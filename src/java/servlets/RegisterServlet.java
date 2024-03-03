@@ -51,5 +51,6 @@ public class RegisterServlet extends HttpServlet {
 
         request.getRequestDispatcher("register.jsp").include(request, response);
         printWriter.print("<center><p>Please Enter Valid Details to Register</p></center>");
+        // Update some new things
     }
 }
