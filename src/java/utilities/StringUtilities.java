@@ -10,6 +10,6 @@ public class StringUtilities {
         for (String string : strings) {
             return isNullOrBlank(string);
         }
-        return false;
+        return true;
     }
 }

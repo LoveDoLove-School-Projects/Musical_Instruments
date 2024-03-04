@@ -1,19 +1,16 @@
-package servlets;
+package features;
 
 import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import models.Customer;
-import models.Message;
 import services.RegisterServices;
-import utilities.MessageUtilities;
 import utilities.StringUtilities;
 
-public class RegisterServlet extends HttpServlet {
+public class RegisterHandler {
 
-    protected int processRequest(HttpServletRequest request, HttpServletResponse response)
+    public int handle(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         int status = 0;
 
@@ -41,23 +38,5 @@ public class RegisterServlet extends HttpServlet {
         RegisterServices registerServices = new RegisterServices();
         status = registerServices.registerNewCustomer(customer);
         return status;
-    }
-
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        int status = processRequest(request, response);
-
-        if (status != 1) {
-            Message message = new Message();
-            message.setRequest(request);
-            message.setResponse(response);
-            message.setMessage("Please Enter Valid Details to Register!");
-            message.setJspPage("register.jsp");
-            MessageUtilities.sendMessageToJsp(message);
-            return;
-        }
-
-        response.sendRedirect("login.jsp");
     }
 }
