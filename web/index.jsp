@@ -62,12 +62,6 @@
                 </div>
             </div>
         </div>
-        <%
-        Integer customer_id = (Integer) session.getAttribute("customer_id");
-        if (customer_id != null) { %>
-        <!-- Print it out -->
-        <p>customer_id = <%= customer_id %></p>
-        <% } %>
         <jsp:include page="footer.jsp" />
     </body>
 </html>
