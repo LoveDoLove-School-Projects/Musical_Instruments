@@ -4,6 +4,7 @@
     <head>
     </head>
     <body>
+        <jsp:include page="navigation.jsp" />
         <% String message = (String) request.getAttribute("message"); if (message != null && !message.isEmpty()) { %>
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
             <%= message %>
