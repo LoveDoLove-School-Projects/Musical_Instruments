@@ -40,6 +40,7 @@
         </style>
     </head>
     <body>
+        <jsp:include page="header.jsp" />
         <div class="container">
             <div class="header">
                 <h1>Welcome to our Musical Instruments E-commerce</h1>
@@ -67,5 +68,6 @@
         <!-- Print it out -->
         <p>customer_id = <%= customer_id %></p>
         <% } %>
+        <jsp:include page="footer.jsp" />
     </body>
 </html>
