@@ -1,14 +1,16 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html>
     <head>
     </head>
     <body>
-        <% String message = (String) request.getAttribute("message"); if (message != null && !message.isEmpty()) { %>
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            <%= message %>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-        <% } %>
+        <c:if test="${not empty sessionScope.message}">
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                ${sessionScope.message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            <% session.removeAttribute("message"); %>
+        </c:if>
     </body>
 </html>

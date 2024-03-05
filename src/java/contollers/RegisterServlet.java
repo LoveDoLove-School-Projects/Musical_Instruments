@@ -5,8 +5,8 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
+import utilities.RedirectUtilities;
 
 public class RegisterServlet extends HttpServlet {
 
@@ -18,9 +18,7 @@ public class RegisterServlet extends HttpServlet {
         int status = registerHandler.handle(request, response);
 
         if (status == 0) {
-            HttpSession session = request.getSession();
-            session.setAttribute("message", "Please Enter Valid Details to Register!");
-            response.sendRedirect("register.jsp");
+            RedirectUtilities.redirectWithMessage(request, response, "Please Enter Valid Details to Register!", "register.jsp");
             return;
         }
 
