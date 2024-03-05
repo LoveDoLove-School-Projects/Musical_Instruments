@@ -5,24 +5,22 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
-import models.Message;
-import utilities.MessageUtilities;
 
 public class RegisterServlet extends HttpServlet {
+
+    private final RegisterHandler registerHandler = new RegisterHandler();
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        int status = new RegisterHandler().handle(request, response);
+        int status = registerHandler.handle(request, response);
 
-        if (status != 1) {
-            Message message = new Message();
-            message.setRequest(request);
-            message.setResponse(response);
-            message.setMessage("Please Enter Valid Details to Register!");
-            message.setJspPage("register.jsp");
-            MessageUtilities.sendMessageToJsp(message);
+        if (status == 0) {
+            HttpSession session = request.getSession();
+            session.setAttribute("message", "Please Enter Valid Details to Register!");
+            response.sendRedirect("register.jsp");
             return;
         }
 

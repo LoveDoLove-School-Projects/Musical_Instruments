@@ -4,43 +4,32 @@ import contollers.ConnectionController;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import utilities.LoggerUtilities;
 import models.Customer;
+import utilities.AesUtilities;
 
 public class LoginServices {
-
-    private static Connection connection;
-    private static PreparedStatement preparedStatement;
-
-    public int loginCustomer(Customer customer) {
-        int customer_id = 0;
-        try {
-            connection = ConnectionController.getConnection();
-            customer_id = authenticateCustomer(customer.getEmail(), customer.getPassword());
-            connection.close();
-        } catch (SQLException ex) {
-            LoggerUtilities.logSevere(ex);
+    
+    public int loginCustomer(Customer customer) throws Exception {
+        try (Connection connection = ConnectionController.getConnection()) {
+            return authenticateCustomer(connection, customer);
         }
-        return customer_id;
     }
-
-    public int authenticateCustomer(String email, String password) {
-        int customer_id = 0;
+    
+    private int authenticateCustomer(Connection connection, Customer customer) throws Exception {
         String sqlString = "SELECT * FROM customers WHERE email = ? AND password = ?";
-        try {
-            connection = ConnectionController.getConnection();
-            preparedStatement = connection.prepareStatement(sqlString);
-            preparedStatement.setString(1, email);
-            preparedStatement.setString(2, password);
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sqlString)) {
+            preparedStatement.setString(1, customer.getEmail());
+            preparedStatement.setString(2, AesUtilities.aes256EcbEncrypt(customer.getPassword()));
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 if (resultSet.next()) {
-                    customer_id = resultSet.getInt("customer_id");
+                    return resultSet.getInt("customer_id");
                 }
             }
-        } catch (SQLException ex) {
-            LoggerUtilities.logSevere(ex);
+        } catch (Exception ex) {
+            LoggerUtilities.logSevere(ex.getMessage(), ex);
+            throw ex;
         }
-        return customer_id;
+        return 0;
     }
 }

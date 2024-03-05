@@ -10,9 +10,11 @@ import utilities.StringUtilities;
 
 public class LoginHandler {
 
+    private final LoginServices loginServices = new LoginServices();
+
     public int handle(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        int customer_id = 0;
+        int customerId = 0;
 
         response.setContentType("text/html;charset=UTF-8");
 
@@ -20,15 +22,17 @@ public class LoginHandler {
         String password = request.getParameter("password");
 
         if (StringUtilities.anyNullOrBlank(email, password)) {
-            return customer_id;
+            return customerId;
         }
 
-        Customer customer = new Customer();
-        customer.setEmail(email);
-        customer.setPassword(password);
+        Customer customer = new Customer(password, email);
 
-        LoginServices loginServices = new LoginServices();
-        customer_id = loginServices.loginCustomer(customer);
-        return customer_id;
+        try {
+            customerId = loginServices.loginCustomer(customer);
+        } catch (Exception ex) {
+            throw new ServletException("Error logging in customer", ex);
+        }
+
+        return customerId;
     }
 }

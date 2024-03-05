@@ -40,8 +40,8 @@
 
                     <div class="d-flex align-items-center">
                         <%
-                        Integer userId = (Integer) session.getAttribute("userId");
-                        if (userId != null) { %>
+                        Integer login_id = (Integer) session.getAttribute("login_id");
+                        if (login_id != null) { %>
                         <!-- Print it out -->
                         <a data-mdb-ripple-init class="btn btn-primary px-3 me-2" href="profile.jsp">Profile</a>
                         <form action="LogoutServlet" method="POST">

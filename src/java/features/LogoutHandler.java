@@ -11,6 +11,6 @@ public class LogoutHandler {
     public void handle(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        SessionUtilities.removeSessionAttribute(request.getSession(), "userId");
+        SessionUtilities.removeSessionAttribute(request.getSession(), "login_id");
     }
 }

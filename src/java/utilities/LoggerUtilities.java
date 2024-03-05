@@ -8,21 +8,21 @@ public class LoggerUtilities {
     private static final Logger logger = Logger.getLogger(LoggerUtilities.class.getName());
 
     public static void logInfo(String message) {
-        StackTraceElement caller = getCaller();
-        String currentDateTime = DateUtilities.getCurrentDate(true);
-        logger.log(Level.INFO, "{0} [{1}::{2}] {3}", new Object[]{currentDateTime, caller.getClassName(), caller.getMethodName(), message});
+        log(Level.INFO, message, null);
     }
 
     public static void logWarning(String message) {
-        StackTraceElement caller = getCaller();
-        String currentDateTime = DateUtilities.getCurrentDate(true);
-        logger.log(Level.WARNING, "{0} [{1}::{2}] {3}", new Object[]{currentDateTime, caller.getClassName(), caller.getMethodName(), message});
+        log(Level.WARNING, message, null);
     }
 
-    public static void logSevere(Throwable throwable) {
+    public static void logSevere(String message, Throwable throwable) {
+        log(Level.SEVERE, message, throwable);
+    }
+
+    private static void log(Level level, String message, Throwable throwable) {
         StackTraceElement caller = getCaller();
         String currentDateTime = DateUtilities.getCurrentDate(true);
-        logger.log(Level.SEVERE, currentDateTime + " [" + caller.getClassName() + "::" + caller.getMethodName() + "]", throwable);
+        logger.log(level, "{0} [{1}::{2}] {3}", new Object[]{currentDateTime, caller.getClassName(), caller.getMethodName(), message, throwable});
     }
 
     private static StackTraceElement getCaller() {
