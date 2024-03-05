@@ -7,31 +7,26 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import models.Message;
-import utilities.MessageUtilities;
 import utilities.SessionUtilities;
 
 public class LoginServlet extends HttpServlet {
 
-    private HttpSession session;
+    private final LoginHandler loginHandler = new LoginHandler();
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        int customer_id = new LoginHandler().handle(request, response);
+        int customerId = loginHandler.handle(request, response);
 
-        if (customer_id == 0) {
-            Message message = new Message();
-            message.setRequest(request);
-            message.setResponse(response);
-            message.setMessage("Incorrect Email or Password!");
-            message.setJspPage("login.jsp");
-            MessageUtilities.sendMessageToJsp(message);
+        if (customerId == 0) {
+            HttpSession session = request.getSession();
+            session.setAttribute("message", "Incorrect Email or Password!");
+            response.sendRedirect("login.jsp");
             return;
         }
 
-        session = request.getSession();
-        SessionUtilities.setSessionAttribute(session, "userId", customer_id);
+        HttpSession session = request.getSession();
+        SessionUtilities.setSessionAttribute(session, "login_id", customerId);
 
         response.sendRedirect("index.jsp");
     }

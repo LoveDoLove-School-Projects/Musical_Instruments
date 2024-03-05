@@ -10,6 +10,8 @@ import utilities.StringUtilities;
 
 public class RegisterHandler {
 
+    private final RegisterServices registerServices = new RegisterServices();
+
     public int handle(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         int status = 0;
@@ -27,16 +29,14 @@ public class RegisterHandler {
             return status;
         }
 
-        Customer customer = new Customer();
-        customer.setUsername(username);
-        customer.setPassword(password);
-        customer.setEmail(email);
-        customer.setAddress(address);
-        customer.setPhoneNumber(phone_number);
-        customer.setGender(gender);
+        Customer customer = new Customer(username, password, email, address, phone_number, gender);
 
-        RegisterServices registerServices = new RegisterServices();
-        status = registerServices.registerNewCustomer(customer);
+        try {
+            status = registerServices.registerNewCustomer(customer);
+        } catch (Exception ex) {
+            throw new ServletException("Error registering new customer", ex);
+        }
+
         return status;
     }
 }

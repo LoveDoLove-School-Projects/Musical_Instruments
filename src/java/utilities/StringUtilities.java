@@ -8,8 +8,10 @@ public class StringUtilities {
 
     public static boolean anyNullOrBlank(String... strings) {
         for (String string : strings) {
-            return isNullOrBlank(string);
+            if (isNullOrBlank(string)) {
+                return true;
+            }
         }
-        return true;
+        return false;
     }
 }

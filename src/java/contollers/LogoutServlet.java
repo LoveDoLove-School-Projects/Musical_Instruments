@@ -9,11 +9,12 @@ import jakarta.servlet.http.HttpServletResponse;
 
 public class LogoutServlet extends HttpServlet {
 
+    private final LogoutHandler logoutHandler = new LogoutHandler();
+
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        new LogoutHandler().handle(request, response);
+        logoutHandler.handle(request, response);
         response.sendRedirect("index.jsp");
     }
-
 }
