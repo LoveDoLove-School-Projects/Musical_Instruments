@@ -6,7 +6,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
+import utilities.RedirectUtilities;
 import utilities.SessionUtilities;
 
 public class LoginServlet extends HttpServlet {
@@ -19,15 +19,11 @@ public class LoginServlet extends HttpServlet {
         int customerId = loginHandler.handle(request, response);
 
         if (customerId == 0) {
-            HttpSession session = request.getSession();
-            session.setAttribute("message", "Incorrect Email or Password!");
-            response.sendRedirect("login.jsp");
+            RedirectUtilities.redirectWithMessage(request, response, "Incorrect Email or Password!", "login.jsp");
             return;
         }
 
-        HttpSession session = request.getSession();
-        SessionUtilities.setSessionAttribute(session, "login_id", customerId);
-
+        SessionUtilities.setSessionAttribute(request.getSession(), "login_id", customerId);
         response.sendRedirect("index.jsp");
     }
 }
