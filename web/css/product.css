@@ -1,0 +1,29 @@
+.section1{
+  background-color:#d9d9e1;
+}
+
+a{
+  text-decoration: none;
+  color: black;
+}
+
+
+.PremiumBox {
+  background-color:#343333;
+  color: #d9d9e1;
+  max-height: 400px;
+  border: solid black 2px;
+  border-radius: 20px;
+  animation: pulse 2S infinite;
+}
+
+.PremiumBoxBtn{
+  background-color:#d9d9e1;
+  border-radius: 20px;
+  
+}
+
+.PremiumBoxBtn:hover{
+  background-color: #343333;
+  color: #d9d9e1;
+}
