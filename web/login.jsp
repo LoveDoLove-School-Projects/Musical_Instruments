@@ -9,7 +9,7 @@
     <body>
     <center>
         <form method="POST" action="LoginServlet">
-            <section class="vh-100 gradient-custom">
+            <section class="vh-100" style="background-color: #eee;">
                 <jsp:include page="header.jsp" />
                 <div class="container py-5 h-100">
                     <div class="row justify-content-center align-items-center h-100">
