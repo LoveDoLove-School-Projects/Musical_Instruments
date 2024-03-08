@@ -12,4 +12,9 @@ public class RedirectUtilities {
         session.setAttribute("message", message);
         response.sendRedirect(redirectUrl);
     }
+
+    public static void setMessage(HttpServletRequest request, HttpServletResponse response, String message) throws IOException {
+        HttpSession session = request.getSession();
+        session.setAttribute("message", message);
+    }
 }

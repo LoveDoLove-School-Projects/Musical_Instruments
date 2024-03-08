@@ -7,7 +7,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import models.Customer;
 import utilities.AesUtilities;
-import utilities.LoggerUtilities;
 
 public class RegisterServices {
 
@@ -30,8 +29,7 @@ public class RegisterServices {
                 return preparedStatement.executeUpdate();
             }
         } catch (Exception ex) {
-            LoggerUtilities.logSevere("Error while registering new customer: ", ex);
-            throw ex;
+            throw new Exception("Error registering new customer: " + ex.getMessage());
         }
     }
 
@@ -47,8 +45,7 @@ public class RegisterServices {
                 }
             }
         } catch (SQLException ex) {
-            LoggerUtilities.logSevere("Error while checking if email exists: ", ex);
-            throw ex;
+            throw new SQLException("Error checking if email exists: " + ex.getMessage());
         }
 
         return false;

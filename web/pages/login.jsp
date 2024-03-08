@@ -21,7 +21,7 @@
 
 <body>
 <center>
-    <form method="POST" action="LoginServlet">
+    <form method="POST" action="/pages/login">
         <section class="vh-100" style="background-color: #eee;">
             <jsp:include page="/defaults/header.jsp" />
             <div class="container py-5 h-100">
@@ -35,7 +35,7 @@
                                     <div class="col-md-6 mb-4 pb-2">
                                         <div class="form-outline">
                                             <input type="email" name="email"
-                                                   class="form-control form-control-lg" required />
+                                                   class="form-control form-control-lg" value="${email}" required />
                                             <label class="form-label" for="email">Email</label>
                                         </div>
                                     </div>
@@ -43,7 +43,7 @@
                                     <div class="col-md-6 mb-4 pb-2">
                                         <div class="form-outline">
                                             <input type="password" name="password"
-                                                   class="form-control form-control-lg" min="8" required />
+                                                   class="form-control form-control-lg" min="8" value="${password}" required />
                                             <label class="form-label" for="password">Password</label>
                                         </div>
                                     </div>
@@ -57,7 +57,7 @@
                                 <div class="mt-4 pt-2">
                                     <p>
                                         No Account?
-                                        <a href="/pages/register.jsp">Register Here</a>
+                                        <a href="/pages/register">Register Here</a>
                                     </p>
                                 </div>
                             </div>
