@@ -4,7 +4,7 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <title>Login Page</title>
-        <link rel="stylesheet" href="./css/simpleForm.css" />
+        <link rel="stylesheet" href="./css/form.css" />
     </head>
     <body>
     <center>
@@ -21,14 +21,14 @@
                                     <div class="row">
                                         <div class="col-md-6 mb-4 pb-2">
                                             <div class="form-outline">
-                                                <input type="email" name="email" class="form-control form-control-lg" />
+                                                <input type="email" name="email" class="form-control form-control-lg" required />
                                                 <label class="form-label" for="email">Email</label>
                                             </div>
                                         </div>
 
                                         <div class="col-md-6 mb-4 pb-2">
                                             <div class="form-outline">
-                                                <input type="password" name="password" class="form-control form-control-lg" />
+                                                <input type="password" name="password" class="form-control form-control-lg" min="8" required />
                                                 <label class="form-label" for="password">Password</label>
                                             </div>
                                         </div>
