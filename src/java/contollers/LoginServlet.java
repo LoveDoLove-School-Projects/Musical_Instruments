@@ -24,6 +24,6 @@ public class LoginServlet extends HttpServlet {
         }
 
         SessionUtilities.setSessionAttribute(request.getSession(), "login_id", customerId);
-        response.sendRedirect("/index.jsp");
+        response.sendRedirect("/pages/profile.jsp");
     }
 }
