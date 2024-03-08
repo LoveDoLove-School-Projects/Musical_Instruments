@@ -1,18 +1,24 @@
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %> <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ page contentType="text/html" pageEncoding="UTF-8" %>
+<%@ page import="java.lang.Integer" %>
+<c:if test="${not empty sessionScope.login_id}">
+    <c:redirect url="/pages/profile.jsp" />
+</c:if>
 <!DOCTYPE html>
 <html>
+
     <head>
-        <%
-            String path = request.getContextPath();
-            String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + path + "/";
-        %>
-        <base href="<%=basePath%>">
+        <c:set var="path" value="${pageContext.request.contextPath}" />
+        <c:set var="basePath"
+               value="${pageContext.request.scheme}://${pageContext.request.serverName}:${pageContext.request.serverPort}${path}/" />
+        <base href="${basePath}">
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <title>Register Page</title>
         <link rel="stylesheet" href="/assets/css/form.css" />
     </head>
+
     <body>
     <center>
         <form method="POST" action="RegisterServlet">
@@ -28,14 +34,16 @@
                                     <div class="row">
                                         <div class="col-md-6 mb-4">
                                             <div class="form-outline">
-                                                <input type="text" name="username" class="form-control form-control-lg" required />
+                                                <input type="text" name="username"
+                                                       class="form-control form-control-lg" required />
                                                 <label class="form-label" for="username">Username</label>
                                             </div>
                                         </div>
 
                                         <div class="col-md-6 mb-4">
                                             <div class="form-outline">
-                                                <input type="password" name="password" class="form-control form-control-lg" min="8" required />
+                                                <input type="password" name="password"
+                                                       class="form-control form-control-lg" min="8" required />
                                                 <label class="form-label" for="password">Password</label>
                                             </div>
                                         </div>
@@ -44,7 +52,8 @@
                                     <div class="row">
                                         <div class="col-md-6 mb-4 d-flex align-items-center">
                                             <div class="form-outline datepicker w-100">
-                                                <input type="text" name="address" class="form-control form-control-lg" required />
+                                                <input type="text" name="address"
+                                                       class="form-control form-control-lg" required />
                                                 <label for="address" class="form-label">Address</label>
                                             </div>
                                         </div>
@@ -53,18 +62,24 @@
                                             <h6 class="mb-2 pb-1">Gender:</h6>
 
                                             <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" name="gender" value="Male" checked />
-                                                <label class="form-check-label" for="maleGender">Male</label>
+                                                <input class="form-check-input" type="radio" name="gender"
+                                                       value="Male" checked />
+                                                <label class="form-check-label"
+                                                       for="maleGender">Male</label>
                                             </div>
 
                                             <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" name="gender" value="Female" />
-                                                <label class="form-check-label" for="femaleGender">Female</label>
+                                                <input class="form-check-input" type="radio" name="gender"
+                                                       value="Female" />
+                                                <label class="form-check-label"
+                                                       for="femaleGender">Female</label>
                                             </div>
 
                                             <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" name="gender" value="Other" />
-                                                <label class="form-check-label" for="otherGender">Other</label>
+                                                <input class="form-check-input" type="radio" name="gender"
+                                                       value="Other" />
+                                                <label class="form-check-label"
+                                                       for="otherGender">Other</label>
                                             </div>
                                         </div>
                                     </div>
@@ -72,20 +87,24 @@
                                     <div class="row">
                                         <div class="col-md-6 mb-4 pb-2">
                                             <div class="form-outline">
-                                                <input type="email" name="email" class="form-control form-control-lg" required />
+                                                <input type="email" name="email"
+                                                       class="form-control form-control-lg" required />
                                                 <label class="form-label" for="email">Email</label>
                                             </div>
                                         </div>
                                         <div class="col-md-6 mb-4 pb-2">
                                             <div class="form-outline">
-                                                <input type="tel" name="phone_number" class="form-control form-control-lg" required />
-                                                <label class="form-label" for="phone_number">Phone Number</label>
+                                                <input type="tel" name="phone_number"
+                                                       class="form-control form-control-lg" required />
+                                                <label class="form-label" for="phone_number">Phone
+                                                    Number</label>
                                             </div>
                                         </div>
                                     </div>
 
                                     <div class="mt-4 pt-2">
-                                        <input class="btn btn-primary btn-lg" type="submit" value="Submit" />
+                                        <input class="btn btn-primary btn-lg" type="submit"
+                                               value="Submit" />
                                     </div>
 
                                     <div class="mt-4 pt-2">
@@ -104,4 +123,5 @@
     </center>
     <jsp:include page="/defaults/footer.jsp" />
 </body>
+
 </html>
