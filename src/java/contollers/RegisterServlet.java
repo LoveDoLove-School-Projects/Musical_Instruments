@@ -18,10 +18,10 @@ public class RegisterServlet extends HttpServlet {
         int status = registerHandler.handle(request, response);
 
         if (status == 0) {
-            RedirectUtilities.redirectWithMessage(request, response, "Please Enter Valid Details to Register!", "register.jsp");
+            RedirectUtilities.redirectWithMessage(request, response, "Please Enter Valid Details to Register!", "/pages/register.jsp");
             return;
         }
 
-        response.sendRedirect("login.jsp");
+        response.sendRedirect("/pages/login.jsp");
     }
 }
