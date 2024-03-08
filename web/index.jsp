@@ -40,7 +40,7 @@
         </style>
     </head>
     <body>
-        <jsp:include page="header.jsp" />
+        <jsp:include page="/defaults/header.jsp" />
         <div class="container">
             <div class="header">
                 <h1>Welcome to our Musical Instruments E-commerce</h1>
@@ -62,6 +62,6 @@
                 </div>
             </div>
         </div>
-        <jsp:include page="footer.jsp" />
+        <jsp:include page="/defaults/footer.jsp" />
     </body>
 </html>
