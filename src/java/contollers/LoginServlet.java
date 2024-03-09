@@ -48,7 +48,7 @@ public class LoginServlet extends HttpServlet {
                     RedirectUtilities.setMessage(request, response, "Incorrect Email or Password!");
                 } else {
                     SessionUtilities.setSessionAttribute(request.getSession(), "login_id", customerId);
-                    response.sendRedirect(Constants.PROFILE_URL);
+                    RedirectUtilities.sendRedirect(request, response, Constants.PROFILE_URL);
                     return;
                 }
             }

@@ -13,22 +13,28 @@
         <servlet-name>LogoutServlet</servlet-name>
         <servlet-class>contollers.LogoutServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ProfileServlet</servlet-name>
+        <servlet-class>contollers.ProfileServlet</servlet-class>
+    </servlet>
     <!--Servlet Mapping-->
     <servlet-mapping>
         <servlet-name>LoginServlet</servlet-name>
-        <url-pattern>/pages/login</url-pattern>        
-        <url-pattern>/pages/login/session</url-pattern>
+        <url-pattern>/pages/login</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>LogoutServlet</servlet-name>
-        <url-pattern>/logout</url-pattern>
+        <url-pattern>/pages/logout</url-pattern>
     </servlet-mapping>
-    <!--配置jstl-->
     <servlet-mapping>
         <servlet-name>RegisterServlet</servlet-name>
         <url-pattern>/pages/register</url-pattern>
-        <url-pattern>/pages/register/add</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ProfileServlet</servlet-name>
+        <url-pattern>/pages/profile</url-pattern>
+    </servlet-mapping>
+    <!--配置jstl-->
     <jsp-config>
         <taglib>
             <taglib-uri>http://java.sun.com/jsp/jstl/core</taglib-uri>

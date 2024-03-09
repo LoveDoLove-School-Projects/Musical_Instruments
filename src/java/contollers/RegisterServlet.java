@@ -1,53 +1,64 @@
 package contollers;
 
-import features.RegisterHandler;
-import jakarta.servlet.RequestDispatcher;
+import common.Constants;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
+import models.Customer;
+import services.RegisterServices;
 import utilities.RedirectUtilities;
+import utilities.StringUtilities;
 
 public class RegisterServlet extends HttpServlet {
 
-    private final RegisterHandler registerHandler = new RegisterHandler();
+    private final RegisterServices registerServices = new RegisterServices();
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        doGet(request, response);
-//        int status = registerHandler.handle(request, response);
-//
-//        if (status == 0) {
-//            RedirectUtilities.redirectWithMessage(request, response, "Please Enter Valid Details to Register!", "/pages/register.jsp");
-//            return;
-//        }
-//
-//        response.sendRedirect("/pages/login.jsp");
-    }
-
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        String action = request.getServletPath();
         try {
-            switch (action) {
-                case "/pages/register":
-                    showRegisterForm(request, response);
-                    break;
-                case "/pages/register/add":
-                    addNewCustomer(request, response);
-                    break;
-            }
+            handleRegister(request, response);
         } catch (SQLException ex) {
             throw new ServletException(ex);
         }
     }
 
-    private void showRegisterForm(HttpServletRequest request, HttpServletResponse response)
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        try {
+            handleRegister(request, response);
+        } catch (SQLException ex) {
+            throw new ServletException(ex);
+        }
+    }
+
+    private void handleRegister(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, IOException, ServletException {
+        try {
+            if ("POST".equalsIgnoreCase(request.getMethod())) {
+                int status = addCustomer(request);
+                if (status == 0) {
+                    String email = request.getParameter("email");
+                    request.setAttribute("email", email);
+                    RedirectUtilities.setMessage(request, response, "Please Enter Valid Details to Register!");
+                } else {
+                    RedirectUtilities.sendRedirect(request, response, Constants.LOGIN_URL);
+                    return;
+                }
+            }
+            request.getRequestDispatcher(Constants.REGISTER_JSP_URL).forward(request, response);
+        } catch (ServletException | IOException ex) {
+            throw new ServletException(ex);
+        }
+    }
+
+    private int addCustomer(HttpServletRequest request)
+            throws SQLException, IOException, ServletException {
+        int status = 0;
         String username = request.getParameter("username");
         String password = request.getParameter("password");
         String email = request.getParameter("email");
@@ -55,30 +66,16 @@ public class RegisterServlet extends HttpServlet {
         String phone_number = request.getParameter("phone_number");
         String gender = request.getParameter("gender");
 
-        request.setAttribute("username", username);
-        request.setAttribute("password", password);
-        request.setAttribute("email", email);
-        request.setAttribute("address", address);
-        request.setAttribute("phone_number", phone_number);
-        request.setAttribute("gender", gender);
-
-        // This one is for the ui to let user interact
-        RequestDispatcher dispatcher = request.getRequestDispatcher("/pages/register.jsp");
-        dispatcher.forward(request, response);
-    }
-
-    private void addNewCustomer(HttpServletRequest request, HttpServletResponse response)
-            throws SQLException, IOException, ServletException {
-        int status = registerHandler.handle(request, response);
-
-        if (status != 0) {
-            RedirectUtilities.setMessage(request, response, "Please Enter Valid Details to Register!");
-            showRegisterForm(request, response);
-            return;
+        if (StringUtilities.anyNullOrBlank(username, password, email, address, phone_number, gender)) {
+            return status;
         }
 
-        response.sendRedirect("/pages/login");
-//        RequestDispatcher dispatcher = request.getRequestDispatcher("/pages/register.jsp");
-//        dispatcher.forward(request, response);
+        Customer customer = new Customer(username, password, email, address, phone_number, gender);
+        try {
+            status = registerServices.registerNewCustomer(customer);
+        } catch (Exception ex) {
+            throw new ServletException("Error registering new customer", ex);
+        }
+        return status;
     }
 }
