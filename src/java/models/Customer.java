@@ -21,11 +21,6 @@ public class Customer {
         this.customerId = customerId;
     }
 
-    public Customer(String password, String email) {
-        this.password = password;
-        this.email = email;
-    }
-
     public Customer(String username, String password, String email, String address, String phoneNumber, String gender) {
         this.username = username;
         this.password = password;
