@@ -4,7 +4,7 @@ import common.Common;
 
 public class RegisterResponse {
 
-    private common.Common.Status status;
+    private Common.Status status;
 
     public RegisterResponse() {
     }
