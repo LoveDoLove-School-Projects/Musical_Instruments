@@ -1,46 +1,24 @@
-package models;
+package request;
 
-import java.sql.Timestamp;
+public class RegisterRequest {
 
-public class Customer {
-
-    private int customerId;
     private String username;
     private String password;
     private String email;
     private String address;
     private String phoneNumber;
     private String gender;
-    private Timestamp accountCreationDate;
-    private Timestamp lastLoginDate;
 
-    public Customer() {
+    public RegisterRequest() {
     }
 
-    public Customer(int customerId) {
-        this.customerId = customerId;
-    }
-
-    public Customer(String password, String email) {
-        this.password = password;
-        this.email = email;
-    }
-
-    public Customer(String username, String password, String email, String address, String phoneNumber, String gender) {
+    public RegisterRequest(String username, String password, String email, String address, String phoneNumber, String gender) {
         this.username = username;
         this.password = password;
         this.email = email;
         this.address = address;
         this.phoneNumber = phoneNumber;
         this.gender = gender;
-    }
-
-    public int getCustomerId() {
-        return customerId;
-    }
-
-    public void setCustomerId(int customerId) {
-        this.customerId = customerId;
     }
 
     public String getUsername() {
@@ -89,22 +67,6 @@ public class Customer {
 
     public void setGender(String gender) {
         this.gender = gender;
-    }
-
-    public Timestamp getAccountCreationDate() {
-        return accountCreationDate;
-    }
-
-    public void setAccountCreationDate(Timestamp accountCreationDate) {
-        this.accountCreationDate = accountCreationDate;
-    }
-
-    public Timestamp getLastLoginDate() {
-        return lastLoginDate;
-    }
-
-    public void setLastLoginDate(Timestamp lastLoginDate) {
-        this.lastLoginDate = lastLoginDate;
     }
 
 }
