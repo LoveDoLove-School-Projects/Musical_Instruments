@@ -7,7 +7,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import models.Customer;
 import utilities.AesUtilities;
-import utilities.LoggerUtilities;
 
 public class LoginServices {
 
@@ -30,8 +29,7 @@ public class LoginServices {
                 }
             }
         } catch (Exception ex) {
-            LoggerUtilities.logSevere(ex.getMessage(), ex);
-            throw ex;
+            throw new Exception("Error authenticating customer: " + ex.getMessage());
         }
         return 0;
     }
@@ -45,8 +43,7 @@ public class LoginServices {
             preparedStatement.executeUpdate();
 
         } catch (SQLException ex) {
-            LoggerUtilities.logSevere(ex.getMessage(), ex);
-            throw ex;
+            throw new SQLException("Error updating last login date: " + ex.getMessage());
         }
     }
 }
