@@ -1,20 +1,20 @@
 package contollers;
 
-import features.LogoutHandler;
-import java.io.IOException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import utilities.RedirectUtilities;
+import utilities.SessionUtilities;
 
 public class LogoutServlet extends HttpServlet {
-
-    private final LogoutHandler logoutHandler = new LogoutHandler();
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        logoutHandler.handle(request, response);
-        response.sendRedirect("index.jsp");
+        response.setContentType("text/html;charset=UTF-8");
+        SessionUtilities.removeSessionAttribute(request.getSession(), "login_id");
+        RedirectUtilities.sendRedirect(request, response, "");
     }
 }

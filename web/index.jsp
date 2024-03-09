@@ -1,67 +1,28 @@
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ page contentType="text/html" pageEncoding="UTF-8" %>
+<c:set var="path" value="${pageContext.request.contextPath}" />
+<c:set var="basePath"
+       value="${pageContext.request.scheme}://${pageContext.request.serverName}:${pageContext.request.serverPort}${path}/" />
 <!DOCTYPE html>
 <html>
+
     <head>
+        <base href="${basePath}">
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <title>Musical Instruments</title>
-        <style>
-            /* Add your CSS styles here */
-            body {
-                font-family: Arial, sans-serif;
-            }
-            .container {
-                width: 80%;
-                margin: 0 auto;
-            }
-            .header {
-                background-color: #333;
-                color: #fff;
-                padding: 20px;
-                text-align: center;
-            }
-            .product {
-                border: 1px solid #ccc;
-                margin-bottom: 20px;
-                padding: 10px;
-                overflow: hidden;
-            }
-            .product img {
-                max-width: 100px;
-                float: left;
-                margin-right: 10px;
-            }
-            .product h2 {
-                margin-top: 0;
-            }
-            .product .price {
-                color: #009688;
-                font-weight: bold;
-            }
-        </style>
+        <link rel="stylesheet" href="assets/css/index.css"/>
     </head>
+
     <body>
-        <jsp:include page="header.jsp" />
+        <jsp:include page="defaults/header.jsp" />
         <div class="container">
             <div class="header">
                 <h1>Welcome to our Musical Instruments E-commerce</h1>
             </div>
-            <div class="products">
-                <div class="product">
-                    <img src="guitar.jpg" alt="Guitar" />
-                    <h2>Acoustic Guitar</h2>
-                    <p class="price">$200</p>
-                    <p>Description: Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                    <button>Add to Cart</button>
-                </div>
-                <div class="product">
-                    <img src="piano.jpg" alt="Piano" />
-                    <h2>Grand Piano</h2>
-                    <p class="price">$1000</p>
-                    <p>Description: Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                    <button>Add to Cart</button>
-                </div>
-            </div>
         </div>
-        <jsp:include page="footer.jsp" />
+        <jsp:include page="defaults/footer.jsp" />
     </body>
+
 </html>

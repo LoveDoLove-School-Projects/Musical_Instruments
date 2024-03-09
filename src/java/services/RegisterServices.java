@@ -1,37 +1,44 @@
 package services;
 
+import common.Common;
 import contollers.ConnectionController;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import models.Customer;
+import request.RegisterRequest;
+import response.RegisterResponse;
 import utilities.AesUtilities;
-import utilities.LoggerUtilities;
 
 public class RegisterServices {
 
-    public int registerNewCustomer(Customer customer) throws Exception {
+    public RegisterResponse registerNewCustomer(RegisterRequest registerRequest) throws SQLException {
+        RegisterResponse registerResponse = new RegisterResponse();
         String sqlString = "INSERT INTO customers (username, password, email, address, phone_number, gender) VALUES (?, ?, ?, ?, ?, ?)";
 
         try (Connection connection = ConnectionController.getConnection()) {
-            if (isEmailExists(connection, customer.getEmail())) {
-                return 0;
+            if (isEmailExists(connection, registerRequest.getEmail())) {
+                registerResponse.setStatus(Common.Status.EXISTS);
+                return registerResponse;
             }
 
             try (PreparedStatement preparedStatement = connection.prepareStatement(sqlString)) {
-                preparedStatement.setString(1, customer.getUsername());
-                preparedStatement.setString(2, AesUtilities.aes256EcbEncrypt(customer.getPassword()));
-                preparedStatement.setString(3, customer.getEmail());
-                preparedStatement.setString(4, customer.getAddress());
-                preparedStatement.setString(5, customer.getPhoneNumber());
-                preparedStatement.setString(6, customer.getGender());
-
-                return preparedStatement.executeUpdate();
+                preparedStatement.setString(1, registerRequest.getUsername());
+                preparedStatement.setString(2, AesUtilities.aes256EcbEncrypt(registerRequest.getPassword()));
+                preparedStatement.setString(3, registerRequest.getEmail());
+                preparedStatement.setString(4, registerRequest.getAddress());
+                preparedStatement.setString(5, registerRequest.getPhoneNumber());
+                preparedStatement.setString(6, registerRequest.getGender());
+                int update = preparedStatement.executeUpdate();
+                if (update > 0) {
+                    registerResponse.setStatus(Common.Status.OK);
+                } else {
+                    registerResponse.setStatus(Common.Status.INTERNAL_SERVER_ERROR);
+                }
+                return registerResponse;
             }
-        } catch (Exception ex) {
-            LoggerUtilities.logSevere("Error while registering new customer: ", ex);
-            throw ex;
+        } catch (SQLException ex) {
+            throw new SQLException("Error registering new customer: " + ex.getMessage());
         }
     }
 
@@ -47,8 +54,7 @@ public class RegisterServices {
                 }
             }
         } catch (SQLException ex) {
-            LoggerUtilities.logSevere("Error while checking if email exists: ", ex);
-            throw ex;
+            throw new SQLException("Error checking if email exists: " + ex.getMessage());
         }
 
         return false;

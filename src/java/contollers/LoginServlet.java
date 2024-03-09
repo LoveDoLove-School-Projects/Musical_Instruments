@@ -1,29 +1,81 @@
 package contollers;
 
-import features.LoginHandler;
-import java.io.IOException;
+import common.Common;
+import common.Constants;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.sql.SQLException;
+import request.LoginRequest;
+import response.LoginResponse;
+import services.LoginServices;
 import utilities.RedirectUtilities;
 import utilities.SessionUtilities;
+import utilities.StringUtilities;
 
 public class LoginServlet extends HttpServlet {
 
-    private final LoginHandler loginHandler = new LoginHandler();
+    private final LoginServices loginServices = new LoginServices();
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        int customerId = loginHandler.handle(request, response);
-
-        if (customerId == 0) {
-            RedirectUtilities.redirectWithMessage(request, response, "Incorrect Email or Password!", "login.jsp");
-            return;
+        try {
+            handleLogin(request, response);
+        } catch (SQLException ex) {
+            throw new ServletException(ex);
         }
+    }
 
-        SessionUtilities.setSessionAttribute(request.getSession(), "login_id", customerId);
-        response.sendRedirect("index.jsp");
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        try {
+            handleLogin(request, response);
+        } catch (SQLException ex) {
+            throw new ServletException(ex);
+        }
+    }
+
+    private void handleLogin(HttpServletRequest request, HttpServletResponse response)
+            throws SQLException, IOException, ServletException {
+        try {
+            if ("POST".equalsIgnoreCase(request.getMethod())) {
+                LoginResponse loginResponse = loginCustomer(request);
+                if (loginResponse.getStatus().getCode() == Common.Status.OK.getCode()) {
+                    SessionUtilities.setSessionAttribute(request.getSession(), "login_id", loginResponse.getCustomer().getCustomerId());
+                    RedirectUtilities.sendRedirect(request, response, Constants.PROFILE_URL);
+                    return;
+                }
+                if (loginResponse.getStatus().getCode() == Common.Status.INVALID.getCode()) {
+                    RedirectUtilities.setMessage(request, response, "Incorrect Email or Password!");
+                } else {
+                    RedirectUtilities.setMessage(request, response, "Error Logging In!");
+                }
+            }
+            request.getRequestDispatcher(Constants.LOGIN_JSP_URL).forward(request, response);
+        } catch (ServletException | IOException ex) {
+            throw new ServletException(ex);
+        }
+    }
+
+    private LoginResponse loginCustomer(HttpServletRequest request) throws ServletException, IOException {
+        LoginResponse loginResponse = new LoginResponse();
+        String email = request.getParameter("email");
+        String password = request.getParameter("password");
+        request.setAttribute("email", email);
+        if (StringUtilities.anyNullOrBlank(email, password)) {
+            loginResponse.setStatus(Common.Status.INVALID);
+            return loginResponse;
+        }
+        LoginRequest loginRequest = new LoginRequest(email, password);
+        try {
+            loginResponse = loginServices.loginCustomer(loginRequest);
+            return loginResponse;
+        } catch (SQLException ex) {
+            throw new ServletException("Error logging in customer", ex);
+        }
     }
 }
