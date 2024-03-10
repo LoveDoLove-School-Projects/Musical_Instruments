@@ -5,7 +5,8 @@ CREATE TABLE customers (
     email VARCHAR(255) UNIQUE NOT NULL,
     address VARCHAR(255) NOT NULL,
     phone_number VARCHAR(20) NOT NULL,
-    gender VARCHAR(10) NOT NULL, 
+    gender VARCHAR(10) NOT NULL,
+    picture BLOB,
     account_creation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     last_login_date TIMESTAMP
 );

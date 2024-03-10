@@ -1,8 +1,12 @@
 package request;
 
+import java.io.InputStream;
+
 public class ProfileRequest {
 
     private int login_id;
+
+    private InputStream picture;
 
     public ProfileRequest() {
     }
@@ -19,4 +23,11 @@ public class ProfileRequest {
         this.login_id = login_id;
     }
 
+    public InputStream getPicture() {
+        return picture;
+    }
+
+    public void setPicture(InputStream picture) {
+        this.picture = picture;
+    }
 }

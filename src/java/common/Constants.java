@@ -14,4 +14,7 @@ public final class Constants {
     public static final String LOGIN_URL = "/pages/login";
     public static final String REGISTER_URL = "/pages/register";
     public static final String PROFILE_URL = "/pages/profile";
+    //    Profile Servlet URL
+    public static final String PROFILE_UPLOAD_PICTURE_URL = "/pages/profile/uploadPicture";
+    public static final String PROFILE_REMOVE_PICTURE_URL = "/pages/profile/removePicture";
 }

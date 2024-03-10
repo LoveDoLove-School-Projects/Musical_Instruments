@@ -21,7 +21,7 @@
     <center>
         <jsp:include page="/defaults/header.jsp" />
         <form method="POST" action="pages/register">
-            <section class="vh-100" style="background-color: #eee;">
+            <section class="vh-100" style=" background-color: #eee;">
                 <div class="container py-5 h-100">
                     <div class="row justify-content-center align-items-center h-100">
                         <div class="col-12 col-lg-9 col-xl-7">
@@ -41,7 +41,7 @@
                                         <div class="col-md-6 mb-4">
                                             <div class="form-outline">
                                                 <input type="password" name="password"
-                                                       class="form-control form-control-lg" min="8" value="${password}" required />
+                                                       class="form-control form-control-lg" value="${password}" required />
                                                 <label class="form-label" for="password">Password</label>
                                             </div>
                                         </div>

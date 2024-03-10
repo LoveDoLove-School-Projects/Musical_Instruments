@@ -12,6 +12,16 @@ public class RedirectUtilities {
         sendRedirect(request, response, redirectUrl);
     }
 
+    public static void redirectWithSuccess(HttpServletRequest request, HttpServletResponse response, String successMessage, String redirectUrl) throws IOException {
+        setSuccessMessage(request, successMessage);
+        sendRedirect(request, response, redirectUrl);
+    }
+
+    public static void redirectWithError(HttpServletRequest request, HttpServletResponse response, String errorMessage, String rediectUrl) throws IOException {
+        setErrorMessage(request, errorMessage);
+        sendRedirect(request, response, rediectUrl);
+    }
+
     public static void setInfoMessage(HttpServletRequest request, String message) {
         setMessage(request, "info", message);
     }
