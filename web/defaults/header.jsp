@@ -33,7 +33,7 @@
 
                     <div class="d-flex align-items-center">
                         <% Integer login_id=(Integer) session.getAttribute("login_id"); if (login_id !=null) { %>
-                        <a data-mdb-ripple-init class="btn btn-primary px-3 me-2" href="pages/profile.jsp">Profile</a>
+                        <a data-mdb-ripple-init class="btn btn-primary px-3 me-2" href="pages/profile">Profile</a>
                         <form action="pages/logout" method="POST">
                             <input type="submit" value="Logout" name="Logout" data-mdb-ripple-init
                                    class="btn btn-danger px-3 me-2" />
