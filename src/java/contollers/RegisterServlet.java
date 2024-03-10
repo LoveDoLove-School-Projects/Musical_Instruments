@@ -19,8 +19,7 @@ public class RegisterServlet extends HttpServlet {
     private final RegisterServices registerServices = new RegisterServices();
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
             handleRegister(request, response);
         } catch (SQLException ex) {
@@ -29,8 +28,7 @@ public class RegisterServlet extends HttpServlet {
     }
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
             handleRegister(request, response);
         } catch (SQLException ex) {
@@ -38,33 +36,28 @@ public class RegisterServlet extends HttpServlet {
         }
     }
 
-    private void handleRegister(HttpServletRequest request, HttpServletResponse response)
-            throws SQLException, IOException, ServletException {
-        try {
-            if ("POST".equalsIgnoreCase(request.getMethod())) {
-                RegisterResponse registerResponse = addCustomer(request);
-                if (registerResponse.getStatus().getCode() == Common.Status.OK.getCode()) {
-                    RedirectUtilities.sendRedirect(request, response, Constants.LOGIN_URL);
-                    return;
-                }
-                if (registerResponse.getStatus().getCode() == Common.Status.EXISTS.getCode()) {
-                    RedirectUtilities.setMessage(request, response, "Email Already Exists!");
-                } else if (registerResponse.getStatus().getCode() == Common.Status.INVALID.getCode()) {
-                    RedirectUtilities.setMessage(request, response, "Please Fill All Fields Correctly!");
-                } else if (registerResponse.getStatus().getCode() == Common.Status.INTERNAL_SERVER_ERROR.getCode()) {
-                    RedirectUtilities.setMessage(request, response, "Internal Server Error!");
-                } else {
-                    RedirectUtilities.setMessage(request, response, "Error Registering New Customer!");
-                }
+    private void handleRegister(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException {
+        if ("POST".equalsIgnoreCase(request.getMethod())) {
+            RegisterResponse registerResponse = addCustomer(request);
+            if (registerResponse.getStatus().getCode() == Common.Status.OK.getCode()) {
+                RedirectUtilities.setSuccessMessage(request, "Registered Successfully!");
+                RedirectUtilities.sendRedirect(request, response, Constants.LOGIN_URL);
+                return;
             }
-            request.getRequestDispatcher(Constants.REGISTER_JSP_URL).forward(request, response);
-        } catch (ServletException | IOException ex) {
-            throw new ServletException(ex);
+            if (registerResponse.getStatus().getCode() == Common.Status.EXISTS.getCode()) {
+                RedirectUtilities.setErrorMessage(request, "Email Already Exists!");
+            } else if (registerResponse.getStatus().getCode() == Common.Status.INVALID.getCode()) {
+                RedirectUtilities.setErrorMessage(request, "Please Fill All Fields Correctly!");
+            } else if (registerResponse.getStatus().getCode() == Common.Status.INTERNAL_SERVER_ERROR.getCode()) {
+                RedirectUtilities.setErrorMessage(request, "Internal Server Error!");
+            } else {
+                RedirectUtilities.setErrorMessage(request, "Error Registering New Customer!");
+            }
         }
+        request.getRequestDispatcher(Constants.REGISTER_JSP_URL).forward(request, response);
     }
 
-    private RegisterResponse addCustomer(HttpServletRequest request)
-            throws SQLException, IOException, ServletException {
+    private RegisterResponse addCustomer(HttpServletRequest request) throws SQLException {
         RegisterResponse registerResponse = new RegisterResponse();
         String username = request.getParameter("username");
         String password = request.getParameter("password");
@@ -86,12 +79,8 @@ public class RegisterServlet extends HttpServlet {
             return registerResponse;
         }
 
-        try {
-            registerResponse = registerServices.registerNewCustomer(registerRequest);
-            return registerResponse;
-        } catch (SQLException ex) {
-            throw new ServletException("Error registering new customer", ex);
-        }
+        registerResponse = registerServices.addNewCustomer(registerRequest);
+        return registerResponse;
     }
 
     private boolean validateRegisterRequest(RegisterRequest registerRequest) {

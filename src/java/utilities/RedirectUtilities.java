@@ -8,17 +8,41 @@ import java.io.IOException;
 public class RedirectUtilities {
 
     public static void redirectWithMessage(HttpServletRequest request, HttpServletResponse response, String message, String redirectUrl) throws IOException {
-        HttpSession session = request.getSession();
-        session.setAttribute("message", message);
+        setInfoMessage(request, message);
         sendRedirect(request, response, redirectUrl);
     }
 
-    public static void setMessage(HttpServletRequest request, HttpServletResponse response, String message) throws IOException {
+    public static void setInfoMessage(HttpServletRequest request, String message) {
+        setMessage(request, "info", message);
+    }
+
+    public static void setWarningMessage(HttpServletRequest request, String message) {
+        setMessage(request, "warning", message);
+    }
+
+    public static void setPrimaryMessage(HttpServletRequest request, String message) {
+        setMessage(request, "primary", message);
+    }
+
+    public static void setSuccessMessage(HttpServletRequest request, String message) {
+        setMessage(request, "success", message);
+    }
+
+    public static void setErrorMessage(HttpServletRequest request, String message) {
+        setMessage(request, "danger", message);
+    }
+
+    private static void setMessage(HttpServletRequest request, String status, String message) {
         HttpSession session = request.getSession();
+        session.setAttribute("messageStatus", status);
         session.setAttribute("message", message);
     }
 
     public static void sendRedirect(HttpServletRequest request, HttpServletResponse response, String redirectUrl) throws IOException {
-        response.sendRedirect(request.getContextPath() + redirectUrl);
+        try {
+            response.sendRedirect(request.getContextPath() + redirectUrl);
+        } catch (IOException ex) {
+            throw new IOException(ex);
+        }
     }
 }

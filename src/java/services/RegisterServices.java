@@ -12,9 +12,11 @@ import utilities.AesUtilities;
 
 public class RegisterServices {
 
-    public RegisterResponse registerNewCustomer(RegisterRequest registerRequest) throws SQLException {
+    private final String ADD_NEW_CUSTOMER_SQL = "INSERT INTO customers (username, password, email, address, phone_number, gender) VALUES (?, ?, ?, ?, ?, ?)";
+    private final String COUNT_EMAIL_SQL = "SELECT COUNT(*) FROM customers WHERE email = ?";
+
+    public RegisterResponse addNewCustomer(RegisterRequest registerRequest) throws SQLException {
         RegisterResponse registerResponse = new RegisterResponse();
-        String sqlString = "INSERT INTO customers (username, password, email, address, phone_number, gender) VALUES (?, ?, ?, ?, ?, ?)";
 
         try (Connection connection = ConnectionController.getConnection()) {
             if (isEmailExists(connection, registerRequest.getEmail())) {
@@ -22,7 +24,7 @@ public class RegisterServices {
                 return registerResponse;
             }
 
-            try (PreparedStatement preparedStatement = connection.prepareStatement(sqlString)) {
+            try (PreparedStatement preparedStatement = connection.prepareStatement(ADD_NEW_CUSTOMER_SQL)) {
                 preparedStatement.setString(1, registerRequest.getUsername());
                 preparedStatement.setString(2, AesUtilities.aes256EcbEncrypt(registerRequest.getPassword()));
                 preparedStatement.setString(3, registerRequest.getEmail());
@@ -43,11 +45,8 @@ public class RegisterServices {
     }
 
     private boolean isEmailExists(Connection connection, String email) throws SQLException {
-        String sqlString = "SELECT COUNT(*) FROM customers WHERE email = ?";
-
-        try (PreparedStatement preparedStatement = connection.prepareStatement(sqlString)) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(COUNT_EMAIL_SQL)) {
             preparedStatement.setString(1, email);
-
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 if (resultSet.next()) {
                     return resultSet.getInt(1) > 0;
@@ -56,7 +55,6 @@ public class RegisterServices {
         } catch (SQLException ex) {
             throw new SQLException("Error checking if email exists: " + ex.getMessage());
         }
-
         return false;
     }
 }

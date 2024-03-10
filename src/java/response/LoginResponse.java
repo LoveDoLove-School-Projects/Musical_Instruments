@@ -1,20 +1,19 @@
 package response;
 
 import common.Common;
-import models.Customer;
 
 public class LoginResponse {
 
-    private common.Common.Status status;
+    private Common.Status status;
 
-    private Customer customer;
+    private int login_id;
 
     public LoginResponse() {
     }
 
-    public LoginResponse(Common.Status status, Customer customer) {
+    public LoginResponse(Common.Status status, int login_id) {
         this.status = status;
-        this.customer = customer;
+        this.login_id = login_id;
     }
 
     public Common.Status getStatus() {
@@ -25,12 +24,12 @@ public class LoginResponse {
         this.status = status;
     }
 
-    public Customer getCustomer() {
-        return customer;
+    public int getLogin_id() {
+        return login_id;
     }
 
-    public void setCustomer(Customer customer) {
-        this.customer = customer;
+    public void setLogin_id(int login_id) {
+        this.login_id = login_id;
     }
 
 }
