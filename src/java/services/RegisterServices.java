@@ -15,7 +15,7 @@ public class RegisterServices {
     private final String ADD_NEW_CUSTOMER_SQL = "INSERT INTO customers (username, password, email, address, phone_number, gender) VALUES (?, ?, ?, ?, ?, ?)";
     private final String COUNT_EMAIL_SQL = "SELECT COUNT(*) FROM customers WHERE email = ?";
 
-    public RegisterResponse addNewCustomer(RegisterRequest registerRequest) throws SQLException {
+    public RegisterResponse addNewCustomer(RegisterRequest registerRequest) {
         RegisterResponse registerResponse = new RegisterResponse();
 
         try (Connection connection = ConnectionController.getConnection()) {
@@ -23,7 +23,6 @@ public class RegisterServices {
                 registerResponse.setStatus(Common.Status.EXISTS);
                 return registerResponse;
             }
-
             try (PreparedStatement preparedStatement = connection.prepareStatement(ADD_NEW_CUSTOMER_SQL)) {
                 preparedStatement.setString(1, registerRequest.getUsername());
                 preparedStatement.setString(2, AesUtilities.aes256EcbEncrypt(registerRequest.getPassword()));
@@ -32,19 +31,19 @@ public class RegisterServices {
                 preparedStatement.setString(5, registerRequest.getPhoneNumber());
                 preparedStatement.setString(6, registerRequest.getGender());
                 int update = preparedStatement.executeUpdate();
-                if (update > 0) {
-                    registerResponse.setStatus(Common.Status.OK);
-                } else {
-                    registerResponse.setStatus(Common.Status.INTERNAL_SERVER_ERROR);
-                }
-                return registerResponse;
+                registerResponse.setStatus(update > 0 ? Common.Status.OK : Common.Status.INTERNAL_SERVER_ERROR);
+            } catch (SQLException ex) {
+                System.err.println("Error adding new customer: " + ex.getMessage());
+                registerResponse.setStatus(Common.Status.INTERNAL_SERVER_ERROR);
             }
         } catch (SQLException ex) {
-            throw new SQLException("Error registering new customer: " + ex.getMessage());
+            System.err.println("Error establishing database connection: " + ex.getMessage());
+            registerResponse.setStatus(Common.Status.INTERNAL_SERVER_ERROR);
         }
+        return registerResponse;
     }
 
-    private boolean isEmailExists(Connection connection, String email) throws SQLException {
+    private boolean isEmailExists(Connection connection, String email) {
         try (PreparedStatement preparedStatement = connection.prepareStatement(COUNT_EMAIL_SQL)) {
             preparedStatement.setString(1, email);
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
@@ -53,7 +52,7 @@ public class RegisterServices {
                 }
             }
         } catch (SQLException ex) {
-            throw new SQLException("Error checking if email exists: " + ex.getMessage());
+            System.err.println("Error checking if email exists: " + ex.getMessage());
         }
         return false;
     }

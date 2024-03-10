@@ -17,14 +17,53 @@
         <jsp:include page="/defaults/header.jsp" />
         <section class="vh-100" style="background-color: #eee;">
             <div class="container py-5">
-
                 <div class="row">
                     <div class="col-lg-4">
                         <div class="card mb-4">
+                            <!-- show a profile picture text -->
+                            <div class="card-header bg-white text-center">
+                                <h5 class="mb-0">Profile Picture</h5>
+                            </div>
                             <div class="card-body text-center">
-                                <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp"
-                                     alt="avatar" class="rounded-circle img-fluid" style="width: 150px;">
-                                <h5 class="my-3">${username}</h5>
+                                <div>
+                                    <c:choose>
+                                        <c:when test="${empty pictureBase64}">
+                                            <c:choose>
+                                                <c:when test="${gender == 'Male'}">
+                                                    <!-- Male -->
+                                                    <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp"
+                                                         alt="avatar" class="rounded-circle img-fluid" style="width: 150px; height: 150px;">
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <!-- Female -->
+                                                    <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava1.webp"
+                                                         alt="avatar" class="rounded-circle img-fluid" style="width: 150px; height: 150px;">
+                                                </c:otherwise>
+                                            </c:choose>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <img src="data:image/jpg;base64,${pictureBase64}" alt="avatar" class="rounded-circle img-fluid" style="width: 150px; height: 150px;">
+                                        </c:otherwise>
+                                    </c:choose>
+
+                                    <!-- Show upload picure and remove picture button -->
+                                    <div class="mt-3">
+                                        <c:choose>
+                                            <c:when test="${empty pictureBase64}">
+                                                <form action="pages/profile/uploadPicture" method="post" enctype="multipart/form-data">
+                                                    <input type="file" name="picture" id="picture" class="d-none" />
+                                                    <label for="picture" class="btn btn-primary">Choose Picture</label>
+                                                    <button type="submit" class="btn btn-primary">Upload Picture</button>
+                                                </form>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <form action="pages/profile/removePicture" method="post">
+                                                    <button type="submit" class="btn btn-danger">Remove Picture</button>
+                                                </form>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </div>
+                                </div>
                                 <!--<p class="text-muted mb-1">Full Stack Developer</p>-->
                                 <!--<p class="text-muted mb-4">Bay Area, San Francisco, CA</p>-->
                                 <!--<div class="d-flex justify-content-center mb-2">-->

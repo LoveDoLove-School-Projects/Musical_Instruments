@@ -7,7 +7,6 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.sql.SQLException;
 import request.RegisterRequest;
 import response.RegisterResponse;
 import services.RegisterServices;
@@ -20,45 +19,27 @@ public class RegisterServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        try {
-            handleRegister(request, response);
-        } catch (SQLException ex) {
-            throw new ServletException(ex);
-        }
+        handleRegister(request, response);
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        try {
-            handleRegister(request, response);
-        } catch (SQLException ex) {
-            throw new ServletException(ex);
-        }
+        handleRegister(request, response);
     }
 
-    private void handleRegister(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException {
+    private void handleRegister(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         if ("POST".equalsIgnoreCase(request.getMethod())) {
-            RegisterResponse registerResponse = addCustomer(request);
-            if (registerResponse.getStatus().getCode() == Common.Status.OK.getCode()) {
-                RedirectUtilities.setSuccessMessage(request, "Registered Successfully!");
-                RedirectUtilities.sendRedirect(request, response, Constants.LOGIN_URL);
-                return;
-            }
-            if (registerResponse.getStatus().getCode() == Common.Status.EXISTS.getCode()) {
-                RedirectUtilities.setErrorMessage(request, "Email Already Exists!");
-            } else if (registerResponse.getStatus().getCode() == Common.Status.INVALID.getCode()) {
-                RedirectUtilities.setErrorMessage(request, "Please Fill All Fields Correctly!");
-            } else if (registerResponse.getStatus().getCode() == Common.Status.INTERNAL_SERVER_ERROR.getCode()) {
-                RedirectUtilities.setErrorMessage(request, "Internal Server Error!");
-            } else {
-                RedirectUtilities.setErrorMessage(request, "Error Registering New Customer!");
+            String path = request.getServletPath();
+            switch (path) {
+                case Constants.REGISTER_URL:
+                    registerCustomer(request, response);
+                    return;
             }
         }
         request.getRequestDispatcher(Constants.REGISTER_JSP_URL).forward(request, response);
     }
 
-    private RegisterResponse addCustomer(HttpServletRequest request) throws SQLException {
-        RegisterResponse registerResponse = new RegisterResponse();
+    private void registerCustomer(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String username = request.getParameter("username");
         String password = request.getParameter("password");
         String email = request.getParameter("email");
@@ -75,12 +56,22 @@ public class RegisterServlet extends HttpServlet {
         RegisterRequest registerRequest = new RegisterRequest(username, password, email, address, phone_number, gender);
 
         if (!validateRegisterRequest(registerRequest)) {
-            registerResponse.setStatus(Common.Status.INVALID);
-            return registerResponse;
+            RedirectUtilities.redirectWithError(request, response, "Please Fill All Fields Correctly!", Constants.REGISTER_URL);
+            return;
         }
 
-        registerResponse = registerServices.addNewCustomer(registerRequest);
-        return registerResponse;
+        RegisterResponse registerResponse = registerServices.addNewCustomer(registerRequest);
+
+        if (registerResponse == null || registerResponse.getStatus() == Common.Status.INTERNAL_SERVER_ERROR) {
+            RedirectUtilities.setErrorMessage(request, "Internal Server Error!");
+        } else if (registerResponse.getStatus() == Common.Status.EXISTS) {
+            RedirectUtilities.setErrorMessage(request, "Email Already Exists!");
+        } else if (registerResponse.getStatus() == Common.Status.OK) {
+            RedirectUtilities.setSuccessMessage(request, "Registered Successfully!");
+            RedirectUtilities.sendRedirect(request, response, Constants.LOGIN_URL);
+            return;
+        }
+        RedirectUtilities.sendRedirect(request, response, Constants.REGISTER_URL);
     }
 
     private boolean validateRegisterRequest(RegisterRequest registerRequest) {

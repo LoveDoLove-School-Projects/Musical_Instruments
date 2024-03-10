@@ -11,6 +11,7 @@ public class Customer {
     private String address;
     private String phoneNumber;
     private String gender;
+    private byte[] picture;
     private Timestamp accountCreationDate;
     private Timestamp lastLoginDate;
 
@@ -84,6 +85,14 @@ public class Customer {
 
     public void setGender(String gender) {
         this.gender = gender;
+    }
+
+    public byte[] getPicture() {
+        return picture;
+    }
+
+    public void setPicture(byte[] picture) {
+        this.picture = picture;
     }
 
     public Timestamp getAccountCreationDate() {
