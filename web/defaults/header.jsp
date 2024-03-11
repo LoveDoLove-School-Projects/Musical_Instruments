@@ -18,10 +18,11 @@
                          style="margin-top: -1px;" />
                 </a>
 
-                <button data-mdb-collapse-init class="navbar-toggler" type="button"
-                        data-mdb-target="#navbarButtonsExample" aria-controls="navbarButtonsExample" aria-expanded="false"
+                <button class="navbar-toggler" type="button" aria-controls="navbarButtonsExample" aria-expanded="false"
                         aria-label="Toggle navigation">
-                    <i class="fas fa-bars"></i>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots-vertical" viewBox="0 0 16 16">
+                    <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0"/>
+                    </svg>
                 </button>
 
                 <div class="collapse navbar-collapse" id="navbarButtonsExample">
@@ -29,15 +30,19 @@
                         <li class="nav-item">
                             <a class="nav-link" href="pages/main">Home</a>
                         </li>
+                        <!--                        Sample
+                                                <li class="nav-item">
+                                                    <a class="nav-link" href="pages/product">Product</a>
+                                                </li>-->
                     </ul>
 
                     <div class="d-flex align-items-center">
                         <% Integer login_id=(Integer) session.getAttribute("login_id"); if (login_id !=null) { %>
-                        <a data-mdb-ripple-init class="btn btn-primary px-3 me-2" href="pages/profile">Profile</a>
-                        <a data-mdb-ripple-init class="btn btn-danger px-3 me-2" href="pages/logout">Logout</a>
+                        <a class="btn btn-primary px-3 me-2" href="pages/profile">Profile</a>
+                        <a class="btn btn-danger px-3 me-2" href="pages/logout">Logout</a>
                         <% } else { %>
-                        <a data-mdb-ripple-init class="btn btn-link px-3 me-2" href="pages/login">Login</a>
-                        <a data-mdb-ripple-init class="btn btn-primary me-3" href="pages/register">Register for
+                        <a class="btn btn-link px-3 me-2" href="pages/login">Login</a>
+                        <a class="btn btn-primary me-3" href="pages/register">Register for
                             free</a>
                             <% } %>
                     </div>
@@ -45,6 +50,19 @@
             </div>
         </nav>
         <jsp:include page="message.jsp" />
+        <script>
+            let navbar_toggler = document.querySelector('.navbar-toggler');
+            let navbar_collapse = document.querySelector('.navbar-collapse');
+            navbar_toggler.addEventListener('click', function () {
+                navbar_collapse.classList.toggle('show');
+            });
+            // when the user clicks outside the navbar, the navbar will be hidden
+            document.addEventListener('click', function (e) {
+                if (!navbar_collapse.contains(e.target) && !navbar_toggler.contains(e.target)) {
+                    navbar_collapse.classList.remove('show');
+                }
+            });
+        </script>
     </body>
 
 </html>
