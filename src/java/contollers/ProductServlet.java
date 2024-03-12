@@ -16,18 +16,18 @@ public class ProductServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        handleIndex(request, response);
+        handleProduct(request, response);
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        handleIndex(request, response);
+        handleProduct(request, response);
     }
 
-    private void handleIndex(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    private void handleProduct(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         if ("POST".equalsIgnoreCase(request.getMethod())) {
         }
-        request.getRequestDispatcher(Constants.MAIN_JSP_URL).forward(request, response);
+        request.getRequestDispatcher(Constants.PRODUCT_JSP_URL).forward(request, response);
     }
 }

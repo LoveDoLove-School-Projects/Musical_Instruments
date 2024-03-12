@@ -15,7 +15,7 @@
 
 
     <body>
-        <jsp:include page="message.jsp" />
+        <jsp:include page="/defaults/header.jsp" />
         <main class="main">
             <section class="section1">
                 <div class="container-fluid">
@@ -75,8 +75,13 @@
                     </div>
                 </div>
             </section>
+            
+            <section4 class="section4">
+                
+                
+            </section4>
 
         </main>
-        <jsp:include page="foot.jsp" />
+        <jsp:include page="/defaults/footer.jsp" />
     </body>
 </html>
