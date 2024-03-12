@@ -9,9 +9,11 @@ public final class Constants {
     public static final String LOGIN_JSP_URL = "/WEB-INF/pages/login.jsp";
     public static final String REGISTER_JSP_URL = "/WEB-INF/pages/register.jsp";
     public static final String PROFILE_JSP_URL = "/WEB-INF/pages/profile.jsp";
+    public static final String PRODUCT_JSP_URL = "/WEB-INF/pages/product.jsp";
     //    Servlet URL
     public static final String MAIN_URL = "/pages/main";
     public static final String LOGIN_URL = "/pages/login";
     public static final String REGISTER_URL = "/pages/register";
     public static final String PROFILE_URL = "/pages/profile";
+    public static final String PRODUCT_URL = "/pages/product";
 }
