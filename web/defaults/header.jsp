@@ -9,6 +9,7 @@
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+           <link rel="stylesheet" href="assets/css/header.css" />
     </head>
     <body>
         <nav class="navbar navbar-expand-lg navbar-light bg-body-tertiary">
@@ -27,10 +28,10 @@
 
                 <div class="collapse navbar-collapse" id="navbarButtonsExample">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                        <li class="nav-item">
+                        <li class="nav-item mx-4 my-2 p-2">
                             <a class="nav-link" href="pages/main">Home</a>
                         </li>
-                        <li class="nav-item">
+                        <li class="nav-item mx-4 my-2 p-2">
                             <a class="nav-link" href="pages/product">Product</a>
                         </li>
                     </ul>
