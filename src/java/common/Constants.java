@@ -10,13 +10,17 @@ public final class Constants {
     public static final String REGISTER_JSP_URL = "/WEB-INF/pages/register.jsp";
     public static final String PROFILE_JSP_URL = "/WEB-INF/pages/profile.jsp";
     public static final String PRODUCT_JSP_URL = "/WEB-INF/pages/product.jsp";
+    public static final String ADMIN_JSP_URL = "/WEB-INF/pages/admin.jsp";
+    
     //    Servlet URL
     public static final String MAIN_URL = "/pages/main";
     public static final String LOGIN_URL = "/pages/login";
     public static final String REGISTER_URL = "/pages/register";
     public static final String PROFILE_URL = "/pages/profile";
     public static final String PRODUCT_URL = "/pages/product";
-    //    Profile Servlet URL
+    public static final String ADMIN_URL = "/pages/admin";
+    
+    //    Profile Method URL
     public static final String PROFILE_UPLOAD_PICTURE_URL = "/pages/profile/uploadPicture";
     public static final String PROFILE_REMOVE_PICTURE_URL = "/pages/profile/removePicture";
 }

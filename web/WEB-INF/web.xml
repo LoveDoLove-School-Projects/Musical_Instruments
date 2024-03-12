@@ -40,6 +40,10 @@
         <servlet-name>ProductServlet</servlet-name>
         <servlet-class>contollers.ProductServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>AdminServlet</servlet-name>
+        <servlet-class>contollers.AdminServlet</servlet-class>
+    </servlet>
     <!--Servlet Mapping-->
     <servlet-mapping>
         <servlet-name>MainServlet</servlet-name>
@@ -67,5 +71,8 @@
         <servlet-name>ProductServlet</servlet-name>
         <url-pattern>/pages/product</url-pattern>
     </servlet-mapping>
-
+    <servlet-mapping>
+        <servlet-name>AdminServlet</servlet-name>
+        <url-pattern>/pages/admin</url-pattern>
+    </servlet-mapping>
 </web-app>
