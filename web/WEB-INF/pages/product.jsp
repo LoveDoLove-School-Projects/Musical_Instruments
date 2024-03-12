@@ -11,6 +11,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Product Page</title>
+         <link rel="stylesheet" href="assets/css/product.css" />
     </head>
 
 
@@ -18,18 +19,18 @@
         <jsp:include page="/defaults/header.jsp" />
         <main class="main">
             <section class="section1">
-                <div class="container-fluid">
+                <div class="container">
                     <div class="row justify-content-center align-items-center">
                         <div class="d-block my-auto p-5 col-12 col-xl-5">
-                            <!--(h1)content-->
-                            <!--(p)content-->
+                            <h1>Welcome to music instruments</h1>
+                            <p>Enjoy the music, Malaysia top 1 music website</p>
                             <button class="m-2 px-4 py-2 button"><strong>Shop now</strong></button>
                             <button class="m-2 px-4 py-2 button"><strong>Explore</strong></button>
                         </div>
 
                         <div class="col-12 col-xl-7">
                             <div class="m-3 mx-auto" style="animation:bounceInRight 2s">
-                                <!--image-->
+                                <img src>
                             </div>
                         </div>
                     </div>
@@ -41,17 +42,17 @@
                         <div class="m-5 col-12 col-xl-6 col-xxl-5">
                             <div class="d-block p-5  sec2_content"  style="animation:bounce 2s">
                                 <h1>Want to be member ?</h1><br>
-                                <!--(p)write member benefit-->
+                                <p>With our state-of-the-art content management and delivery system placing content orders has never been faster and easier. You can order content in multiple languages in just few clicks. Furthermore, our professional content writers are ready to finalise your request as fast as possible.</p>
                             </div>
                         </div>
                         <div class="col-12 col-xl-6 col-xxl-5 d-flex align-content-center justify-content-center">
                             <div class="m-5 p-5 d-block text-center PremiumBox">
                                 <h1>Premium</h1>
                                 <ul>
-                                    <!--<li>write benefit</li>-->
-                                    <!--<li>write benefit</li>-->
-                                    <!--<li>write benefit</li>-->
-                                    <!--<li>write benefit</li>-->
+                                    <li>Offer coupons and discounts</li>
+                                    <li>Birthday reward</li>
+                                    <li>Free some piano</li>
+                                    <li>online community</li>
                                 </ul>
                                 <a href="#"><button class="m-2 px-4 py-2 PremiumBoxBtn"><strong>Login</strong></button></a>
                                 <a href="#"><button class="m-2 px-4 py-2 PremiumBoxBtn"><strong>Sign up</strong></button></a>
@@ -77,8 +78,9 @@
             </section>
             
             <section4 class="section4">
-                
-                
+                <div class="">
+                    
+                </div>
             </section4>
 
         </main>
