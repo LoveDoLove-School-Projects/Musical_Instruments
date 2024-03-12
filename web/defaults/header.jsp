@@ -30,10 +30,9 @@
                         <li class="nav-item">
                             <a class="nav-link" href="pages/main">Home</a>
                         </li>
-                        <!--                        Sample
-                                                <li class="nav-item">
-                                                    <a class="nav-link" href="pages/product">Product</a>
-                                                </li>-->
+                        <li class="nav-item">
+                            <a class="nav-link" href="pages/product">Product</a>
+                        </li>
                     </ul>
 
                     <div class="d-flex align-items-center">

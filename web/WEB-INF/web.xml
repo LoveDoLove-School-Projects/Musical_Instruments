@@ -36,6 +36,10 @@
         <servlet-name>ProfileServlet</servlet-name>
         <servlet-class>contollers.ProfileServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ProductServlet</servlet-name>
+        <servlet-class>contollers.ProductServlet</servlet-class>
+    </servlet>
     <!--Servlet Mapping-->
     <servlet-mapping>
         <servlet-name>MainServlet</servlet-name>
@@ -59,4 +63,9 @@
         <url-pattern>/pages/profile/uploadPicture</url-pattern>        
         <url-pattern>/pages/profile/removePicture</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ProductServlet</servlet-name>
+        <url-pattern>/pages/product</url-pattern>
+    </servlet-mapping>
+
 </web-app>
