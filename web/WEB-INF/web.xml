@@ -51,7 +51,8 @@
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>RegisterServlet</servlet-name>
-        <url-pattern>/pages/register</url-pattern>
+        <url-pattern>/pages/register</url-pattern>        
+        <url-pattern>/pages/register/sendOtp</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>LoginServlet</servlet-name>
