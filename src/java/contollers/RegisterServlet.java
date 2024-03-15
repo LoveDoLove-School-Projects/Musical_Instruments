@@ -1,5 +1,6 @@
 package contollers;
 
+import common.Common;
 import common.Constants;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
@@ -7,8 +8,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import request.RegisterRequest;
+import response.OtpResponse;
 import response.RegisterResponse;
 import services.MailServices;
+import services.OtpServices;
 import services.RegisterServices;
 import utilities.JsonUtilities;
 import utilities.RedirectUtilities;
@@ -17,6 +20,7 @@ import utilities.StringUtilities;
 public class RegisterServlet extends HttpServlet {
 
     private final RegisterServices registerServices = new RegisterServices();
+    private final OtpServices otpServices = new OtpServices();
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -34,9 +38,7 @@ public class RegisterServlet extends HttpServlet {
             switch (path) {
                 case Constants.REGISTER_URL:
                     if (!registerCustomer(request, response)) {
-
                         request.getRequestDispatcher(Constants.REGISTER_JSP_URL).forward(request, response);
-
                     }
                     return;
                 case Constants.REGISTER_SEND_OTP_URL:
@@ -74,37 +76,36 @@ public class RegisterServlet extends HttpServlet {
             return false;
         }
 
-        RegisterResponse registerResponse = registerServices.getOtp(email);
+        OtpResponse otpResponse = otpServices.getOtp(email, otp);
 
-        switch (registerResponse.getStatus()) {
-            case INTERNAL_SERVER_ERROR:
-                RedirectUtilities.setErrorMessage(request, "Internal Server Error!");
-                return false;
-            case NOT_FOUND:
-                RedirectUtilities.setErrorMessage(request, "Email Not Found!");
-                return false;
-            case OK:
-                if (!otp.equals(registerResponse.getOtp())) {
-                    RedirectUtilities.setErrorMessage(request, "Invalid OTP!");
-                    return false;
-                }
-                break;
+        if (otpResponse.getStatus() != Common.Status.OK) {
+            RedirectUtilities.setErrorMessage(request, "Failed to get OTP!");
+            return false;
         }
 
-        registerResponse = registerServices.addNewCustomer(registerRequest);
+        if (!otp.equals(otpResponse.getOtp())) {
+            RedirectUtilities.setErrorMessage(request, "Invalid OTP!");
+            return false;
+        }
 
-        switch (registerResponse.getStatus()) {
-            case INTERNAL_SERVER_ERROR:
-                RedirectUtilities.setErrorMessage(request, "Internal Server Error!");
-                return false;
-            case EXISTS:
-                RedirectUtilities.setErrorMessage(request, "Email Already Exists!");
-                return false;
-            case OK:
-                RedirectUtilities.setSuccessMessage(request, "Registered Successfully!");
-                sendWelcomeMessage(username, email);
-                RedirectUtilities.sendRedirect(request, response, Constants.LOGIN_URL);
-                return true;
+        RegisterResponse registerResponse = registerServices.addNewCustomer(registerRequest);
+
+        if (registerResponse.getStatus() == null) {
+            RedirectUtilities.setErrorMessage(request, "Failed to Register!");
+            return false;
+        }
+
+        if (registerResponse.getStatus() == Common.Status.EXISTS) {
+            RedirectUtilities.setErrorMessage(request, "Email Already Exists!");
+            return false;
+        }
+
+        if (registerResponse.getStatus() == Common.Status.OK) {
+            RedirectUtilities.setSuccessMessage(request, "Registered Successfully!");
+            otpServices.deleteOtp(email);
+            sendWelcomeMessage(username, email);
+            RedirectUtilities.sendRedirect(request, response, Constants.LOGIN_URL);
+            return true;
         }
 
         RedirectUtilities.setErrorMessage(request, "Failed to Register!");
@@ -135,20 +136,16 @@ public class RegisterServlet extends HttpServlet {
             JsonUtilities.sendErrorResponse(response, "Please fill in the email field!");
             return;
         }
-        RegisterResponse registerResponse = registerServices.sendOtp(email);
-        switch (registerResponse.getStatus()) {
-            case INTERNAL_SERVER_ERROR:
-                JsonUtilities.sendErrorResponse(response, "Internal Server Error!");
-                return;
-            case OK:
-                JsonUtilities.sendSuccessResponse(response, "OTP Sent Successfully!");
-                return;
+        OtpResponse otpResponse = otpServices.sendOtp(email);
+        if (otpResponse.getStatus() != Common.Status.OK) {
+            JsonUtilities.sendErrorResponse(response, "Failed to send OTP!");
+            return;
         }
-        JsonUtilities.sendErrorResponse(response, "Failed to send OTP!");
+        JsonUtilities.sendSuccessResponse(response, "OTP Sent Successfully!");
     }
 
     private void sendWelcomeMessage(String username, String email) {
-        String subject = String.format("Welcome to %s %s", username, Constants.COMPANY_NAME);
+        String subject = String.format("Welcome to %s, %s", Constants.COMPANY_NAME, username);
         String body = String.format("Hey %s! Welcome to our store!\n"
                 + "\n"
                 + "Thank you for creating a %s account. We are more than happy to have you on board.\n"

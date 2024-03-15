@@ -2,9 +2,7 @@ package response;
 
 import common.Common;
 
-public class RegisterResponse {
-
-    private Common.Status status;
+public class RegisterResponse extends DefaultResponse {
 
     private String otp;
 
@@ -12,19 +10,6 @@ public class RegisterResponse {
     }
 
     public RegisterResponse(Common.Status status) {
-        this.status = status;
-    }
-
-    public RegisterResponse(Common.Status status, String otp) {
-        this.status = status;
-        this.otp = otp;
-    }
-
-    public Common.Status getStatus() {
-        return status;
-    }
-
-    public void setStatus(Common.Status status) {
         this.status = status;
     }
 
