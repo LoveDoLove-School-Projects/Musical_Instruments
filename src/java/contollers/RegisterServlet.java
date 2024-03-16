@@ -12,13 +12,13 @@ import response.OtpResponse;
 import response.RegisterResponse;
 import services.OtpServices;
 import services.RegisterServices;
-import utilities.JsonUtilities;
 import utilities.RedirectUtilities;
 import utilities.StringUtilities;
 
 public class RegisterServlet extends HttpServlet {
 
     private final RegisterServices registerServices = new RegisterServices();
+
     private final OtpServices otpServices = new OtpServices();
 
     @Override
@@ -39,9 +39,6 @@ public class RegisterServlet extends HttpServlet {
                     if (!registerCustomer(request, response)) {
                         request.getRequestDispatcher(Constants.REGISTER_JSP_URL).forward(request, response);
                     }
-                    return;
-                case Constants.REGISTER_SEND_OTP_URL:
-                    sendOtp(request, response);
                     return;
             }
         }
@@ -97,7 +94,7 @@ public class RegisterServlet extends HttpServlet {
         if (registerResponse.getStatus() == Common.Status.OK) {
             RedirectUtilities.setSuccessMessage(request, "Registered Successfully!");
             otpServices.deleteOtp(email);
-            RedirectUtilities.sendRedirect(request, response, Constants.LOGIN_URL);
+            RedirectUtilities.sendRedirect(request, response, Constants.CUSTOMER_LOGIN_URL);
             return true;
         }
 
@@ -122,19 +119,4 @@ public class RegisterServlet extends HttpServlet {
         }
         return true;
     }
-
-    private void sendOtp(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String email = request.getParameter("email");
-        if (StringUtilities.anyNullOrBlank(email)) {
-            JsonUtilities.sendErrorResponse(response, "Please fill in the email field!");
-            return;
-        }
-        OtpResponse otpResponse = otpServices.sendOtp(email);
-        if (otpResponse.getStatus() != Common.Status.OK) {
-            JsonUtilities.sendErrorResponse(response, "Failed to send OTP!");
-            return;
-        }
-        JsonUtilities.sendSuccessResponse(response, "OTP Sent Successfully!");
-    }
-
 }

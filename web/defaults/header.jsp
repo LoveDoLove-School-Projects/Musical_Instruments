@@ -9,7 +9,7 @@
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-           <link rel="stylesheet" href="assets/css/header.css" />
+        <link rel="stylesheet" href="assets/css/header.css" />
     </head>
     <body>
         <nav class="navbar navbar-expand-lg navbar-light bg-body-tertiary">
@@ -37,29 +37,31 @@
                     </ul>
 
                     <div class="d-flex align-items-center">
-                        <% Integer login_id=(Integer) session.getAttribute("login_id"); if (login_id !=null) { %>
-                        <a class="btn btn-primary px-3 me-2" href="pages/profile">Profile</a>
-                        <a class="btn btn-danger px-3 me-2" href="pages/logout">Logout</a>
-                        <% } else { %>
-                        <a class="btn btn-link px-3 me-2" href="pages/login">Login</a>
-                        <a class="btn btn-primary me-3" href="pages/register">Register for
-                            free</a>
-                            <% } %>
+                        <c:if test="${sessionScope.login_id != null}">
+                            <a class="btn btn-primary px-3 me-2" href="pages/profile">Profile</a>
+                            <a class="btn btn-danger px-3 me-2" href="pages/logout">Logout</a>
+                        </c:if>
+                        <c:if test="${sessionScope.login_id == null}">
+                            <a class="btn btn-link px-3 me-2" href="pages/login">Login</a>
+                            <a class="btn btn-primary me-3" href="pages/register">Register for
+                                free</a>
+                            <a class="btn btn-primary px-3 me-2" href="pages/adminLogin">Admin Login</a>
+                        </c:if>
                     </div>
                 </div>
             </div>
         </nav>
         <jsp:include page="message.jsp" />
         <script>
-            let navbar_toggler = document.querySelector('.navbar-toggler');
-            let navbar_collapse = document.querySelector('.navbar-collapse');
-            navbar_toggler.addEventListener('click', function () {
-                navbar_collapse.classList.toggle('show');
+            let navbar_toggler = document.querySelector(".navbar-toggler");
+            let navbar_collapse = document.querySelector(".navbar-collapse");
+            navbar_toggler.addEventListener("click", function () {
+                navbar_collapse.classList.toggle("show");
             });
             // when the user clicks outside the navbar, the navbar will be hidden
-            document.addEventListener('click', function (e) {
+            document.addEventListener("click", function (e) {
                 if (!navbar_collapse.contains(e.target) && !navbar_toggler.contains(e.target)) {
-                    navbar_collapse.classList.remove('show');
+                    navbar_collapse.classList.remove("show");
                 }
             });
         </script>

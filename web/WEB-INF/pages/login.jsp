@@ -20,7 +20,7 @@
     <body>
     <center>
         <jsp:include page="/defaults/header.jsp" />
-        <form method="POST" action="pages/login">
+        <form method="POST" action="${loginFormUrl}">
             <section class="vh-100" style="background-color: #eee;">
                 <div class="container py-5 h-100">
                     <div class="row justify-content-center align-items-center h-100">
@@ -52,12 +52,15 @@
                                                value="Submit" />
                                     </div>
 
-                                    <div class="mt-4 pt-2">
-                                        <p>
-                                            No Account?
-                                            <a href="pages/register">Register Here</a>
-                                        </p>
-                                    </div>
+                                    <!-- If login url is equals == pages/adminLogin hide it -->
+                                    <c:if test="${loginFormUrl != 'pages/adminLogin'}">
+                                        <div class="mt-4 pt-2">
+                                            <p>
+                                                No Account?
+                                                <a href="pages/register">Register Here</a>
+                                            </p>
+                                        </div>
+                                    </c:if>
                                 </div>
                             </div>
                         </div>

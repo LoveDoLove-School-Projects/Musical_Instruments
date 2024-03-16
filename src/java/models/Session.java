@@ -1,16 +1,20 @@
 package models;
 
+import common.Common;
+
 public class Session {
 
     private boolean result;
-    private int login_id;
+    private int id;
+    private Common.Role role;
 
     public Session() {
     }
 
-    public Session(boolean result, int login_id) {
+    public Session(boolean result, int id, Common.Role role) {
         this.result = result;
-        this.login_id = login_id;
+        this.id = id;
+        this.role = role;
     }
 
     public boolean isResult() {
@@ -21,12 +25,20 @@ public class Session {
         this.result = result;
     }
 
-    public int getLogin_id() {
-        return login_id;
+    public int getId() {
+        return id;
     }
 
-    public void setLogin_id(int login_id) {
-        this.login_id = login_id;
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public Common.Role getRole() {
+        return role;
+    }
+
+    public void setRole(Common.Role role) {
+        this.role = role;
     }
 
 }
