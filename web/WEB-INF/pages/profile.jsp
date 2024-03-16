@@ -50,16 +50,13 @@
                                     <div class="mt-3">
                                         <c:choose>
                                             <c:when test="${empty pictureBase64}">
-                                                <form action="pages/profile/uploadPicture" method="post" enctype="multipart/form-data">
-                                                    <input type="file" name="picture" id="picture" class="d-none" />
-                                                    <label for="picture" class="btn btn-primary">Choose Picture</label>
-                                                    <button type="submit" class="btn btn-primary">Upload Picture</button>
-                                                </form>
+                                                <!-- <form action="pages/profile/uploadPicture" method="post" enctype="multipart/form-data"> -->
+                                                <input type="file" name="uploadPicture" id="uploadPicture" class="d-none" accept="image/*">
+                                                <label for="uploadPicture" class="btn btn-primary">Upload Picture</label>
+                                                <!-- </form> -->
                                             </c:when>
                                             <c:otherwise>
-                                                <form action="pages/profile/removePicture" method="post">
-                                                    <button type="submit" class="btn btn-danger">Remove Picture</button>
-                                                </form>
+                                                <button type="button" class="btn btn-danger" id="removePicture">Remove Picture</button>
                                             </c:otherwise>
                                         </c:choose>
                                     </div>
@@ -229,6 +226,7 @@
             </div>
         </section>
         <jsp:include page="/defaults/footer.jsp" />
+        <script src="assets/js/profile.js"></script>
     </body>
 
 </html>

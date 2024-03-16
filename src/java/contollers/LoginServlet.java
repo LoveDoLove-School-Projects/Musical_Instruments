@@ -2,6 +2,7 @@ package contollers;
 
 import common.Common;
 import common.Constants;
+import features.SessionHandler;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -11,12 +12,12 @@ import request.LoginRequest;
 import response.LoginResponse;
 import services.LoginServices;
 import utilities.RedirectUtilities;
-import utilities.SessionUtilities;
 import utilities.StringUtilities;
 
 public class LoginServlet extends HttpServlet {
 
     private final LoginServices loginServices = new LoginServices();
+    private static final SessionHandler sessionHandler = new SessionHandler();
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -28,35 +29,73 @@ public class LoginServlet extends HttpServlet {
         handleLogin(request, response);
     }
 
+    private void setLoginPage(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        request.getRequestDispatcher(Constants.LOGIN_JSP_URL).forward(request, response);
+    }
+
     private void handleLogin(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String path = request.getServletPath();
         if ("POST".equalsIgnoreCase(request.getMethod())) {
-            String path = request.getServletPath();
+            Common.Role role = null;
             switch (path) {
-                case Constants.LOGIN_URL:
-                    loginCustomer(request, response);
-                    return;
+                case Constants.CUSTOMER_LOGIN_URL:
+                    role = Common.Role.CUSTOMER;
+                    break;
+                case Constants.ADMIN_LOGIN_URL:
+                    role = Common.Role.ADMIN;
+                    break;
             }
+            if (!handleLogin(request, response, role)) {
+                setLoginPage(request, response);
+            }
+            return;
+        }
+        switch (path) {
+            case Constants.CUSTOMER_LOGIN_URL:
+                request.setAttribute("loginFormUrl", "pages/login");
+                break;
+            case Constants.ADMIN_LOGIN_URL:
+                request.setAttribute("loginFormUrl", "pages/adminLogin");
+                break;
         }
         request.getRequestDispatcher(Constants.LOGIN_JSP_URL).forward(request, response);
     }
 
-    private void loginCustomer(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    private boolean handleLogin(HttpServletRequest request, HttpServletResponse response, Common.Role role) throws ServletException, IOException {
         String email = request.getParameter("email");
         String password = request.getParameter("password");
+
         request.setAttribute("email", email);
+
         if (StringUtilities.anyNullOrBlank(email, password)) {
-            RedirectUtilities.redirectWithError(request, response, "Email and Password are required!", Constants.LOGIN_URL);
-            return;
+            RedirectUtilities.setErrorMessage(request, "Email and Password are required!");
+            return false;
         }
         LoginRequest loginRequest = new LoginRequest(email, password);
-        LoginResponse loginResponse = loginServices.loginCustomer(loginRequest);
-        if (loginResponse == null || loginResponse.getStatus() == Common.Status.UNAUTHORIZED) {
-            RedirectUtilities.setErrorMessage(request, "Incorrect Email or Password!");
-        } else if (loginResponse.getStatus() == Common.Status.OK) {
-            SessionUtilities.setSessionAttribute(request.getSession(), "login_id", loginResponse.getLogin_id());
-            RedirectUtilities.sendRedirect(request, response, Constants.PROFILE_URL);
-            return;
+        LoginResponse loginResponse = loginServices.loginServices(loginRequest, role);
+
+        if (loginResponse.getStatus() == null) {
+            RedirectUtilities.setErrorMessage(request, "Failed to login!");
+            return false;
         }
-        RedirectUtilities.sendRedirect(request, response, Constants.LOGIN_URL);
+
+        if (loginResponse.getStatus() == Common.Status.NOT_FOUND) {
+            RedirectUtilities.setErrorMessage(request, "Email not found!");
+            return false;
+        }
+
+        if (loginResponse.getStatus() == Common.Status.UNAUTHORIZED) {
+            RedirectUtilities.setErrorMessage(request, "Incorrect Email or Password!");
+            return false;
+        }
+
+        if (loginResponse.getStatus() == Common.Status.OK) {
+            sessionHandler.setLoginSession(request.getSession(), loginResponse.getLogin_id(), role);
+            RedirectUtilities.sendRedirect(request, response, Constants.PROFILE_URL);
+            return true;
+        }
+
+        RedirectUtilities.setErrorMessage(request, "Failed to login!");
+        return false;
     }
 }

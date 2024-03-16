@@ -33,36 +33,36 @@ public class ProfileServlet extends HttpServlet {
     }
 
     private void handleProfile(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        Session session = new SessionHandler().checkLoginStatus(request, response);
+        Session session = new SessionHandler().getLoginSession(request, response);
         if (session.isResult()) {
             String path = request.getServletPath();
             if ("POST".equalsIgnoreCase(request.getMethod())) {
                 switch (path) {
                     case Constants.PROFILE_UPLOAD_PICTURE_URL:
-                        uploadPicture(request, response, session.getLogin_id());
+                        uploadPicture(request, response, session);
                         return;
                     case Constants.PROFILE_REMOVE_PICTURE_URL:
-                        removePicture(request, response, session.getLogin_id());
+                        removePicture(request, response, session);
                         return;
                 }
             }
-            initCustomerProfile(request, response, session.getLogin_id());
+            initCustomerProfile(request, response, session);
         }
     }
 
-    private void initCustomerProfile(HttpServletRequest request, HttpServletResponse response, int login_id) throws ServletException, IOException {
-        ProfileRequest profileRequest = new ProfileRequest(login_id);
-        ProfileResponse profileResponse = profileServices.getCustomerProfile(profileRequest);
+    private void initCustomerProfile(HttpServletRequest request, HttpServletResponse response, Session session) throws ServletException, IOException {
+        ProfileRequest profileRequest = new ProfileRequest(session.getId());
+        ProfileResponse profileResponse = profileServices.getProfile(profileRequest, session.getRole());
         if (profileResponse == null || profileResponse.getStatus() == Common.Status.INTERNAL_SERVER_ERROR || profileResponse.getStatus() == Common.Status.NOT_FOUND) {
             RedirectUtilities.redirectWithError(request, response, "Error fetching profile details.", Constants.MAIN_URL);
             return;
         }
-        request.setAttribute("username", profileResponse.getCustomer().getUsername());
-        request.setAttribute("email", profileResponse.getCustomer().getEmail());
-        request.setAttribute("address", profileResponse.getCustomer().getAddress());
-        request.setAttribute("phone_number", profileResponse.getCustomer().getPhoneNumber());
-        request.setAttribute("gender", profileResponse.getCustomer().getGender());
-        byte[] picture = profileResponse.getCustomer().getPicture();
+        request.setAttribute("username", profileResponse.getProfile().getUsername());
+        request.setAttribute("email", profileResponse.getProfile().getEmail());
+        request.setAttribute("address", profileResponse.getProfile().getAddress());
+        request.setAttribute("phone_number", profileResponse.getProfile().getPhoneNumber());
+        request.setAttribute("gender", profileResponse.getProfile().getGender());
+        byte[] picture = profileResponse.getProfile().getPicture();
         if (picture != null) {
             String pictureBase64 = Base64.getEncoder().encodeToString(picture);
             request.setAttribute("pictureBase64", pictureBase64);
@@ -70,15 +70,15 @@ public class ProfileServlet extends HttpServlet {
         request.getRequestDispatcher(Constants.PROFILE_JSP_URL).forward(request, response);
     }
 
-    private void uploadPicture(HttpServletRequest request, HttpServletResponse response, int login_id) throws ServletException, IOException {
-        InputStream pictureStream = request.getPart("picture").getInputStream();
+    private void uploadPicture(HttpServletRequest request, HttpServletResponse response, Session session) throws ServletException, IOException {
+        InputStream pictureStream = request.getPart("uploadPicture").getInputStream();
         if (pictureStream == null) {
             RedirectUtilities.redirectWithError(request, response, "Error uploading picture.", Constants.PROFILE_URL);
             return;
         }
-        ProfileRequest profileRequest = new ProfileRequest(login_id);
+        ProfileRequest profileRequest = new ProfileRequest(session.getId());
         profileRequest.setPicture(pictureStream);
-        ProfileResponse profileResponse = profileServices.uploadPicture(profileRequest);
+        ProfileResponse profileResponse = profileServices.uploadPicture(profileRequest, session.getRole());
         if (profileResponse == null || profileResponse.getStatus() == Common.Status.INTERNAL_SERVER_ERROR) {
             RedirectUtilities.setErrorMessage(request, "Error uploading picture.");
         } else if (profileResponse.getStatus() == Common.Status.OK) {
@@ -87,9 +87,9 @@ public class ProfileServlet extends HttpServlet {
         RedirectUtilities.sendRedirect(request, response, Constants.PROFILE_URL);
     }
 
-    private void removePicture(HttpServletRequest request, HttpServletResponse response, int login_id) throws ServletException, IOException {
-        ProfileRequest profileRequest = new ProfileRequest(login_id);
-        ProfileResponse profileResponse = profileServices.removePicture(profileRequest);
+    private void removePicture(HttpServletRequest request, HttpServletResponse response, Session session) throws ServletException, IOException {
+        ProfileRequest profileRequest = new ProfileRequest(session.getId());
+        ProfileResponse profileResponse = profileServices.removePicture(profileRequest, session.getRole());
         if (profileResponse == null || profileResponse.getStatus() == Common.Status.INTERNAL_SERVER_ERROR) {
             RedirectUtilities.setErrorMessage(request, "Error removing picture.");
         } else if (profileResponse.getStatus() == Common.Status.OK) {

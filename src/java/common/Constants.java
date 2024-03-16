@@ -15,16 +15,20 @@ public final class Constants {
 
     //    Servlet URL
     public static final String MAIN_URL = "/pages/main";
-    public static final String LOGIN_URL = "/pages/login";
     public static final String REGISTER_URL = "/pages/register";
     public static final String PROFILE_URL = "/pages/profile";
     public static final String PRODUCT_URL = "/pages/product";
     public static final String ADMIN_URL = "/pages/admin";
 
-    //    Register Method URL
-    public static final String REGISTER_SEND_OTP_URL = "/pages/register/sendOtp";
-
+    //    Login URL
+    public static final String CUSTOMER_LOGIN_URL = "/pages/login";
+    public static final String ADMIN_LOGIN_URL = "/pages/adminLogin";
+    
     //    Profile Method URL
     public static final String PROFILE_UPLOAD_PICTURE_URL = "/pages/profile/uploadPicture";
     public static final String PROFILE_REMOVE_PICTURE_URL = "/pages/profile/removePicture";
+
+    //    Services Method URL
+    public static final String SERVICE_SEND_OTP_URL = "/services/sendOtp";
+    public static final String SERVICE_SEND_EMAIL_URL = "/services/sendEmail";
 }

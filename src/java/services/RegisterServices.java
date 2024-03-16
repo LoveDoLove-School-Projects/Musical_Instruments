@@ -4,7 +4,6 @@ import common.Common;
 import contollers.ConnectionController;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import request.RegisterRequest;
 import response.RegisterResponse;
@@ -12,14 +11,15 @@ import utilities.AesUtilities;
 
 public class RegisterServices {
 
-    private final String ADD_NEW_CUSTOMER_SQL = "INSERT INTO customers (username, password, email, address, phone_number, gender) VALUES (?, ?, ?, ?, ?, ?)";
-    private final String COUNT_EMAIL_SQL = "SELECT COUNT(*) FROM customers WHERE email = ?";
+    private static final CustomerServices CUSTOMER_SERVICES = new CustomerServices();
+
+    private static final String ADD_NEW_CUSTOMER_SQL = "INSERT INTO customers (username, password, email, address, phone_number, gender) VALUES (?, ?, ?, ?, ?, ?)";
 
     public RegisterResponse addNewCustomer(RegisterRequest registerRequest) {
         RegisterResponse registerResponse = new RegisterResponse();
 
         try (Connection connection = ConnectionController.getConnection()) {
-            if (isEmailExists(connection, registerRequest.getEmail())) {
+            if (CUSTOMER_SERVICES.isEmailExists(connection, registerRequest.getEmail())) {
                 registerResponse.setStatus(Common.Status.EXISTS);
                 return registerResponse;
             }
@@ -41,19 +41,5 @@ public class RegisterServices {
             registerResponse.setStatus(Common.Status.INTERNAL_SERVER_ERROR);
         }
         return registerResponse;
-    }
-
-    private boolean isEmailExists(Connection connection, String email) {
-        try (PreparedStatement preparedStatement = connection.prepareStatement(COUNT_EMAIL_SQL)) {
-            preparedStatement.setString(1, email);
-            try (ResultSet resultSet = preparedStatement.executeQuery()) {
-                if (resultSet.next()) {
-                    return resultSet.getInt(1) > 0;
-                }
-            }
-        } catch (SQLException ex) {
-            System.err.println("Error checking if email exists: " + ex.getMessage());
-        }
-        return false;
     }
 }

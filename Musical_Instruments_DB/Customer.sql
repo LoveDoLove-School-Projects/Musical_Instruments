@@ -8,7 +8,8 @@ CREATE TABLE customers (
     gender VARCHAR(10) NOT NULL,
     picture BLOB,
     account_creation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    last_login_date TIMESTAMP
+    last_login_date TIMESTAMP,
+    two_factor_auth BOOLEAN DEFAULT FALSE
 );
 
 DROP TABLE customers;

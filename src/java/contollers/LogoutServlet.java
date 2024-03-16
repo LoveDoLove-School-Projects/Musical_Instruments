@@ -1,15 +1,17 @@
 package contollers;
 
 import common.Constants;
+import features.SessionHandler;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import utilities.RedirectUtilities;
-import utilities.SessionUtilities;
 
 public class LogoutServlet extends HttpServlet {
+
+    private static final SessionHandler SESSION_HANDLER = new SessionHandler();
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -24,7 +26,7 @@ public class LogoutServlet extends HttpServlet {
     }
 
     private void handleLogout(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        SessionUtilities.removeSessionAttribute(request.getSession(), "login_id");
+        SESSION_HANDLER.clearSession(request);
         RedirectUtilities.sendRedirect(request, response, Constants.MAIN_URL);
     }
 }

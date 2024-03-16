@@ -13,14 +13,13 @@ import utilities.MailUtilities;
 
 public class MailServices {
 
-    private final String GET_MAIL_CREDENTIALS_SQL = "SELECT * FROM mailcredentials WHERE pkid = 1";
+    private static final String GET_MAIL_CREDENTIALS_SQL = "SELECT * FROM mailcredentials WHERE pkid = 1";
 
     public MailResponse sendEmail(String toEmail, String subject, String body) {
         MailResponse mailResponse = new MailResponse();
         MailRequest mail = new MailRequest(toEmail, subject, body);
         MailRequest fromMail = getMailCredentials();
         if (fromMail == null) {
-            System.err.println("Error getting mail credentials");
             mailResponse.setStatus(Common.Status.INTERNAL_SERVER_ERROR);
             return mailResponse;
         }

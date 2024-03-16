@@ -1,24 +1,24 @@
 package response;
 
-import models.Customer;
+import models.Profile;
 
 public class ProfileResponse extends DefaultResponse {
 
-    private Customer customer;
+    private Profile profile;
 
     public ProfileResponse() {
     }
 
-    public ProfileResponse(Customer customer) {
-        this.customer = customer;
+    public ProfileResponse(Profile profile) {
+        this.profile = profile;
     }
 
-    public Customer getCustomer() {
-        return customer;
+    public Profile getProfile() {
+        return profile;
     }
 
-    public void setCustomer(Customer customer) {
-        this.customer = customer;
+    public void setProfile(Profile profile) {
+        this.profile = profile;
     }
 
 }

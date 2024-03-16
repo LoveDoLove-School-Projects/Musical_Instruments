@@ -10,6 +10,13 @@ public class SessionUtilities {
         }
     }
 
+    public static Object getSessionAttribute(HttpSession session, String key) {
+        if (session == null) {
+            return null;
+        }
+        return session.getAttribute(key);
+    }
+
     public static Integer getSessionAttributeInt(HttpSession session, String key) {
         if (session == null) {
             return null;
