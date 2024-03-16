@@ -32,45 +32,31 @@
                                     <div class="row">
                                         <div class="col-md-6 mb-4">
                                             <div class="form-outline">
-                                                <input type="text" name="username"
-                                                       class="form-control form-control-lg" value="${username}" required />
+                                                <input type="text" name="username" id="username" class="form-control form-control-lg" value="${username}" required />
                                                 <label class="form-label" for="username">Username</label>
                                             </div>
                                         </div>
 
-                                        <div class="col-md-6 mb-4">
-                                            <div class="form-outline">
-                                                <input type="password" name="password"
-                                                       class="form-control form-control-lg" value="${password}" required />
-                                                <label class="form-label" for="password">Password</label>
+                                        <div class="col-md-6 mb-4 d-flex align-items-center">
+                                            <div class="form-outline datepicker w-100">
+                                                <input type="text" name="address" id="address" class="form-control form-control-lg" value="${address}" required />
+                                                <label for="address" class="form-label">Address</label>
                                             </div>
                                         </div>
                                     </div>
 
                                     <div class="row">
-                                        <div class="col-md-6 mb-4 d-flex align-items-center">
-                                            <div class="form-outline datepicker w-100">
-                                                <input type="text" name="address"
-                                                       class="form-control form-control-lg" value="${address}" required />
-                                                <label for="address" class="form-label">Address</label>
+                                        <div class="col-md-6 mb-4">
+                                            <div class="form-outline">
+                                                <input type="password" name="password" id="password" class="form-control form-control-lg" value="" required />
+                                                <label class="form-label" for="password">Password</label>
                                             </div>
                                         </div>
 
                                         <div class="col-md-6 mb-4">
-                                            <h6 class="mb-2 pb-1">Gender:</h6>
-
-                                            <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" name="gender"
-                                                       value="Male" checked/>
-                                                <label class="form-check-label"
-                                                       for="maleGender">Male</label>
-                                            </div>
-
-                                            <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" name="gender"
-                                                       value="Female" />
-                                                <label class="form-check-label"
-                                                       for="femaleGender">Female</label>
+                                            <div class="form-outline">
+                                                <input type="password" name="confirm_password" id="confirm_password" class="form-control form-control-lg" value="" required />
+                                                <label class="form-label" for="confirm_password">Confirm Password</label>
                                             </div>
                                         </div>
                                     </div>
@@ -78,24 +64,52 @@
                                     <div class="row">
                                         <div class="col-md-6 mb-4 pb-2">
                                             <div class="form-outline">
-                                                <input type="email" name="email"
-                                                       class="form-control form-control-lg" value="${email}" required />
+                                                <input type="email" name="email" id="email" id="email" class="form-control form-control-lg" value="${email}" required />
                                                 <label class="form-label" for="email">Email</label>
                                             </div>
                                         </div>
                                         <div class="col-md-6 mb-4 pb-2">
                                             <div class="form-outline">
-                                                <input type="tel" name="phone_number"
-                                                       class="form-control form-control-lg" value="${phone_number}" required />
-                                                <label class="form-label" for="phone_number">Phone
-                                                    Number</label>
+                                                <input type="tel" name="phone_number" id="phone_number" class="form-control form-control-lg" value="${phone_number}" required />
+                                                <label class="form-label" for="phone_number">Phone Number</label>
                                             </div>
                                         </div>
                                     </div>
 
+                                    <div class="row">
+                                        <div class="col-md-6 mb-4 pb-2">
+                                            <div class="form-outline">
+                                                <input type="text" name="otp" id="otp" class="form-control form-control-lg" value="" required />
+                                                <label class="form-label" for="otp">Enter OTP</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 mb-4 pb-2">
+                                            <div class="form-outline">
+                                                <button class="btn btn-primary btn-lg" type="button" id="otpButton">Send OTP</button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6 mb-4">
+                                        <h6 class="mb-2 pb-1">Gender:</h6>
+
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="gender"
+                                                   value="Male" checked/>
+                                            <label class="form-check-label"
+                                                   for="maleGender">Male</label>
+                                        </div>
+
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="gender"
+                                                   value="Female" />
+                                            <label class="form-check-label"
+                                                   for="femaleGender">Female</label>
+                                        </div>
+                                    </div>
+
                                     <div class="mt-4 pt-2">
-                                        <input class="btn btn-primary btn-lg" type="submit"
-                                               value="Submit" />
+                                        <button class="btn btn-primary btn-lg" id="submit">Submit</button>
                                     </div>
 
                                     <div class="mt-4 pt-2">
@@ -113,6 +127,7 @@
         </form>
     </center>
     <jsp:include page="/defaults/footer.jsp" />
+    <script src="assets/js/register.js"></script>
 </body>
 
 </html>

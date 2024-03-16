@@ -1,27 +1,14 @@
 package response;
 
-import common.Common;
-
-public class AdminResponse {
-
-    private Common.Status status;
+public class AdminResponse extends DefaultResponse {
 
     private String username;
 
     public AdminResponse() {
     }
 
-    public AdminResponse(Common.Status status, String username) {
-        this.status = status;
+    public AdminResponse(String username) {
         this.username = username;
-    }
-
-    public Common.Status getStatus() {
-        return status;
-    }
-
-    public void setStatus(Common.Status status) {
-        this.status = status;
     }
 
     public String getUsername() {

@@ -1,28 +1,16 @@
 package response;
 
-import common.Common;
 import models.Customer;
 
-public class ProfileResponse {
-
-    private Common.Status status;
+public class ProfileResponse extends DefaultResponse {
 
     private Customer customer;
 
     public ProfileResponse() {
     }
 
-    public ProfileResponse(Common.Status status, Customer customer) {
-        this.status = status;
+    public ProfileResponse(Customer customer) {
         this.customer = customer;
-    }
-
-    public Common.Status getStatus() {
-        return status;
-    }
-
-    public void setStatus(Common.Status status) {
-        this.status = status;
     }
 
     public Customer getCustomer() {

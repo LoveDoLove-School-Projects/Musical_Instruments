@@ -1,0 +1,6 @@
+CREATE TABLE otps (
+    email VARCHAR(255) PRIMARY KEY NOT NULL,
+    otp VARCHAR(255) NOT NULL
+);
+
+DROP TABLE otps;

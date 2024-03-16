@@ -53,7 +53,7 @@ public class ProfileServlet extends HttpServlet {
     private void initCustomerProfile(HttpServletRequest request, HttpServletResponse response, int login_id) throws ServletException, IOException {
         ProfileRequest profileRequest = new ProfileRequest(login_id);
         ProfileResponse profileResponse = profileServices.getCustomerProfile(profileRequest);
-        if (profileResponse == null) {
+        if (profileResponse == null || profileResponse.getStatus() == Common.Status.INTERNAL_SERVER_ERROR || profileResponse.getStatus() == Common.Status.NOT_FOUND) {
             RedirectUtilities.redirectWithError(request, response, "Error fetching profile details.", Constants.MAIN_URL);
             return;
         }
