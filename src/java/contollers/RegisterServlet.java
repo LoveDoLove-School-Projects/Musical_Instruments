@@ -8,14 +8,18 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import request.RegisterRequest;
+import response.OtpResponse;
 import response.RegisterResponse;
+import services.OtpServices;
 import services.RegisterServices;
+import utilities.JsonUtilities;
 import utilities.RedirectUtilities;
 import utilities.StringUtilities;
 
 public class RegisterServlet extends HttpServlet {
 
     private final RegisterServices registerServices = new RegisterServices();
+    private final OtpServices otpServices = new OtpServices();
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -32,53 +36,80 @@ public class RegisterServlet extends HttpServlet {
             String path = request.getServletPath();
             switch (path) {
                 case Constants.REGISTER_URL:
-                    registerCustomer(request, response);
+                    if (!registerCustomer(request, response)) {
+                        request.getRequestDispatcher(Constants.REGISTER_JSP_URL).forward(request, response);
+                    }
+                    return;
+                case Constants.REGISTER_SEND_OTP_URL:
+                    sendOtp(request, response);
                     return;
             }
         }
         request.getRequestDispatcher(Constants.REGISTER_JSP_URL).forward(request, response);
     }
 
-    private void registerCustomer(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    private boolean registerCustomer(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String username = request.getParameter("username");
         String password = request.getParameter("password");
+        String confirm_password = request.getParameter("confirm_password");
         String email = request.getParameter("email");
         String address = request.getParameter("address");
         String phone_number = request.getParameter("phone_number");
         String gender = request.getParameter("gender");
+        String otp = request.getParameter("otp");
 
         request.setAttribute("username", username);
         request.setAttribute("email", email);
         request.setAttribute("address", address);
         request.setAttribute("phone_number", phone_number);
-        request.setAttribute("gender", gender);
 
-        RegisterRequest registerRequest = new RegisterRequest(username, password, email, address, phone_number, gender);
+        RegisterRequest registerRequest = new RegisterRequest(username, password, confirm_password, email, address, phone_number, gender, otp);
 
         if (!validateRegisterRequest(registerRequest)) {
-            RedirectUtilities.redirectWithError(request, response, "Please Fill All Fields Correctly!", Constants.REGISTER_URL);
-            return;
+            RedirectUtilities.setErrorMessage(request, "Please Fill In All The Fields!");
+            return false;
+        }
+
+        if (!password.equals(confirm_password)) {
+            RedirectUtilities.setErrorMessage(request, "Password and Confirm Password should be same!");
+            return false;
+        }
+
+        OtpResponse otpResponse = otpServices.verifyOtp(email, otp);
+
+        if (otpResponse.getStatus() != Common.Status.OK) {
+            RedirectUtilities.setErrorMessage(request, "Failed to verify OTP!");
+            return false;
         }
 
         RegisterResponse registerResponse = registerServices.addNewCustomer(registerRequest);
 
-        if (registerResponse == null || registerResponse.getStatus() == Common.Status.INTERNAL_SERVER_ERROR) {
-            RedirectUtilities.setErrorMessage(request, "Internal Server Error!");
-        } else if (registerResponse.getStatus() == Common.Status.EXISTS) {
-            RedirectUtilities.setErrorMessage(request, "Email Already Exists!");
-        } else if (registerResponse.getStatus() == Common.Status.OK) {
-            RedirectUtilities.setSuccessMessage(request, "Registered Successfully!");
-            RedirectUtilities.sendRedirect(request, response, Constants.LOGIN_URL);
-            return;
+        if (registerResponse.getStatus() == null) {
+            RedirectUtilities.setErrorMessage(request, "Failed to Register!");
+            return false;
         }
-        RedirectUtilities.sendRedirect(request, response, Constants.REGISTER_URL);
+
+        if (registerResponse.getStatus() == Common.Status.EXISTS) {
+            RedirectUtilities.setErrorMessage(request, "Email Already Exists!");
+            return false;
+        }
+
+        if (registerResponse.getStatus() == Common.Status.OK) {
+            RedirectUtilities.setSuccessMessage(request, "Registered Successfully!");
+            otpServices.deleteOtp(email);
+            RedirectUtilities.sendRedirect(request, response, Constants.LOGIN_URL);
+            return true;
+        }
+
+        RedirectUtilities.setErrorMessage(request, "Failed to Register!");
+        return false;
     }
 
     private boolean validateRegisterRequest(RegisterRequest registerRequest) {
         if (registerRequest == null) {
             return false;
         }
-        if (StringUtilities.anyNullOrBlank(registerRequest.getUsername(), registerRequest.getPassword(), registerRequest.getEmail(), registerRequest.getAddress(), registerRequest.getPhoneNumber(), registerRequest.getGender())) {
+        if (StringUtilities.anyNullOrBlank(registerRequest.getUsername(), registerRequest.getPassword(), registerRequest.getConfirm_password(), registerRequest.getEmail(), registerRequest.getAddress(), registerRequest.getPhoneNumber(), registerRequest.getGender(), registerRequest.getOtp())) {
             return false;
         }
         if (registerRequest.getPassword().length() < 8) {
@@ -91,4 +122,19 @@ public class RegisterServlet extends HttpServlet {
         }
         return true;
     }
+
+    private void sendOtp(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String email = request.getParameter("email");
+        if (StringUtilities.anyNullOrBlank(email)) {
+            JsonUtilities.sendErrorResponse(response, "Please fill in the email field!");
+            return;
+        }
+        OtpResponse otpResponse = otpServices.sendOtp(email);
+        if (otpResponse.getStatus() != Common.Status.OK) {
+            JsonUtilities.sendErrorResponse(response, "Failed to send OTP!");
+            return;
+        }
+        JsonUtilities.sendSuccessResponse(response, "OTP Sent Successfully!");
+    }
+
 }

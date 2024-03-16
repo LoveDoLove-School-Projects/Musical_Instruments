@@ -2,9 +2,9 @@ package response;
 
 import common.Common;
 
-public class RegisterResponse {
+public class RegisterResponse extends DefaultResponse {
 
-    private Common.Status status;
+    private String otp;
 
     public RegisterResponse() {
     }
@@ -13,12 +13,16 @@ public class RegisterResponse {
         this.status = status;
     }
 
-    public Common.Status getStatus() {
-        return status;
+    public String getOtp() {
+        return otp;
     }
 
-    public void setStatus(Common.Status status) {
-        this.status = status;
+    public void setOtp(String otp) {
+        this.otp = otp;
     }
 
+    @Override
+    public String toString() {
+        return "{status: " + status.getCode() + ",message: " + status.getMessage() + "}";
+    }
 }

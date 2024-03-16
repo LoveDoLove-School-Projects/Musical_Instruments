@@ -52,6 +52,7 @@
     <servlet-mapping>
         <servlet-name>RegisterServlet</servlet-name>
         <url-pattern>/pages/register</url-pattern>
+        <url-pattern>/pages/register/sendOtp</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>LoginServlet</servlet-name>
@@ -64,7 +65,7 @@
     <servlet-mapping>
         <servlet-name>ProfileServlet</servlet-name>
         <url-pattern>/pages/profile</url-pattern>
-        <url-pattern>/pages/profile/uploadPicture</url-pattern>        
+        <url-pattern>/pages/profile/uploadPicture</url-pattern>
         <url-pattern>/pages/profile/removePicture</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
