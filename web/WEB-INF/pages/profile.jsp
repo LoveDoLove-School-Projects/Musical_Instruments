@@ -20,7 +20,6 @@
                 <div class="row">
                     <div class="col-lg-4">
                         <div class="card mb-4">
-                            <!-- show a profile picture text -->
                             <div class="card-header bg-white text-center">
                                 <h5 class="mb-0">Profile Picture</h5>
                             </div>
@@ -46,7 +45,6 @@
                                         </c:otherwise>
                                     </c:choose>
 
-                                    <!-- Show upload picure and remove picture button -->
                                     <div class="mt-3">
                                         <c:choose>
                                             <c:when test="${empty pictureBase64}">
@@ -61,172 +59,84 @@
                                         </c:choose>
                                     </div>
                                 </div>
-                                <!--<p class="text-muted mb-1">Full Stack Developer</p>-->
-                                <!--<p class="text-muted mb-4">Bay Area, San Francisco, CA</p>-->
-                                <!--<div class="d-flex justify-content-center mb-2">-->
-                                <!--<button type="button" class="btn btn-primary">Follow</button>-->
-                                <!--<button type="button" class="btn btn-outline-primary ms-1">Message</button>-->
-                                <!--</div>-->
                             </div>
                         </div>
-                        <!--                        <div class="card mb-4 mb-lg-0">
-                                                    <div class="card-body p-0">
-                                                        <ul class="list-group list-group-flush rounded-3">
-                                                            <li
-                                                                class="list-group-item d-flex justify-content-between align-items-center p-3">
-                                                                <i class="fas fa-globe fa-lg text-warning"></i>
-                                                                <p class="mb-0">https://mdbootstrap.com</p>
-                                                            </li>
-                                                            <li
-                                                                class="list-group-item d-flex justify-content-between align-items-center p-3">
-                                                                <i class="fab fa-github fa-lg" style="color: #333333;"></i>
-                                                                <p class="mb-0">mdbootstrap</p>
-                                                            </li>
-                                                            <li
-                                                                class="list-group-item d-flex justify-content-between align-items-center p-3">
-                                                                <i class="fab fa-twitter fa-lg" style="color: #55acee;"></i>
-                                                                <p class="mb-0">@mdbootstrap</p>
-                                                            </li>
-                                                            <li
-                                                                class="list-group-item d-flex justify-content-between align-items-center p-3">
-                                                                <i class="fab fa-instagram fa-lg" style="color: #ac2bac;"></i>
-                                                                <p class="mb-0">mdbootstrap</p>
-                                                            </li>
-                                                            <li
-                                                                class="list-group-item d-flex justify-content-between align-items-center p-3">
-                                                                <i class="fab fa-facebook-f fa-lg" style="color: #3b5998;"></i>
-                                                                <p class="mb-0">mdbootstrap</p>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                                </div>-->
                     </div>
                     <div class="col-lg-8">
-                        <div class="card mb-4">
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-sm-3">
-                                        <p class="mb-0">Username</p>
-                                    </div>
-                                    <div class="col-sm-9">
-                                        <p class="text-muted mb-0">${username}</p>
-                                    </div>
+                        <form action="pages/profile/updateProfile" method="POST">
+                            <div class="card mb-4">
+                                <div class="card-header bg-white text-center">
+                                    <h5 class="mb-0">Profile Information</h5>
                                 </div>
-                                <hr>
-                                <div class="row">
-                                    <div class="col-sm-3">
-                                        <p class="mb-0">Email</p>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <label for="username">Username</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" id="username" name="username" class="form-control" value="${username}" />
+                                        </div>
                                     </div>
-                                    <div class="col-sm-9">
-                                        <p class="text-muted mb-0">${email}</p>
+                                    <hr>
+                                    <div class="row">
+                                        <label for="email">Email</label>
+                                        <div class="col-sm-9">
+                                            <p class="text-muted mb-0">${email}</p>
+                                        </div>
                                     </div>
-                                </div>
-                                <hr>
-                                <div class="row">
-                                    <div class="col-sm-3">
-                                        <p class="mb-0">Address</p>
+                                    <hr>
+                                    <div class="row">
+                                        <label for="address">Address</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" id="address" name="address" class="form-control" value="${address}" />
+                                        </div>
                                     </div>
-                                    <div class="col-sm-9">
-                                        <p class="text-muted mb-0">${address}</p>
+                                    <hr>
+                                    <div class="row">
+                                        <label for="phone">Phone</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" id="phone" name="phone" class="form-control" value="${phone_number}" />
+                                        </div>
                                     </div>
-                                </div>
-                                <hr>
-                                <div class="row">
-                                    <div class="col-sm-3">
-                                        <p class="mb-0">Phone</p>
+                                    <hr>
+                                    <div class="row">
+                                        <label for="gender">Gender</label>
+                                        <div class="col-sm-9">
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="gender"
+                                                       value="Male" checked/>
+                                                <label class="form-check-label"
+                                                       for="maleGender">Male</label>
+                                            </div>
+
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="gender"
+                                                       value="Female" />
+                                                <label class="form-check-label"
+                                                       for="femaleGender">Female</label>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="col-sm-9">
-                                        <p class="text-muted mb-0">${phone_number}</p>
+                                    <hr>
+                                    <div class="row">
+                                        <label for="2fa">2FA</label>
+                                        <div class="col-sm-9">
+                                            <input type="checkbox" id="2fa" name="2fa" ${twoFactorAuth == true ? 'checked' : ''} />
+                                        </div>
                                     </div>
-                                </div>
-                                <hr>
-                                <div class="row">
-                                    <div class="col-sm-3">
-                                        <p class="mb-0">Gender</p>
-                                    </div>
-                                    <div class="col-sm-9">
-                                        <p class="text-muted mb-0">${gender}</p>
+                                    <hr>
+                                    <div class="row">
+                                        <div class="col-sm-9">
+                                            <button type="button" class="btn btn-primary" id="updateProfile">Update Profile</button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <!--                        <div class="row">
-                                                    <div class="col-md-6">
-                                                        <div class="card mb-4 mb-md-0">
-                                                            <div class="card-body">
-                                                                <p class="mb-4"><span
-                                                                        class="text-primary font-italic me-1">assigment</span> Project
-                                                                    Status
-                                                                </p>
-                                                                <p class="mb-1" style="font-size: .77rem;">Web Design</p>
-                                                                <div class="progress rounded" style="height: 5px;">
-                                                                    <div class="progress-bar" role="progressbar" style="width: 80%"
-                                                                         aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
-                                                                </div>
-                                                                <p class="mt-4 mb-1" style="font-size: .77rem;">Website Markup</p>
-                                                                <div class="progress rounded" style="height: 5px;">
-                                                                    <div class="progress-bar" role="progressbar" style="width: 72%"
-                                                                         aria-valuenow="72" aria-valuemin="0" aria-valuemax="100"></div>
-                                                                </div>
-                                                                <p class="mt-4 mb-1" style="font-size: .77rem;">One Page</p>
-                                                                <div class="progress rounded" style="height: 5px;">
-                                                                    <div class="progress-bar" role="progressbar" style="width: 89%"
-                                                                         aria-valuenow="89" aria-valuemin="0" aria-valuemax="100"></div>
-                                                                </div>
-                                                                <p class="mt-4 mb-1" style="font-size: .77rem;">Mobile Template</p>
-                                                                <div class="progress rounded" style="height: 5px;">
-                                                                    <div class="progress-bar" role="progressbar" style="width: 55%"
-                                                                         aria-valuenow="55" aria-valuemin="0" aria-valuemax="100"></div>
-                                                                </div>
-                                                                <p class="mt-4 mb-1" style="font-size: .77rem;">Backend API</p>
-                                                                <div class="progress rounded mb-2" style="height: 5px;">
-                                                                    <div class="progress-bar" role="progressbar" style="width: 66%"
-                                                                         aria-valuenow="66" aria-valuemin="0" aria-valuemax="100"></div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>-->
-                        <!--                            <div class="col-md-6">
-                                                        <div class="card mb-4 mb-md-0">
-                                                            <div class="card-body">
-                                                                <p class="mb-4"><span
-                                                                        class="text-primary font-italic me-1">assigment</span> Project
-                                                                    Status
-                                                                </p>
-                                                                <p class="mb-1" style="font-size: .77rem;">Web Design</p>
-                                                                <div class="progress rounded" style="height: 5px;">
-                                                                    <div class="progress-bar" role="progressbar" style="width: 80%"
-                                                                         aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
-                                                                </div>
-                                                                <p class="mt-4 mb-1" style="font-size: .77rem;">Website Markup</p>
-                                                                <div class="progress rounded" style="height: 5px;">
-                                                                    <div class="progress-bar" role="progressbar" style="width: 72%"
-                                                                         aria-valuenow="72" aria-valuemin="0" aria-valuemax="100"></div>
-                                                                </div>
-                                                                <p class="mt-4 mb-1" style="font-size: .77rem;">One Page</p>
-                                                                <div class="progress rounded" style="height: 5px;">
-                                                                    <div class="progress-bar" role="progressbar" style="width: 89%"
-                                                                         aria-valuenow="89" aria-valuemin="0" aria-valuemax="100"></div>
-                                                                </div>
-                                                                <p class="mt-4 mb-1" style="font-size: .77rem;">Mobile Template</p>
-                                                                <div class="progress rounded" style="height: 5px;">
-                                                                    <div class="progress-bar" role="progressbar" style="width: 55%"
-                                                                         aria-valuenow="55" aria-valuemin="0" aria-valuemax="100"></div>
-                                                                </div>
-                                                                <p class="mt-4 mb-1" style="font-size: .77rem;">Backend API</p>
-                                                                <div class="progress rounded mb-2" style="height: 5px;">
-                                                                    <div class="progress-bar" role="progressbar" style="width: 66%"
-                                                                         aria-valuenow="66" aria-valuemin="0" aria-valuemax="100"></div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>-->
+                        </form>
                     </div>
                 </div>
             </div>
         </section>
         <jsp:include page="/defaults/footer.jsp" />
-        <script src="assets/js/profile.js"></script>
+        <script type="module" src="assets/js/profile.js"></script>
     </body>
 
 </html>

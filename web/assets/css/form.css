@@ -7,3 +7,16 @@
 .card-registration .select-arrow {
     top: 13px;
 }
+input[type="text"]:invalid,
+input[type="password"]:invalid,
+input[type="email"]:invalid,
+input[type="tel"]:invalid {
+    border: 2px solid red;
+}
+
+input[type="text"]:valid,
+input[type="password"]:valid,
+input[type="email"]:valid,
+input[type="tel"]:valid {
+    border: 2px solid green;
+}

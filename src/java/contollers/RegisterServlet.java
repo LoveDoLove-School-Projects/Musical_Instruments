@@ -109,7 +109,13 @@ public class RegisterServlet extends HttpServlet {
         if (StringUtilities.anyNullOrBlank(registerRequest.getUsername(), registerRequest.getPassword(), registerRequest.getConfirm_password(), registerRequest.getEmail(), registerRequest.getAddress(), registerRequest.getPhoneNumber(), registerRequest.getGender(), registerRequest.getOtp())) {
             return false;
         }
+        if (!registerRequest.getPassword().equals(registerRequest.getConfirm_password())) {
+            return false;
+        }
         if (registerRequest.getPassword().length() < 8) {
+            return false;
+        }
+        if (!registerRequest.getEmail().contains("@") || !registerRequest.getEmail().contains(".")) {
             return false;
         }
         for (char ch : registerRequest.getPhoneNumber().toCharArray()) {

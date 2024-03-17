@@ -20,7 +20,7 @@
     <body>
     <center>
         <jsp:include page="/defaults/header.jsp" />
-        <form method="POST" action="pages/register">
+        <form method="POST" action="pages/register" id="registerForm">
             <section class="vh-100" style=" background-color: #eee;">
                 <div class="container py-5 h-100">
                     <div class="row justify-content-center align-items-center h-100">
@@ -48,14 +48,14 @@
                                     <div class="row">
                                         <div class="col-md-6 mb-4">
                                             <div class="form-outline">
-                                                <input type="password" name="password" id="password" class="form-control form-control-lg" value="" required />
+                                                <input type="password" name="password" id="password" class="form-control form-control-lg" minlength="8" value="" required />
                                                 <label class="form-label" for="password">Password</label>
                                             </div>
                                         </div>
 
                                         <div class="col-md-6 mb-4">
                                             <div class="form-outline">
-                                                <input type="password" name="confirm_password" id="confirm_password" class="form-control form-control-lg" value="" required />
+                                                <input type="password" name="confirm_password" id="confirm_password" class="form-control form-control-lg" minlength="8" value="" required />
                                                 <label class="form-label" for="confirm_password">Confirm Password</label>
                                             </div>
                                         </div>
@@ -64,13 +64,13 @@
                                     <div class="row">
                                         <div class="col-md-6 mb-4 pb-2">
                                             <div class="form-outline">
-                                                <input type="email" name="email" id="email" id="email" class="form-control form-control-lg" value="${email}" required />
+                                                <input type="email" name="email" id="email" class="form-control form-control-lg" value="${email}" required />
                                                 <label class="form-label" for="email">Email</label>
                                             </div>
                                         </div>
                                         <div class="col-md-6 mb-4 pb-2">
                                             <div class="form-outline">
-                                                <input type="tel" name="phone_number" id="phone_number" class="form-control form-control-lg" value="${phone_number}" required />
+                                                <input type="tel" name="phone_number" id="phone_number" class="form-control form-control-lg" value="${phone_number}" pattern="[0-9]+" required />
                                                 <label class="form-label" for="phone_number">Phone Number</label>
                                             </div>
                                         </div>
@@ -109,7 +109,7 @@
                                     </div>
 
                                     <div class="mt-4 pt-2">
-                                        <button class="btn btn-primary btn-lg" id="submit">Submit</button>
+                                        <input class="btn btn-primary btn-lg" type="submit" value="Submit" />
                                     </div>
 
                                     <div class="mt-4 pt-2">
@@ -127,7 +127,7 @@
         </form>
     </center>
     <jsp:include page="/defaults/footer.jsp" />
-    <script src="assets/js/register.js"></script>
+    <script type="module" src="assets/js/register.js"></script>
 </body>
 
 </html>
