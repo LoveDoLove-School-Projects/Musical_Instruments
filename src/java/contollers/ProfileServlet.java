@@ -16,6 +16,7 @@ import request.ProfileRequest;
 import response.ProfileResponse;
 import services.ProfileServices;
 import utilities.RedirectUtilities;
+import utilities.StringUtilities;
 
 @MultipartConfig
 public class ProfileServlet extends HttpServlet {
@@ -44,6 +45,9 @@ public class ProfileServlet extends HttpServlet {
                     case Constants.PROFILE_REMOVE_PICTURE_URL:
                         removePicture(request, response, session);
                         return;
+                    case Constants.PROFILE_UPDATE_URL:
+                        updateProfile(request, response, session);
+                        return;
                 }
             }
             initCustomerProfile(request, response, session);
@@ -62,6 +66,7 @@ public class ProfileServlet extends HttpServlet {
         request.setAttribute("address", profileResponse.getProfile().getAddress());
         request.setAttribute("phone_number", profileResponse.getProfile().getPhoneNumber());
         request.setAttribute("gender", profileResponse.getProfile().getGender());
+        request.setAttribute("two_factor_auth", profileResponse.getProfile().isTwo_factor_auth());
         byte[] picture = profileResponse.getProfile().getPicture();
         if (picture != null) {
             String pictureBase64 = Base64.getEncoder().encodeToString(picture);
@@ -76,8 +81,7 @@ public class ProfileServlet extends HttpServlet {
             RedirectUtilities.redirectWithError(request, response, "Error uploading picture.", Constants.PROFILE_URL);
             return;
         }
-        ProfileRequest profileRequest = new ProfileRequest(session.getId());
-        profileRequest.setPicture(pictureStream);
+        ProfileRequest profileRequest = new ProfileRequest(session.getId(), pictureStream);
         ProfileResponse profileResponse = profileServices.uploadPicture(profileRequest, session.getRole());
         if (profileResponse == null || profileResponse.getStatus() == Common.Status.INTERNAL_SERVER_ERROR) {
             RedirectUtilities.setErrorMessage(request, "Error uploading picture.");
@@ -94,6 +98,26 @@ public class ProfileServlet extends HttpServlet {
             RedirectUtilities.setErrorMessage(request, "Error removing picture.");
         } else if (profileResponse.getStatus() == Common.Status.OK) {
             RedirectUtilities.setSuccessMessage(request, "Picture removed successfully.");
+        }
+        RedirectUtilities.sendRedirect(request, response, Constants.PROFILE_URL);
+    }
+
+    private void updateProfile(HttpServletRequest request, HttpServletResponse response, Session session) throws ServletException, IOException {
+        String username = request.getParameter("username");
+        String address = request.getParameter("address");
+        String phoneNumber = request.getParameter("phone_number");
+        String gender = request.getParameter("gender");
+        Boolean twoFactorAuth = request.getParameter("two_factor_auth") != null;
+        if (StringUtilities.anyNullOrBlank(username, address, phoneNumber, gender)) {
+            RedirectUtilities.redirectWithError(request, response, "All fields are required.", Constants.PROFILE_URL);
+            return;
+        }
+        ProfileRequest profileRequest = new ProfileRequest(session.getId(), username, address, phoneNumber, gender, twoFactorAuth);
+        ProfileResponse profileResponse = profileServices.updateProfile(profileRequest, session.getRole());
+        if (profileResponse == null || profileResponse.getStatus() == Common.Status.INTERNAL_SERVER_ERROR) {
+            RedirectUtilities.setErrorMessage(request, "Error updating profile.");
+        } else if (profileResponse.getStatus() == Common.Status.OK) {
+            RedirectUtilities.setSuccessMessage(request, "Profile updated successfully.");
         }
         RedirectUtilities.sendRedirect(request, response, Constants.PROFILE_URL);
     }

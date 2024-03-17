@@ -1,22 +1,22 @@
 package request;
 
-public class AdminRequest {
+public class AdminRequest extends DefaultRequest {
 
-    private int admin_id;
+    private int login_id;
 
     public AdminRequest() {
     }
 
-    public AdminRequest(int admin_id) {
-        this.admin_id = admin_id;
+    public AdminRequest(int login_id) {
+        this.login_id = login_id;
     }
 
-    public int getAdmin_id() {
-        return admin_id;
+    public int getLogin_id() {
+        return login_id;
     }
 
-    public void setAdmin_id(int Admin_id) {
-        this.admin_id = admin_id;
+    public void setLogin_id(int login_id) {
+        this.login_id = login_id;
     }
 
 }

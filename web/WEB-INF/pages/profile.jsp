@@ -1,7 +1,8 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page contentType="text/html" pageEncoding="UTF-8" %>
 <c:set var="path" value="${pageContext.request.contextPath}" />
-<c:set var="basePath" value="${pageContext.request.scheme}://${pageContext.request.serverName}:${pageContext.request.serverPort}${path}/" />
+<c:set var="basePath"
+       value="${pageContext.request.scheme}://${pageContext.request.serverName}:${pageContext.request.serverPort}${path}/" />
 <!DOCTYPE html>
 <html>
 
@@ -31,17 +32,21 @@
                                                 <c:when test="${gender == 'Male'}">
                                                     <!-- Male -->
                                                     <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp"
-                                                         alt="avatar" class="rounded-circle img-fluid" style="width: 150px; height: 150px;">
+                                                         alt="avatar" class="rounded-circle img-fluid"
+                                                         style="width: 150px; height: 150px;">
                                                 </c:when>
                                                 <c:otherwise>
                                                     <!-- Female -->
                                                     <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava1.webp"
-                                                         alt="avatar" class="rounded-circle img-fluid" style="width: 150px; height: 150px;">
+                                                         alt="avatar" class="rounded-circle img-fluid"
+                                                         style="width: 150px; height: 150px;">
                                                 </c:otherwise>
                                             </c:choose>
                                         </c:when>
                                         <c:otherwise>
-                                            <img src="data:image/jpg;base64,${pictureBase64}" alt="avatar" class="rounded-circle img-fluid" style="width: 150px; height: 150px;">
+                                            <img src="data:image/jpg;base64,${pictureBase64}" alt="avatar"
+                                                 class="rounded-circle img-fluid"
+                                                 style="width: 150px; height: 150px;">
                                         </c:otherwise>
                                     </c:choose>
 
@@ -49,12 +54,15 @@
                                         <c:choose>
                                             <c:when test="${empty pictureBase64}">
                                                 <!-- <form action="pages/profile/uploadPicture" method="post" enctype="multipart/form-data"> -->
-                                                <input type="file" name="uploadPicture" id="uploadPicture" class="d-none" accept="image/*">
-                                                <label for="uploadPicture" class="btn btn-primary">Upload Picture</label>
+                                                <input type="file" name="uploadPicture" id="uploadPicture"
+                                                       class="d-none" accept="image/*">
+                                                <label for="uploadPicture" class="btn btn-primary">Upload
+                                                    Picture</label>
                                                 <!-- </form> -->
                                             </c:when>
                                             <c:otherwise>
-                                                <button type="button" class="btn btn-danger" id="removePicture">Remove Picture</button>
+                                                <button type="button" class="btn btn-danger"
+                                                        id="removePicture">Remove Picture</button>
                                             </c:otherwise>
                                         </c:choose>
                                     </div>
@@ -63,7 +71,7 @@
                         </div>
                     </div>
                     <div class="col-lg-8">
-                        <form action="pages/profile/updateProfile" method="POST">
+                        <form action="pages/profile/updateProfile" method="POST" id="updateProfileForm">
                             <div class="card mb-4">
                                 <div class="card-header bg-white text-center">
                                     <h5 class="mb-0">Profile Information</h5>
@@ -72,7 +80,8 @@
                                     <div class="row">
                                         <label for="username">Username</label>
                                         <div class="col-sm-9">
-                                            <input type="text" id="username" name="username" class="form-control" value="${username}" />
+                                            <input type="text" id="username" name="username" class="form-control"
+                                                   value="${username}" />
                                         </div>
                                     </div>
                                     <hr>
@@ -86,14 +95,16 @@
                                     <div class="row">
                                         <label for="address">Address</label>
                                         <div class="col-sm-9">
-                                            <input type="text" id="address" name="address" class="form-control" value="${address}" />
+                                            <input type="text" id="address" name="address" class="form-control"
+                                                   value="${address}" />
                                         </div>
                                     </div>
                                     <hr>
                                     <div class="row">
-                                        <label for="phone">Phone</label>
+                                        <label for="phone_number">Phone</label>
                                         <div class="col-sm-9">
-                                            <input type="text" id="phone" name="phone" class="form-control" value="${phone_number}" />
+                                            <input type="text" id="phone_number" name="phone_number" class="form-control"
+                                                   value="${phone_number}" />
                                         </div>
                                     </div>
                                     <hr>
@@ -102,30 +113,33 @@
                                         <div class="col-sm-9">
                                             <div class="form-check form-check-inline">
                                                 <input class="form-check-input" type="radio" name="gender"
-                                                       value="Male" checked/>
-                                                <label class="form-check-label"
-                                                       for="maleGender">Male</label>
+                                                       id="maleGender" value="Male" <c:choose>
+                                                           <c:when test="${gender eq 'Male'}">checked</c:when>
+                                                       </c:choose> />
+                                                <label class="form-check-label" for="maleGender">Male</label>
                                             </div>
 
                                             <div class="form-check form-check-inline">
                                                 <input class="form-check-input" type="radio" name="gender"
-                                                       value="Female" />
-                                                <label class="form-check-label"
-                                                       for="femaleGender">Female</label>
+                                                       id="femaleGender" value="Female" <c:choose>
+                                                           <c:when test="${gender eq 'Female'}">checked</c:when>
+                                                       </c:choose> />
+                                                <label class="form-check-label" for="femaleGender">Female</label>
                                             </div>
                                         </div>
                                     </div>
                                     <hr>
                                     <div class="row">
-                                        <label for="2fa">2FA</label>
+                                        <label for="two_factor_auth">2FA</label>
                                         <div class="col-sm-9">
-                                            <input type="checkbox" id="2fa" name="2fa" ${twoFactorAuth == true ? 'checked' : ''} />
+                                            <input type="checkbox" id="two_factor_auth" name="two_factor_auth"
+                                                   ${two_factor_auth==true ? 'checked' : '' } />
                                         </div>
                                     </div>
                                     <hr>
                                     <div class="row">
                                         <div class="col-sm-9">
-                                            <button type="button" class="btn btn-primary" id="updateProfile">Update Profile</button>
+                                            <input type="submit"  class="btn btn-primary" value="Update Profile" />
                                         </div>
                                     </div>
                                 </div>
@@ -133,7 +147,6 @@
                         </form>
                     </div>
                 </div>
-            </div>
         </section>
         <jsp:include page="/defaults/footer.jsp" />
         <script type="module" src="assets/js/profile.js"></script>

@@ -1,8 +1,12 @@
 import { showConfirmDialog, showConfirmWithImageDialog } from "./dialog.js";
+import { anyStringNullOrEmpty } from "./validate.js";
 
+let usernameElement;
+let addressElement;
+let phone_numberElement;
 let uploadPictureElement;
 let removePictureElement;
-let updateProfileElement;
+let updateProfileForm;
 
 let xhr = new XMLHttpRequest();
 function setUploadPicture() {
@@ -57,11 +61,39 @@ function setRemovePicture() {
     showConfirmDialog("Are you sure you want to remove your profile picture?", action);
   });
 }
+function checkAllFields() {
+  const username = usernameElement.value;
+  const address = addressElement.value;
+  const phone_number = phone_numberElement.value;
+  if (anyStringNullOrEmpty([username, address, phone_number])) {
+    alert("Please fill in all fields.");
+    return false;
+  }
+  return true;
+}
+function setUpdateProfileForm() {
+  if (updateProfileForm === null) {
+    return;
+  }
+  updateProfileForm.onsubmit = function (event) {
+    event.preventDefault();
+    let action = () => {
+      if (checkAllFields()) {
+        updateProfileForm.submit();
+      }
+    };
+    showConfirmDialog("Are you sure to update your profile?", action);
+  };
+}
 function init() {
+  usernameElement = document.getElementById("username");
+  addressElement = document.getElementById("address");
+  phone_numberElement = document.getElementById("phone_number");
   uploadPictureElement = document.getElementById("uploadPicture");
   removePictureElement = document.getElementById("removePicture");
-  updateProfileElement = document.getElementById("updateProfile");
+  updateProfileForm = document.getElementById("updateProfileForm");
   setUploadPicture();
   setRemovePicture();
+  setUpdateProfileForm();
 }
 window.onload = init;

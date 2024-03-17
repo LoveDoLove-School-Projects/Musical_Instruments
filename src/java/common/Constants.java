@@ -27,6 +27,7 @@ public final class Constants {
     //    Profile Method URL
     public static final String PROFILE_UPLOAD_PICTURE_URL = "/pages/profile/uploadPicture";
     public static final String PROFILE_REMOVE_PICTURE_URL = "/pages/profile/removePicture";
+    public static final String PROFILE_UPDATE_URL = "/pages/profile/updateProfile";
 
     //    Services Method URL
     public static final String SERVICE_SEND_OTP_URL = "/services/sendOtp";

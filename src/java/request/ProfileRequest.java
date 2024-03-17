@@ -2,32 +2,21 @@ package request;
 
 import java.io.InputStream;
 
-public class ProfileRequest {
-
-    private int login_id;
-
-    private InputStream picture;
+public class ProfileRequest extends DefaultRequest {
 
     public ProfileRequest() {
     }
 
-    public ProfileRequest(int login_id) {
-        this.login_id = login_id;
+    public ProfileRequest(int id) {
+        super(id);
     }
 
-    public int getLogin_id() {
-        return login_id;
+    public ProfileRequest(int id, InputStream picture) {
+        super(id, picture);
     }
 
-    public void setLogin_id(int login_id) {
-        this.login_id = login_id;
+    public ProfileRequest(int id, String username, String address, String phoneNumber, String gender, boolean two_factor_auth) {
+        super(id, username, address, phoneNumber, gender, two_factor_auth);
     }
 
-    public InputStream getPicture() {
-        return picture;
-    }
-
-    public void setPicture(InputStream picture) {
-        this.picture = picture;
-    }
 }
