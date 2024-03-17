@@ -16,7 +16,7 @@ public class AdminServices {
     public AdminResponse getAdminProfile(AdminRequest adminRequest) {
         AdminResponse adminResponse = new AdminResponse();
         try (Connection connection = ConnectionController.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(GET_ADMIN_NAME_SQL)) {
-            preparedStatement.setInt(1, adminRequest.getAdmin_id());
+            preparedStatement.setInt(1, adminRequest.getLogin_id());
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 if (resultSet.next()) {
                     String username = resultSet.getString("username");

@@ -1,8 +1,9 @@
-package models;
+package request;
 
+import java.io.InputStream;
 import java.sql.Timestamp;
 
-public class Profile {
+public class DefaultRequest {
 
     protected int id;
     protected String username;
@@ -11,21 +12,44 @@ public class Profile {
     protected String address;
     protected String phoneNumber;
     protected String gender;
-    protected byte[] picture;
+    protected InputStream picture;
     protected boolean two_factor_auth;
     protected Timestamp accountCreationDate;
     protected Timestamp lastLoginDate;
 
-    public Profile() {
+    public DefaultRequest() {
     }
 
-    public Profile(String username, String password, String email, String address, String phoneNumber, String gender) {
+    public DefaultRequest(int id) {
+        this.id = id;
+    }
+
+    public DefaultRequest(int id, InputStream picture) {
+        this.id = id;
+        this.picture = picture;
+    }
+
+    public DefaultRequest(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
+
+    public DefaultRequest(String username, String password, String email, String address, String phoneNumber, String gender) {
         this.username = username;
         this.password = password;
         this.email = email;
         this.address = address;
         this.phoneNumber = phoneNumber;
         this.gender = gender;
+    }
+
+    public DefaultRequest(int id, String username, String address, String phoneNumber, String gender, boolean two_factor_auth) {
+        this.id = id;
+        this.username = username;
+        this.address = address;
+        this.phoneNumber = phoneNumber;
+        this.gender = gender;
+        this.two_factor_auth = two_factor_auth;
     }
 
     public int getId() {
@@ -84,11 +108,11 @@ public class Profile {
         this.gender = gender;
     }
 
-    public byte[] getPicture() {
+    public InputStream getPicture() {
         return picture;
     }
 
-    public void setPicture(byte[] picture) {
+    public void setPicture(InputStream picture) {
         this.picture = picture;
     }
 
