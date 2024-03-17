@@ -20,7 +20,7 @@
     <body>
     <center>
         <jsp:include page="/defaults/header.jsp" />
-        <form method="POST" action="${loginFormUrl}">
+        <form method="POST" action="${loginFormUrl}" id="loginForm">
             <section class="vh-100" style="background-color: #eee;">
                 <div class="container py-5 h-100">
                     <div class="row justify-content-center align-items-center h-100">
@@ -41,18 +41,16 @@
                                         <div class="col-md-6 mb-4 pb-2">
                                             <div class="form-outline">
                                                 <input type="password" name="password"
-                                                       class="form-control form-control-lg" min="8" value="${password}" required />
+                                                       class="form-control form-control-lg" minlength="8" value="${password}" required />
                                                 <label class="form-label" for="password">Password</label>
                                             </div>
                                         </div>
                                     </div>
 
                                     <div class="mt-4 pt-2">
-                                        <input class="btn btn-primary btn-lg" type="submit"
-                                               value="Submit" />
+                                        <input class="btn btn-primary btn-lg" type="submit" value="Submit" />
                                     </div>
 
-                                    <!-- If login url is equals == pages/adminLogin hide it -->
                                     <c:if test="${loginFormUrl != 'pages/adminLogin'}">
                                         <div class="mt-4 pt-2">
                                             <p>

@@ -1,58 +1,103 @@
+import { showErrorDialog, showProgressDialog, showSuccessDialog } from "./dialog.js";
+import { anyStringNullOrEmpty, checkEmail, checkPassword, checkPhoneNumber } from "./validate.js";
+
+let usernameElement;
+let addressElement;
+let passwordElement;
+let confirm_passwordElement;
+let emailElement;
+let phone_numberElement;
+let otpElement;
+let otpButtonElement;
+let registerForm;
+
 function checkAllFields() {
-    let username = document.getElementById("username").value;
-    let address = document.getElementById("address").value;
-    let password = document.getElementById("password").value;
-    let confirm_password = document.getElementById("confirm_password").value;
-    let email = document.getElementById("email").value;
-    let phone_number = document.getElementById("phone_number").value;
-    let otp = document.getElementById("otp").value;
-    if (username === "" || address === "" || password === "" || confirm_password === "" || email === "" || phone_number === "" || otp === "") {
-        alert("Please fill all the fields");
-        return false;
-    }
-    if (password !== confirm_password) {
-        alert("Password and Confirm Password should be same");
-        return false;
-    }
-    if (!/^\d+$/.test(phone_number)) {
-        alert("Phone number should contain only digits");
-        return false;
-    }
-    return true;
+  const username = usernameElement.value;
+  const address = addressElement.value;
+  const password = passwordElement.value;
+  const confirm_password = confirm_passwordElement.value;
+  const email = emailElement.value;
+  const phone_number = phone_numberElement.value;
+  const otp = otpElement.value;
+  if (anyStringNullOrEmpty([username, address, password, confirm_password, email, phone_number, otp])) {
+    showErrorDialog("All fields are required");
+    return false;
+  }
+  if (password !== confirm_password) {
+    showErrorDialog("Password and Confirm Password should be same");
+    return false;
+  }
+  if (!checkPassword(password)) {
+    showErrorDialog("Password should be at least 8 characters long");
+    return false;
+  }
+  if (!checkEmail(email)) {
+    showErrorDialog("Invalid email!");
+    return false;
+  }
+  if (!checkPhoneNumber(phone_number)) {
+    showErrorDialog("Phone number should contain only digits");
+    return false;
+  }
+  return true;
 }
-function sendOtp() {
-    let email = document.getElementById("email").value;
-    if (email === "") {
-        alert("Please enter email");
-        return;
+
+function setRegisterForm() {
+  if (registerForm === null) {
+    return;
+  }
+  registerForm.onsubmit = function (event) {
+    event.preventDefault();
+    if (checkAllFields()) {
+      registerForm.submit();
     }
-    let xhr = new XMLHttpRequest();
+  };
+}
+
+function setSendOtp() {
+  if (otpButtonElement === null) {
+    return;
+  }
+  otpButtonElement.addEventListener("click", () => {
+    const email = emailElement.value;
+    if (anyStringNullOrEmpty([email])) {
+      showErrorDialog("Email is required");
+      return;
+    }
+    showProgressDialog("Sending OTP");
+    const xhr = new XMLHttpRequest();
     xhr.open("POST", "services/sendOtp", true);
     xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     xhr.onreadystatechange = function () {
-        if (xhr.readyState === 4 && xhr.status === 200) {
-            try {
-                let response = JSON.parse(xhr.responseText);
-                if (response.status === "success") {
-                    alert("OTP sent successfully");
-                } else {
-                    alert("Failed to send OTP");
-                }
-            } catch (e) {
-                alert("Failed to send OTP");
-            }
+      if (xhr.readyState === 4 && xhr.status === 200) {
+        try {
+          let response = JSON.parse(xhr.responseText);
+          if (response.status === "success") {
+            showSuccessDialog("Success", "OTP sent successfully");
+          } else {
+            showErrorDialog("Error", "Failed to send OTP");
+          }
+        } catch (e) {
+          showErrorDialog("Error", "Failed to send OTP");
         }
+      }
     };
     xhr.send("email=" + email);
+  });
 }
-function sendRegistrationForm() {
-    if (!checkAllFields()) {
-        return;
-    }
-    document.getElementById("submit").submit();
-}
+
 function init() {
-    document.getElementById("otpButton").addEventListener("click", sendOtp);
-    document.getElementById("submit").addEventListener("click", sendRegistrationForm);
+  usernameElement = document.getElementById("username");
+  addressElement = document.getElementById("address");
+  passwordElement = document.getElementById("password");
+  confirm_passwordElement = document.getElementById("confirm_password");
+  emailElement = document.getElementById("email");
+  phone_numberElement = document.getElementById("phone_number");
+  otpElement = document.getElementById("otp");
+  otpButtonElement = document.getElementById("otpButton");
+  registerForm = document.getElementById("registerForm");
+  setRegisterForm();
+  setSendOtp();
 }
+
 window.onload = init;
