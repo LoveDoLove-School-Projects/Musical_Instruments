@@ -1,5 +1,5 @@
-import { showErrorDialog } from "./dialog";
-import { anyStringNullOrEmpty } from "./validate";
+import { showErrorDialog } from "./dialog.js";
+import { anyStringNullOrEmpty } from "./validate.js";
 
 let emailElement;
 let passwordElement;
