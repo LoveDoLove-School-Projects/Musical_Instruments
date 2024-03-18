@@ -17,42 +17,42 @@
     <!--Services-->
     <servlet>
         <servlet-name>ServiceServlet</servlet-name>
-        <servlet-class>contollers.ServiceServlet</servlet-class>
+        <servlet-class>presentation.controllers.ServiceServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>ServiceServlet</servlet-name>
-        <url-pattern>/services/sendOtp</url-pattern>        
+        <url-pattern>/services/sendOtp</url-pattern>
         <url-pattern>/services/sendEmail</url-pattern>
     </servlet-mapping>
     <!--~~~~~~~~~~~~~~~~~~~~Don't Touch~~~~~~~~~~~~~~~~~~~~-->
     <!--Servlet-->
     <servlet>
         <servlet-name>MainServlet</servlet-name>
-        <servlet-class>contollers.MainServlet</servlet-class>
+        <servlet-class>presentation.controllers.MainServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>RegisterServlet</servlet-name>
-        <servlet-class>contollers.RegisterServlet</servlet-class>
+        <servlet-class>presentation.controllers.RegisterServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>LoginServlet</servlet-name>
-        <servlet-class>contollers.LoginServlet</servlet-class>
+        <servlet-class>presentation.controllers.LoginServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>LogoutServlet</servlet-name>
-        <servlet-class>contollers.LogoutServlet</servlet-class>
+        <servlet-class>presentation.controllers.LogoutServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>ProfileServlet</servlet-name>
-        <servlet-class>contollers.ProfileServlet</servlet-class>
+        <servlet-class>presentation.controllers.ProfileServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>ProductServlet</servlet-name>
-        <servlet-class>contollers.ProductServlet</servlet-class>
+        <servlet-class>presentation.controllers.ProductServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>AdminServlet</servlet-name>
-        <servlet-class>contollers.AdminServlet</servlet-class>
+        <servlet-class>presentation.controllers.AdminServlet</servlet-class>
     </servlet>
     <!--Servlet Mapping-->
     <servlet-mapping>
@@ -65,7 +65,7 @@
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>LoginServlet</servlet-name>
-        <url-pattern>/pages/login</url-pattern>        
+        <url-pattern>/pages/login</url-pattern>
         <url-pattern>/pages/adminLogin</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
