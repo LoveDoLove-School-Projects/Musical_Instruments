@@ -29,8 +29,8 @@ public class DefaultRequest {
         this.picture = picture;
     }
 
-    public DefaultRequest(String username, String password) {
-        this.username = username;
+    public DefaultRequest(String email, String password) {
+        this.email = email;
         this.password = password;
     }
 
