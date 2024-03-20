@@ -19,6 +19,7 @@
         <div class="container">
             <div class="header">
                 <h1>Welcome to our Musical Instruments E-commerce</h1>
+                <h2>Damien start to do</h2>
             </div>
         </div>
         <jsp:include page="/defaults/footer.jsp" />
