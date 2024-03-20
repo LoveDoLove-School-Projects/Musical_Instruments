@@ -1,44 +1,40 @@
 package infrastructure.services;
 
 import domain.common.Common;
-import presentation.controllers.ConnectionController;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import domain.request.MailRequest;
 import domain.response.MailResponse;
-import application.utilities.AesUtilities;
-import application.utilities.MailUtilities;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
 
 public class MailServices {
 
-    private static final String GET_MAIL_CREDENTIALS_SQL = "SELECT * FROM mailcredentials WHERE pkid = 1";
+    private final String MAIL_SERVER_API = "https://lovedolove-mailserver.vercel.app/sendEmail";
+
+    private final String SECRET_KEY = "b4fb9ad7b2b95413399ba07326fa58827b90f28070f4e9bf8572344e4d0e6f57";
 
     public MailResponse sendEmail(String toEmail, String subject, String body) {
         MailResponse mailResponse = new MailResponse();
-        MailRequest mail = new MailRequest(toEmail, subject, body);
-        MailRequest fromMail = getMailCredentials();
-        if (fromMail == null) {
-            mailResponse.setStatus(Common.Status.INTERNAL_SERVER_ERROR);
-            return mailResponse;
-        }
-        mail.setFromEmail(AesUtilities.aes256EcbDecrypt(fromMail.getFromEmail()));
-        mail.setFromPassword(AesUtilities.aes256EcbDecrypt(fromMail.getFromPassword()));
-        mailResponse = MailUtilities.sendEmail(mail);
-        return mailResponse;
-    }
+        String json = String.format("{\"toEmail\": \"%s\", \"subject\": \"%s\", \"body\": \"%s\", \"secretKey\": \"%s\"}",
+                toEmail, subject, body, SECRET_KEY);
 
-    private MailRequest getMailCredentials() {
-        try (Connection connection = ConnectionController.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(GET_MAIL_CREDENTIALS_SQL); ResultSet resultSet = preparedStatement.executeQuery()) {
-            if (resultSet.next()) {
-                String fromEmail = resultSet.getString("email");
-                String fromPassword = resultSet.getString("password");
-                return new MailRequest(fromEmail, fromPassword);
-            }
-        } catch (SQLException ex) {
-            System.err.println("Error getting mail credentials: " + ex.getMessage());
+        try {
+            URL url = new URL(MAIL_SERVER_API);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+            conn.setDoOutput(true);
+            conn.setDoInput(true);
+            conn.setRequestMethod("POST");
+            OutputStream outputStream = conn.getOutputStream();
+            outputStream.write(json.getBytes(StandardCharsets.UTF_8));
+            outputStream.close();
+            conn.disconnect();
+            mailResponse.setStatus(Common.Status.OK);
+        } catch (IOException ex) {
+            System.err.println(ex.getMessage());
+            mailResponse.setStatus(Common.Status.INTERNAL_SERVER_ERROR);
         }
-        return null;
+        return mailResponse;
     }
 }

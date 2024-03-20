@@ -2,18 +2,12 @@ package domain.request;
 
 public class MailRequest {
 
-    private String fromEmail;
-    private String fromPassword;
     private String toEmail;
     private String subject;
     private String body;
+    private String secretKey;
 
     public MailRequest() {
-    }
-
-    public MailRequest(String fromEmail, String fromPassword) {
-        this.fromEmail = fromEmail;
-        this.fromPassword = fromPassword;
     }
 
     public MailRequest(String toEmail, String subject, String body) {
@@ -22,28 +16,11 @@ public class MailRequest {
         this.body = body;
     }
 
-    public MailRequest(String fromEmail, String fromPassword, String toEmail, String subject, String body) {
-        this.fromEmail = fromEmail;
-        this.fromPassword = fromPassword;
+    public MailRequest(String toEmail, String subject, String body, String secretKey) {
         this.toEmail = toEmail;
         this.subject = subject;
         this.body = body;
-    }
-
-    public String getFromEmail() {
-        return fromEmail;
-    }
-
-    public void setFromEmail(String fromEmail) {
-        this.fromEmail = fromEmail;
-    }
-
-    public String getFromPassword() {
-        return fromPassword;
-    }
-
-    public void setFromPassword(String fromPassword) {
-        this.fromPassword = fromPassword;
+        this.secretKey = secretKey;
     }
 
     public String getToEmail() {
@@ -69,4 +46,13 @@ public class MailRequest {
     public void setBody(String body) {
         this.body = body;
     }
+
+    public String getSecretKey() {
+        return secretKey;
+    }
+
+    public void setSecretKey(String secretKey) {
+        this.secretKey = secretKey;
+    }
+
 }
