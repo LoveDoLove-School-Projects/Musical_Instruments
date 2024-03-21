@@ -16,13 +16,6 @@ public class MailRequest {
         this.body = body;
     }
 
-    public MailRequest(String toEmail, String subject, String body, String secretKey) {
-        this.toEmail = toEmail;
-        this.subject = subject;
-        this.body = body;
-        this.secretKey = secretKey;
-    }
-
     public String getToEmail() {
         return toEmail;
     }
