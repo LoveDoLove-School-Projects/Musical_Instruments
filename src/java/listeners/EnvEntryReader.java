@@ -17,7 +17,7 @@ public class EnvEntryReader implements ServletContextListener {
             Context context = new InitialContext();
             Context env = (Context) context.lookup("java:comp/env");
             Enviroment.AES_KEY = (String) env.lookup(Enviroment.AES_KEY);
-            Enviroment.MAIL_SERVER_API = (String) env.lookup(Enviroment.MAIL_SERVER_API);
+            Enviroment.SEND_MAIL_API = (String) env.lookup(Enviroment.SEND_MAIL_API);
             Enviroment.SECRET_KEY = (String) env.lookup(Enviroment.SECRET_KEY);
         } catch (NamingException ex) {
             Logger.getLogger(EnvEntryReader.class.getName()).log(Level.SEVERE, null, ex);
