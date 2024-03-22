@@ -36,7 +36,7 @@
         <env-entry-value>cdff0db1d09606c808efdb55249060207b4cdc51eb96ba5d1692a2c2f00c2948</env-entry-value>
     </env-entry>
     <env-entry>
-        <env-entry-name>MAIL_SERVER_API</env-entry-name>
+        <env-entry-name>SEND_MAIL_API</env-entry-name>
         <env-entry-type>java.lang.String</env-entry-type>
         <env-entry-value>Li3v31mJXIweF14+ZWfZkQicrWDGNIXuPwe1FfeAqpWHMKSkoZaHLvfgu+K7mIgm/0w9jIEfwWsTv/+Hyj6FRg==</env-entry-value>
     </env-entry>
