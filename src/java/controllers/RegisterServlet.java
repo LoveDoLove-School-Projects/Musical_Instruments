@@ -68,6 +68,7 @@ public class RegisterServlet extends HttpServlet {
         request.setAttribute("email", email);
         request.setAttribute("address", address);
         request.setAttribute("phone_number", phone_number);
+        request.setAttribute("gender", gender);
 
         RegisterRequest registerRequest = new RegisterRequest(username, password, confirm_password, email, address, phone_number, gender, otp);
 

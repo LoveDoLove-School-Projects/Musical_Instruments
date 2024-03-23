@@ -1,4 +1,4 @@
-import { showErrorDialog, showProgressDialog, showSuccessDialog } from "./dialog.js";
+import { showConfirmDialog, showErrorDialog, showProgressDialog } from "./dialog.js";
 import { anyStringNullOrEmpty, checkEmail, checkPassword, checkPhoneNumber } from "./validate.js";
 
 let usernameElement;
@@ -10,6 +10,7 @@ let phone_numberElement;
 let otpElement;
 let otpButtonElement;
 let registerForm;
+let registerButtonElement;
 
 function checkAllFields() {
   const username = usernameElement.value;
@@ -40,18 +41,6 @@ function checkAllFields() {
     return false;
   }
   return true;
-}
-
-function setRegisterForm() {
-  if (registerForm === null) {
-    return;
-  }
-  registerForm.onsubmit = function (event) {
-    event.preventDefault();
-    if (checkAllFields()) {
-      registerForm.submit();
-    }
-  };
 }
 
 function setSendOtp() {
@@ -86,6 +75,25 @@ function setSendOtp() {
   });
 }
 
+function setRegisterButton() {
+  if (registerButtonElement === null) {
+    return;
+  }
+  registerButtonElement.addEventListener("click", () => {
+    if (registerForm === null) {
+      return;
+    }
+    if (!checkAllFields()) {
+      showErrorDialog("All fields are required");
+      return;
+    }
+    const action = () => {
+      registerForm.submit();
+    };
+    showConfirmDialog("Are you sure you want to register?", action);
+  });
+}
+
 function init() {
   usernameElement = document.getElementById("username");
   addressElement = document.getElementById("address");
@@ -96,7 +104,8 @@ function init() {
   otpElement = document.getElementById("otp");
   otpButtonElement = document.getElementById("otpButton");
   registerForm = document.getElementById("registerForm");
-  setRegisterForm();
+  registerButtonElement = document.getElementById("registerButton");
+  setRegisterButton();
   setSendOtp();
 }
 
