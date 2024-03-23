@@ -34,6 +34,7 @@ public class LoginServlet extends HttpServlet {
         String path = request.getServletPath();
         if ("POST".equalsIgnoreCase(request.getMethod())) {
             Common.Role role = null;
+            boolean isLoggedIn = false;
             switch (path) {
                 case Constants.CUSTOMER_LOGIN_URL:
                     role = Common.Role.CUSTOMER;
@@ -42,10 +43,10 @@ public class LoginServlet extends HttpServlet {
                     role = Common.Role.ADMIN;
                     break;
             }
-            if (!handleLogin(request, response, role)) {
-                setLoginPage(request, response);
+            isLoggedIn = handleLogin(request, response, role);
+            if (isLoggedIn) {
+                return;
             }
-            return;
         }
         setLoginPage(request, response);
     }
