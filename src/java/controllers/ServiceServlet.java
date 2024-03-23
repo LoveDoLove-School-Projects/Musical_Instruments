@@ -1,24 +1,24 @@
 package controllers;
 
-import utilities.JsonUtilities;
-import utilities.StringUtilities;
 import domain.common.Common;
 import domain.common.Constants;
 import domain.request.MailRequest;
 import domain.response.MailResponse;
 import domain.response.OtpResponse;
-import services.MailServices;
-import services.OtpServices;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import services.MailServices;
+import services.OtpServices;
+import utilities.JsonUtilities;
+import utilities.StringUtilities;
 
 public class ServiceServlet extends HttpServlet {
 
-    private static final OtpServices OTP_SERVICES = new OtpServices();
-    private static final MailServices MAIL_SERVICES = new MailServices();
+    private final OtpServices otpServices = new OtpServices();
+    private final MailServices mailServices = new MailServices();
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -51,7 +51,7 @@ public class ServiceServlet extends HttpServlet {
             JsonUtilities.sendErrorResponse(response, "Please fill in the email field!");
             return;
         }
-        OtpResponse otpResponse = OTP_SERVICES.sendOtp(email);
+        OtpResponse otpResponse = otpServices.sendOtp(email);
         if (otpResponse.getStatus() != Common.Status.OK) {
             JsonUtilities.sendErrorResponse(response, "Failed to send OTP!");
             return;
@@ -69,7 +69,7 @@ public class ServiceServlet extends HttpServlet {
             return;
         }
         MailRequest mailRequest = new MailRequest(email, subject, body);
-        MailResponse mailResponse = MAIL_SERVICES.sendEmail(mailRequest);
+        MailResponse mailResponse = mailServices.sendEmail(mailRequest);
         if (mailResponse.getStatus() != Common.Status.OK) {
             JsonUtilities.sendErrorResponse(response, "Failed to send email!");
             return;

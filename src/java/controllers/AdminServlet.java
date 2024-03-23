@@ -2,18 +2,15 @@ package controllers;
 
 import domain.common.Common;
 import domain.common.Constants;
-import features.SessionChecker;
+import domain.request.AdminRequest;
+import domain.response.AdminResponse;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import domain.models.Session;
-import domain.request.AdminRequest;
-import domain.response.AdminResponse;
 import services.AdminServices;
 import utilities.RedirectUtilities;
-import utilities.StringUtilities;
 
 public class AdminServlet extends HttpServlet {
 
@@ -30,7 +27,7 @@ public class AdminServlet extends HttpServlet {
     }
 
     private void handleTemplate(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-//        Session session = new SessionChecker().checkLoginStatus(request, response);
+//        Session session = new SessionHandler().checkLoginStatus(request, response);
 //        if (session.isResult()) {
 //            if (session.getIsAdmin() == 0) {
 //                RedirectUtilities.redirectWithError(request, response, "You are not admin", Constants.MAIN_URL);
@@ -41,7 +38,7 @@ public class AdminServlet extends HttpServlet {
 //                switch (path) {
 //                }
 //            }
-            initAdminProfile(request, response, 1);
+        initAdminProfile(request, response, 1);
 //        }
     }
 

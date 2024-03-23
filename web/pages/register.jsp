@@ -2,9 +2,6 @@
 <%@ page contentType="text/html" pageEncoding="UTF-8" %>
 <c:set var="path" value="${pageContext.request.contextPath}" />
 <c:set var="basePath" value="${pageContext.request.scheme}://${pageContext.request.serverName}:${pageContext.request.serverPort}${path}/" />
-<c:if test="${not empty sessionScope.login_id}">
-    <c:redirect url="${basePath}pages/profile" />
-</c:if>
 <!DOCTYPE html>
 <html>
 

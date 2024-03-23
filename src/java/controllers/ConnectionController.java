@@ -16,8 +16,8 @@ public class ConnectionController {
             Class.forName("org.apache.derby.jdbc.ClientDriver");
             connection = DriverManager.getConnection(HOST, USER, PASSWORD);
         } catch (ClassNotFoundException | SQLException ex) {
-//            connection.close();
-            System.out.println(ex);
+            connection.close();
+            System.err.println(ex);
         }
         return connection; // returns the connection.
     }

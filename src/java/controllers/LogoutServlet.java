@@ -1,7 +1,7 @@
 package controllers;
 
 import domain.common.Constants;
-import features.SessionChecker;
+import features.SessionHandler;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -11,7 +11,7 @@ import utilities.RedirectUtilities;
 
 public class LogoutServlet extends HttpServlet {
 
-    private static final SessionChecker SESSION_HANDLER = new SessionChecker();
+    private final SessionHandler sessionHandler = new SessionHandler();
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -26,7 +26,7 @@ public class LogoutServlet extends HttpServlet {
     }
 
     private void handleLogout(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        SESSION_HANDLER.clearSession(request);
+        sessionHandler.clearSession(request);
         RedirectUtilities.sendRedirect(request, response, Constants.MAIN_URL);
     }
 }

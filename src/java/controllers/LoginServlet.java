@@ -1,23 +1,24 @@
 package controllers;
 
-import features.SessionChecker;
-import utilities.RedirectUtilities;
-import utilities.StringUtilities;
 import domain.common.Common;
 import domain.common.Constants;
+import domain.models.Session;
 import domain.request.LoginRequest;
 import domain.response.LoginResponse;
-import services.LoginServices;
+import features.SessionHandler;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import services.LoginServices;
+import utilities.RedirectUtilities;
+import utilities.StringUtilities;
 
 public class LoginServlet extends HttpServlet {
 
     private final LoginServices loginServices = new LoginServices();
-    private static final SessionChecker sessionHandler = new SessionChecker();
+    private final SessionHandler sessionHandler = new SessionHandler();
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -27,19 +28,6 @@ public class LoginServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         handleLogin(request, response);
-    }
-
-    private void setLoginPage(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String path = request.getServletPath();
-        switch (path) {
-            case Constants.CUSTOMER_LOGIN_URL:
-                request.setAttribute("loginFormUrl", "pages/login");
-                break;
-            case Constants.ADMIN_LOGIN_URL:
-                request.setAttribute("loginFormUrl", "pages/adminLogin");
-                break;
-        }
-        request.getRequestDispatcher(Constants.LOGIN_JSP_URL).forward(request, response);
     }
 
     private void handleLogin(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -60,6 +48,24 @@ public class LoginServlet extends HttpServlet {
             return;
         }
         setLoginPage(request, response);
+    }
+
+    private void setLoginPage(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        Session session = sessionHandler.getLoginSession(request, response);
+        if (session.isResult()) {
+            RedirectUtilities.sendRedirect(request, response, Constants.PROFILE_URL);
+            return;
+        }
+        String path = request.getServletPath();
+        switch (path) {
+            case Constants.CUSTOMER_LOGIN_URL:
+                request.setAttribute("loginFormUrl", "pages/login");
+                break;
+            case Constants.ADMIN_LOGIN_URL:
+                request.setAttribute("loginFormUrl", "pages/adminLogin");
+                break;
+        }
+        request.getRequestDispatcher(Constants.LOGIN_JSP_URL).forward(request, response);
     }
 
     private boolean handleLogin(HttpServletRequest request, HttpServletResponse response, Common.Role role) throws ServletException, IOException {
