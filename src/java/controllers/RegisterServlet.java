@@ -2,14 +2,16 @@ package controllers;
 
 import domain.common.Common;
 import domain.common.Constants;
+import domain.models.Session;
+import domain.request.RegisterRequest;
+import domain.response.OtpResponse;
+import domain.response.RegisterResponse;
+import features.SessionHandler;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import domain.request.RegisterRequest;
-import domain.response.OtpResponse;
-import domain.response.RegisterResponse;
 import services.OtpServices;
 import services.RegisterServices;
 import utilities.RedirectUtilities;
@@ -20,6 +22,8 @@ public class RegisterServlet extends HttpServlet {
     private final RegisterServices registerServices = new RegisterServices();
 
     private final OtpServices otpServices = new OtpServices();
+
+    private final SessionHandler sessionHandler = new SessionHandler();
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -32,6 +36,11 @@ public class RegisterServlet extends HttpServlet {
     }
 
     private void handleRegister(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        Session session = sessionHandler.getLoginSession(request, response);
+        if (session.isResult()) {
+            RedirectUtilities.sendRedirect(request, response, Constants.PROFILE_URL);
+            return;
+        }
         if ("POST".equalsIgnoreCase(request.getMethod())) {
             String path = request.getServletPath();
             switch (path) {

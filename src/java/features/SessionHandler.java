@@ -1,16 +1,14 @@
 package features;
 
 import domain.common.Common;
-import domain.common.Constants;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import domain.models.Session;
-import utilities.RedirectUtilities;
 import utilities.SessionUtilities;
 
-public class SessionChecker {
+public class SessionHandler {
 
     public void setCustomerSession(HttpSession session, Integer customerId) {
         setLoginSession(session, customerId, Common.Role.CUSTOMER);
@@ -46,8 +44,8 @@ public class SessionChecker {
     }
 
     private Session showSessionExpired(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        RedirectUtilities.setErrorMessage(request, "Session expired. Please login again.");
-        RedirectUtilities.sendRedirect(request, response, Constants.MAIN_URL);
+//        RedirectUtilities.setErrorMessage(request, "Session expired. Please login again.");
+//        RedirectUtilities.sendRedirect(request, response, Constants.MAIN_URL);
         return new Session(false, 0, Common.Role.UNKNOWN);
 
     }

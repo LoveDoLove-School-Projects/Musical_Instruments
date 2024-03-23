@@ -1,6 +1,6 @@
 package services;
 
-import utilities.AesUtilities;
+import controllers.ConnectionController;
 import domain.common.Common;
 import domain.request.LoginRequest;
 import domain.response.LoginResponse;
@@ -8,7 +8,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import controllers.ConnectionController;
+import utilities.AesUtilities;
 
 public class LoginServices {
 

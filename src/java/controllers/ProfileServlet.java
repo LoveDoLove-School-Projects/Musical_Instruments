@@ -2,7 +2,10 @@ package controllers;
 
 import domain.common.Common;
 import domain.common.Constants;
-import features.SessionChecker;
+import domain.models.Session;
+import domain.request.ProfileRequest;
+import domain.response.ProfileResponse;
+import features.SessionHandler;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.http.HttpServlet;
@@ -11,9 +14,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Base64;
-import domain.models.Session;
-import domain.request.ProfileRequest;
-import domain.response.ProfileResponse;
 import services.ProfileServices;
 import utilities.RedirectUtilities;
 import utilities.StringUtilities;
@@ -22,6 +22,8 @@ import utilities.StringUtilities;
 public class ProfileServlet extends HttpServlet {
 
     private final ProfileServices profileServices = new ProfileServices();
+
+    private final SessionHandler sessionHandler = new SessionHandler();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -34,7 +36,7 @@ public class ProfileServlet extends HttpServlet {
     }
 
     private void handleProfile(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        Session session = new SessionChecker().getLoginSession(request, response);
+        Session session = sessionHandler.getLoginSession(request, response);
         if (session.isResult()) {
             String path = request.getServletPath();
             if ("POST".equalsIgnoreCase(request.getMethod())) {
@@ -58,6 +60,7 @@ public class ProfileServlet extends HttpServlet {
         ProfileRequest profileRequest = new ProfileRequest(session.getId());
         ProfileResponse profileResponse = profileServices.getProfile(profileRequest, session.getRole());
         if (profileResponse == null || profileResponse.getStatus() == Common.Status.INTERNAL_SERVER_ERROR || profileResponse.getStatus() == Common.Status.NOT_FOUND) {
+            sessionHandler.clearSession(request);
             RedirectUtilities.redirectWithError(request, response, "Error fetching profile details.", Constants.MAIN_URL);
             return;
         }
