@@ -1,7 +1,6 @@
 package services;
 
-import utilities.RandomUtilities;
-import utilities.StringUtilities;
+import controllers.ConnectionController;
 import domain.common.Common;
 import domain.request.MailRequest;
 import domain.response.MailResponse;
@@ -10,7 +9,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import controllers.ConnectionController;
+import utilities.RandomUtilities;
+import utilities.StringUtilities;
 
 public class OtpServices {
 

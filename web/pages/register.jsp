@@ -92,21 +92,25 @@
 
                                         <div class="form-check form-check-inline">
                                             <input class="form-check-input" type="radio" name="gender"
-                                                   value="Male" checked/>
-                                            <label class="form-check-label"
-                                                   for="maleGender">Male</label>
+                                                   id="maleGender" value="Male"
+                                                   <c:choose>
+                                                       <c:when test="${empty gender or gender eq 'Male'}">checked</c:when>
+                                                   </c:choose> />
+                                            <label class="form-check-label" for="maleGender">Male</label>
                                         </div>
 
                                         <div class="form-check form-check-inline">
                                             <input class="form-check-input" type="radio" name="gender"
-                                                   value="Female" />
-                                            <label class="form-check-label"
-                                                   for="femaleGender">Female</label>
+                                                   id="femaleGender" value="Female"
+                                                   <c:choose>
+                                                       <c:when test="${gender eq 'Female'}">checked</c:when>
+                                                   </c:choose> />
+                                            <label class="form-check-label" for="femaleGender">Female</label>
                                         </div>
                                     </div>
 
                                     <div class="mt-4 pt-2">
-                                        <input class="btn btn-primary btn-lg" type="submit" value="Submit" />
+                                        <button type="button" class="btn btn-primary btn-lg" id="registerButton">Register</button>
                                     </div>
 
                                     <div class="mt-4 pt-2">
