@@ -75,10 +75,6 @@
         <servlet-name>AdminServlet</servlet-name>
         <servlet-class>controllers.AdminServlet</servlet-class>
     </servlet>
-    <servlet>
-        <servlet-name>OtpServlet</servlet-name>
-        <servlet-class>controllers.OtpServlet</servlet-class>
-    </servlet>
     <!--Servlet Mapping-->
     <servlet-mapping>
         <servlet-name>MainServlet</servlet-name>
@@ -111,9 +107,5 @@
     <servlet-mapping>
         <servlet-name>AdminServlet</servlet-name>
         <url-pattern>/pages/admin</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>OtpServlet</servlet-name>
-        <url-pattern>/pages/verifyOtp</url-pattern>        
     </servlet-mapping>
 </web-app>
