@@ -1,9 +1,10 @@
 import { showErrorDialog } from "./dialog.js";
-import { anyStringNullOrEmpty } from "./validate.js";
+import { anyStringNullOrEmpty, checkEmail, checkPassword } from "./validate.js";
 
 let emailElement;
 let passwordElement;
 let loginForm;
+let loginButtonElement;
 
 function checkAllFields() {
   const email = emailElement.value;
@@ -23,12 +24,11 @@ function checkAllFields() {
   return true;
 }
 
-function setLoginForm() {
-  if (loginForm === null) {
+function setLoginButton() {
+  if (loginButtonElement === null) {
     return;
   }
-  loginForm.onsubmit = function (event) {
-    event.preventDefault();
+  loginButtonElement.onclick = function () {
     if (checkAllFields()) {
       loginForm.submit();
     }
@@ -39,7 +39,8 @@ function init() {
   emailElement = document.getElementById("email");
   passwordElement = document.getElementById("password");
   loginForm = document.getElementById("loginForm");
-  setLoginForm();
+  loginButtonElement = document.getElementById("loginButton");
+  setLoginButton();
 }
 
 window.onload = init;

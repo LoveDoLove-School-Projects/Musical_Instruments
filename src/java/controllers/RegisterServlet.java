@@ -4,7 +4,6 @@ import domain.common.Common;
 import domain.common.Constants;
 import domain.models.Session;
 import domain.request.RegisterRequest;
-import domain.response.OtpResponse;
 import domain.response.RegisterResponse;
 import features.SessionHandler;
 import jakarta.servlet.ServletException;
@@ -35,23 +34,29 @@ public class RegisterServlet extends HttpServlet {
         handleRegister(request, response);
     }
 
+    private void setRegisterPage(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        request.getRequestDispatcher(Constants.REGISTER_JSP_URL).forward(request, response);
+    }
+
     private void handleRegister(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Session session = sessionHandler.getLoginSession(request, response);
         if (session.isResult()) {
             RedirectUtilities.sendRedirect(request, response, Constants.PROFILE_URL);
             return;
         }
+        String path = request.getServletPath();
         if ("POST".equalsIgnoreCase(request.getMethod())) {
-            String path = request.getServletPath();
+            boolean isRegistered = false;
             switch (path) {
                 case Constants.REGISTER_URL:
-                    if (!registerCustomer(request, response)) {
-                        request.getRequestDispatcher(Constants.REGISTER_JSP_URL).forward(request, response);
-                    }
-                    return;
+                    isRegistered = registerCustomer(request, response);
+                    break;
+            }
+            if (isRegistered) {
+                return;
             }
         }
-        request.getRequestDispatcher(Constants.REGISTER_JSP_URL).forward(request, response);
+        setRegisterPage(request, response);
     }
 
     private boolean registerCustomer(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -62,7 +67,6 @@ public class RegisterServlet extends HttpServlet {
         String address = request.getParameter("address");
         String phone_number = request.getParameter("phone_number");
         String gender = request.getParameter("gender");
-        String otp = request.getParameter("otp");
 
         request.setAttribute("username", username);
         request.setAttribute("email", email);
@@ -70,7 +74,7 @@ public class RegisterServlet extends HttpServlet {
         request.setAttribute("phone_number", phone_number);
         request.setAttribute("gender", gender);
 
-        RegisterRequest registerRequest = new RegisterRequest(username, password, confirm_password, email, address, phone_number, gender, otp);
+        RegisterRequest registerRequest = new RegisterRequest(username, password, confirm_password, email, address, phone_number, gender);
 
         if (!validateRegisterRequest(registerRequest)) {
             RedirectUtilities.setErrorMessage(request, "Please Fill In All The Fields!");
@@ -79,13 +83,6 @@ public class RegisterServlet extends HttpServlet {
 
         if (!password.equals(confirm_password)) {
             RedirectUtilities.setErrorMessage(request, "Password and Confirm Password should be same!");
-            return false;
-        }
-
-        OtpResponse otpResponse = otpServices.verifyOtp(email, otp);
-
-        if (otpResponse.getStatus() != Common.Status.OK) {
-            RedirectUtilities.setErrorMessage(request, "Failed to verify OTP!");
             return false;
         }
 
@@ -116,7 +113,7 @@ public class RegisterServlet extends HttpServlet {
         if (registerRequest == null) {
             return false;
         }
-        if (StringUtilities.anyNullOrBlank(registerRequest.getUsername(), registerRequest.getPassword(), registerRequest.getConfirm_password(), registerRequest.getEmail(), registerRequest.getAddress(), registerRequest.getPhoneNumber(), registerRequest.getGender(), registerRequest.getOtp())) {
+        if (StringUtilities.anyNullOrBlank(registerRequest.getUsername(), registerRequest.getPassword(), registerRequest.getConfirm_password(), registerRequest.getEmail(), registerRequest.getAddress(), registerRequest.getPhoneNumber(), registerRequest.getGender())) {
             return false;
         }
         if (!registerRequest.getPassword().equals(registerRequest.getConfirm_password())) {

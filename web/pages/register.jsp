@@ -73,20 +73,6 @@
                                         </div>
                                     </div>
 
-                                    <div class="row">
-                                        <div class="col-md-6 mb-4 pb-2">
-                                            <div class="form-outline">
-                                                <input type="text" name="otp" id="otp" class="form-control form-control-lg" value="" required />
-                                                <label class="form-label" for="otp">Enter OTP</label>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6 mb-4 pb-2">
-                                            <div class="form-outline">
-                                                <button class="btn btn-primary btn-lg" type="button" id="otpButton">Send OTP</button>
-                                            </div>
-                                        </div>
-                                    </div>
-
                                     <div class="col-md-6 mb-4">
                                         <h6 class="mb-2 pb-1">Gender:</h6>
 
