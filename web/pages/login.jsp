@@ -29,23 +29,26 @@
                                     <div class="row">
                                         <div class="col-md-6 mb-4 pb-2">
                                             <div class="form-outline">
-                                                <input type="email" name="email"
-                                                       class="form-control form-control-lg" value="${email}" required />
+                                                <input type="email" name="email" id="email" class="form-control form-control-lg" value="${email}" required />
                                                 <label class="form-label" for="email">Email</label>
                                             </div>
                                         </div>
 
                                         <div class="col-md-6 mb-4 pb-2">
                                             <div class="form-outline">
-                                                <input type="password" name="password"
-                                                       class="form-control form-control-lg" minlength="8" value="${password}" required />
+                                                <input type="password" name="password" id="password" class="form-control form-control-lg" minlength="8" value="${password}" required />
                                                 <label class="form-label" for="password">Password</label>
                                             </div>
                                         </div>
                                     </div>
 
                                     <div class="mt-4 pt-2">
-                                        <input class="btn btn-primary btn-lg" type="submit" value="Submit" />
+                                        <button type="button" class="btn btn-primary btn-lg" id="loginButton">Login</button>
+                                    </div>
+
+                                    <div class="mt-4 pt-2">
+                                        <!-- Forgot Password -->
+                                        <a href="pages/forgotPassword" class="btn btn-link">Forgot Password?</a>
                                     </div>
 
                                     <c:if test="${loginFormUrl != 'pages/adminLogin'}">
@@ -65,6 +68,7 @@
         </form>
     </center>
     <jsp:include page="/defaults/footer.jsp" />
+    <script type="module" src="assets/js/login.js"></script>
 </body>
 
 </html>
