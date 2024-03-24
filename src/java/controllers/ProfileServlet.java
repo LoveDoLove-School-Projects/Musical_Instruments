@@ -37,23 +37,25 @@ public class ProfileServlet extends HttpServlet {
 
     private void handleProfile(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Session session = sessionHandler.getLoginSession(request, response);
-        if (session.isResult()) {
-            String path = request.getServletPath();
-            if ("POST".equalsIgnoreCase(request.getMethod())) {
-                switch (path) {
-                    case Constants.PROFILE_UPLOAD_PICTURE_URL:
-                        uploadPicture(request, response, session);
-                        return;
-                    case Constants.PROFILE_REMOVE_PICTURE_URL:
-                        removePicture(request, response, session);
-                        return;
-                    case Constants.PROFILE_UPDATE_URL:
-                        updateProfile(request, response, session);
-                        return;
-                }
-            }
-            initCustomerProfile(request, response, session);
+        if (!session.isResult()) {
+            RedirectUtilities.redirectWithError(request, response, "Please login to view this page.", Constants.MAIN_URL);
+            return;
         }
+        String path = request.getServletPath();
+        if ("POST".equalsIgnoreCase(request.getMethod())) {
+            switch (path) {
+                case Constants.PROFILE_UPLOAD_PICTURE_URL:
+                    uploadPicture(request, response, session);
+                    return;
+                case Constants.PROFILE_REMOVE_PICTURE_URL:
+                    removePicture(request, response, session);
+                    return;
+                case Constants.PROFILE_UPDATE_URL:
+                    updateProfile(request, response, session);
+                    return;
+            }
+        }
+        initCustomerProfile(request, response, session);
     }
 
     private void initCustomerProfile(HttpServletRequest request, HttpServletResponse response, Session session) throws ServletException, IOException {
