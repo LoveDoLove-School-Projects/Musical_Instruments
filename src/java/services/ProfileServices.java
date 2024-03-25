@@ -1,5 +1,6 @@
 package services;
 
+import controllers.ConnectionController;
 import domain.common.Common;
 import domain.models.Profile;
 import domain.request.ProfileRequest;
@@ -9,26 +10,25 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import controllers.ConnectionController;
 
 public class ProfileServices {
-    
+
     private final String GET_PROFILE_CUSTOMER_SQL = "SELECT * FROM customers WHERE customer_id = ?";
-    
+
     private final String UPLOAD_PICTURE_CUSTOMER_SQL = "UPDATE customers SET picture = ? WHERE customer_id = ?";
-    
+
     private final String REMOVE_PICTURE_CUSTOMER_SQL = "UPDATE customers SET picture = NULL WHERE customer_id = ?";
-    
-    private final String UPDATE_PROFILE_CUSTOMER_SQL = "UPDATE customers SET username = ?, address = ?, phone_number = ?, gender = ?, two_factor_auth = ? WHERE customer_id = ?";
-    
+
+    private final String UPDATE_PROFILE_CUSTOMER_SQL = "UPDATE customers SET username = ?, address = ?, phone_number = ?, gender = ? WHERE customer_id = ?";
+
     private final String GET_PROFILE_ADMIN_SQL = "SELECT * FROM admins WHERE admin_id = ?";
-    
+
     private final String UPLOAD_PICTURE_ADMIN_SQL = "UPDATE admins SET picture = ? WHERE admin_id = ?";
-    
+
     private final String REMOVE_PICTURE_ADMIN_SQL = "UPDATE admins SET picture = NULL WHERE admin_id = ?";
-    
-    private final String UPDATE_PROFILE_ADMIN_SQL = "UPDATE admins SET username = ?, address = ?, phone_number = ?, gender = ?, two_factor_auth = ? WHERE admin_id = ?";
-    
+
+    private final String UPDATE_PROFILE_ADMIN_SQL = "UPDATE admins SET username = ?, address = ?, phone_number = ?, gender = ? WHERE admin_id = ?";
+
     public ProfileResponse getProfile(ProfileRequest profileRequest, Common.Role role) {
         ProfileResponse profileResponse = new ProfileResponse();
         try (Connection connection = ConnectionController.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(getProfile(role))) {
@@ -50,7 +50,6 @@ public class ProfileServices {
                             profile.setPicture(blobAsBytes);
                         }
                     }
-                    profile.setTwo_factor_auth(resultSet.getBoolean("two_factor_auth"));
                     profile.setAccountCreationDate(resultSet.getTimestamp("account_creation_date"));
                     profile.setLastLoginDate(resultSet.getTimestamp("last_login_date"));
                     profileResponse.setStatus(Common.Status.OK);
@@ -65,7 +64,7 @@ public class ProfileServices {
         }
         return profileResponse;
     }
-    
+
     public ProfileResponse uploadPicture(ProfileRequest profileRequest, Common.Role role) {
         ProfileResponse profileResponse = new ProfileResponse();
         try (Connection connection = ConnectionController.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(uploadPicture(role))) {
@@ -79,7 +78,7 @@ public class ProfileServices {
         }
         return profileResponse;
     }
-    
+
     public ProfileResponse removePicture(ProfileRequest profileRequest, Common.Role role) {
         ProfileResponse profileResponse = new ProfileResponse();
         try (Connection connection = ConnectionController.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(removePicture(role))) {
@@ -92,7 +91,7 @@ public class ProfileServices {
         }
         return profileResponse;
     }
-    
+
     public ProfileResponse updateProfile(ProfileRequest profileRequest, Common.Role role) {
         ProfileResponse profileResponse = new ProfileResponse();
         try (Connection connection = ConnectionController.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(updateProfile(role))) {
@@ -100,8 +99,7 @@ public class ProfileServices {
             preparedStatement.setString(2, profileRequest.getAddress());
             preparedStatement.setString(3, profileRequest.getPhoneNumber());
             preparedStatement.setString(4, profileRequest.getGender());
-            preparedStatement.setBoolean(5, profileRequest.isTwo_factor_auth());
-            preparedStatement.setInt(6, profileRequest.getId());
+            preparedStatement.setInt(5, profileRequest.getId());
             int result = preparedStatement.executeUpdate();
             profileResponse.setStatus(result > 0 ? Common.Status.OK : Common.Status.INTERNAL_SERVER_ERROR);
         } catch (SQLException ex) {
@@ -110,23 +108,23 @@ public class ProfileServices {
         }
         return profileResponse;
     }
-    
+
     private String getProfile(Common.Role role) {
         return role == Common.Role.CUSTOMER ? GET_PROFILE_CUSTOMER_SQL : GET_PROFILE_ADMIN_SQL;
     }
-    
+
     private String uploadPicture(Common.Role role) {
         return role == Common.Role.CUSTOMER ? UPLOAD_PICTURE_CUSTOMER_SQL : UPLOAD_PICTURE_ADMIN_SQL;
     }
-    
+
     private String removePicture(Common.Role role) {
         return role == Common.Role.CUSTOMER ? REMOVE_PICTURE_CUSTOMER_SQL : REMOVE_PICTURE_ADMIN_SQL;
     }
-    
+
     private String updateProfile(Common.Role role) {
         return role == Common.Role.CUSTOMER ? UPDATE_PROFILE_CUSTOMER_SQL : UPDATE_PROFILE_ADMIN_SQL;
     }
-    
+
     private String getId(Common.Role role) {
         return role == Common.Role.CUSTOMER ? "customer_id" : "admin_id";
     }

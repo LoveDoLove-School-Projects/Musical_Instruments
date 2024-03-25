@@ -1,11 +1,11 @@
 package features;
 
 import domain.common.Common;
+import domain.models.Session;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
-import domain.models.Session;
 import utilities.SessionUtilities;
 
 public class SessionHandler {
@@ -26,11 +26,11 @@ public class SessionHandler {
     public Session getLoginSession(HttpServletRequest request, HttpServletResponse response) throws IOException {
         Object role = SessionUtilities.getSessionAttribute(request.getSession(), "role");
         if (role == null) {
-            return showSessionExpired(request, response);
+            return showSessionExpired();
         }
         Integer loginId = SessionUtilities.getSessionAttributeInt(request.getSession(), "login_id");
         if (loginId == null) {
-            return showSessionExpired(request, response);
+            return showSessionExpired();
         }
         return new Session(true, loginId, (Common.Role) role);
     }
@@ -43,10 +43,7 @@ public class SessionHandler {
         session.invalidate();
     }
 
-    private Session showSessionExpired(HttpServletRequest request, HttpServletResponse response) throws IOException {
-//        RedirectUtilities.setErrorMessage(request, "Session expired. Please login again.");
-//        RedirectUtilities.sendRedirect(request, response, Constants.MAIN_URL);
+    private Session showSessionExpired() throws IOException {
         return new Session(false, 0, Common.Role.UNKNOWN);
-
     }
 }

@@ -7,7 +7,6 @@ CREATE TABLE customers (
     phone_number VARCHAR(20) NOT NULL,
     gender VARCHAR(10) NOT NULL,
     picture BLOB,
-    two_factor_auth BOOLEAN DEFAULT FALSE,
     account_creation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     last_login_date TIMESTAMP
 );

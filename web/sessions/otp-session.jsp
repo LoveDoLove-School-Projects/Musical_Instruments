@@ -2,6 +2,9 @@
 <%@ page contentType="text/html" pageEncoding="UTF-8" %>
 <c:set var="path" value="${pageContext.request.contextPath}" />
 <c:set var="basePath" value="${pageContext.request.scheme}://${pageContext.request.serverName}:${pageContext.request.serverPort}${path}/" />
+<%
+response.setHeader("Cache-Control", "no-store");
+%>
 <!DOCTYPE html>
 <html>
 
@@ -14,7 +17,7 @@
     <body>
         <jsp:include page="/defaults/message.jsp" />
         <section class="vh-100" style=" background-color: #eee;">
-            <form method="POST" action="sessions/verified-session" id="verifiedSession">
+            <form method="POST" action="sessions/otp-session" id="otpForm">
                 <center>
                     <div class="container py-5 h-100">
                         <div class="row justify-content-center align-items-center h-100">
@@ -50,6 +53,7 @@
             </form>
         </section>
         <jsp:include page="/defaults/footer.jsp" />
+        <script type="module" src="assets/js/otp-session.js"></script>
     </body>
 
 </html>

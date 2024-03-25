@@ -26,12 +26,12 @@
     </servlet-mapping>
     <!--Sessions-->
     <servlet>
-        <servlet-name>SessionServlet</servlet-name>
-        <servlet-class>controllers.SessionServlet</servlet-class>
+        <servlet-name>OtpServlet</servlet-name>
+        <servlet-class>controllers.OtpServlet</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>SessionServlet</servlet-name>
-        <url-pattern>/sessions/verified-session</url-pattern>
+        <servlet-name>OtpServlet</servlet-name>
+        <url-pattern>/sessions/otp-session</url-pattern>
     </servlet-mapping>
     <!--Listener-->
     <listener>

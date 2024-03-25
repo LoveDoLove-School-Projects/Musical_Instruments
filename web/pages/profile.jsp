@@ -127,14 +127,6 @@
                                     </div>
                                     <hr>
                                     <div class="row">
-                                        <label for="two_factor_auth">2FA</label>
-                                        <div class="col-sm-9">
-                                            <input type="checkbox" id="two_factor_auth" name="two_factor_auth"
-                                                   ${two_factor_auth==true ? 'checked' : '' } />
-                                        </div>
-                                    </div>
-                                    <hr>
-                                    <div class="row">
                                         <div class="col-sm-9">
                                             <input type="submit"  class="btn btn-primary" value="Update Profile" />
                                         </div>

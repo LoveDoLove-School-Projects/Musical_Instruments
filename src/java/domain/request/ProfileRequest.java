@@ -15,8 +15,8 @@ public class ProfileRequest extends DefaultRequest {
         super(id, picture);
     }
 
-    public ProfileRequest(int id, String username, String address, String phoneNumber, String gender, boolean two_factor_auth) {
-        super(id, username, address, phoneNumber, gender, two_factor_auth);
+    public ProfileRequest(int id, String username, String address, String phoneNumber, String gender) {
+        super(id, username, address, phoneNumber, gender);
     }
 
 }

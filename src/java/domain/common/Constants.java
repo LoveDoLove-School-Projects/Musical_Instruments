@@ -34,7 +34,6 @@ public final class Constants {
     public static final String SERVICE_SEND_EMAIL_URL = "/services/sendEmail";
 
     //    Two Step Verification URL
-    public static final String VERIFIED_SESSION_JSP_URL = "/sessions/verified-session.jsp";
-    public static final String VERIFIED_SESSION_URL = "/sessions/verified-session";
+    public static final String OTP_SESSION_JSP_URL = "/sessions/otp-session.jsp";
 
 }
