@@ -12,7 +12,6 @@ public final class Constants {
     public static final String PROFILE_JSP_URL = "/pages/profile.jsp";
     public static final String PRODUCT_JSP_URL = "/pages/product.jsp";
     public static final String ADMIN_JSP_URL = "/pages/admin.jsp";
-    public static final String OTP_JSP_URL = "/pages/verifyOtp.jsp";
 
     //    Servlet URL
     public static final String MAIN_URL = "/pages/main";
@@ -20,7 +19,6 @@ public final class Constants {
     public static final String PROFILE_URL = "/pages/profile";
     public static final String PRODUCT_URL = "/pages/product";
     public static final String ADMIN_URL = "/pages/admin";
-    public static final String OTP_URL = "/pages/verifyOtp";
 
     //    Login URL
     public static final String CUSTOMER_LOGIN_URL = "/pages/login";
@@ -34,5 +32,9 @@ public final class Constants {
     //    Services Method URL
     public static final String SERVICE_SEND_OTP_URL = "/services/sendOtp";
     public static final String SERVICE_SEND_EMAIL_URL = "/services/sendEmail";
+
+    //    Two Step Verification URL
+    public static final String VERIFIED_SESSION_JSP_URL = "/sessions/verified-session.jsp";
+    public static final String VERIFIED_SESSION_URL = "/sessions/verified-session";
 
 }
