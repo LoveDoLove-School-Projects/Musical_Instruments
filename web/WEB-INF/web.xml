@@ -24,6 +24,15 @@
         <url-pattern>/services/sendOtp</url-pattern>
         <url-pattern>/services/sendEmail</url-pattern>
     </servlet-mapping>
+    <!--Sessions-->
+    <servlet>
+        <servlet-name>SessionServlet</servlet-name>
+        <servlet-class>controllers.SessionServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>SessionServlet</servlet-name>
+        <url-pattern>/sessions/verified-session</url-pattern>
+    </servlet-mapping>
     <!--Listener-->
     <listener>
         <description>Enviroment Entry Reader Listener</description>
