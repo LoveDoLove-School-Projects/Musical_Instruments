@@ -6,10 +6,7 @@
 <html>
 
     <head>
-        <base href="${basePath}">
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <jsp:include page="/defaults/head.jsp" />
         <title>2FA Session</title>
         <link rel="stylesheet" href="assets/css/form.css" />
     </head>
@@ -32,7 +29,7 @@
                                         <div class="row d-flex justify-content-center">
                                             <div class="col-md-6 mb-4 d-flex align-items-center">
                                                 <div class="form-outline datepicker w-100">
-                                                    <input type="text" name="otp" id="otp" class="form-control form-control-lg" min="0" maxlength="6" placeholder="XXXXXX" required />
+                                                    <input type="text" name="otp" id="otp" class="form-control form-control-lg" maxlength="6" placeholder="XXXXXX" required />
                                                 </div>
                                             </div>
                                         </div>
@@ -53,7 +50,6 @@
             </form>
         </section>
         <jsp:include page="/defaults/footer.jsp" />
-        <script type="module" src="assets/js/register.js"></script>
     </body>
 
 </html>

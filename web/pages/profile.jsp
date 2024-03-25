@@ -7,11 +7,8 @@
 <html>
 
     <head>
-        <base href="${basePath}">
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        <title>Profile</title>
+        <jsp:include page="/defaults/head.jsp" />
+        <title>Profile Page</title>
     </head>
 
     <body>

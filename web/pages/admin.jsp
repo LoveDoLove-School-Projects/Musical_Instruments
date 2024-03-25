@@ -1,4 +1,4 @@
-<%-- 
+<%--
     Document   : admin
     Created on : 12 Mar 2024, 8:03:44 PM
     Author     : tanji
@@ -272,22 +272,22 @@
             </div>
         </section>
         <script>
-         let sidebar = document.querySelector(".sidebar");
-      let sidebarBtn = document.querySelector(".sidebarBtn");
-      sidebarBtn.onclick = function() {
-        sidebar.classList.toggle("active");
-        if(sidebar.classList.contains("active")) {
+            let sidebar = document.querySelector(".sidebar");
+            let sidebarBtn = document.querySelector(".sidebarBtn");
+            sidebarBtn.onclick = function () {
+                sidebar.classList.toggle("active");
+                if (sidebar.classList.contains("active")) {
                     sidebarBtn.classList.replace("bx-menu", "bx-menu-alt-right");
                 } else
                     sidebarBtn.classList.replace("bx-menu-alt-right", "bx-menu");
             }
         </script>
-        
+
     </head>
-    <body>
-        <jsp:include page="/defaults/header.jsp" />
-        <h1>Admin Panel to be continue, now continue</h1>
-        <p>${username}</p>
-        <jsp:include page="/defaults/footer.jsp" />
-    </body>
+<body>
+    <jsp:include page="/defaults/header.jsp" />
+    <h1>Admin Panel to be continue, now continue</h1>
+    <p>${username}</p>
+    <jsp:include page="/defaults/footer.jsp" />
+</body>
 </html>
