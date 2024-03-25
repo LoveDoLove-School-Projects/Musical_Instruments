@@ -12,7 +12,6 @@ public class Profile {
     protected String phoneNumber;
     protected String gender;
     protected byte[] picture;
-    protected boolean two_factor_auth;
     protected Timestamp accountCreationDate;
     protected Timestamp lastLoginDate;
 
@@ -90,14 +89,6 @@ public class Profile {
 
     public void setPicture(byte[] picture) {
         this.picture = picture;
-    }
-
-    public boolean isTwo_factor_auth() {
-        return two_factor_auth;
-    }
-
-    public void setTwo_factor_auth(boolean two_factor_auth) {
-        this.two_factor_auth = two_factor_auth;
     }
 
     public Timestamp getAccountCreationDate() {

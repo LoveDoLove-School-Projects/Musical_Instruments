@@ -26,9 +26,11 @@ public class LoginServices {
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 if (resultSet.next()) {
                     int id = resultSet.getInt(role == Common.Role.CUSTOMER ? "customer_id" : "admin_id");
+                    String email = resultSet.getString("email");
                     updateLastLoginDate(connection, id, role);
                     loginResponse.setStatus(Common.Status.OK);
                     loginResponse.setLogin_id(id);
+                    loginResponse.setEmail(email);
                 } else {
                     loginResponse.setStatus(Common.Status.UNAUTHORIZED);
                 }
