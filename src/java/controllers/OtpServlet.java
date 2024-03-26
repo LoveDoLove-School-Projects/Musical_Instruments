@@ -13,6 +13,7 @@ import java.io.IOException;
 import services.OtpServices;
 import utilities.RedirectUtilities;
 import utilities.StringUtilities;
+import utilities.enums.RedirectType;
 
 public class OtpServlet extends HttpServlet {
 
@@ -39,14 +40,14 @@ public class OtpServlet extends HttpServlet {
         System.out.println(otp);
 
         if (StringUtilities.anyNullOrBlank(otp)) {
-            RedirectUtilities.redirectWithError(request, response, "Please fill in OTP!", Constants.CUSTOMER_LOGIN_URL);
+            RedirectUtilities.redirectWithMessage(request, response, RedirectType.DANGER, "Please fill in OTP!", Constants.CUSTOMER_LOGIN_URL);
             return;
         }
 
         OtpResponse otpResponse = otpServices.verifyOtp(email, otp);
 
         if (otpResponse.getStatus() == Common.Status.INVALID) {
-            RedirectUtilities.redirectWithError(request, response, "Invalid OTP!", Constants.CUSTOMER_LOGIN_URL);
+            RedirectUtilities.redirectWithMessage(request, response, RedirectType.DANGER, "Invalid OTP!", Constants.CUSTOMER_LOGIN_URL);
             return;
         }
         session.invalidate();

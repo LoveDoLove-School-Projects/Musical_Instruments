@@ -17,6 +17,7 @@ import services.LoginServices;
 import services.OtpServices;
 import utilities.RedirectUtilities;
 import utilities.StringUtilities;
+import utilities.enums.RedirectType;
 
 public class LoginServlet extends HttpServlet {
 
@@ -78,36 +79,36 @@ public class LoginServlet extends HttpServlet {
         request.setAttribute("email", email);
 
         if (StringUtilities.anyNullOrBlank(email, password)) {
-            RedirectUtilities.setErrorMessage(request, "Email and Password are required!");
+            RedirectUtilities.setMessage(request, RedirectType.DANGER, "Email and Password are required!");
             return false;
         }
         LoginRequest loginRequest = new LoginRequest(email, password);
         LoginResponse loginResponse = loginServices.loginServices(loginRequest, role);
 
         if (loginResponse.getStatus() == null) {
-            RedirectUtilities.setErrorMessage(request, "Failed to login!");
+            RedirectUtilities.setMessage(request, RedirectType.DANGER, "Failed to login!");
             return false;
         }
 
         if (loginResponse.getStatus() == Common.Status.NOT_FOUND) {
-            RedirectUtilities.setErrorMessage(request, "Email not found!");
+            RedirectUtilities.setMessage(request, RedirectType.DANGER, "Email not found!");
             return false;
         }
 
         if (loginResponse.getStatus() == Common.Status.UNAUTHORIZED) {
-            RedirectUtilities.setErrorMessage(request, "Incorrect Email or Password!");
+            RedirectUtilities.setMessage(request, RedirectType.DANGER, "Incorrect Email or Password!");
             return false;
         }
 
         if (loginResponse.getStatus() != Common.Status.OK) {
-            RedirectUtilities.setErrorMessage(request, "Failed to login!");
+            RedirectUtilities.setMessage(request, RedirectType.DANGER, "Failed to login!");
             return false;
         }
 
         OtpResponse otpResponse = otpServices.sendOtp(loginResponse.getEmail());
 
         if (otpResponse.getStatus() != Common.Status.OK) {
-            RedirectUtilities.setErrorMessage(request, "There was an error from the server! Please try again later.");
+            RedirectUtilities.setMessage(request, RedirectType.DANGER, "There was an error from the server! Please try again later.");
             return false;
         }
 

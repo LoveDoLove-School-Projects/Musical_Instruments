@@ -16,7 +16,9 @@ import java.io.InputStream;
 import java.util.Base64;
 import services.ProfileServices;
 import utilities.RedirectUtilities;
+import utilities.SessionUtilities;
 import utilities.StringUtilities;
+import utilities.enums.RedirectType;
 
 @MultipartConfig
 public class ProfileServlet extends HttpServlet {
@@ -38,7 +40,7 @@ public class ProfileServlet extends HttpServlet {
     private void handleProfile(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Session session = sessionHandler.getLoginSession(request, response);
         if (!session.isResult()) {
-            RedirectUtilities.redirectWithError(request, response, "Please login to view this page.", Constants.MAIN_URL);
+            RedirectUtilities.redirectWithMessage(request, response, RedirectType.DANGER, "Please login to view this page.", Constants.MAIN_URL);
             return;
         }
         String path = request.getServletPath();
@@ -62,8 +64,8 @@ public class ProfileServlet extends HttpServlet {
         ProfileRequest profileRequest = new ProfileRequest(session.getId());
         ProfileResponse profileResponse = profileServices.getProfile(profileRequest, session.getRole());
         if (profileResponse == null || profileResponse.getStatus() == Common.Status.INTERNAL_SERVER_ERROR || profileResponse.getStatus() == Common.Status.NOT_FOUND) {
-            sessionHandler.clearSession(request);
-            RedirectUtilities.redirectWithError(request, response, "Error fetching profile details.", Constants.MAIN_URL);
+            SessionUtilities.clearSession(request);
+            RedirectUtilities.redirectWithMessage(request, response, RedirectType.DANGER, "Error fetching profile details.", Constants.MAIN_URL);
             return;
         }
         request.setAttribute("username", profileResponse.getProfile().getUsername());
@@ -82,15 +84,15 @@ public class ProfileServlet extends HttpServlet {
     private void uploadPicture(HttpServletRequest request, HttpServletResponse response, Session session) throws ServletException, IOException {
         InputStream pictureStream = request.getPart("uploadPicture").getInputStream();
         if (pictureStream == null) {
-            RedirectUtilities.redirectWithError(request, response, "Error uploading picture.", Constants.PROFILE_URL);
+            RedirectUtilities.redirectWithMessage(request, response, RedirectType.DANGER, "Error uploading picture.", Constants.PROFILE_URL);
             return;
         }
         ProfileRequest profileRequest = new ProfileRequest(session.getId(), pictureStream);
         ProfileResponse profileResponse = profileServices.uploadPicture(profileRequest, session.getRole());
         if (profileResponse == null || profileResponse.getStatus() == Common.Status.INTERNAL_SERVER_ERROR) {
-            RedirectUtilities.setErrorMessage(request, "Error uploading picture.");
+            RedirectUtilities.setMessage(request, RedirectType.DANGER, "Error uploading picture.");
         } else if (profileResponse.getStatus() == Common.Status.OK) {
-            RedirectUtilities.setSuccessMessage(request, "Picture uploaded successfully.");
+            RedirectUtilities.setMessage(request, RedirectType.SUCCESS, "Picture uploaded successfully.");
         }
         RedirectUtilities.sendRedirect(request, response, Constants.PROFILE_URL);
     }
@@ -99,9 +101,9 @@ public class ProfileServlet extends HttpServlet {
         ProfileRequest profileRequest = new ProfileRequest(session.getId());
         ProfileResponse profileResponse = profileServices.removePicture(profileRequest, session.getRole());
         if (profileResponse == null || profileResponse.getStatus() == Common.Status.INTERNAL_SERVER_ERROR) {
-            RedirectUtilities.setErrorMessage(request, "Error removing picture.");
+            RedirectUtilities.setMessage(request, RedirectType.DANGER, "Error removing picture.");
         } else if (profileResponse.getStatus() == Common.Status.OK) {
-            RedirectUtilities.setSuccessMessage(request, "Picture removed successfully.");
+            RedirectUtilities.setMessage(request, RedirectType.SUCCESS, "Picture removed successfully.");
         }
         RedirectUtilities.sendRedirect(request, response, Constants.PROFILE_URL);
     }
@@ -112,15 +114,15 @@ public class ProfileServlet extends HttpServlet {
         String phoneNumber = request.getParameter("phone_number");
         String gender = request.getParameter("gender");
         if (StringUtilities.anyNullOrBlank(username, address, phoneNumber, gender)) {
-            RedirectUtilities.redirectWithError(request, response, "All fields are required.", Constants.PROFILE_URL);
+            RedirectUtilities.redirectWithMessage(request, response, RedirectType.DANGER, "All fields are required.", Constants.PROFILE_URL);
             return;
         }
         ProfileRequest profileRequest = new ProfileRequest(session.getId(), username, address, phoneNumber, gender);
         ProfileResponse profileResponse = profileServices.updateProfile(profileRequest, session.getRole());
         if (profileResponse == null || profileResponse.getStatus() == Common.Status.INTERNAL_SERVER_ERROR) {
-            RedirectUtilities.setErrorMessage(request, "Error updating profile.");
+            RedirectUtilities.setMessage(request, RedirectType.DANGER, "Error updating profile.");
         } else if (profileResponse.getStatus() == Common.Status.OK) {
-            RedirectUtilities.setSuccessMessage(request, "Profile updated successfully.");
+            RedirectUtilities.setMessage(request, RedirectType.SUCCESS, "Profile updated successfully.");
         }
         RedirectUtilities.sendRedirect(request, response, Constants.PROFILE_URL);
     }

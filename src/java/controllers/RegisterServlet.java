@@ -15,6 +15,7 @@ import services.OtpServices;
 import services.RegisterServices;
 import utilities.RedirectUtilities;
 import utilities.StringUtilities;
+import utilities.enums.RedirectType;
 
 public class RegisterServlet extends HttpServlet {
 
@@ -77,35 +78,34 @@ public class RegisterServlet extends HttpServlet {
         RegisterRequest registerRequest = new RegisterRequest(username, password, confirm_password, email, address, phone_number, gender);
 
         if (!validateRegisterRequest(registerRequest)) {
-            RedirectUtilities.setErrorMessage(request, "Please Fill In All The Fields!");
+            RedirectUtilities.setMessage(request, RedirectType.DANGER, "Please Fill In All The Fields!");
             return false;
         }
 
         if (!password.equals(confirm_password)) {
-            RedirectUtilities.setErrorMessage(request, "Password and Confirm Password should be same!");
+            RedirectUtilities.setMessage(request, RedirectType.DANGER, "Password and Confirm Password should be same!");
             return false;
         }
 
         RegisterResponse registerResponse = registerServices.addNewCustomer(registerRequest);
 
         if (registerResponse.getStatus() == null) {
-            RedirectUtilities.setErrorMessage(request, "Failed to Register!");
+            RedirectUtilities.setMessage(request, RedirectType.DANGER, "Failed to Register!");
             return false;
         }
 
         if (registerResponse.getStatus() == Common.Status.EXISTS) {
-            RedirectUtilities.setErrorMessage(request, "Email Already Exists!");
+            RedirectUtilities.setMessage(request, RedirectType.DANGER, "Email Already Exists!");
             return false;
         }
 
         if (registerResponse.getStatus() == Common.Status.OK) {
-            RedirectUtilities.setSuccessMessage(request, "Registered Successfully!");
             otpServices.deleteOtp(email);
-            RedirectUtilities.sendRedirect(request, response, Constants.CUSTOMER_LOGIN_URL);
+            RedirectUtilities.redirectWithMessage(request, response, RedirectType.SUCCESS, "Registered Successfully!", Constants.CUSTOMER_LOGIN_URL);
             return true;
         }
 
-        RedirectUtilities.setErrorMessage(request, "Failed to Register!");
+        RedirectUtilities.setMessage(request, RedirectType.DANGER, "Failed to Register!");
         return false;
     }
 

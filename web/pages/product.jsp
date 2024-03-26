@@ -6,12 +6,9 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <base href="${basePath}">
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <jsp:include page="/defaults/head.jsp" />
         <title>Product Page</title>
-         <link rel="stylesheet" href="assets/css/product.css" />
+        <link rel="stylesheet" href="assets/css/product.css" />
     </head>
 
 
@@ -76,10 +73,10 @@
                     </div>
                 </div>
             </section>
-            
+
             <section4 class="section4">
                 <div class="">
-                    
+
                 </div>
             </section4>
 

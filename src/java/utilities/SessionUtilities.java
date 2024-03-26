@@ -1,5 +1,6 @@
 package utilities;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
 public class SessionUtilities {
@@ -22,10 +23,7 @@ public class SessionUtilities {
             return null;
         }
         Object attribute = session.getAttribute(key);
-        if (attribute instanceof Integer) {
-            return (Integer) attribute;
-        }
-        return null;
+        return (attribute instanceof Integer) ? (Integer) attribute : null;
     }
 
     public static String getSessionAttributeString(HttpSession session, String key) {
@@ -33,15 +31,19 @@ public class SessionUtilities {
             return null;
         }
         Object attribute = session.getAttribute(key);
-        if (attribute instanceof String) {
-            return (String) attribute;
-        }
-        return null;
+        return (attribute instanceof String) ? (String) attribute : null;
     }
 
     public static void removeSessionAttribute(HttpSession session, String key) {
         if (session != null) {
             session.removeAttribute(key);
+        }
+    }
+
+    public static void clearSession(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            session.invalidate();
         }
     }
 }
