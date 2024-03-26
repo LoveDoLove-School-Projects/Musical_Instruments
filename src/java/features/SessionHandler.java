@@ -35,14 +35,6 @@ public class SessionHandler {
         return new Session(true, loginId, (Common.Role) role);
     }
 
-    public void clearSession(HttpServletRequest request) {
-        clearSession(request.getSession());
-    }
-
-    public void clearSession(HttpSession session) {
-        session.invalidate();
-    }
-
     private Session showSessionExpired() throws IOException {
         return new Session(false, 0, Common.Role.UNKNOWN);
     }

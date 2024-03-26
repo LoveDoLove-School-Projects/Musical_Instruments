@@ -11,6 +11,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import services.AdminServices;
 import utilities.RedirectUtilities;
+import utilities.enums.RedirectType;
 
 public class AdminServlet extends HttpServlet {
 
@@ -47,7 +48,7 @@ public class AdminServlet extends HttpServlet {
         AdminRequest adminRequest = new AdminRequest(token);
         AdminResponse adminResponse = adminServices.getAdminProfile(adminRequest);
         if (adminResponse == null || adminResponse.getStatus() == Common.Status.NOT_FOUND) { // Refer Common java class to see have what status then apply in services
-            RedirectUtilities.redirectWithError(request, response, "Invalid Admin Profile!", Constants.MAIN_URL);
+            RedirectUtilities.redirectWithMessage(request, response, RedirectType.DANGER, "Invalid Admin Profile!", Constants.MAIN_URL);
             return;
         }
         request.setAttribute("username", adminResponse.getUsername());
