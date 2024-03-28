@@ -12,6 +12,7 @@ public class DefaultRequest {
     protected String address;
     protected String phoneNumber;
     protected String gender;
+    protected Boolean two_factor_auth;
     protected InputStream picture;
     protected Timestamp accountCreationDate;
     protected Timestamp lastLoginDate;
@@ -39,6 +40,15 @@ public class DefaultRequest {
         this.address = address;
         this.phoneNumber = phoneNumber;
         this.gender = gender;
+    }
+
+    public DefaultRequest(int id, String username, String address, String phoneNumber, String gender, Boolean two_factor_auth) {
+        this.id = id;
+        this.username = username;
+        this.address = address;
+        this.phoneNumber = phoneNumber;
+        this.gender = gender;
+        this.two_factor_auth = two_factor_auth;
     }
 
     public DefaultRequest(String username, String password, String email, String address, String phoneNumber, String gender) {
@@ -104,6 +114,14 @@ public class DefaultRequest {
 
     public void setGender(String gender) {
         this.gender = gender;
+    }
+
+    public Boolean getTwo_factor_auth() {
+        return two_factor_auth;
+    }
+
+    public void setTwo_factor_auth(Boolean two_factor_auth) {
+        this.two_factor_auth = two_factor_auth;
     }
 
     public InputStream getPicture() {

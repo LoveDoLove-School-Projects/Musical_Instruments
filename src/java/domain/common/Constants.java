@@ -33,7 +33,10 @@ public final class Constants {
     public static final String SERVICE_SEND_OTP_URL = "/services/sendOtp";
     public static final String SERVICE_SEND_EMAIL_URL = "/services/sendEmail";
 
-    //    Two Step Verification URL
-    public static final String OTP_SESSION_JSP_URL = "/sessions/otp-session.jsp";
+    //    Session JSP URL
+    public static final String VERIFY_OTP_JSP_URL = "/sessions/verifyOtp.jsp";
 
+    //    Session URL
+    public static final String SEND_OTP_URL = "/sessions/sendOtp";
+    public static final String VERIFY_OTP_URL = "/sessions/verifyOtp";
 }

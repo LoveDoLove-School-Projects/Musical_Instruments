@@ -17,8 +17,8 @@ import utilities.StringUtilities;
 
 public class ServiceServlet extends HttpServlet {
 
-    private final OtpServices otpServices = new OtpServices();
-    private final MailServices mailServices = new MailServices();
+    private static final OtpServices otpServices = new OtpServices();
+    private static final MailServices mailServices = new MailServices();
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

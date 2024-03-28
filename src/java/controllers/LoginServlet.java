@@ -21,9 +21,9 @@ import utilities.enums.RedirectType;
 
 public class LoginServlet extends HttpServlet {
 
-    private final LoginServices loginServices = new LoginServices();
-    private final OtpServices otpServices = new OtpServices();
-    private final SessionHandler sessionHandler = new SessionHandler();
+    private static final LoginServices loginServices = new LoginServices();
+    private static final OtpServices otpServices = new OtpServices();
+    private static final SessionHandler sessionHandler = new SessionHandler();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -105,20 +105,23 @@ public class LoginServlet extends HttpServlet {
             return false;
         }
 
-        OtpResponse otpResponse = otpServices.sendOtp(loginResponse.getEmail());
-
-        if (otpResponse.getStatus() != Common.Status.OK) {
-            RedirectUtilities.setMessage(request, RedirectType.DANGER, "There was an error from the server! Please try again later.");
-            return false;
-        }
-
         HttpSession session = request.getSession(true);
-        session.setAttribute("login_id_2fa", loginResponse.getLogin_id());
-        session.setAttribute("role", role);
-        session.setAttribute("email", loginResponse.getEmail());
-        String loginSession = "JSESSIONID=" + session.getId() + ";Path=/;Secure;HttpOnly;SameSite=Strict";
-        response.setHeader("Set-Cookie", loginSession);
-        request.getRequestDispatcher(Constants.OTP_SESSION_JSP_URL).forward(request, response);
+        if (loginResponse.isTwo_factor_auth()) {
+            OtpResponse otpResponse = otpServices.sendOtp(loginResponse.getEmail());
+            if (otpResponse.getStatus() != Common.Status.OK) {
+                RedirectUtilities.setMessage(request, RedirectType.DANGER, "There was an error from the server! Please try again later.");
+                return false;
+            }
+            session.setAttribute("login_id_2fa", loginResponse.getLogin_id());
+            session.setAttribute("role", role);
+            session.setAttribute("email", loginResponse.getEmail());
+            String loginSession = "JSESSIONID=" + session.getId() + ";Path=/;Secure;HttpOnly;SameSite=Strict";
+            response.setHeader("Set-Cookie", loginSession);
+            request.getRequestDispatcher(Constants.VERIFY_OTP_JSP_URL).forward(request, response);
+        } else {
+            sessionHandler.setLoginSession(session, loginResponse.getLogin_id(), role);
+            RedirectUtilities.sendRedirect(request, response, Constants.PROFILE_URL);
+        }
         return true;
     }
 }

@@ -27,10 +27,12 @@ public class LoginServices {
                 if (resultSet.next()) {
                     int id = resultSet.getInt(role == Common.Role.CUSTOMER ? "customer_id" : "admin_id");
                     String email = resultSet.getString("email");
+                    Boolean two_factor_auth = resultSet.getBoolean("two_factor_auth");
                     updateLastLoginDate(connection, id, role);
                     loginResponse.setStatus(Common.Status.OK);
                     loginResponse.setLogin_id(id);
                     loginResponse.setEmail(email);
+                    loginResponse.setTwo_factor_auth(two_factor_auth);
                 } else {
                     loginResponse.setStatus(Common.Status.UNAUTHORIZED);
                 }

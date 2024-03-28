@@ -31,12 +31,13 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>OtpServlet</servlet-name>
-        <url-pattern>/sessions/otp-session</url-pattern>
+        <url-pattern>/sessions/sendOtp</url-pattern>
+        <url-pattern>/sessions/verifyOtp</url-pattern>
     </servlet-mapping>
     <!--Listener-->
     <listener>
         <description>Enviroment Entry Reader Listener</description>
-        <listener-class>listeners.EnvEntryReader</listener-class>
+        <listener-class>listeners.ServerListener</listener-class>
     </listener>
     <!--Enviroment-->
     <env-entry>

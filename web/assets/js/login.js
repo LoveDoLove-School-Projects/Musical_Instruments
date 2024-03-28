@@ -1,4 +1,4 @@
-import { showErrorDialog } from "./dialog.js";
+import { showErrorDialog, showProgressDialog } from "./dialog.js";
 import { anyStringNullOrEmpty, checkEmail, checkPassword } from "./validate.js";
 
 let emailElement;

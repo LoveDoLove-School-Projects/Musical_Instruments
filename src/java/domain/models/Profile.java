@@ -12,6 +12,7 @@ public class Profile {
     protected String phoneNumber;
     protected String gender;
     protected byte[] picture;
+    protected Boolean two_factor_auth;
     protected Timestamp accountCreationDate;
     protected Timestamp lastLoginDate;
 
@@ -25,6 +26,16 @@ public class Profile {
         this.address = address;
         this.phoneNumber = phoneNumber;
         this.gender = gender;
+    }
+
+    public Profile(String username, String password, String email, String address, String phoneNumber, String gender, Boolean two_factor_auth) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.address = address;
+        this.phoneNumber = phoneNumber;
+        this.gender = gender;
+        this.two_factor_auth = two_factor_auth;
     }
 
     public int getId() {
@@ -81,6 +92,14 @@ public class Profile {
 
     public void setGender(String gender) {
         this.gender = gender;
+    }
+
+    public Boolean getTwo_factor_auth() {
+        return two_factor_auth;
+    }
+
+    public void setTwo_factor_auth(Boolean two_factor_auth) {
+        this.two_factor_auth = two_factor_auth;
     }
 
     public byte[] getPicture() {

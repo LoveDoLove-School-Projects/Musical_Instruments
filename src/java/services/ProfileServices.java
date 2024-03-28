@@ -19,7 +19,7 @@ public class ProfileServices {
 
     private final String REMOVE_PICTURE_CUSTOMER_SQL = "UPDATE customers SET picture = NULL WHERE customer_id = ?";
 
-    private final String UPDATE_PROFILE_CUSTOMER_SQL = "UPDATE customers SET username = ?, address = ?, phone_number = ?, gender = ? WHERE customer_id = ?";
+    private final String UPDATE_PROFILE_CUSTOMER_SQL = "UPDATE customers SET username = ?, address = ?, phone_number = ?, gender = ?, two_factor_auth = ? WHERE customer_id = ?";
 
     private final String GET_PROFILE_ADMIN_SQL = "SELECT * FROM admins WHERE admin_id = ?";
 
@@ -27,7 +27,7 @@ public class ProfileServices {
 
     private final String REMOVE_PICTURE_ADMIN_SQL = "UPDATE admins SET picture = NULL WHERE admin_id = ?";
 
-    private final String UPDATE_PROFILE_ADMIN_SQL = "UPDATE admins SET username = ?, address = ?, phone_number = ?, gender = ? WHERE admin_id = ?";
+    private final String UPDATE_PROFILE_ADMIN_SQL = "UPDATE admins SET username = ?, address = ?, phone_number = ?, gender = ?, two_factor_auth = ? WHERE admin_id = ?";
 
     public ProfileResponse getProfile(ProfileRequest profileRequest, Common.Role role) {
         ProfileResponse profileResponse = new ProfileResponse();
@@ -42,6 +42,7 @@ public class ProfileServices {
                     profile.setAddress(resultSet.getString("address"));
                     profile.setPhoneNumber(resultSet.getString("phone_number"));
                     profile.setGender(resultSet.getString("gender"));
+                    profile.setTwo_factor_auth(resultSet.getBoolean("two_factor_auth"));
                     Blob picture = resultSet.getBlob("picture");
                     if (picture != null) {
                         int blobLength = (int) picture.length();
@@ -99,7 +100,8 @@ public class ProfileServices {
             preparedStatement.setString(2, profileRequest.getAddress());
             preparedStatement.setString(3, profileRequest.getPhoneNumber());
             preparedStatement.setString(4, profileRequest.getGender());
-            preparedStatement.setInt(5, profileRequest.getId());
+            preparedStatement.setBoolean(5, profileRequest.getTwo_factor_auth());
+            preparedStatement.setInt(6, profileRequest.getId());
             int result = preparedStatement.executeUpdate();
             profileResponse.setStatus(result > 0 ? Common.Status.OK : Common.Status.INTERNAL_SERVER_ERROR);
         } catch (SQLException ex) {
