@@ -127,6 +127,18 @@
                                     </div>
                                     <hr>
                                     <div class="row">
+                                        <label for="gender">Two Factor Auth</label>
+                                        <div class="col-sm-9">
+                                            <div class="form-check form-check-inline">
+                                                <input type="checkbox" name="two_factor_auth" id="two_factor_auth"
+                                                       class="form-check-input" <c:choose>
+                                                           <c:when test="${two_factor_auth}">checked</c:when>
+                                                       </c:choose> />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <hr>
+                                    <div class="row">
                                         <div class="col-sm-9">
                                             <input type="submit"  class="btn btn-primary" value="Update Profile" />
                                         </div>

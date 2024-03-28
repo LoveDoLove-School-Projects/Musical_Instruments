@@ -23,9 +23,8 @@ import utilities.enums.RedirectType;
 @MultipartConfig
 public class ProfileServlet extends HttpServlet {
 
-    private final ProfileServices profileServices = new ProfileServices();
-
-    private final SessionHandler sessionHandler = new SessionHandler();
+    private static final ProfileServices profileServices = new ProfileServices();
+    private static final SessionHandler sessionHandler = new SessionHandler();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -73,6 +72,7 @@ public class ProfileServlet extends HttpServlet {
         request.setAttribute("address", profileResponse.getProfile().getAddress());
         request.setAttribute("phone_number", profileResponse.getProfile().getPhoneNumber());
         request.setAttribute("gender", profileResponse.getProfile().getGender());
+        request.setAttribute("two_factor_auth", profileResponse.getProfile().getTwo_factor_auth());
         byte[] picture = profileResponse.getProfile().getPicture();
         if (picture != null) {
             String pictureBase64 = Base64.getEncoder().encodeToString(picture);
@@ -113,11 +113,12 @@ public class ProfileServlet extends HttpServlet {
         String address = request.getParameter("address");
         String phoneNumber = request.getParameter("phone_number");
         String gender = request.getParameter("gender");
+        Boolean two_factor_auth = request.getParameter("two_factor_auth") != null;
         if (StringUtilities.anyNullOrBlank(username, address, phoneNumber, gender)) {
             RedirectUtilities.redirectWithMessage(request, response, RedirectType.DANGER, "All fields are required.", Constants.PROFILE_URL);
             return;
         }
-        ProfileRequest profileRequest = new ProfileRequest(session.getId(), username, address, phoneNumber, gender);
+        ProfileRequest profileRequest = new ProfileRequest(session.getId(), username, address, phoneNumber, gender, two_factor_auth);
         ProfileResponse profileResponse = profileServices.updateProfile(profileRequest, session.getRole());
         if (profileResponse == null || profileResponse.getStatus() == Common.Status.INTERNAL_SERVER_ERROR) {
             RedirectUtilities.setMessage(request, RedirectType.DANGER, "Error updating profile.");

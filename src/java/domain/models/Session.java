@@ -6,9 +6,16 @@ public class Session {
 
     private boolean result;
     private int id;
+    private String email;
     private Common.Role role;
 
     public Session() {
+    }
+
+    public Session(int id, String email, Common.Role role) {
+        this.id = id;
+        this.email = email;
+        this.role = role;
     }
 
     public Session(boolean result, int id, Common.Role role) {
@@ -31,6 +38,14 @@ public class Session {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public Common.Role getRole() {

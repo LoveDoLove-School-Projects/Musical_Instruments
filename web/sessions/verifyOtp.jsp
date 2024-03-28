@@ -17,7 +17,7 @@ response.setHeader("Cache-Control", "no-store");
     <body>
         <jsp:include page="/defaults/message.jsp" />
         <section class="vh-100" style=" background-color: #eee;">
-            <form method="POST" action="sessions/otp-session" id="otpForm">
+            <form method="POST" action="sessions/verifyOtp" id="otpForm">
                 <center>
                     <div class="container py-5 h-100">
                         <div class="row justify-content-center align-items-center h-100">
@@ -52,8 +52,7 @@ response.setHeader("Cache-Control", "no-store");
                 </center>
             </form>
         </section>
-        <jsp:include page="/defaults/footer.jsp" />
-        <script type="module" src="assets/js/otp-session.js"></script>
+        <script type="module" src="assets/js/verifyOtp.js"></script>
     </body>
 
 </html>

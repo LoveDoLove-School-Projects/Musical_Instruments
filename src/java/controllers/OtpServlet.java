@@ -2,6 +2,7 @@ package controllers;
 
 import domain.common.Common;
 import domain.common.Constants;
+import domain.models.Session;
 import domain.response.OtpResponse;
 import features.SessionHandler;
 import jakarta.servlet.ServletException;
@@ -17,9 +18,23 @@ import utilities.enums.RedirectType;
 
 public class OtpServlet extends HttpServlet {
 
-    private final SessionHandler sessionHandler = new SessionHandler();
+    private static final String LOGIN_ID_ATTRIBUTE = "login_id_2fa";
+    private static final String EMAIL_ATTRIBUTE = "email";
+    private static final String ROLE_ATTRIBUTE = "role";
 
-    private final OtpServices otpServices = new OtpServices();
+    private static final SessionHandler sessionHandler = new SessionHandler();
+    private static final OtpServices otpServices = new OtpServices();
+
+    private void setOtpPage(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        request.getRequestDispatcher(Constants.VERIFY_OTP_JSP_URL).forward(request, response);
+    }
+
+    private Session getSessionAttributes(HttpSession session) {
+        Integer loginId = (Integer) session.getAttribute(LOGIN_ID_ATTRIBUTE);
+        String email = (String) session.getAttribute(EMAIL_ATTRIBUTE);
+        Common.Role role = (Common.Role) session.getAttribute(ROLE_ATTRIBUTE);
+        return new Session(loginId, email, role);
+    }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -28,31 +43,27 @@ public class OtpServlet extends HttpServlet {
         response.setHeader("Cache-Control", "no-store");
 
         HttpSession session = request.getSession(false);
-        Integer login_id = (Integer) session.getAttribute("login_id_2fa");
-        String email = (String) session.getAttribute("email");
-        Common.Role role = (Common.Role) session.getAttribute("role");
-        session.removeAttribute("login_id_2fa");
-        session.removeAttribute("email");
-        session.removeAttribute("role");
+        Session attributes = getSessionAttributes(session);
 
-        String otp = (String) request.getParameter("otp");
-
-        System.out.println(otp);
+        String otp = request.getParameter("otp");
 
         if (StringUtilities.anyNullOrBlank(otp)) {
-            RedirectUtilities.redirectWithMessage(request, response, RedirectType.DANGER, "Please fill in OTP!", Constants.CUSTOMER_LOGIN_URL);
+            RedirectUtilities.setMessage(request, RedirectType.DANGER, "Please fill in OTP!");
+            setOtpPage(request, response);
             return;
         }
 
-        OtpResponse otpResponse = otpServices.verifyOtp(email, otp);
+        OtpResponse otpResponse = otpServices.verifyOtp(attributes.getEmail(), otp);
 
         if (otpResponse.getStatus() == Common.Status.INVALID) {
-            RedirectUtilities.redirectWithMessage(request, response, RedirectType.DANGER, "Invalid OTP!", Constants.CUSTOMER_LOGIN_URL);
+            RedirectUtilities.setMessage(request, RedirectType.DANGER, "Invalid OTP!");
+            setOtpPage(request, response);
             return;
         }
+
         session.invalidate();
         session = request.getSession(true);
-        sessionHandler.setLoginSession(session, login_id, role);
+        sessionHandler.setLoginSession(session, attributes.getId(), attributes.getRole());
 
         String loginSession = "JSESSIONID=" + session.getId() + ";Path=/;Secure;HttpOnly;SameSite=Strict";
         response.setHeader("Set-Cookie", loginSession);
