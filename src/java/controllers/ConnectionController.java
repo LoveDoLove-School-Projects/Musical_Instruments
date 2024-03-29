@@ -14,7 +14,8 @@ public class ConnectionController {
     public static Connection getConnection() {
         try {
             Class.forName("org.apache.derby.jdbc.ClientDriver");
-            return DriverManager.getConnection(HOST, USER, PASSWORD);
+            Connection connection = DriverManager.getConnection(HOST, USER, PASSWORD);
+            return connection;
         } catch (ClassNotFoundException | SQLException ex) {
             throw new DatabaseAccessException("Error establishing database connection", ex);
         }
