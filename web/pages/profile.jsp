@@ -103,7 +103,7 @@
                                         <label for="phone_number">Phone</label>
                                         <div class="col-sm-9">
                                             <input type="text" id="phone_number" name="phone_number" class="form-control"
-                                                   value="${phone_number}" />
+                                                   value="${phone_number}" pattern="[0-9]+" />
                                         </div>
                                     </div>
                                     <hr>

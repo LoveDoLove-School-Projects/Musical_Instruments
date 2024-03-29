@@ -24,7 +24,7 @@ public class LoginServlet extends HttpServlet {
     private final LoginServices loginServices;
     private final OtpServices otpServices;
     private final SessionHandler sessionHandler;
-    private static final Map<String, Common.Role> ROLE_MAP = Map.of(
+    private final Map<String, Common.Role> ROLE_MAP = Map.of(
             Constants.CUSTOMER_LOGIN_URL, Common.Role.CUSTOMER,
             Constants.ADMIN_LOGIN_URL, Common.Role.ADMIN
     );
@@ -37,11 +37,31 @@ public class LoginServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        processRequest(request, response);
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        processRequest(request, response);
+    }
+
+    private void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Session session = sessionHandler.getLoginSession(request, response);
         if (session.isResult()) {
             RedirectUtilities.sendRedirect(request, response, Constants.PROFILE_URL);
             return;
         }
+        switch (request.getMethod()) {
+            case "GET":
+                processGetRequest(request, response);
+                break;
+            case "POST":
+                processPostRequest(request, response);
+                break;
+        }
+    }
+
+    private void processGetRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String path = request.getServletPath();
         switch (path) {
             case Constants.CUSTOMER_LOGIN_URL:
@@ -54,8 +74,7 @@ public class LoginServlet extends HttpServlet {
         setLoginPage(request, response);
     }
 
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    private void processPostRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String path = request.getServletPath();
         Common.Role role = ROLE_MAP.get(path);
         if (role == null) {

@@ -12,8 +12,8 @@ import utilities.AesUtilities;
 
 public class RegisterServices {
 
-    private static final String ADD_NEW_CUSTOMER_SQL = "INSERT INTO customers (username, password, email, address, phone_number, gender) VALUES (?, ?, ?, ?, ?, ?)";
-    private static final String COUNT_CUSTOMER_EMAIL_SQL = "SELECT COUNT(*) FROM customers WHERE email = ?";
+    private final String ADD_NEW_CUSTOMER_SQL = "INSERT INTO customers (username, password, email, address, phone_number, gender) VALUES (?, ?, ?, ?, ?, ?)";
+    private final String COUNT_CUSTOMER_EMAIL_SQL = "SELECT COUNT(*) FROM customers WHERE email = ?";
 
     public Common.Status addNewCustomer(RegisterRequest registerRequest) {
         try (Connection connection = ConnectionController.getConnection()) {

@@ -13,7 +13,7 @@
 
     <body>
         <jsp:include page="/defaults/header.jsp" />
-        <section class="vh-100" style="background-color: #eee;">
+        <section style="background-color: #eee;">
             <form method="POST" action="${loginFormUrl}" id="loginForm">
                 <center>
                     <div class="container py-5 h-100">
