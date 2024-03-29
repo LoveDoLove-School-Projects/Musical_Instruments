@@ -93,7 +93,7 @@
                                         </div>
 
                                         <div class="mt-4 pt-2">
-                                            <button type="button" class="btn btn-primary btn-lg" id="registerButton">Register</button>
+                                            <button type="submit" class="btn btn-primary btn-lg" id="registerButton">Register</button>
                                         </div>
 
                                         <div class="mt-4 pt-2">

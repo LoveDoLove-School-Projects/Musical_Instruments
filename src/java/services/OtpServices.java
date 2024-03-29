@@ -3,8 +3,7 @@ package services;
 import controllers.ConnectionController;
 import domain.common.Common;
 import domain.request.MailRequest;
-import domain.response.MailResponse;
-import domain.response.OtpResponse;
+import exceptions.DatabaseAccessException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -15,116 +14,92 @@ import utilities.StringUtilities;
 public class OtpServices {
 
     private final MailServices mailServices = new MailServices();
-
     private final String OTP_EMAIL_SUBJECT = "OTP";
     private final String OTP_EMAIL_BODY = "Your OTP is: ";
-
     private final String GET_OTP_SQL = "SELECT * FROM otps WHERE email = ? AND otp = ?";
     private final String COUNT_OTP_SQL = "SELECT COUNT(*) FROM otps WHERE email = ?";
     private final String ADD_OTP_SQL = "INSERT INTO OTPS(email, otp) VALUES(?, ?)";
     private final String UPDATE_OTP_SQL = "UPDATE otps SET otp = ? WHERE email = ?";
     private final String DELETE_OTP_SQL = "DELETE FROM otps WHERE email = ?";
 
-    public OtpResponse sendOtp(String email) {
-        OtpResponse otpResponse = new OtpResponse();
+    public Common.Status sendOtp(String email) {
         if (StringUtilities.anyNullOrBlank(email)) {
-            otpResponse.setStatus(Common.Status.INVALID);
-            return otpResponse;
+            return Common.Status.INVALID;
         }
         String otp = RandomUtilities.generateOtp();
         MailRequest mailRequest = new MailRequest(email, OTP_EMAIL_SUBJECT, OTP_EMAIL_BODY + otp);
-        MailResponse mailResponse = mailServices.sendEmail(mailRequest);
-        if (mailResponse.getStatus() != Common.Status.OK) {
-            otpResponse.setStatus(Common.Status.INTERNAL_SERVER_ERROR);
-            return otpResponse;
+        Common.Status mailStatus = mailServices.sendEmail(mailRequest);
+        if (mailStatus != Common.Status.OK) {
+            return mailStatus;
         }
-        try (Connection connection = ConnectionController.getConnection()) {
-            Boolean otpExists = isOtpExists(connection, email);
-            if (otpExists == null || (otpExists ? updateOtp(connection, email, otp) : addOtp(connection, email, otp))) {
-                otpResponse.setStatus(Common.Status.OK);
-            } else {
-                otpResponse.setStatus(Common.Status.INTERNAL_SERVER_ERROR);
-            }
-        } catch (SQLException ex) {
-            System.err.println("Error establishing database connection: " + ex.getMessage());
-            otpResponse.setStatus(Common.Status.INTERNAL_SERVER_ERROR);
+        boolean otpExists = isOtpExists(email);
+        if (otpExists ? updateOtp(email, otp) : addOtp(email, otp)) {
+            return Common.Status.OK;
+        } else {
+            return Common.Status.INTERNAL_SERVER_ERROR;
         }
-        return otpResponse;
     }
 
-    public OtpResponse verifyOtp(String email, String otp) {
-        OtpResponse otpResponse = new OtpResponse();
+    public Common.Status verifyOtp(String email, String otp) {
         if (StringUtilities.anyNullOrBlank(email, otp)) {
-            otpResponse.setStatus(Common.Status.INVALID);
-            return otpResponse;
+            return Common.Status.INVALID;
         }
-        OtpResponse getOtpResponse = getOtp(email, otp);
-        if (getOtpResponse.getStatus() == Common.Status.OK) {
-            deleteOtp(email);
+        Common.Status getOtpStatus = getOtp(email, otp);
+        if (getOtpStatus == Common.Status.OK) {
+            return deleteOtp(email);
         }
-        return getOtpResponse;
+        return getOtpStatus;
     }
 
-    public boolean addOtp(Connection connection, String email, String otp) {
-        return executeUpdate(connection, ADD_OTP_SQL, email, otp);
+    public boolean addOtp(String email, String otp) {
+        return executeUpdate(ADD_OTP_SQL, email, otp);
     }
 
-    public boolean updateOtp(Connection connection, String email, String otp) {
-        return executeUpdate(connection, UPDATE_OTP_SQL, otp, email);
+    public boolean updateOtp(String email, String otp) {
+        return executeUpdate(UPDATE_OTP_SQL, otp, email);
     }
 
-    public OtpResponse deleteOtp(String email) {
-        OtpResponse otpResponse = new OtpResponse();
+    public Common.Status deleteOtp(String email) {
         try (Connection connection = ConnectionController.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(DELETE_OTP_SQL)) {
             preparedStatement.setString(1, email);
             int update = preparedStatement.executeUpdate();
-            otpResponse.setStatus(update > 0 ? Common.Status.OK : Common.Status.NOT_FOUND);
+            return update > 0 ? Common.Status.OK : Common.Status.NOT_FOUND;
         } catch (SQLException ex) {
-            System.err.println("Error establishing database connection: " + ex.getMessage());
-            otpResponse.setStatus(Common.Status.INTERNAL_SERVER_ERROR);
+            throw new DatabaseAccessException("Database error while deleting OTP", ex);
         }
-        return otpResponse;
     }
 
-    private Boolean isOtpExists(Connection connection, String email) {
-        try (PreparedStatement preparedStatement = connection.prepareStatement(COUNT_OTP_SQL)) {
+    private boolean isOtpExists(String email) {
+        try (Connection connection = ConnectionController.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(COUNT_OTP_SQL)) {
             preparedStatement.setString(1, email);
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
-                if (resultSet.next()) {
-                    return resultSet.getInt(1) > 0;
-                }
+                return resultSet.next() ? resultSet.getInt(1) > 0 : null;
             }
         } catch (SQLException ex) {
-            System.err.println("Error checking if OTP exists: " + ex.getMessage());
-            return null;
+            throw new DatabaseAccessException("Database error while checking OTP existence", ex);
         }
-        return false;
     }
 
-    private boolean executeUpdate(Connection connection, String sql, String param1, String param2) {
-        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+    private boolean executeUpdate(String sql, String param1, String param2) {
+        try (Connection connection = ConnectionController.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setString(1, param1);
             preparedStatement.setString(2, param2);
-            preparedStatement.executeUpdate();
-            return true;
+            int update = preparedStatement.executeUpdate();
+            return update > 0;
         } catch (SQLException ex) {
-            System.err.println("Error executing update: " + ex.getMessage());
-            return false;
+            throw new DatabaseAccessException("Database error while adding OTP", ex);
         }
     }
 
-    private OtpResponse getOtp(String email, String otp) {
-        OtpResponse otpResponse = new OtpResponse();
+    private Common.Status getOtp(String email, String otp) {
         try (Connection connection = ConnectionController.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(GET_OTP_SQL)) {
             preparedStatement.setString(1, email);
             preparedStatement.setString(2, otp);
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
-                otpResponse.setStatus(resultSet.next() ? Common.Status.OK : Common.Status.INVALID);
+                return resultSet.next() ? Common.Status.OK : Common.Status.INVALID;
             }
         } catch (SQLException ex) {
-            System.err.println("Error establishing database connection: " + ex.getMessage());
-            otpResponse.setStatus(Common.Status.INTERNAL_SERVER_ERROR);
+            throw new DatabaseAccessException("Database error while getting OTP", ex);
         }
-        return otpResponse;
     }
 }

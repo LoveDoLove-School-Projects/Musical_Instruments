@@ -40,7 +40,7 @@
                                         </div>
 
                                         <div class="mt-4 pt-2">
-                                            <button type="button" class="btn btn-primary btn-lg" id="loginButton">Login</button>
+                                            <button type="submit" class="btn btn-primary btn-lg" id="loginButton">Login</button>
                                         </div>
 
                                         <div class="mt-4 pt-2">

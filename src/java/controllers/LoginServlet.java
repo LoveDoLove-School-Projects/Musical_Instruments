@@ -5,7 +5,6 @@ import domain.common.Constants;
 import domain.models.Session;
 import domain.request.LoginRequest;
 import domain.response.LoginResponse;
-import domain.response.OtpResponse;
 import features.SessionHandler;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
@@ -13,6 +12,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.Map;
 import services.LoginServices;
 import services.OtpServices;
 import utilities.RedirectUtilities;
@@ -21,9 +21,19 @@ import utilities.enums.RedirectType;
 
 public class LoginServlet extends HttpServlet {
 
-    private static final LoginServices loginServices = new LoginServices();
-    private static final OtpServices otpServices = new OtpServices();
-    private static final SessionHandler sessionHandler = new SessionHandler();
+    private final LoginServices loginServices;
+    private final OtpServices otpServices;
+    private final SessionHandler sessionHandler;
+    private static final Map<String, Common.Role> ROLE_MAP = Map.of(
+            Constants.CUSTOMER_LOGIN_URL, Common.Role.CUSTOMER,
+            Constants.ADMIN_LOGIN_URL, Common.Role.ADMIN
+    );
+
+    public LoginServlet() {
+        this.loginServices = new LoginServices();
+        this.otpServices = new OtpServices();
+        this.sessionHandler = new SessionHandler();
+    }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -47,17 +57,13 @@ public class LoginServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String path = request.getServletPath();
-        Common.Role role = null;
-        boolean isLoggedIn = false;
-        switch (path) {
-            case Constants.CUSTOMER_LOGIN_URL:
-                role = Common.Role.CUSTOMER;
-                break;
-            case Constants.ADMIN_LOGIN_URL:
-                role = Common.Role.ADMIN;
-                break;
+        Common.Role role = ROLE_MAP.get(path);
+        if (role == null) {
+            RedirectUtilities.setMessage(request, RedirectType.DANGER, "Invalid URL!");
+            setLoginPage(request, response);
+            return;
         }
-        isLoggedIn = handleLogin(request, response, role);
+        boolean isLoggedIn = handleLogin(request, response, role);
         if (isLoggedIn) {
             return;
         }
@@ -72,56 +78,70 @@ public class LoginServlet extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         response.setContentType("text/plain;charset=UTF-8");
         response.setHeader("Cache-Control", "no-store");
-
-        String email = request.getParameter("email");
-        String password = request.getParameter("password");
-
-        request.setAttribute("email", email);
-
-        if (StringUtilities.anyNullOrBlank(email, password)) {
-            RedirectUtilities.setMessage(request, RedirectType.DANGER, "Email and Password are required!");
+        LoginRequest loginRequest = createLoginRequest(request);
+        request.setAttribute("email", loginRequest.getEmail());
+        if (!validateLoginRequest(loginRequest)) {
+            RedirectUtilities.setMessage(request, RedirectType.DANGER, "Please Fill In All The Fields!");
             return false;
         }
-        LoginRequest loginRequest = new LoginRequest(email, password);
         LoginResponse loginResponse = loginServices.loginServices(loginRequest, role);
-
-        if (loginResponse.getStatus() == null) {
-            RedirectUtilities.setMessage(request, RedirectType.DANGER, "Failed to login!");
-            return false;
+        switch (loginResponse.getStatus()) {
+            case OK:
+                handleSuccessfulLogin(request, response, loginResponse, role);
+                return true;
+            case NOT_FOUND:
+                RedirectUtilities.setMessage(request, RedirectType.DANGER, "Email not found!");
+                break;
+            case UNAUTHORIZED:
+                RedirectUtilities.setMessage(request, RedirectType.DANGER, "Incorrect Email or Password!");
+                break;
+            default:
+                RedirectUtilities.setMessage(request, RedirectType.DANGER, "Failed to login!");
+                break;
         }
+        return false;
+    }
 
-        if (loginResponse.getStatus() == Common.Status.NOT_FOUND) {
-            RedirectUtilities.setMessage(request, RedirectType.DANGER, "Email not found!");
-            return false;
-        }
-
-        if (loginResponse.getStatus() == Common.Status.UNAUTHORIZED) {
-            RedirectUtilities.setMessage(request, RedirectType.DANGER, "Incorrect Email or Password!");
-            return false;
-        }
-
-        if (loginResponse.getStatus() != Common.Status.OK) {
-            RedirectUtilities.setMessage(request, RedirectType.DANGER, "Failed to login!");
-            return false;
-        }
-
+    private void handleSuccessfulLogin(HttpServletRequest request, HttpServletResponse response, LoginResponse loginResponse, Common.Role role) throws ServletException, IOException {
         HttpSession session = request.getSession(true);
         if (loginResponse.isTwo_factor_auth()) {
-            OtpResponse otpResponse = otpServices.sendOtp(loginResponse.getEmail());
-            if (otpResponse.getStatus() != Common.Status.OK) {
-                RedirectUtilities.setMessage(request, RedirectType.DANGER, "There was an error from the server! Please try again later.");
-                return false;
-            }
-            session.setAttribute("login_id_2fa", loginResponse.getLogin_id());
-            session.setAttribute("role", role);
-            session.setAttribute("email", loginResponse.getEmail());
-            String loginSession = "JSESSIONID=" + session.getId() + ";Path=/;Secure;HttpOnly;SameSite=Strict";
-            response.setHeader("Set-Cookie", loginSession);
-            request.getRequestDispatcher(Constants.VERIFY_OTP_JSP_URL).forward(request, response);
+            handleTwoFactorAuth(request, response, loginResponse, session, role);
         } else {
             sessionHandler.setLoginSession(session, loginResponse.getLogin_id(), role);
             RedirectUtilities.sendRedirect(request, response, Constants.PROFILE_URL);
         }
-        return true;
+    }
+
+    private void handleTwoFactorAuth(HttpServletRequest request, HttpServletResponse response, LoginResponse loginResponse, HttpSession session, Common.Role role) throws ServletException, IOException {
+        Common.Status otpStatus = otpServices.sendOtp(loginResponse.getEmail());
+        if (otpStatus != Common.Status.OK) {
+            RedirectUtilities.setMessage(request, RedirectType.DANGER, "There was an error from the server! Please try again later.");
+            return;
+        }
+        session.setAttribute("login_id_2fa", loginResponse.getLogin_id());
+        session.setAttribute("role", role);
+        session.setAttribute("email", loginResponse.getEmail());
+        String loginSession = "JSESSIONID=" + session.getId() + ";Path=/;Secure;HttpOnly;SameSite=Strict";
+        response.setHeader("Set-Cookie", loginSession);
+        request.getRequestDispatcher(Constants.VERIFY_OTP_JSP_URL).forward(request, response);
+    }
+
+    private LoginRequest createLoginRequest(HttpServletRequest request) {
+        String email = request.getParameter("email");
+        String password = request.getParameter("password");
+        return new LoginRequest(email, password);
+    }
+
+    private boolean validateLoginRequest(LoginRequest loginRequest) {
+        if (loginRequest == null) {
+            return false;
+        }
+        if (StringUtilities.anyNullOrBlank(loginRequest.getPassword(), loginRequest.getEmail())) {
+            return false;
+        }
+        if (loginRequest.getPassword().length() < 8) {
+            return false;
+        }
+        return !(!loginRequest.getEmail().contains("@") || !loginRequest.getEmail().contains("."));
     }
 }

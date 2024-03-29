@@ -1,4 +1,4 @@
-import { showConfirmDialog, showErrorDialog } from "./dialog.js";
+import { showConfirmDialog, showErrorDialog, showProgressDialog } from "./dialog.js";
 import { anyStringNullOrEmpty, checkEmail, checkPassword, checkPhoneNumber } from "./validate.js";
 
 let usernameElement;
@@ -8,66 +8,62 @@ let confirm_passwordElement;
 let emailElement;
 let phone_numberElement;
 let registerForm;
-let registerButtonElement;
 
 function checkAllFields() {
-    const username = usernameElement.value;
-    const address = addressElement.value;
-    const password = passwordElement.value;
-    const confirm_password = confirm_passwordElement.value;
-    const email = emailElement.value;
-    const phone_number = phone_numberElement.value;
-    if (anyStringNullOrEmpty([username, address, password, confirm_password, email, phone_number])) {
-        showErrorDialog("All fields are required");
-        return false;
-    }
-    if (password !== confirm_password) {
-        showErrorDialog("Password and Confirm Password should be same");
-        return false;
-    }
-    if (!checkPassword(password)) {
-        showErrorDialog("Password should be at least 8 characters long");
-        return false;
-    }
-    if (!checkEmail(email)) {
-        showErrorDialog("Invalid email!");
-        return false;
-    }
-    if (!checkPhoneNumber(phone_number)) {
-        showErrorDialog("Phone number should contain only digits");
-        return false;
-    }
-    return true;
+  const username = usernameElement.value;
+  const address = addressElement.value;
+  const password = passwordElement.value;
+  const confirm_password = confirm_passwordElement.value;
+  const email = emailElement.value;
+  const phone_number = phone_numberElement.value;
+  if (anyStringNullOrEmpty([username, address, password, confirm_password, email, phone_number])) {
+    showErrorDialog("All fields are required");
+    return false;
+  }
+  if (password !== confirm_password) {
+    showErrorDialog("Password and Confirm Password should be same");
+    return false;
+  }
+  if (!checkPassword(password)) {
+    showErrorDialog("Password should be at least 8 characters long");
+    return false;
+  }
+  if (!checkEmail(email)) {
+    showErrorDialog("Invalid email!");
+    return false;
+  }
+  if (!checkPhoneNumber(phone_number)) {
+    showErrorDialog("Phone number should contain only digits");
+    return false;
+  }
+  return true;
 }
 
-function setRegisterButton() {
-    if (registerButtonElement === null) {
-        return;
+function setRegisterForm() {
+  if (registerForm === null) {
+    return;
+  }
+  registerForm.onsubmit = function (event) {
+    event.preventDefault();
+    if (checkAllFields()) {
+      let action = () => {
+        showProgressDialog("Registering...");
+        registerForm.submit();
+      };
+      showConfirmDialog("Are you sure you want to submit the form?", action);
     }
-    registerButtonElement.addEventListener("click", () => {
-        if (registerForm === null) {
-            return;
-        }
-        if (!checkAllFields()) {
-            return;
-        }
-        const action = () => {
-            registerForm.submit();
-        };
-        showConfirmDialog("Are you sure you want to register?", action);
-    });
+  };
 }
 
 function init() {
-    usernameElement = document.getElementById("username");
-    addressElement = document.getElementById("address");
-    passwordElement = document.getElementById("password");
-    confirm_passwordElement = document.getElementById("confirm_password");
-    emailElement = document.getElementById("email");
-    phone_numberElement = document.getElementById("phone_number");
-    registerForm = document.getElementById("registerForm");
-    registerButtonElement = document.getElementById("registerButton");
-    setRegisterButton();
+  usernameElement = document.getElementById("username");
+  addressElement = document.getElementById("address");
+  passwordElement = document.getElementById("password");
+  confirm_passwordElement = document.getElementById("confirm_password");
+  emailElement = document.getElementById("email");
+  phone_numberElement = document.getElementById("phone_number");
+  registerForm = document.getElementById("registerForm");
+  setRegisterForm();
 }
 
 window.onload = init;

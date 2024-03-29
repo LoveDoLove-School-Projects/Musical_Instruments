@@ -1,6 +1,6 @@
 package domain.request;
 
-public class AdminRequest extends DefaultRequest {
+public class AdminRequest {
 
     private int login_id;
 
@@ -18,5 +18,4 @@ public class AdminRequest extends DefaultRequest {
     public void setLogin_id(int login_id) {
         this.login_id = login_id;
     }
-
 }

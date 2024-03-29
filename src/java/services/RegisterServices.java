@@ -3,6 +3,7 @@ package services;
 import controllers.ConnectionController;
 import domain.common.Common;
 import domain.request.RegisterRequest;
+import exceptions.DatabaseAccessException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -29,10 +30,10 @@ public class RegisterServices {
                 preparedStatement.executeUpdate();
                 return Common.Status.OK;
             } catch (SQLException ex) {
-                throw new RuntimeException("Error adding new customer: " + ex.getMessage(), ex);
+                throw new DatabaseAccessException("Error adding new customer: " + ex.getMessage(), ex);
             }
         } catch (SQLException ex) {
-            throw new RuntimeException("Error establishing database connection: " + ex.getMessage(), ex);
+            throw new DatabaseAccessException("Error establishing database connection: " + ex.getMessage(), ex);
         }
     }
 
@@ -43,7 +44,7 @@ public class RegisterServices {
                 return resultSet.next() && resultSet.getInt(1) > 0;
             }
         } catch (SQLException ex) {
-            throw new RuntimeException("Database error while checking email existence", ex);
+            throw new DatabaseAccessException("Database error while checking email existence", ex);
         }
     }
 }

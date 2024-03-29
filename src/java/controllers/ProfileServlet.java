@@ -16,15 +16,19 @@ import java.io.InputStream;
 import java.util.Base64;
 import services.ProfileServices;
 import utilities.RedirectUtilities;
-import utilities.SessionUtilities;
 import utilities.StringUtilities;
 import utilities.enums.RedirectType;
 
 @MultipartConfig
 public class ProfileServlet extends HttpServlet {
 
-    private static final ProfileServices profileServices = new ProfileServices();
-    private static final SessionHandler sessionHandler = new SessionHandler();
+    private final ProfileServices profileServices;
+    private final SessionHandler sessionHandler;
+
+    public ProfileServlet() {
+        this.profileServices = new ProfileServices();
+        this.sessionHandler = new SessionHandler();
+    }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -63,17 +67,16 @@ public class ProfileServlet extends HttpServlet {
         ProfileRequest profileRequest = new ProfileRequest(session.getId());
         ProfileResponse profileResponse = profileServices.getProfile(profileRequest, session.getRole());
         if (profileResponse == null || profileResponse.getStatus() == Common.Status.INTERNAL_SERVER_ERROR || profileResponse.getStatus() == Common.Status.NOT_FOUND) {
-            SessionUtilities.clearSession(request);
             RedirectUtilities.redirectWithMessage(request, response, RedirectType.DANGER, "Error fetching profile details.", Constants.MAIN_URL);
             return;
         }
-        request.setAttribute("username", profileResponse.getProfile().getUsername());
-        request.setAttribute("email", profileResponse.getProfile().getEmail());
-        request.setAttribute("address", profileResponse.getProfile().getAddress());
-        request.setAttribute("phone_number", profileResponse.getProfile().getPhoneNumber());
-        request.setAttribute("gender", profileResponse.getProfile().getGender());
-        request.setAttribute("two_factor_auth", profileResponse.getProfile().getTwo_factor_auth());
-        byte[] picture = profileResponse.getProfile().getPicture();
+        request.setAttribute("username", profileResponse.getUsername());
+        request.setAttribute("email", profileResponse.getEmail());
+        request.setAttribute("address", profileResponse.getAddress());
+        request.setAttribute("phone_number", profileResponse.getPhoneNumber());
+        request.setAttribute("gender", profileResponse.getGender());
+        request.setAttribute("two_factor_auth", profileResponse.getTwo_factor_auth());
+        byte[] picture = profileResponse.getPicture();
         if (picture != null) {
             String pictureBase64 = Base64.getEncoder().encodeToString(picture);
             request.setAttribute("pictureBase64", pictureBase64);
@@ -87,23 +90,24 @@ public class ProfileServlet extends HttpServlet {
             RedirectUtilities.redirectWithMessage(request, response, RedirectType.DANGER, "Error uploading picture.", Constants.PROFILE_URL);
             return;
         }
-        ProfileRequest profileRequest = new ProfileRequest(session.getId(), pictureStream);
-        ProfileResponse profileResponse = profileServices.uploadPicture(profileRequest, session.getRole());
-        if (profileResponse == null || profileResponse.getStatus() == Common.Status.INTERNAL_SERVER_ERROR) {
-            RedirectUtilities.setMessage(request, RedirectType.DANGER, "Error uploading picture.");
-        } else if (profileResponse.getStatus() == Common.Status.OK) {
+        byte[] pictureBytes = pictureStream.readAllBytes();
+        ProfileRequest profileRequest = new ProfileRequest(session.getId(), pictureBytes);
+        Common.Status profileStatus = profileServices.uploadPicture(profileRequest, session.getRole());
+        if (profileStatus == Common.Status.OK) {
             RedirectUtilities.setMessage(request, RedirectType.SUCCESS, "Picture uploaded successfully.");
+        } else {
+            RedirectUtilities.setMessage(request, RedirectType.DANGER, "Error uploading picture.");
         }
         RedirectUtilities.sendRedirect(request, response, Constants.PROFILE_URL);
     }
 
     private void removePicture(HttpServletRequest request, HttpServletResponse response, Session session) throws ServletException, IOException {
         ProfileRequest profileRequest = new ProfileRequest(session.getId());
-        ProfileResponse profileResponse = profileServices.removePicture(profileRequest, session.getRole());
-        if (profileResponse == null || profileResponse.getStatus() == Common.Status.INTERNAL_SERVER_ERROR) {
-            RedirectUtilities.setMessage(request, RedirectType.DANGER, "Error removing picture.");
-        } else if (profileResponse.getStatus() == Common.Status.OK) {
+        Common.Status profileStatus = profileServices.removePicture(profileRequest, session.getRole());
+        if (profileStatus == Common.Status.OK) {
             RedirectUtilities.setMessage(request, RedirectType.SUCCESS, "Picture removed successfully.");
+        } else {
+            RedirectUtilities.setMessage(request, RedirectType.DANGER, "Error removing picture.");
         }
         RedirectUtilities.sendRedirect(request, response, Constants.PROFILE_URL);
     }
@@ -113,17 +117,17 @@ public class ProfileServlet extends HttpServlet {
         String address = request.getParameter("address");
         String phoneNumber = request.getParameter("phone_number");
         String gender = request.getParameter("gender");
-        Boolean two_factor_auth = request.getParameter("two_factor_auth") != null;
+        boolean two_factor_auth = request.getParameter("two_factor_auth") != null;
         if (StringUtilities.anyNullOrBlank(username, address, phoneNumber, gender)) {
             RedirectUtilities.redirectWithMessage(request, response, RedirectType.DANGER, "All fields are required.", Constants.PROFILE_URL);
             return;
         }
         ProfileRequest profileRequest = new ProfileRequest(session.getId(), username, address, phoneNumber, gender, two_factor_auth);
         ProfileResponse profileResponse = profileServices.updateProfile(profileRequest, session.getRole());
-        if (profileResponse == null || profileResponse.getStatus() == Common.Status.INTERNAL_SERVER_ERROR) {
-            RedirectUtilities.setMessage(request, RedirectType.DANGER, "Error updating profile.");
-        } else if (profileResponse.getStatus() == Common.Status.OK) {
+        if (profileResponse.getStatus() == Common.Status.OK) {
             RedirectUtilities.setMessage(request, RedirectType.SUCCESS, "Profile updated successfully.");
+        } else {
+            RedirectUtilities.setMessage(request, RedirectType.DANGER, "Error updating profile.");
         }
         RedirectUtilities.sendRedirect(request, response, Constants.PROFILE_URL);
     }

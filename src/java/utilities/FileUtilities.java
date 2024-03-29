@@ -1,5 +1,6 @@
 package utilities;
 
+import exceptions.FileException;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -22,9 +23,9 @@ public class FileUtilities {
             while ((length = fis.read(buffer)) != -1) {
                 content.write(buffer, 0, length);
             }
+            return content.toByteArray();
         } catch (IOException ex) {
-            System.err.println(ex.getMessage());
+            throw new FileException("Error reading file content: " + fullPath, ex);
         }
-        return content.toByteArray();
     }
 }

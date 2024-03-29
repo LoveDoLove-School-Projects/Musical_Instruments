@@ -50,16 +50,18 @@
                                     <div class="mt-3">
                                         <c:choose>
                                             <c:when test="${empty pictureBase64}">
-                                                <!-- <form action="pages/profile/uploadPicture" method="post" enctype="multipart/form-data"> -->
-                                                <input type="file" name="uploadPicture" id="uploadPicture"
-                                                       class="d-none" accept="image/*">
-                                                <label for="uploadPicture" class="btn btn-primary">Upload
-                                                    Picture</label>
-                                                <!-- </form> -->
+                                                <form action="pages/profile/uploadPicture" method="post" enctype="multipart/form-data" id="uploadPictureForm">
+                                                    <input type="file" name="uploadPicture" id="uploadPicture"
+                                                           class="d-none" accept="image/*">
+                                                    <label for="uploadPicture" class="btn btn-primary">Upload
+                                                        Picture</label>
+                                                </form>
                                             </c:when>
                                             <c:otherwise>
-                                                <button type="button" class="btn btn-danger"
-                                                        id="removePicture">Remove Picture</button>
+                                                <form action="pages/profile/removePicture" method="post" id="removePictureForm">
+                                                    <button type="button" class="btn btn-danger"
+                                                            id="removePicture">Remove Picture</button>
+                                                </form>
                                             </c:otherwise>
                                         </c:choose>
                                     </div>

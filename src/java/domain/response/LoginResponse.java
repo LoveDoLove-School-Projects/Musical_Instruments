@@ -1,14 +1,19 @@
 package domain.response;
 
-public class LoginResponse extends DefaultResponse {
+import domain.common.Common;
 
+public class LoginResponse {
+
+    private Common.Status status;
     private int login_id;
-
     private String email;
-
     private boolean two_factor_auth;
 
     public LoginResponse() {
+    }
+
+    public LoginResponse(Common.Status status) {
+        this.status = status;
     }
 
     public LoginResponse(int login_id) {
@@ -24,6 +29,21 @@ public class LoginResponse extends DefaultResponse {
         this.login_id = login_id;
         this.email = email;
         this.two_factor_auth = two_factor_auth;
+    }
+
+    public LoginResponse(Common.Status status, int login_id, String email, boolean two_factor_auth) {
+        this.status = status;
+        this.login_id = login_id;
+        this.email = email;
+        this.two_factor_auth = two_factor_auth;
+    }
+
+    public Common.Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Common.Status status) {
+        this.status = status;
     }
 
     public int getLogin_id() {
@@ -49,5 +69,4 @@ public class LoginResponse extends DefaultResponse {
     public void setTwo_factor_auth(boolean two_factor_auth) {
         this.two_factor_auth = two_factor_auth;
     }
-
 }

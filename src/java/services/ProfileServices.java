@@ -2,113 +2,85 @@ package services;
 
 import controllers.ConnectionController;
 import domain.common.Common;
-import domain.models.Profile;
 import domain.request.ProfileRequest;
 import domain.response.ProfileResponse;
-import java.sql.Blob;
+import exceptions.DatabaseAccessException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 
 public class ProfileServices {
 
     private final String GET_PROFILE_CUSTOMER_SQL = "SELECT * FROM customers WHERE customer_id = ?";
-
     private final String UPLOAD_PICTURE_CUSTOMER_SQL = "UPDATE customers SET picture = ? WHERE customer_id = ?";
-
     private final String REMOVE_PICTURE_CUSTOMER_SQL = "UPDATE customers SET picture = NULL WHERE customer_id = ?";
-
     private final String UPDATE_PROFILE_CUSTOMER_SQL = "UPDATE customers SET username = ?, address = ?, phone_number = ?, gender = ?, two_factor_auth = ? WHERE customer_id = ?";
-
     private final String GET_PROFILE_ADMIN_SQL = "SELECT * FROM admins WHERE admin_id = ?";
-
     private final String UPLOAD_PICTURE_ADMIN_SQL = "UPDATE admins SET picture = ? WHERE admin_id = ?";
-
     private final String REMOVE_PICTURE_ADMIN_SQL = "UPDATE admins SET picture = NULL WHERE admin_id = ?";
-
     private final String UPDATE_PROFILE_ADMIN_SQL = "UPDATE admins SET username = ?, address = ?, phone_number = ?, gender = ?, two_factor_auth = ? WHERE admin_id = ?";
 
     public ProfileResponse getProfile(ProfileRequest profileRequest, Common.Role role) {
-        ProfileResponse profileResponse = new ProfileResponse();
         try (Connection connection = ConnectionController.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(getProfile(role))) {
             preparedStatement.setInt(1, profileRequest.getId());
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 if (resultSet.next()) {
-                    Profile profile = new Profile();
-                    profile.setId(resultSet.getInt(getId(role)));
-                    profile.setUsername(resultSet.getString("username"));
-                    profile.setEmail(resultSet.getString("email"));
-                    profile.setAddress(resultSet.getString("address"));
-                    profile.setPhoneNumber(resultSet.getString("phone_number"));
-                    profile.setGender(resultSet.getString("gender"));
-                    profile.setTwo_factor_auth(resultSet.getBoolean("two_factor_auth"));
-                    Blob picture = resultSet.getBlob("picture");
-                    if (picture != null) {
-                        int blobLength = (int) picture.length();
-                        if (blobLength > 0) {
-                            byte[] blobAsBytes = picture.getBytes(1, blobLength);
-                            profile.setPicture(blobAsBytes);
-                        }
-                    }
-                    profile.setAccountCreationDate(resultSet.getTimestamp("account_creation_date"));
-                    profile.setLastLoginDate(resultSet.getTimestamp("last_login_date"));
-                    profileResponse.setStatus(Common.Status.OK);
-                    profileResponse.setProfile(profile);
+                    int id = resultSet.getInt(getId(role));
+                    String username = resultSet.getString("username");
+                    String email = resultSet.getString("email");
+                    String address = resultSet.getString("address");
+                    String phoneNumber = resultSet.getString("phone_number");
+                    String gender = resultSet.getString("gender");
+                    boolean twoFactorAuth = resultSet.getBoolean("two_factor_auth");
+                    byte[] pictureBytes = resultSet.getBytes("picture");
+                    Timestamp accountCreationDate = resultSet.getTimestamp("account_creation_date");
+                    Timestamp lastLoginDate = resultSet.getTimestamp("last_login_date");
+                    return new ProfileResponse(Common.Status.OK, id, username, email, address, phoneNumber, gender, pictureBytes, twoFactorAuth, accountCreationDate, lastLoginDate);
                 } else {
-                    profileResponse.setStatus(Common.Status.NOT_FOUND);
+                    return new ProfileResponse(Common.Status.NOT_FOUND);
                 }
             }
         } catch (SQLException ex) {
-            profileResponse.setStatus(Common.Status.INTERNAL_SERVER_ERROR);
-            System.err.println("Error getting " + role.name().toLowerCase() + " profile: " + ex.getMessage());
+            throw new DatabaseAccessException("Database error while getting profile", ex);
         }
-        return profileResponse;
     }
 
-    public ProfileResponse uploadPicture(ProfileRequest profileRequest, Common.Role role) {
-        ProfileResponse profileResponse = new ProfileResponse();
+    public Common.Status uploadPicture(ProfileRequest profileRequest, Common.Role role) {
         try (Connection connection = ConnectionController.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(uploadPicture(role))) {
-            preparedStatement.setBlob(1, profileRequest.getPicture());
+            preparedStatement.setBytes(1, profileRequest.getPicture());
             preparedStatement.setInt(2, profileRequest.getId());
-            int result = preparedStatement.executeUpdate();
-            profileResponse.setStatus(result > 0 ? Common.Status.OK : Common.Status.INTERNAL_SERVER_ERROR);
+            preparedStatement.executeUpdate();
+            return Common.Status.OK;
         } catch (SQLException ex) {
-            profileResponse.setStatus(Common.Status.INTERNAL_SERVER_ERROR);
-            System.err.println("Error uploading picture: " + ex.getMessage());
+            throw new DatabaseAccessException("Error uploading picture", ex);
         }
-        return profileResponse;
     }
 
-    public ProfileResponse removePicture(ProfileRequest profileRequest, Common.Role role) {
-        ProfileResponse profileResponse = new ProfileResponse();
+    public Common.Status removePicture(ProfileRequest profileRequest, Common.Role role) {
         try (Connection connection = ConnectionController.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(removePicture(role))) {
             preparedStatement.setInt(1, profileRequest.getId());
-            int result = preparedStatement.executeUpdate();
-            profileResponse.setStatus(result > 0 ? Common.Status.OK : Common.Status.INTERNAL_SERVER_ERROR);
+            preparedStatement.executeUpdate();
+            return Common.Status.OK;
         } catch (SQLException ex) {
-            profileResponse.setStatus(Common.Status.INTERNAL_SERVER_ERROR);
-            System.err.println("Error removing picture: " + ex.getMessage());
+            throw new DatabaseAccessException("Error removing picture", ex);
         }
-        return profileResponse;
     }
 
     public ProfileResponse updateProfile(ProfileRequest profileRequest, Common.Role role) {
-        ProfileResponse profileResponse = new ProfileResponse();
         try (Connection connection = ConnectionController.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(updateProfile(role))) {
             preparedStatement.setString(1, profileRequest.getUsername());
             preparedStatement.setString(2, profileRequest.getAddress());
             preparedStatement.setString(3, profileRequest.getPhoneNumber());
             preparedStatement.setString(4, profileRequest.getGender());
-            preparedStatement.setBoolean(5, profileRequest.getTwo_factor_auth());
+            preparedStatement.setBoolean(5, profileRequest.isTwo_factor_auth());
             preparedStatement.setInt(6, profileRequest.getId());
-            int result = preparedStatement.executeUpdate();
-            profileResponse.setStatus(result > 0 ? Common.Status.OK : Common.Status.INTERNAL_SERVER_ERROR);
+            preparedStatement.executeUpdate();
+            return new ProfileResponse(Common.Status.OK);
         } catch (SQLException ex) {
-            profileResponse.setStatus(Common.Status.INTERNAL_SERVER_ERROR);
-            System.err.println("Error updating profile: " + ex.getMessage());
+            throw new DatabaseAccessException("Error updating profile", ex);
         }
-        return profileResponse;
     }
 
     private String getProfile(Common.Role role) {

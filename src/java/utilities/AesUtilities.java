@@ -1,6 +1,7 @@
 package utilities;
 
 import domain.common.Enviroment;
+import exceptions.AesException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
@@ -20,7 +21,7 @@ public class AesUtilities {
             byte[] encryptedBytes = cipher.doFinal(textBytes);
             return Base64.getEncoder().encodeToString(encryptedBytes);
         } catch (InvalidKeyException | NoSuchAlgorithmException | BadPaddingException | IllegalBlockSizeException | NoSuchPaddingException ex) {
-            throw new RuntimeException("Error encrypting text", ex);
+            throw new AesException("Error encrypting text", ex);
         }
     }
 
@@ -31,7 +32,7 @@ public class AesUtilities {
             byte[] decryptedBytes = cipher.doFinal(encryptedBytes);
             return new String(decryptedBytes);
         } catch (InvalidKeyException | NoSuchAlgorithmException | BadPaddingException | IllegalBlockSizeException | NoSuchPaddingException ex) {
-            throw new RuntimeException("Error decrypting text", ex);
+            throw new AesException("Error decrypting text", ex);
         }
     }
 
