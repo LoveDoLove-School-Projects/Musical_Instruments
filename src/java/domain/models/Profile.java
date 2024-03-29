@@ -12,7 +12,7 @@ public class Profile {
     protected String phoneNumber;
     protected String gender;
     protected byte[] picture;
-    protected Boolean two_factor_auth;
+    protected boolean two_factor_auth;
     protected Timestamp accountCreationDate;
     protected Timestamp lastLoginDate;
 
@@ -28,7 +28,7 @@ public class Profile {
         this.gender = gender;
     }
 
-    public Profile(String username, String password, String email, String address, String phoneNumber, String gender, Boolean two_factor_auth) {
+    public Profile(String username, String password, String email, String address, String phoneNumber, String gender, boolean two_factor_auth) {
         this.username = username;
         this.password = password;
         this.email = email;
@@ -36,6 +36,19 @@ public class Profile {
         this.phoneNumber = phoneNumber;
         this.gender = gender;
         this.two_factor_auth = two_factor_auth;
+    }
+
+    public Profile(int id, String username, String email, String address, String phoneNumber, String gender, byte[] picture, boolean two_factor_auth, Timestamp accountCreationDate, Timestamp lastLoginDate) {
+        this.id = id;
+        this.username = username;
+        this.email = email;
+        this.address = address;
+        this.phoneNumber = phoneNumber;
+        this.gender = gender;
+        this.picture = picture;
+        this.two_factor_auth = two_factor_auth;
+        this.accountCreationDate = accountCreationDate;
+        this.lastLoginDate = lastLoginDate;
     }
 
     public int getId() {
@@ -94,11 +107,11 @@ public class Profile {
         this.gender = gender;
     }
 
-    public Boolean getTwo_factor_auth() {
+    public boolean getTwo_factor_auth() {
         return two_factor_auth;
     }
 
-    public void setTwo_factor_auth(Boolean two_factor_auth) {
+    public void setTwo_factor_auth(boolean two_factor_auth) {
         this.two_factor_auth = two_factor_auth;
     }
 
@@ -125,5 +138,4 @@ public class Profile {
     public void setLastLoginDate(Timestamp lastLoginDate) {
         this.lastLoginDate = lastLoginDate;
     }
-
 }

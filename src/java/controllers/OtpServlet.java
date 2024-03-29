@@ -3,7 +3,6 @@ package controllers;
 import domain.common.Common;
 import domain.common.Constants;
 import domain.models.Session;
-import domain.response.OtpResponse;
 import features.SessionHandler;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
@@ -21,9 +20,18 @@ public class OtpServlet extends HttpServlet {
     private static final String LOGIN_ID_ATTRIBUTE = "login_id_2fa";
     private static final String EMAIL_ATTRIBUTE = "email";
     private static final String ROLE_ATTRIBUTE = "role";
+    private final SessionHandler sessionHandler;
+    private final OtpServices otpServices;
 
-    private static final SessionHandler sessionHandler = new SessionHandler();
-    private static final OtpServices otpServices = new OtpServices();
+    public OtpServlet() {
+        this.sessionHandler = new SessionHandler();
+        this.otpServices = new OtpServices();
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        handleOtpVerification(request, response);
+    }
 
     private void setOtpPage(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.getRequestDispatcher(Constants.VERIFY_OTP_JSP_URL).forward(request, response);
@@ -36,38 +44,37 @@ public class OtpServlet extends HttpServlet {
         return new Session(loginId, email, role);
     }
 
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.setCharacterEncoding("UTF-8");
-        response.setContentType("text/plain;charset=UTF-8");
-        response.setHeader("Cache-Control", "no-store");
-
+    private void handleOtpVerification(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession(false);
         Session attributes = getSessionAttributes(session);
-
         String otp = request.getParameter("otp");
-
         if (StringUtilities.anyNullOrBlank(otp)) {
             RedirectUtilities.setMessage(request, RedirectType.DANGER, "Please fill in OTP!");
             setOtpPage(request, response);
             return;
         }
-
-        OtpResponse otpResponse = otpServices.verifyOtp(attributes.getEmail(), otp);
-
-        if (otpResponse.getStatus() == Common.Status.INVALID) {
-            RedirectUtilities.setMessage(request, RedirectType.DANGER, "Invalid OTP!");
-            setOtpPage(request, response);
-            return;
-        }
-
-        session.invalidate();
-        session = request.getSession(true);
-        sessionHandler.setLoginSession(session, attributes.getId(), attributes.getRole());
-
-        String loginSession = "JSESSIONID=" + session.getId() + ";Path=/;Secure;HttpOnly;SameSite=Strict";
-        response.setHeader("Set-Cookie", loginSession);
-        RedirectUtilities.sendRedirect(request, response, Constants.MAIN_URL);
+        Common.Status otpStatus = otpServices.verifyOtp(attributes.getEmail(), otp);
+        handleOtpStatus(otpStatus, request, response, session, attributes);
     }
 
+    private void handleOtpStatus(Common.Status otpStatus, HttpServletRequest request, HttpServletResponse response, HttpSession session, Session attributes) throws IOException, ServletException {
+        switch (otpStatus) {
+            case OK:
+                session.invalidate();
+                session = request.getSession(true);
+                sessionHandler.setLoginSession(session, attributes.getId(), attributes.getRole());
+                String loginSession = "JSESSIONID=" + session.getId() + ";Path=/;Secure;HttpOnly;SameSite=Strict";
+                response.setHeader("Set-Cookie", loginSession);
+                RedirectUtilities.sendRedirect(request, response, Constants.MAIN_URL);
+                break;
+            case INVALID:
+                RedirectUtilities.setMessage(request, RedirectType.DANGER, "Invalid OTP!");
+                setOtpPage(request, response);
+                break;
+            default:
+                RedirectUtilities.setMessage(request, RedirectType.DANGER, "Failed to verify OTP!");
+                setOtpPage(request, response);
+                break;
+        }
+    }
 }

@@ -7,10 +7,11 @@ let phone_numberElement;
 let uploadPictureElement;
 let removePictureElement;
 let updateProfileForm;
+let uploadPictureForm;
+let removePictureForm;
 
-let xhr = new XMLHttpRequest();
 function setUploadPicture() {
-  if (uploadPictureElement === null) {
+  if (uploadPictureElement === null || uploadPictureForm === null) {
     return;
   }
   uploadPictureElement.addEventListener("change", () => {
@@ -33,43 +34,21 @@ function setUploadPicture() {
 
     let action = () => {
       formData.append("uploadPicture", files[0]);
-      xhr.open("POST", "pages/profile/uploadPicture", true);
-      xhr.send(formData);
-      xhr.onreadystatechange = function () {
-        if (xhr.readyState === 4 && xhr.status === 200) {
-          location.reload();
-        }
-      };
+      uploadPictureForm.submit();
     };
     showConfirmWithImageDialog("Are you sure to upload this picture?", URL.createObjectURL(files[0]), 400, 400, action);
   });
 }
 function setRemovePicture() {
-  if (removePictureElement === null) {
+  if (removePictureElement === null || removePictureForm === null) {
     return;
   }
   removePictureElement.addEventListener("click", () => {
     let action = () => {
-      xhr.open("POST", "pages/profile/removePicture", true);
-      xhr.send();
-      xhr.onreadystatechange = function () {
-        if (xhr.readyState === 4 && xhr.status === 200) {
-          location.reload();
-        }
-      };
+      removePictureForm.submit();
     };
     showConfirmDialog("Are you sure you want to remove your profile picture?", action);
   });
-}
-function checkAllFields() {
-  const username = usernameElement.value;
-  const address = addressElement.value;
-  const phone_number = phone_numberElement.value;
-  if (anyStringNullOrEmpty([username, address, phone_number])) {
-    alert("Please fill in all fields.");
-    return false;
-  }
-  return true;
 }
 function setUpdateProfileForm() {
   if (updateProfileForm === null) {
@@ -85,6 +64,16 @@ function setUpdateProfileForm() {
     showConfirmDialog("Are you sure to update your profile?", action);
   };
 }
+function checkAllFields() {
+  const username = usernameElement.value;
+  const address = addressElement.value;
+  const phone_number = phone_numberElement.value;
+  if (anyStringNullOrEmpty([username, address, phone_number])) {
+    alert("Please fill in all fields.");
+    return false;
+  }
+  return true;
+}
 function init() {
   usernameElement = document.getElementById("username");
   addressElement = document.getElementById("address");
@@ -92,6 +81,8 @@ function init() {
   uploadPictureElement = document.getElementById("uploadPicture");
   removePictureElement = document.getElementById("removePicture");
   updateProfileForm = document.getElementById("updateProfileForm");
+  uploadPictureForm = document.getElementById("uploadPictureForm");
+  removePictureForm = document.getElementById("removePictureForm");
   setUploadPicture();
   setRemovePicture();
   setUpdateProfileForm();

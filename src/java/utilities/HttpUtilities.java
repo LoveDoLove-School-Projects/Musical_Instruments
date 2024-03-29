@@ -2,7 +2,7 @@ package utilities;
 
 import com.google.gson.Gson;
 import domain.common.Common;
-import domain.response.DefaultResponse;
+import exceptions.HttpRequestException;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -18,7 +18,6 @@ import javax.net.ssl.X509TrustManager;
 public class HttpUtilities {
 
     private static final Gson gson = new Gson();
-
     private static final TrustManager[] trustAllCerts = new TrustManager[]{
         new X509TrustManager() {
             public java.security.cert.X509Certificate[] getAcceptedIssuers() {
@@ -35,10 +34,8 @@ public class HttpUtilities {
         }
     };
 
-    public static DefaultResponse sendHttpJsonRequest(String urlConnection, Object object) {
-        DefaultResponse defaultResponse = new DefaultResponse();
+    public static Common.Status sendHttpJsonRequest(String urlConnection, Object object) {
         String jsonPayload = gson.toJson(object);
-
         HttpsURLConnection connection = null;
         try {
             SSLContext sc = SSLContext.getInstance("SSL");
@@ -66,19 +63,13 @@ public class HttpUtilities {
             }
             System.out.println("Response Code: " + responseCode);
             System.out.println("Response Body: " + response.toString());
-            if (responseCode == 200) {
-                defaultResponse.setStatus(Common.Status.OK);
-            } else {
-                defaultResponse.setStatus(Common.Status.INTERNAL_SERVER_ERROR);
-            }
+            return responseCode == 200 ? Common.Status.OK : Common.Status.INTERNAL_SERVER_ERROR;
         } catch (IOException | KeyManagementException | NoSuchAlgorithmException ex) {
-            defaultResponse.setStatus(Common.Status.INTERNAL_SERVER_ERROR);
-            System.err.println(ex.getMessage());
+            throw new HttpRequestException("Error sending HTTP request", ex);
         } finally {
             if (connection != null) {
                 connection.disconnect();
             }
         }
-        return defaultResponse;
     }
 }

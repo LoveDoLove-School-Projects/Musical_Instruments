@@ -11,7 +11,6 @@ public class Common {
         EXISTS(409, "Already Exists"),
         INVALID(422, "Invalid"),
         NOT_ACTIVATED(423, "Not Activated");
-
         private final int code;
         private final String message;
 
@@ -33,7 +32,6 @@ public class Common {
         ADMIN("admin"),
         CUSTOMER("customer"),
         UNKNOWN("unknown");
-
         private final String role;
 
         private Role(String role) {

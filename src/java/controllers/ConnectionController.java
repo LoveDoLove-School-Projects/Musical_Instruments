@@ -1,5 +1,6 @@
 package controllers;
 
+import exceptions.DatabaseAccessException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -10,15 +11,12 @@ public class ConnectionController {
     private static final String USER = "nbuser";
     private static final String PASSWORD = "nbuser";
 
-    public static Connection getConnection() throws SQLException {
-        Connection connection = null;
+    public static Connection getConnection() {
         try {
             Class.forName("org.apache.derby.jdbc.ClientDriver");
-            connection = DriverManager.getConnection(HOST, USER, PASSWORD);
+            return DriverManager.getConnection(HOST, USER, PASSWORD);
         } catch (ClassNotFoundException | SQLException ex) {
-            connection.close();
-            System.err.println(ex);
+            throw new DatabaseAccessException("Error establishing database connection", ex);
         }
-        return connection; // returns the connection.
     }
 }

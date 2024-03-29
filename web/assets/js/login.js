@@ -4,7 +4,6 @@ import { anyStringNullOrEmpty, checkEmail, checkPassword } from "./validate.js";
 let emailElement;
 let passwordElement;
 let loginForm;
-let loginButtonElement;
 
 function checkAllFields() {
   const email = emailElement.value;
@@ -24,12 +23,14 @@ function checkAllFields() {
   return true;
 }
 
-function setLoginButton() {
-  if (loginButtonElement === null) {
+function setLoginForm() {
+  if (loginForm === null) {
     return;
   }
-  loginButtonElement.onclick = function () {
+  loginForm.onsubmit = function (event) {
+    event.preventDefault();
     if (checkAllFields()) {
+      showProgressDialog("Logging in...");
       loginForm.submit();
     }
   };
@@ -39,8 +40,7 @@ function init() {
   emailElement = document.getElementById("email");
   passwordElement = document.getElementById("password");
   loginForm = document.getElementById("loginForm");
-  loginButtonElement = document.getElementById("loginButton");
-  setLoginButton();
+  setLoginForm();
 }
 
 window.onload = init;

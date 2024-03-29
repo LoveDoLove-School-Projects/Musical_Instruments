@@ -14,16 +14,6 @@
         </web-resource-collection>
         <auth-constraint/>
     </security-constraint>
-    <!--Services-->
-    <servlet>
-        <servlet-name>ServiceServlet</servlet-name>
-        <servlet-class>controllers.ServiceServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>ServiceServlet</servlet-name>
-        <url-pattern>/services/sendOtp</url-pattern>
-        <url-pattern>/services/sendEmail</url-pattern>
-    </servlet-mapping>
     <!--Sessions-->
     <servlet>
         <servlet-name>OtpServlet</servlet-name>
