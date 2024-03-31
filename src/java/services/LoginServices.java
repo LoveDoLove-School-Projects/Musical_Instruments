@@ -5,11 +5,11 @@ import domain.common.Common;
 import domain.request.LoginRequest;
 import domain.response.LoginResponse;
 import exceptions.DatabaseAccessException;
+import features.AesHandler;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import utilities.AesUtilities;
 
 public class LoginServices {
 
@@ -21,7 +21,7 @@ public class LoginServices {
     public LoginResponse loginServices(LoginRequest loginRequest, Common.Role role) {
         try (Connection connection = ConnectionController.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(getLoginSqlQuery(role))) {
             preparedStatement.setString(1, loginRequest.getEmail());
-            preparedStatement.setString(2, AesUtilities.aes256EcbEncrypt(loginRequest.getPassword()));
+            preparedStatement.setString(2, AesHandler.aes256EcbEncrypt(loginRequest.getPassword()));
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 if (resultSet.next()) {
                     int id = resultSet.getInt(role == Common.Role.CUSTOMER ? "customer_id" : "admin_id");

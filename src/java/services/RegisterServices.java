@@ -4,11 +4,11 @@ import controllers.ConnectionController;
 import domain.common.Common;
 import domain.request.RegisterRequest;
 import exceptions.DatabaseAccessException;
+import features.AesHandler;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import utilities.AesUtilities;
 
 public class RegisterServices {
 
@@ -22,7 +22,7 @@ public class RegisterServices {
             }
             try (PreparedStatement preparedStatement = connection.prepareStatement(ADD_NEW_CUSTOMER_SQL)) {
                 preparedStatement.setString(1, registerRequest.getUsername());
-                preparedStatement.setString(2, AesUtilities.aes256EcbEncrypt(registerRequest.getPassword()));
+                preparedStatement.setString(2, AesHandler.aes256EcbEncrypt(registerRequest.getPassword()));
                 preparedStatement.setString(3, registerRequest.getEmail());
                 preparedStatement.setString(4, registerRequest.getAddress());
                 preparedStatement.setString(5, registerRequest.getPhoneNumber());

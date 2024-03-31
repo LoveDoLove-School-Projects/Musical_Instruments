@@ -43,7 +43,7 @@
     <env-entry>
         <env-entry-name>SECRET_KEY</env-entry-name>
         <env-entry-type>java.lang.String</env-entry-type>
-        <env-entry-value>VssPRF4Csh1ru0wmJEsqxJU6pTHP+RgAqJ2624FSLCwQW+HVuGpUqEFgHSDtJ+axcHUNRFLU5n1fDhz+fpfYPBdV+Eos3htXEFo2tIglnUM=</env-entry-value>
+        <env-entry-value>b4fb9ad7b2b95413399ba07326fa58827b90f28070f4e9bf8572344e4d0e6f57</env-entry-value>
     </env-entry>
     <!--~~~~~~~~~~~~~~~~~~~~Don't Touch~~~~~~~~~~~~~~~~~~~~-->
     <!--Servlet-->
