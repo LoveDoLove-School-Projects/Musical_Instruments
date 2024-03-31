@@ -2,6 +2,7 @@ package utilities;
 
 import com.google.gson.Gson;
 import domain.common.Common;
+import domain.common.Enviroment;
 import exceptions.HttpRequestException;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -35,7 +36,10 @@ public class HttpUtilities {
     };
 
     public static Common.Status sendHttpJsonRequest(String urlConnection, Object object) {
+        String timestamp = String.valueOf(System.currentTimeMillis());
         String jsonPayload = gson.toJson(object);
+        String combineContent = timestamp + jsonPayload;
+        String signature = AesUtilities.aes256EcbEncrypt(combineContent, Enviroment.SECRET_KEY);
         HttpsURLConnection connection = null;
         try {
             SSLContext sc = SSLContext.getInstance("SSL");
@@ -46,6 +50,8 @@ public class HttpUtilities {
             connection.setRequestMethod("POST");
             connection.setRequestProperty("Content-Type", "application/json");
             connection.setRequestProperty("Accept", "application/json");
+            connection.setRequestProperty("timestamp", timestamp);
+            connection.setRequestProperty("signature", signature);
             connection.setDoOutput(true);
             connection.setDoInput(true);
             try (DataOutputStream outputStream = new DataOutputStream(connection.getOutputStream())) {

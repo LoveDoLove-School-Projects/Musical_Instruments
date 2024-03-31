@@ -5,7 +5,6 @@ public class MailRequest {
     private String toEmail;
     private String subject;
     private String body;
-    private String secretKey;
 
     public MailRequest() {
     }
@@ -39,13 +38,4 @@ public class MailRequest {
     public void setBody(String body) {
         this.body = body;
     }
-
-    public String getSecretKey() {
-        return secretKey;
-    }
-
-    public void setSecretKey(String secretKey) {
-        this.secretKey = secretKey;
-    }
-
 }

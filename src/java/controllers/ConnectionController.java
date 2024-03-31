@@ -7,7 +7,7 @@ import java.sql.SQLException;
 
 public class ConnectionController {
 
-    private static final String HOST = "jdbc:derby://localhost:1527/Musical_Instruments_DB";
+    private static final String HOST = "jdbc:derby://localhost:1527/musicalinstrumentsdb";
     private static final String USER = "nbuser";
     private static final String PASSWORD = "nbuser";
 
