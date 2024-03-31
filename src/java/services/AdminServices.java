@@ -1,17 +1,17 @@
 package services;
 
-import domain.common.Common;
 import controllers.ConnectionController;
+import domain.common.Common;
+import domain.request.AdminRequest;
+import domain.response.AdminResponse;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import domain.request.AdminRequest;
-import domain.response.AdminResponse;
 
 public class AdminServices {
 
-    private final String GET_ADMIN_NAME_SQL = "SELECT * FROM admins WHERE admin_id = ?";
+    private static final String GET_ADMIN_NAME_SQL = "SELECT * FROM admins WHERE admin_id = ?";
 
     public AdminResponse getAdminProfile(AdminRequest adminRequest) {
         AdminResponse adminResponse = new AdminResponse();
@@ -32,5 +32,4 @@ public class AdminServices {
         }
         return adminResponse;
     }
-
 }

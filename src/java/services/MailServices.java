@@ -8,11 +8,11 @@ import utilities.HttpUtilities;
 
 public class MailServices {
 
-    private final String secretKey = AesUtilities.aes256EcbDecrypt(Enviroment.SECRET_KEY);
-    private final String sendMailApi = AesUtilities.aes256EcbDecrypt(Enviroment.SEND_MAIL_API);
+    private static final String SECRET_KEY = AesUtilities.aes256EcbDecrypt(Enviroment.SECRET_KEY);
+    private static final String SEND_MAIL_API = AesUtilities.aes256EcbDecrypt(Enviroment.SEND_MAIL_API);
 
     public Common.Status sendEmail(MailRequest mailRequest) {
-        mailRequest.setSecretKey(secretKey);
-        return HttpUtilities.sendHttpJsonRequest(sendMailApi, mailRequest);
+        mailRequest.setSecretKey(SECRET_KEY);
+        return HttpUtilities.sendHttpJsonRequest(SEND_MAIL_API, mailRequest);
     }
 }

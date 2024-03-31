@@ -13,14 +13,18 @@ import utilities.StringUtilities;
 
 public class OtpServices {
 
-    private final MailServices mailServices = new MailServices();
-    private final String OTP_EMAIL_SUBJECT = "OTP";
-    private final String OTP_EMAIL_BODY = "Your OTP is: ";
-    private final String GET_OTP_SQL = "SELECT * FROM otps WHERE email = ? AND otp = ?";
-    private final String COUNT_OTP_SQL = "SELECT COUNT(*) FROM otps WHERE email = ?";
-    private final String ADD_OTP_SQL = "INSERT INTO OTPS(email, otp) VALUES(?, ?)";
-    private final String UPDATE_OTP_SQL = "UPDATE otps SET otp = ? WHERE email = ?";
-    private final String DELETE_OTP_SQL = "DELETE FROM otps WHERE email = ?";
+    private static final String OTP_EMAIL_SUBJECT = "OTP";
+    private static final String OTP_EMAIL_BODY = "Your OTP is: ";
+    private static final String GET_OTP_SQL = "SELECT * FROM otps WHERE email = ? AND otp = ?";
+    private static final String COUNT_OTP_SQL = "SELECT COUNT(*) FROM otps WHERE email = ?";
+    private static final String ADD_OTP_SQL = "INSERT INTO OTPS(email, otp) VALUES(?, ?)";
+    private static final String UPDATE_OTP_SQL = "UPDATE otps SET otp = ? WHERE email = ?";
+    private static final String DELETE_OTP_SQL = "DELETE FROM otps WHERE email = ?";
+    private final MailServices mailServices;
+
+    public OtpServices() {
+        this.mailServices = new MailServices();
+    }
 
     public Common.Status sendOtp(String email) {
         if (StringUtilities.anyNullOrBlank(email)) {

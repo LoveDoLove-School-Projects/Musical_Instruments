@@ -9,7 +9,6 @@ public enum RedirectType {
     INFO("info"),
     LIGHT("light"),
     DARK("dark");
-
     private final String redirectType;
 
     private RedirectType(String redirectType) {

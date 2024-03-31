@@ -21,15 +21,16 @@ import utilities.enums.RedirectType;
 
 public class LoginServlet extends HttpServlet {
 
-    private final LoginServices loginServices;
-    private final OtpServices otpServices;
-    private final SessionHandler sessionHandler;
-    private final Map<String, Common.Role> ROLE_MAP = Map.of(
+    private static final Map<String, Common.Role> ROLE_MAP = Map.of(
             Constants.CUSTOMER_LOGIN_URL, Common.Role.CUSTOMER,
             Constants.ADMIN_LOGIN_URL, Common.Role.ADMIN
     );
+    private LoginServices loginServices;
+    private OtpServices otpServices;
+    private SessionHandler sessionHandler;
 
-    public LoginServlet() {
+    @Override
+    public void init() throws ServletException {
         this.loginServices = new LoginServices();
         this.otpServices = new OtpServices();
         this.sessionHandler = new SessionHandler();
