@@ -17,10 +17,11 @@ import utilities.enums.RedirectType;
 
 public class RegisterServlet extends HttpServlet {
 
-    private final RegisterServices registerServices;
-    private final SessionHandler sessionHandler;
+    private RegisterServices registerServices;
+    private SessionHandler sessionHandler;
 
-    public RegisterServlet() {
+    @Override
+    public void init() throws ServletException {
         this.registerServices = new RegisterServices();
         this.sessionHandler = new SessionHandler();
     }

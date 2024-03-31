@@ -22,10 +22,11 @@ import utilities.enums.RedirectType;
 @MultipartConfig
 public class ProfileServlet extends HttpServlet {
 
-    private final ProfileServices profileServices;
-    private final SessionHandler sessionHandler;
+    private ProfileServices profileServices;
+    private SessionHandler sessionHandler;
 
-    public ProfileServlet() {
+    @Override
+    public void init() throws ServletException {
         this.profileServices = new ProfileServices();
         this.sessionHandler = new SessionHandler();
     }

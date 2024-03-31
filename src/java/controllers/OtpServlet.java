@@ -17,13 +17,14 @@ import utilities.enums.RedirectType;
 
 public class OtpServlet extends HttpServlet {
 
-    private final String LOGIN_ID_ATTRIBUTE = "login_id_2fa";
-    private final String EMAIL_ATTRIBUTE = "email";
-    private final String ROLE_ATTRIBUTE = "role";
-    private final SessionHandler sessionHandler;
-    private final OtpServices otpServices;
+    private static final String LOGIN_ID_ATTRIBUTE = "login_id_2fa";
+    private static final String EMAIL_ATTRIBUTE = "email";
+    private static final String ROLE_ATTRIBUTE = "role";
+    private SessionHandler sessionHandler;
+    private OtpServices otpServices;
 
-    public OtpServlet() {
+    @Override
+    public void init() throws ServletException {
         this.sessionHandler = new SessionHandler();
         this.otpServices = new OtpServices();
     }

@@ -15,7 +15,12 @@ import utilities.enums.RedirectType;
 
 public class AdminServlet extends HttpServlet {
 
-    private final AdminServices adminServices = new AdminServices();
+    private AdminServices adminServices;
+
+    @Override
+    public void init() throws ServletException {
+        this.adminServices = new AdminServices();
+    }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

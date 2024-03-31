@@ -13,10 +13,10 @@ import utilities.AesUtilities;
 
 public class LoginServices {
 
-    private final String CUSTOMER_LOGIN_SQL = "SELECT * FROM customers WHERE email = ? AND password = ?";
-    private final String CUSTOMER_UPDATE_LAST_LOGIN_DATE_SQL = "UPDATE customers SET last_login_date = CURRENT_TIMESTAMP WHERE customer_id = ?";
-    private final String ADMIN_LOGIN_SQL = "SELECT * FROM admins WHERE email = ? AND password = ?";
-    private final String ADMIN_UPDATE_LAST_LOGIN_DATE_SQL = "UPDATE admins SET last_login_date = CURRENT_TIMESTAMP WHERE admin_id = ?";
+    private static final String CUSTOMER_LOGIN_SQL = "SELECT * FROM customers WHERE email = ? AND password = ?";
+    private static final String CUSTOMER_UPDATE_LAST_LOGIN_DATE_SQL = "UPDATE customers SET last_login_date = CURRENT_TIMESTAMP WHERE customer_id = ?";
+    private static final String ADMIN_LOGIN_SQL = "SELECT * FROM admins WHERE email = ? AND password = ?";
+    private static final String ADMIN_UPDATE_LAST_LOGIN_DATE_SQL = "UPDATE admins SET last_login_date = CURRENT_TIMESTAMP WHERE admin_id = ?";
 
     public LoginResponse loginServices(LoginRequest loginRequest, Common.Role role) {
         try (Connection connection = ConnectionController.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(getLoginSqlQuery(role))) {
