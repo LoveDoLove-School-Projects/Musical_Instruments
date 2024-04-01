@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app version="5.0" xmlns="https://jakarta.ee/xml/ns/jakartaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_5_0.xsd">
     <!--~~~~~~~~~~~~~~~~~~~~Don't Touch~~~~~~~~~~~~~~~~~~~~-->
+    <!--Session Timeout-->
+    <session-config>
+        <session-timeout>30</session-timeout>
+    </session-config>
     <!--Welcome File-->
     <welcome-file-list>
         <welcome-file>index.jsp</welcome-file>
@@ -16,13 +20,12 @@
     </security-constraint>
     <!--Sessions-->
     <servlet>
-        <servlet-name>OtpServlet</servlet-name>
-        <servlet-class>controllers.OtpServlet</servlet-class>
+        <servlet-name>Login2FAServlet</servlet-name>
+        <servlet-class>controllers.Login2FAServlet</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>OtpServlet</servlet-name>
-        <url-pattern>/sessions/sendOtp</url-pattern>
-        <url-pattern>/sessions/verifyOtp</url-pattern>
+        <servlet-name>Login2FAServlet</servlet-name>
+        <url-pattern>/sessions/login2fa</url-pattern>
     </servlet-mapping>
     <!--Listener-->
     <listener>

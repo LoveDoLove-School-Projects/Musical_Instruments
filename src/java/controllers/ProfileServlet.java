@@ -42,7 +42,7 @@ public class ProfileServlet extends HttpServlet {
     }
 
     private void handleProfile(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        Session session = sessionHandler.getLoginSession(request, response);
+        Session session = sessionHandler.getLoginSession(request.getSession());
         if (!session.isResult()) {
             RedirectUtilities.redirectWithMessage(request, response, RedirectType.DANGER, "Please login to view this page.", Constants.MAIN_URL);
             return;

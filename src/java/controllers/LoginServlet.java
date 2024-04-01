@@ -47,7 +47,7 @@ public class LoginServlet extends HttpServlet {
     }
 
     private void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        Session session = sessionHandler.getLoginSession(request, response);
+        Session session = sessionHandler.getLoginSession(request.getSession());
         if (session.isResult()) {
             RedirectUtilities.sendRedirect(request, response, Constants.PROFILE_URL);
             return;
@@ -141,9 +141,11 @@ public class LoginServlet extends HttpServlet {
         session.setAttribute("login_id_2fa", loginResponse.getLogin_id());
         session.setAttribute("role", role);
         session.setAttribute("email", loginResponse.getEmail());
+        session.setAttribute("otpFormUrl", "sessions/login2fa");
         String loginSession = "JSESSIONID=" + session.getId() + ";Path=/;Secure;HttpOnly;SameSite=Strict";
         response.setHeader("Set-Cookie", loginSession);
-        request.getRequestDispatcher(Constants.VERIFY_OTP_JSP_URL).forward(request, response);
+        request.setAttribute("otpFormUrl", "sessions/login2fa");
+        request.getRequestDispatcher(Constants.OTP_FORM_JSP_URL).forward(request, response);
     }
 
     private LoginRequest createLoginRequest(HttpServletRequest request) {

@@ -2,11 +2,8 @@ package features;
 
 import domain.common.Common;
 import domain.models.Session;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
-import utilities.SessionUtilities;
 
 public class SessionHandler {
 
@@ -19,16 +16,16 @@ public class SessionHandler {
     }
 
     public void setLoginSession(HttpSession session, Integer loginId, Common.Role role) {
-        SessionUtilities.setSessionAttribute(session, "login_id", loginId);
-        SessionUtilities.setSessionAttribute(session, "role", role);
+        session.setAttribute("login_id", loginId);
+        session.setAttribute("role", role);
     }
 
-    public Session getLoginSession(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        Object role = SessionUtilities.getSessionAttribute(request.getSession(), "role");
+    public Session getLoginSession(HttpSession session) throws IOException {
+        Object role = session.getAttribute("role");
         if (role == null) {
             return showSessionExpired();
         }
-        Integer loginId = SessionUtilities.getSessionAttributeInt(request.getSession(), "login_id");
+        Integer loginId = (Integer) session.getAttribute("login_id");
         if (loginId == null) {
             return showSessionExpired();
         }
