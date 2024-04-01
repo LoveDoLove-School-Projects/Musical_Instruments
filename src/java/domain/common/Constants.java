@@ -29,14 +29,9 @@ public final class Constants {
     public static final String PROFILE_REMOVE_PICTURE_URL = "/pages/profile/removePicture";
     public static final String PROFILE_UPDATE_URL = "/pages/profile/updateProfile";
 
-    //    Services Method URL
-    public static final String SERVICE_SEND_OTP_URL = "/services/sendOtp";
-    public static final String SERVICE_SEND_EMAIL_URL = "/services/sendEmail";
-
     //    Session JSP URL
-    public static final String VERIFY_OTP_JSP_URL = "/sessions/verifyOtp.jsp";
-
+    public static final String OTP_FORM_JSP_URL = "/sessions/otpForm.jsp";
+    
     //    Session URL
-    public static final String SEND_OTP_URL = "/sessions/sendOtp";
-    public static final String VERIFY_OTP_URL = "/sessions/verifyOtp";
+    public static final String LOGIN_2FA_URL = "/sessions/login2fa";
 }

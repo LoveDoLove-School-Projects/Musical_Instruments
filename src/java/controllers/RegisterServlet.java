@@ -41,7 +41,7 @@ public class RegisterServlet extends HttpServlet {
     }
 
     private void handleRegister(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        Session session = sessionHandler.getLoginSession(request, response);
+        Session session = sessionHandler.getLoginSession(request.getSession());
         if (session.isResult()) {
             RedirectUtilities.sendRedirect(request, response, Constants.PROFILE_URL);
             return;

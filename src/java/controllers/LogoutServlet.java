@@ -5,9 +5,9 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import utilities.RedirectUtilities;
-import utilities.SessionUtilities;
 
 public class LogoutServlet extends HttpServlet {
 
@@ -24,7 +24,8 @@ public class LogoutServlet extends HttpServlet {
     }
 
     private void handleLogout(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        SessionUtilities.clearSession(request);
+        HttpSession session = request.getSession(false);
+        session.invalidate();
         RedirectUtilities.sendRedirect(request, response, Constants.MAIN_URL);
     }
 }
