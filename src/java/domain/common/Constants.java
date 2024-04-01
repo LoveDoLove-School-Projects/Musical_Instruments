@@ -30,7 +30,7 @@ public final class Constants {
     public static final String PROFILE_UPDATE_URL = "/pages/profile/updateProfile";
 
     //    Session JSP URL
-    public static final String OTP_FORM_JSP_URL = "/sessions/otpForm.jsp";
+    public static final String LOGIN_2FA_JSP_URL = "/sessions/login2fa.jsp";
     
     //    Session URL
     public static final String LOGIN_2FA_URL = "/sessions/login2fa";
