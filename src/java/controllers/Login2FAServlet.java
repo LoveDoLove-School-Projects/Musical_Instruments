@@ -10,6 +10,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.EnumMap;
+import java.util.Map;
 import services.OtpServices;
 import utilities.RedirectUtilities;
 import utilities.StringUtilities;
@@ -20,6 +22,16 @@ public class Login2FAServlet extends HttpServlet {
     private static final String LOGIN_ID_ATTRIBUTE = "login_id_2fa";
     private static final String EMAIL_ATTRIBUTE = "email";
     private static final String ROLE_ATTRIBUTE = "role";
+    private static final Map<Common.Status, String> STATUS_MESSAGES;
+
+    static {
+        STATUS_MESSAGES = new EnumMap<>(Common.Status.class);
+        STATUS_MESSAGES.put(Common.Status.NOT_FOUND, "OTP not found!");
+        STATUS_MESSAGES.put(Common.Status.UNAUTHORIZED, "Too many attempts! Please click on 'Resend OTP' to try again.");
+        STATUS_MESSAGES.put(Common.Status.EXPIRED, "OTP expired! Please click on 'Resend OTP' to try again.");
+        STATUS_MESSAGES.put(Common.Status.FAILED, "Failed to verify OTP! Please try again.");
+        STATUS_MESSAGES.put(Common.Status.INVALID, "Invalid OTP!");
+    }
     private SessionHandler sessionHandler;
     private OtpServices otpServices;
 
@@ -30,16 +42,19 @@ public class Login2FAServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        handle2FAVerification(request, response);
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        setLogin2FAPage(request, response);
     }
 
-    private void handle2FAVerification(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        handleLogin2FA(request, response);
+    }
+
+    private void handleLogin2FA(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession(false);
         Session attributes = getSessionAttributes(session);
         String otp = request.getParameter("otp");
-        String otpFormUrl = (String) session.getAttribute("otpFormUrl");
-        request.setAttribute("otpFormUrl", otpFormUrl);
         if (StringUtilities.anyNullOrBlank(otp)) {
             RedirectUtilities.setMessage(request, RedirectType.DANGER, "Please fill in OTP!");
             setLogin2FAPage(request, response);
@@ -50,7 +65,7 @@ public class Login2FAServlet extends HttpServlet {
     }
 
     private void setLogin2FAPage(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.getRequestDispatcher(Constants.OTP_FORM_JSP_URL).forward(request, response);
+        request.getRequestDispatcher(Constants.LOGIN_2FA_JSP_URL).forward(request, response);
     }
 
     private Session getSessionAttributes(HttpSession session) {
@@ -61,23 +76,16 @@ public class Login2FAServlet extends HttpServlet {
     }
 
     private void handleOtpStatus(Common.Status otpStatus, HttpServletRequest request, HttpServletResponse response, HttpSession session, Session attributes) throws IOException, ServletException {
-        switch (otpStatus) {
-            case OK:
-                session.invalidate();
-                session = request.getSession(true);
-                sessionHandler.setLoginSession(session, attributes.getId(), attributes.getRole());
-                String loginSession = "JSESSIONID=" + session.getId() + ";Path=/;Secure;HttpOnly;SameSite=Strict";
-                response.setHeader("Set-Cookie", loginSession);
-                RedirectUtilities.sendRedirect(request, response, Constants.MAIN_URL);
-                break;
-            case INVALID:
-                RedirectUtilities.setMessage(request, RedirectType.DANGER, "Invalid OTP!");
-                setLogin2FAPage(request, response);
-                break;
-            default:
-                RedirectUtilities.setMessage(request, RedirectType.DANGER, "Failed to verify OTP!");
-                setLogin2FAPage(request, response);
-                break;
+        if (otpStatus == Common.Status.OK) {
+            String returnToUrl = (String) session.getAttribute("returnToUrl");
+            session.invalidate();
+            session = request.getSession(true);
+            sessionHandler.setLoginSession(session, attributes.getId(), attributes.getRole());
+            response.sendRedirect(returnToUrl);
+        } else {
+            String message = STATUS_MESSAGES.getOrDefault(otpStatus, "Failed to verify OTP!");
+            RedirectUtilities.setMessage(request, RedirectType.DANGER, message);
+            setLogin2FAPage(request, response);
         }
     }
 }
