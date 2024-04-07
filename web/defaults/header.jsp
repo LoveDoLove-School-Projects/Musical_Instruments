@@ -3,7 +3,13 @@
 <c:set var="path" value="${pageContext.request.contextPath}" />
 <c:set var="basePath" value="${pageContext.request.scheme}://${pageContext.request.serverName}:${pageContext.request.serverPort}${path}/" />
 <!DOCTYPE html>
-<nav class="navbar navbar-expand-lg navbar-light bg-body-tertiary">
+<style>
+    .navbar{
+        z-index:2;
+        position: sticky;
+    }
+</style>
+<nav class="fixed-top navbar navbar-expand-lg navbar-light bg-body-tertiary ">
     <div class="container">
         <a class="navbar-brand me-2" href="pages/main">
             <img src="assets/image/logo.png" width="38" height="38" alt="Musical Instruments Logo"
@@ -11,7 +17,7 @@
         </a>
 
         <button class="navbar-toggler" type="button" aria-controls="navbarButtonsExample"
-                aria-expanded="false" aria-label="Toggle navigation">
+                aria-expanded="false" aria-label="Toggle navigation" data-bs-toggle="collapse" data-bs-target="#navbarButtonsExample">
             <svg  width="16" height="16" fill="currentColor"
                   class="bi bi-three-dots-vertical" viewBox="0 0 16 16">
             <path
@@ -26,6 +32,9 @@
                 </li>
                 <li class="nav-item mx-4 my-2 p-2">
                     <a class="nav-link" href="pages/product">Product</a>
+                </li>
+                <li class="nav-item mx-4 my-2 p-2">
+                    <a class="nav-link" href="pages/admin">Admin Panel</a>
                 </li>
             </ul>
 
@@ -53,5 +62,6 @@
         </div>
     </div>
 </nav>
+
 <jsp:include page="message.jsp" />
 <script type="module" src="assets/js/header.js"></script>

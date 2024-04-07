@@ -2,8 +2,10 @@ package controllers;
 
 import domain.common.Common;
 import domain.common.Constants;
+import domain.models.Session;
 import domain.request.AdminRequest;
 import domain.response.AdminResponse;
+import features.SessionHandler;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -24,32 +26,28 @@ public class AdminServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        handleTemplate(request, response);
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        handleTemplate(request, response);
+        Session session = new SessionHandler().getLoginSession(request.getSession());
+        if (!session.isResult()) {
+            RedirectUtilities.redirectWithMessage(request, response, RedirectType.DANGER, "Please login as admin!", Constants.ADMIN_LOGIN_URL);
+            return;
+        }
+        if (session.getRole() != Common.Role.ADMIN) {
+            RedirectUtilities.redirectWithMessage(request, response, RedirectType.DANGER, "You are not admin", Constants.MAIN_URL);
+            return;
+        }
+        String path = request.getServletPath();
+        switch (path) {
+            case Constants.ADMIN_URL:
+                viewAdminMainPage(request, response, session.getId());
+                return;
+        }
     }
 
-    private void handleTemplate(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-//        Session session = new SessionHandler().checkLoginStatus(request, response);
-//        if (session.isResult()) {
-//            if (session.getIsAdmin() == 0) {
-//                RedirectUtilities.redirectWithError(request, response, "You are not admin", Constants.MAIN_URL);
-//                return;
-//            }
-//            String path = request.getServletPath();
-//            if ("POST".equalsIgnoreCase(request.getMethod())) {
-//                switch (path) {
-//                }
-//            }
-        initAdminProfile(request, response, 1);
-//        }
-    }
-
-    //    Add your own method here and each method have their own link that added in web.xml under their own servlet
-    private void initAdminProfile(HttpServletRequest request, HttpServletResponse response, int token) throws ServletException, IOException {
+    private void viewAdminMainPage(HttpServletRequest request, HttpServletResponse response, int token) throws ServletException, IOException {
         AdminRequest adminRequest = new AdminRequest(token);
         AdminResponse adminResponse = adminServices.getAdminProfile(adminRequest);
         if (adminResponse == null || adminResponse.getStatus() == Common.Status.NOT_FOUND) { // Refer Common java class to see have what status then apply in services

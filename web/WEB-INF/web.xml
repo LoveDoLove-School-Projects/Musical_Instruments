@@ -115,6 +115,11 @@
     <servlet-mapping>
         <servlet-name>AdminServlet</servlet-name>
         <url-pattern>/pages/admin</url-pattern>
+        <url-pattern>/pages/admin/controlPanel</url-pattern>
+        <url-pattern>/pages/admin/manageCustomer</url-pattern>
+        <url-pattern>/pages/admin/manageStaff</url-pattern>
+        <url-pattern>/pages/admin/sales</url-pattern>
+        <url-pattern>/pages/admin/viewTransaction</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>TransactionServlet</servlet-name>

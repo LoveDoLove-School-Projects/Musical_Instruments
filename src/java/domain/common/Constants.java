@@ -10,9 +10,19 @@ public final class Constants {
     public static final String LOGIN_JSP_URL = "/pages/login.jsp";
     public static final String REGISTER_JSP_URL = "/pages/register.jsp";
     public static final String PROFILE_JSP_URL = "/pages/profile.jsp";
+
+    //    Product JSP URL
     public static final String PRODUCT_JSP_URL = "/pages/product.jsp";
     public static final String VIEW_PRODUCT_JSP_URL = "/pages/viewProduct.jsp";
-    public static final String ADMIN_JSP_URL = "/pages/admin.jsp";
+
+    //    Admin JSP URL
+    public static final String ADMIN_JSP_URL = "/pages/admins/admin.jsp";
+    public static final String ADMIN_CONTROL_PANEL_JSP_URL = "/pages/admins/controlPanel.jsp";
+    public static final String ADMIN_MANAGE_CUSTOMER_JSP_URL = "/pages/admins/manageCustomer.jsp";
+    public static final String ADMIN_MANAGE_STAFF_JSP_URL = "/pages/admins/manageStaff.jsp";
+    public static final String ADMIN_MANAGE_STOCK_JSP_URL = "/pages/admins/manageStock.jsp";
+    public static final String ADMIN_SALES_JSP_URL = "/pages/admins/sales.jsp";
+    public static final String ADMIN_VIEW_TRANSACTION_JSP_URL = "/pages/admins/viewTransaction.jsp";
 
     //    Servlet URL
     public static final String MAIN_URL = "/pages/main";
