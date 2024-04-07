@@ -6,19 +6,19 @@ a{
   text-decoration: none;
   color: black;
 }
-/*.chair, .chair::before{
+.MusicInstruments, .MusicInstruments::before{
   display: block;
   width: 100%;
   height: 100%;
   border-radius: 20px;
   transition: all 0.5s ease;
 }
-.chair{
+.MusicInstruments{
   position: relative;
   border: none;
   animation:fadeInLeftBig 3s;
 }
-.chair::before{
+.MusicInstruments::before{
   content: '';
   position: absolute;
   background-color: #d9d9e1;
@@ -27,10 +27,10 @@ a{
   z-index: -1;
 }
 
-.chair:hover::before{
+.MusicInstruments:hover::before{
   transform: translateY(20px);
   opacity: 1;
-}*/
+}
 
 .PremiumBox {
   background-color:#343333;
