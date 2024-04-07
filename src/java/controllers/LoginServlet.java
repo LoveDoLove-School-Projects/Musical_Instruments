@@ -140,11 +140,9 @@ public class LoginServlet extends HttpServlet {
             RedirectUtilities.setMessage(request, RedirectType.DANGER, "There was an error from the server! Please try again later.");
             return;
         }
-        String returnToUrl = request.getRequestURL().toString();
         session.setAttribute("login_id_2fa", loginResponse.getLogin_id());
         session.setAttribute("role", role);
         session.setAttribute("email", loginResponse.getEmail());
-        session.setAttribute("returnToUrl", returnToUrl);
         RedirectUtilities.sendRedirect(request, response, Constants.LOGIN_2FA_URL);
     }
 
