@@ -11,6 +11,7 @@ public final class Constants {
     public static final String REGISTER_JSP_URL = "/pages/register.jsp";
     public static final String PROFILE_JSP_URL = "/pages/profile.jsp";
     public static final String PRODUCT_JSP_URL = "/pages/product.jsp";
+    public static final String VIEW_PRODUCT_JSP_URL = "/pages/viewProduct.jsp";
     public static final String ADMIN_JSP_URL = "/pages/admin.jsp";
 
     //    Servlet URL
@@ -31,7 +32,10 @@ public final class Constants {
 
     //    Session JSP URL
     public static final String LOGIN_2FA_JSP_URL = "/sessions/login2fa.jsp";
-    
+
     //    Session URL
     public static final String LOGIN_2FA_URL = "/sessions/login2fa";
+
+    //    Product URL
+    public static final String VIEW_PRODUCT_URL = "/pages/product/viewProduct";
 }
