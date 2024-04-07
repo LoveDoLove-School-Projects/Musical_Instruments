@@ -20,7 +20,7 @@ public class OtpServices {
     private static final String GET_OTP_SQL = "SELECT * FROM otps WHERE email = ?";
     private static final String COUNT_OTP_SQL = "SELECT COUNT(*) FROM otps WHERE email = ?";
     private static final String ADD_OTP_SQL = "INSERT INTO OTPS(email, otp) VALUES(?, ?)";
-    private static final String UPDATE_OTP_SQL = "UPDATE otps SET otp = ? WHERE email = ?";
+    private static final String UPDATE_OTP_SQL = "UPDATE otps SET otp = ?, try_count = ? WHERE email = ?";
     private static final String DELETE_OTP_SQL = "DELETE FROM otps WHERE email = ?";
     private static final String UPDATE_TRY_COUNT_SQL = "UPDATE otps SET try_count = ? WHERE email = ?";
     private final MailServices mailServices;
@@ -74,11 +74,26 @@ public class OtpServices {
     }
 
     public boolean addOtp(String email, String otp) {
-        return executeUpdate(ADD_OTP_SQL, email, otp);
+        try (Connection connection = ConnectionController.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(ADD_OTP_SQL)) {
+            preparedStatement.setString(1, email);
+            preparedStatement.setString(2, otp);
+            preparedStatement.executeUpdate();
+            return true;
+        } catch (SQLException ex) {
+            throw new DatabaseAccessException("Database error while adding OTP", ex);
+        }
     }
 
     public boolean updateOtp(String email, String otp) {
-        return executeUpdate(UPDATE_OTP_SQL, otp, email);
+        try (Connection connection = ConnectionController.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_OTP_SQL)) {
+            preparedStatement.setString(1, otp);
+            preparedStatement.setInt(2, 0);
+            preparedStatement.setString(3, email);
+            preparedStatement.executeUpdate();
+            return true;
+        } catch (SQLException ex) {
+            throw new DatabaseAccessException("Database error while updating OTP", ex);
+        }
     }
 
     public void deleteOtp(String email) {
@@ -108,17 +123,6 @@ public class OtpServices {
             }
         } catch (SQLException ex) {
             throw new DatabaseAccessException("Database error while checking OTP existence", ex);
-        }
-    }
-
-    private boolean executeUpdate(String sql, String param1, String param2) {
-        try (Connection connection = ConnectionController.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-            preparedStatement.setString(1, param1);
-            preparedStatement.setString(2, param2);
-            int update = preparedStatement.executeUpdate();
-            return update > 0;
-        } catch (SQLException ex) {
-            throw new DatabaseAccessException("Database error while adding OTP", ex);
         }
     }
 
