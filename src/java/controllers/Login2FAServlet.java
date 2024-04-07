@@ -77,11 +77,10 @@ public class Login2FAServlet extends HttpServlet {
 
     private void handleOtpStatus(Common.Status otpStatus, HttpServletRequest request, HttpServletResponse response, HttpSession session, Session attributes) throws IOException, ServletException {
         if (otpStatus == Common.Status.OK) {
-            String returnToUrl = (String) session.getAttribute("returnToUrl");
             session.invalidate();
             session = request.getSession(true);
             sessionHandler.setLoginSession(session, attributes.getId(), attributes.getRole());
-            response.sendRedirect(returnToUrl);
+            RedirectUtilities.sendRedirect(request, response, Constants.PROFILE_URL);
         } else {
             String message = STATUS_MESSAGES.getOrDefault(otpStatus, "Failed to verify OTP!");
             RedirectUtilities.setMessage(request, RedirectType.DANGER, message);
