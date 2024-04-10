@@ -78,10 +78,6 @@
         <servlet-name>AdminServlet</servlet-name>
         <servlet-class>controllers.AdminServlet</servlet-class>
     </servlet>
-    <servlet>
-        <servlet-name>TransactionServlet</servlet-name>
-        <servlet-class>controllers.TransactionServlet</servlet-class>
-    </servlet>
     <!--Servlet Mapping-->
     <servlet-mapping>
         <servlet-name>MainServlet</servlet-name>
@@ -121,10 +117,5 @@
         <url-pattern>/pages/admin/manageStock</url-pattern>
         <url-pattern>/pages/admin/sales</url-pattern>
         <url-pattern>/pages/admin/viewTransaction</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>TransactionServlet</servlet-name>
-        <url-pattern>/payments/transaction</url-pattern>        
-        <url-pattern>/payments/makeTransaction</url-pattern>
     </servlet-mapping>
 </web-app>

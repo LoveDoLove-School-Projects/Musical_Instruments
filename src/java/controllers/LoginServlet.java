@@ -26,6 +26,10 @@ public class LoginServlet extends HttpServlet {
             Constants.CUSTOMER_LOGIN_URL, Common.Role.CUSTOMER,
             Constants.ADMIN_LOGIN_URL, Common.Role.ADMIN
     );
+    private static final Map<String, String> LOGIN_FORM_URLS = Map.of(
+            Constants.CUSTOMER_LOGIN_URL, "pages/login",
+            Constants.ADMIN_LOGIN_URL, "pages/adminLogin"
+    );
     private static final Map<Common.Status, String> STATUS_MESSAGES;
     private LoginServices loginServices;
     private OtpServices otpServices;
@@ -73,26 +77,13 @@ public class LoginServlet extends HttpServlet {
 
     private void processGetRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String path = request.getServletPath();
-        switch (path) {
-            case Constants.CUSTOMER_LOGIN_URL:
-                request.setAttribute("loginFormUrl", "pages/login");
-                break;
-            case Constants.ADMIN_LOGIN_URL:
-                request.setAttribute("loginFormUrl", "pages/adminLogin");
-                break;
-        }
+        request.setAttribute("loginFormUrl", LOGIN_FORM_URLS.get(path));
         setLoginPage(request, response);
     }
 
     private void processPostRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String path = request.getServletPath();
-        Common.Role role = ROLE_MAP.get(path);
-        if (role == null) {
-            RedirectUtilities.setMessage(request, RedirectType.DANGER, "Invalid URL!");
-            setLoginPage(request, response);
-            return;
-        }
-        handleLoginRequest(request, response, role);
+        handleLoginRequest(request, response, ROLE_MAP.get(path));
     }
 
     private void setLoginPage(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
