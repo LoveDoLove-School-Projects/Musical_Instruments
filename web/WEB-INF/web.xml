@@ -124,6 +124,7 @@
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>TransactionServlet</servlet-name>
-        <url-pattern>/payments/transaction</url-pattern>
+        <url-pattern>/payments/transaction</url-pattern>        
+        <url-pattern>/payments/makeTransaction</url-pattern>
     </servlet-mapping>
 </web-app>
