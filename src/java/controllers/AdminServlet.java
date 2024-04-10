@@ -44,6 +44,24 @@ public class AdminServlet extends HttpServlet {
             case Constants.ADMIN_URL:
                 viewAdminMainPage(request, response, session.getId());
                 return;
+            case Constants.ADMIN_CONTROL_PANEL_URL:
+                viewControlPanelPage(request, response, session.getId());
+                return;
+            case Constants.ADMIN_MANAGE_CUSTOMER_URL:
+                viewManageCustomerPage(request, response, session.getId());
+                return;
+            case Constants.ADMIN_MANAGE_STAFF_URL:
+                viewManageStaffPage(request, response, session.getId());
+                return;
+            case Constants.ADMIN_MANAGE_STOCK_URL:
+                viewManageStockPage(request, response, session.getId());
+                return;
+            case Constants.ADMIN_SALES_URL:
+                viewSalesPage(request, response, session.getId());
+                return;
+            case Constants.ADMIN_VIEW_TRANSACTION_URL:
+                viewTransactionPage(request, response, session.getId());
+                return;
         }
     }
 
@@ -57,4 +75,29 @@ public class AdminServlet extends HttpServlet {
         request.setAttribute("username", adminResponse.getUsername());
         request.getRequestDispatcher(Constants.ADMIN_JSP_URL).forward(request, response);
     }
+
+    private void viewControlPanelPage(HttpServletRequest request, HttpServletResponse response, int token) throws ServletException, IOException {
+        request.getRequestDispatcher(Constants.ADMIN_CONTROL_PANEL_JSP_URL).forward(request, response);
+    }
+
+    private void viewManageCustomerPage(HttpServletRequest request, HttpServletResponse response, int token) throws ServletException, IOException {
+        request.getRequestDispatcher(Constants.ADMIN_MANAGE_CUSTOMER_JSP_URL).forward(request, response);
+    }
+
+    private void viewManageStaffPage(HttpServletRequest request, HttpServletResponse response, int token) throws ServletException, IOException {
+        request.getRequestDispatcher(Constants.ADMIN_MANAGE_STAFF_JSP_URL).forward(request, response);
+    }
+
+    private void viewManageStockPage(HttpServletRequest request, HttpServletResponse response, int token) throws ServletException, IOException {
+        request.getRequestDispatcher(Constants.ADMIN_MANAGE_STOCK_JSP_URL).forward(request, response);
+    }
+
+    private void viewSalesPage(HttpServletRequest request, HttpServletResponse response, int token) throws ServletException, IOException {
+        request.getRequestDispatcher(Constants.ADMIN_SALES_JSP_URL).forward(request, response);
+    }
+
+    private void viewTransactionPage(HttpServletRequest request, HttpServletResponse response, int token) throws ServletException, IOException {
+        request.getRequestDispatcher(Constants.ADMIN_VIEW_TRANSACTION_JSP_URL).forward(request, response);
+    }
+
 }

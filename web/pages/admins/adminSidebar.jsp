@@ -4,6 +4,9 @@
 <c:set var="basePath" value="${pageContext.request.scheme}://${pageContext.request.serverName}:${pageContext.request.serverPort}${path}/" />
 <!DOCTYPE html>
 <html>
+    <head>
+        <jsp:include page="/defaults/head.jsp" />
+    </head>
     <body>
         <!-- Sidebar -->
         <nav id="sidebarMenu" class="collapse d-lg-block sidebar collapse bg-white">
@@ -19,7 +22,7 @@
                     <a href="#" class="list-group-item list-group-item-action py-2 ripple active">
                         <i class="fas fa-chart-area fa-fw me-3"></i><span>Manage Staff</span>
                     </a>
-                    <a href="#" class="list-group-item list-group-item-action py-2 ripple"
+                    <a href="pages/admin/manageCustomer" class="list-group-item list-group-item-action py-2 ripple"
                        ><i class="fas fa-lock fa-fw me-3"></i><span>Manager Customer</span></a
                     >
                     <a href="#" class="list-group-item list-group-item-action py-2 ripple"

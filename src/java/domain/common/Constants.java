@@ -15,21 +15,11 @@ public final class Constants {
     public static final String PRODUCT_JSP_URL = "/pages/product.jsp";
     public static final String VIEW_PRODUCT_JSP_URL = "/pages/viewProduct.jsp";
 
-    //    Admin JSP URL
-    public static final String ADMIN_JSP_URL = "/pages/admins/admin.jsp";
-    public static final String ADMIN_CONTROL_PANEL_JSP_URL = "/pages/admins/controlPanel.jsp";
-    public static final String ADMIN_MANAGE_CUSTOMER_JSP_URL = "/pages/admins/manageCustomer.jsp";
-    public static final String ADMIN_MANAGE_STAFF_JSP_URL = "/pages/admins/manageStaff.jsp";
-    public static final String ADMIN_MANAGE_STOCK_JSP_URL = "/pages/admins/manageStock.jsp";
-    public static final String ADMIN_SALES_JSP_URL = "/pages/admins/sales.jsp";
-    public static final String ADMIN_VIEW_TRANSACTION_JSP_URL = "/pages/admins/viewTransaction.jsp";
-
     //    Servlet URL
     public static final String MAIN_URL = "/pages/main";
     public static final String REGISTER_URL = "/pages/register";
     public static final String PROFILE_URL = "/pages/profile";
     public static final String PRODUCT_URL = "/pages/product";
-    public static final String ADMIN_URL = "/pages/admin";
 
     //    Login URL
     public static final String CUSTOMER_LOGIN_URL = "/pages/login";
@@ -48,4 +38,22 @@ public final class Constants {
 
     //    Product URL
     public static final String VIEW_PRODUCT_URL = "/pages/product/viewProduct";
+
+    //    Admin JSP URL
+    public static final String ADMIN_JSP_URL = "/pages/admins/admin.jsp";
+    public static final String ADMIN_CONTROL_PANEL_JSP_URL = "/pages/admins/controlPanel.jsp";
+    public static final String ADMIN_MANAGE_CUSTOMER_JSP_URL = "/pages/admins/manageCustomer.jsp";
+    public static final String ADMIN_MANAGE_STAFF_JSP_URL = "/pages/admins/manageStaff.jsp";
+    public static final String ADMIN_MANAGE_STOCK_JSP_URL = "/pages/admins/manageStock.jsp";
+    public static final String ADMIN_SALES_JSP_URL = "/pages/admins/sales.jsp";
+    public static final String ADMIN_VIEW_TRANSACTION_JSP_URL = "/pages/admins/viewTransaction.jsp";
+
+    //    Admin URL
+    public static final String ADMIN_URL = "/pages/admin";
+    public static final String ADMIN_CONTROL_PANEL_URL = "/pages/admin/controlPanel";
+    public static final String ADMIN_MANAGE_CUSTOMER_URL = "/pages/admin/manageCustomer";
+    public static final String ADMIN_MANAGE_STAFF_URL = "/pages/admin/manageStaff";
+    public static final String ADMIN_MANAGE_STOCK_URL = "/pages/admin/manageStock";
+    public static final String ADMIN_SALES_URL = "/pages/admin/sales";
+    public static final String ADMIN_VIEW_TRANSACTION_URL = "/pages/admin/viewTransaction";
 }
