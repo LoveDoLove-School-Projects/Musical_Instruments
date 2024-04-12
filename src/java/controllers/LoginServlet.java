@@ -22,6 +22,7 @@ import utilities.enums.RedirectType;
 
 public class LoginServlet extends HttpServlet {
 
+    private static final String LOGIN_2FA_URL = "/sessions/login2fa";
     private static final Map<String, Common.Role> ROLE_MAP = Map.of(
             Constants.CUSTOMER_LOGIN_URL, Common.Role.CUSTOMER,
             Constants.ADMIN_LOGIN_URL, Common.Role.ADMIN
@@ -31,22 +32,15 @@ public class LoginServlet extends HttpServlet {
             Constants.ADMIN_LOGIN_URL, "pages/adminLogin"
     );
     private static final Map<Common.Status, String> STATUS_MESSAGES;
-    private LoginServices loginServices;
-    private OtpServices otpServices;
-    private SessionHandler sessionHandler;
+    private final LoginServices loginServices = new LoginServices();
+    private final OtpServices otpServices = new OtpServices();
+    private final SessionHandler sessionHandler = new SessionHandler();
 
     static {
         STATUS_MESSAGES = new EnumMap<>(Common.Status.class);
         STATUS_MESSAGES.put(Common.Status.NOT_FOUND, "Email not found!");
         STATUS_MESSAGES.put(Common.Status.UNAUTHORIZED, "Incorrect Email or Password!");
         STATUS_MESSAGES.put(Common.Status.FAILED, "Failed to login!");
-    }
-
-    @Override
-    public void init() throws ServletException {
-        this.loginServices = new LoginServices();
-        this.otpServices = new OtpServices();
-        this.sessionHandler = new SessionHandler();
     }
 
     @Override
@@ -134,7 +128,7 @@ public class LoginServlet extends HttpServlet {
         session.setAttribute("login_id_2fa", loginResponse.getLogin_id());
         session.setAttribute("role", role);
         session.setAttribute("email", loginResponse.getEmail());
-        RedirectUtilities.sendRedirect(request, response, Constants.LOGIN_2FA_URL);
+        RedirectUtilities.sendRedirect(request, response, LOGIN_2FA_URL);
     }
 
     private boolean validateLoginRequest(LoginRequest loginRequest) {

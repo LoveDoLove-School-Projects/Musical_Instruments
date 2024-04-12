@@ -62,10 +62,4 @@ public final class Constants {
     public static final String ADMIN_SALES_URL = "/pages/admin/sales";
     public static final String ADMIN_VIEW_TRANSACTION_URL = "/pages/admin/viewTransaction";
     /* ********************************* */
- /* ********************************* */
-    //    Session JSP URL
-    public static final String LOGIN_2FA_JSP_URL = "/sessions/login2fa.jsp";
-    //    Session URL
-    public static final String LOGIN_2FA_URL = "/sessions/login2fa";
-    /* ********************************* */
 }

@@ -18,15 +18,6 @@
         </web-resource-collection>
         <auth-constraint/>
     </security-constraint>
-    <!--Sessions-->
-    <servlet>
-        <servlet-name>Login2FAServlet</servlet-name>
-        <servlet-class>controllers.Login2FAServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>Login2FAServlet</servlet-name>
-        <url-pattern>/sessions/login2fa</url-pattern>
-    </servlet-mapping>
     <!--Listener-->
     <listener>
         <description>Enviroment Entry Reader Listener</description>

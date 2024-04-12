@@ -105,9 +105,10 @@
             </div>
         </section>
         <script>
+            const paymentMethod = ['Credit Card', 'Debit Card', 'PayPal'];
             $(document).ready(function () {
                 $('#paymentMethod').change(function () {
-                    if ($(this).val() === 'Credit Card' || $(this).val() === 'Debit Card') {
+                    if ($(this).val() === paymentMethod[0] || $(this).val() === paymentMethod[1]) {
                         $('#cardDetails').show();
                     } else {
                         $('#cardDetails').hide();
