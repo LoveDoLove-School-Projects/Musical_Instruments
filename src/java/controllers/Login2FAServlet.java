@@ -5,6 +5,7 @@ import domain.common.Constants;
 import domain.models.Session;
 import features.SessionHandler;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -17,8 +18,10 @@ import utilities.RedirectUtilities;
 import utilities.StringUtilities;
 import utilities.enums.RedirectType;
 
+@WebServlet(name = "Login2FAServlet", urlPatterns = "/sessions/login2fa")
 public class Login2FAServlet extends HttpServlet {
 
+    private static final String LOGIN_2FA_JSP_URL = "/sessions/login2fa.jsp";
     private static final String LOGIN_ID_ATTRIBUTE = "login_id_2fa";
     private static final String EMAIL_ATTRIBUTE = "email";
     private static final String ROLE_ATTRIBUTE = "role";
@@ -32,28 +35,28 @@ public class Login2FAServlet extends HttpServlet {
         STATUS_MESSAGES.put(Common.Status.FAILED, "Failed to verify OTP! Please try again.");
         STATUS_MESSAGES.put(Common.Status.INVALID, "Invalid OTP!");
     }
-    private SessionHandler sessionHandler;
-    private OtpServices otpServices;
-
-    @Override
-    public void init() throws ServletException {
-        this.sessionHandler = new SessionHandler();
-        this.otpServices = new OtpServices();
-    }
+    private final SessionHandler sessionHandler = new SessionHandler();
+    private final OtpServices otpServices = new OtpServices();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        HttpSession session = request.getSession(false);
+        Session attributes = getSessionAttributes(session);
+        if (attributes == null) {
+            RedirectUtilities.redirectWithMessage(request, response, RedirectType.DANGER, "Invalid request!", Constants.CUSTOMER_LOGIN_URL);
+            return;
+        }
         setLogin2FAPage(request, response);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        handleLogin2FA(request, response);
-    }
-
-    private void handleLogin2FA(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession(false);
         Session attributes = getSessionAttributes(session);
+        if (attributes == null) {
+            RedirectUtilities.redirectWithMessage(request, response, RedirectType.DANGER, "Invalid request!", Constants.CUSTOMER_LOGIN_URL);
+            return;
+        }
         String otp = request.getParameter("otp");
         if (StringUtilities.anyNullOrBlank(otp)) {
             RedirectUtilities.setMessage(request, RedirectType.DANGER, "Please fill in OTP!");
@@ -65,13 +68,19 @@ public class Login2FAServlet extends HttpServlet {
     }
 
     private void setLogin2FAPage(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.getRequestDispatcher(Constants.LOGIN_2FA_JSP_URL).forward(request, response);
+        request.getRequestDispatcher(LOGIN_2FA_JSP_URL).forward(request, response);
     }
 
     private Session getSessionAttributes(HttpSession session) {
+        if (session == null) {
+            return null;
+        }
         Integer loginId = (Integer) session.getAttribute(LOGIN_ID_ATTRIBUTE);
         String email = (String) session.getAttribute(EMAIL_ATTRIBUTE);
         Common.Role role = (Common.Role) session.getAttribute(ROLE_ATTRIBUTE);
+        if (loginId == null || loginId == 0 || StringUtilities.anyNullOrBlank(email) || role == null) {
+            return null;
+        }
         return new Session(loginId, email, role);
     }
 

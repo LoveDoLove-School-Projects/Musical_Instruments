@@ -2,6 +2,8 @@
 <%@ page contentType="text/html" pageEncoding="UTF-8" %>
 <c:set var="path" value="${pageContext.request.contextPath}" />
 <c:set var="basePath" value="${pageContext.request.scheme}://${pageContext.request.serverName}:${pageContext.request.serverPort}${path}/" />
+<!-- IMport -->
+<%@ page import="java.util.Calendar" %>
 <!DOCTYPE html>
 <html>
 
@@ -11,7 +13,6 @@
     </head>
 
     <body>
-        <jsp:include page="/defaults/header.jsp" />
         <section class="py-5">
             <div class="container justify-content-center align-items-center">
                 <div class="row">
@@ -31,11 +32,11 @@
                 <div class="row">
                     <div class="col-md-6">
                         <h2>Select Payment Method</h2>
-                        <form>
+                        <form action="/payments/payTransaction" method="post">
                             <div class="form-group">
                                 <label for="paymentMethod">Payment Method</label>
                                 <select class="form-control" id="paymentMethod">
-                                    <option value="">Select Payment Method</option>
+                                    <option value="" selected>Select Payment Method</option>
                                     <option value="Credit Card">Credit Card</option>
                                     <option value="Debit Card">Debit Card</option>
                                     <option value="PayPal">PayPal</option>
@@ -47,30 +48,67 @@
                                     <label for="cardHolderName">Card Holder Name</label>
                                     <input type="text" class="form-control" id="cardHolderName" />
                                 </div>
-                                <div class="form-group">
-                                    <label for="cardNumber">Card Number</label>
-                                    <input type="text" class="form-control" id="cardNumber" />
+                                <div class="form-group row">
+                                    <label for="cardNumber" class="col-form-label">Card Number</label>
+                                    <div class="col">
+                                        <input type="text" class="form-control" name="card1" id="card1" maxlength="4" pattern="[0-9]{4}" title="First 4 digits" size="4" />
+                                    </div>
+                                    <div class="col-auto text-center my-auto">
+                                        -
+                                    </div>
+                                    <div class="col">
+                                        <input type="text" class="form-control" name="card2" id="card2" maxlength="4" pattern="[0-9]{4}" title="Second 4 digits" size="4" />
+                                    </div>
+                                    <div class="col-auto text-center my-auto">
+                                        -
+                                    </div>
+                                    <div class="col">
+                                        <input type="text" class="form-control" name="card3" id="card3" maxlength="4" pattern="[0-9]{4}" title="Third 4 digits" size="4" />
+                                    </div>
+                                    <div class="col-auto text-center my-auto">
+                                        -
+                                    </div>
+                                    <div class="col">
+                                        <input type="text" class="form-control" name="card4" id="card4" maxlength="4" pattern="[0-9]{4}" title="Fourth 4 digits" size="4" />
+                                    </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="cvv">CVV</label>
                                     <input type="text" class="form-control" id="cvv" />
                                 </div>
-                                <div class="form-group">
-                                    <label for="expDate">Expiration Date</label>
-                                    <input type="text" class="form-control" id="expDate" />
+                                <div class="form-group row">
+                                    <label for="expDate" class="col-form-label">Expiration Date</label>
+                                    <div class="col">
+                                        <!-- First year block -->
+                                        <select class="form-control" id="expYear">
+                                            <option value="">Year</option>
+                                            <c:forEach var="year" begin="<%= Calendar.getInstance().get(Calendar.YEAR) %>" end="<%= Calendar.getInstance().get(Calendar.YEAR) + 30 %>">
+                                                <option value="${year}">${year}</option>
+                                            </c:forEach>
+                                        </select>
+                                    </div>
+                                    <div class="col">
+                                        <!-- Second date block -->
+                                        <select class="form-control" id="expMonth">
+                                            <option value="">Month</option>
+                                            <c:forEach var="month" begin="1" end="12">
+                                                <option value="${month}">${month}</option>
+                                            </c:forEach>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
-                            <button type="submit" class="btn btn-primary">Submit</button>
+                            <button type="submit" class="btn btn-primary mt-3">Pay Now</button>
                         </form>
                     </div>
                 </div>
             </div>
         </section>
-        <jsp:include page="/defaults/footer.jsp" />
         <script>
+            const paymentMethod = ['Credit Card', 'Debit Card', 'PayPal'];
             $(document).ready(function () {
                 $('#paymentMethod').change(function () {
-                    if ($(this).val() === 'Credit Card' || $(this).val() === 'Debit Card') {
+                    if ($(this).val() === paymentMethod[0] || $(this).val() === paymentMethod[1]) {
                         $('#cardDetails').show();
                     } else {
                         $('#cardDetails').hide();

@@ -62,18 +62,4 @@ public final class Constants {
     public static final String ADMIN_SALES_URL = "/pages/admin/sales";
     public static final String ADMIN_VIEW_TRANSACTION_URL = "/pages/admin/viewTransaction";
     /* ********************************* */
- /* ********************************* */
-    //    Transaction JSP URL
-    public static final String TRANSACTION_JSP_URL = "/payments/transaction.jsp";
-    //    Transaction URL
-    public static final String TRANSACTION_URL = "/payments/transaction";
-    public static final String DO_TRANSACTION_URL = "/payments/doTransaction";
-
-    /* ********************************* */
- /* ********************************* */
-    //    Session JSP URL
-    public static final String LOGIN_2FA_JSP_URL = "/sessions/login2fa.jsp";
-    //    Session URL
-    public static final String LOGIN_2FA_URL = "/sessions/login2fa";
-    /* ********************************* */
 }

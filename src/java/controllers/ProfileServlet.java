@@ -22,14 +22,8 @@ import utilities.enums.RedirectType;
 @MultipartConfig
 public class ProfileServlet extends HttpServlet {
 
-    private ProfileServices profileServices;
-    private SessionHandler sessionHandler;
-
-    @Override
-    public void init() throws ServletException {
-        this.profileServices = new ProfileServices();
-        this.sessionHandler = new SessionHandler();
-    }
+    private final ProfileServices profileServices = new ProfileServices();
+    private final SessionHandler sessionHandler = new SessionHandler();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
