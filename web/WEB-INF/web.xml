@@ -109,8 +109,8 @@
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>ProductServlet</servlet-name>
-        <url-pattern>/pages/viewProduct</url-pattern>
         <url-pattern>/pages/product</url-pattern>
+        <url-pattern>/pages/product/viewProduct</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>AdminServlet</servlet-name>

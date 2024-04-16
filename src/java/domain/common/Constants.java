@@ -12,8 +12,8 @@ public final class Constants {
     public static final String PROFILE_JSP_URL = "/pages/profile.jsp";
 
     //    Product JSP URL
-    public static final String PRODUCT_JSP_URL = "/pages/product.jsp";
-    public static final String VIEW_PRODUCT_JSP_URL = "/pages/viewProduct.jsp";
+    public static final String PRODUCT_JSP_URL = "/pages/products/product.jsp";
+    public static final String VIEW_PRODUCT_JSP_URL = "/pages/products/viewProduct.jsp";
 
     //    Admin JSP URL
     public static final String ADMIN_JSP_URL = "/pages/admins/admin.jsp";
