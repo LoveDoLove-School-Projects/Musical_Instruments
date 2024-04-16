@@ -22,27 +22,25 @@ import utilities.enums.RedirectType;
 
 public class LoginServlet extends HttpServlet {
 
+    private static final String LOGIN_2FA_URL = "/sessions/login2fa";
     private static final Map<String, Common.Role> ROLE_MAP = Map.of(
             Constants.CUSTOMER_LOGIN_URL, Common.Role.CUSTOMER,
             Constants.ADMIN_LOGIN_URL, Common.Role.ADMIN
     );
+    private static final Map<String, String> LOGIN_FORM_URLS = Map.of(
+            Constants.CUSTOMER_LOGIN_URL, "pages/login",
+            Constants.ADMIN_LOGIN_URL, "pages/adminLogin"
+    );
     private static final Map<Common.Status, String> STATUS_MESSAGES;
-    private LoginServices loginServices;
-    private OtpServices otpServices;
-    private SessionHandler sessionHandler;
+    private final LoginServices loginServices = new LoginServices();
+    private final OtpServices otpServices = new OtpServices();
+    private final SessionHandler sessionHandler = new SessionHandler();
 
     static {
         STATUS_MESSAGES = new EnumMap<>(Common.Status.class);
         STATUS_MESSAGES.put(Common.Status.NOT_FOUND, "Email not found!");
         STATUS_MESSAGES.put(Common.Status.UNAUTHORIZED, "Incorrect Email or Password!");
         STATUS_MESSAGES.put(Common.Status.FAILED, "Failed to login!");
-    }
-
-    @Override
-    public void init() throws ServletException {
-        this.loginServices = new LoginServices();
-        this.otpServices = new OtpServices();
-        this.sessionHandler = new SessionHandler();
     }
 
     @Override
@@ -73,26 +71,13 @@ public class LoginServlet extends HttpServlet {
 
     private void processGetRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String path = request.getServletPath();
-        switch (path) {
-            case Constants.CUSTOMER_LOGIN_URL:
-                request.setAttribute("loginFormUrl", "pages/login");
-                break;
-            case Constants.ADMIN_LOGIN_URL:
-                request.setAttribute("loginFormUrl", "pages/adminLogin");
-                break;
-        }
+        request.setAttribute("loginFormUrl", LOGIN_FORM_URLS.get(path));
         setLoginPage(request, response);
     }
 
     private void processPostRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String path = request.getServletPath();
-        Common.Role role = ROLE_MAP.get(path);
-        if (role == null) {
-            RedirectUtilities.setMessage(request, RedirectType.DANGER, "Invalid URL!");
-            setLoginPage(request, response);
-            return;
-        }
-        handleLoginRequest(request, response, role);
+        handleLoginRequest(request, response, ROLE_MAP.get(path));
     }
 
     private void setLoginPage(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -143,7 +128,7 @@ public class LoginServlet extends HttpServlet {
         session.setAttribute("login_id_2fa", loginResponse.getLogin_id());
         session.setAttribute("role", role);
         session.setAttribute("email", loginResponse.getEmail());
-        RedirectUtilities.sendRedirect(request, response, Constants.LOGIN_2FA_URL);
+        RedirectUtilities.sendRedirect(request, response, LOGIN_2FA_URL);
     }
 
     private boolean validateLoginRequest(LoginRequest loginRequest) {

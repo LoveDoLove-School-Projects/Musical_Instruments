@@ -17,14 +17,8 @@ import utilities.enums.RedirectType;
 
 public class RegisterServlet extends HttpServlet {
 
-    private RegisterServices registerServices;
-    private SessionHandler sessionHandler;
-
-    @Override
-    public void init() throws ServletException {
-        this.registerServices = new RegisterServices();
-        this.sessionHandler = new SessionHandler();
-    }
+    private final RegisterServices registerServices = new RegisterServices();
+    private final SessionHandler sessionHandler = new SessionHandler();
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
