@@ -28,4 +28,19 @@ public final class Common {
             return role;
         }
     }
+
+    public enum PRODUCT_CATEGORIES {
+        PIANO("PIANO"),
+        ELECTRICGUITARS("ELECTRICGUITARS");
+
+        private final String category;
+
+        PRODUCT_CATEGORIES(String category) {
+            this.category = category;
+        }
+
+        public String getCategory() {
+            return category;
+        }
+    }
 }
