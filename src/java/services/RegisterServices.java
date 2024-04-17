@@ -12,8 +12,8 @@ import java.sql.SQLException;
 
 public class RegisterServices {
 
-    private static final String ADD_NEW_CUSTOMER_SQL = "INSERT INTO customers (username, password, email, address, phone_number, gender) VALUES (?, ?, ?, ?, ?, ?)";
-    private static final String COUNT_CUSTOMER_EMAIL_SQL = "SELECT COUNT(*) FROM customers WHERE email = ?";
+    private static final String ADD_NEW_CUSTOMER_SQL = "INSERT INTO customer (username, password, email, address, phone_number, gender) VALUES (?, ?, ?, ?, ?, ?)";
+    private static final String COUNT_CUSTOMER_EMAIL_SQL = "SELECT COUNT(*) FROM customer WHERE email = ?";
 
     public Common.Status addNewCustomer(RegisterRequest registerRequest) {
         try (Connection connection = ConnectionController.getConnection()) {
