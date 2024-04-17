@@ -1,4 +1,4 @@
-CREATE TABLE customers (
+CREATE TABLE customer (
     customer_id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     username VARCHAR(255) NOT NULL,
     password VARCHAR(255) NOT NULL,
@@ -12,4 +12,4 @@ CREATE TABLE customers (
     last_login_date TIMESTAMP
 );
 
-DROP TABLE customers;
+DROP TABLE customer;

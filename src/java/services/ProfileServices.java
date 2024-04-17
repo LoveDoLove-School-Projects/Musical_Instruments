@@ -13,14 +13,14 @@ import java.sql.Timestamp;
 
 public class ProfileServices {
 
-    private static final String GET_PROFILE_CUSTOMER_SQL = "SELECT * FROM customers WHERE customer_id = ?";
-    private static final String UPLOAD_PICTURE_CUSTOMER_SQL = "UPDATE customers SET picture = ? WHERE customer_id = ?";
-    private static final String REMOVE_PICTURE_CUSTOMER_SQL = "UPDATE customers SET picture = NULL WHERE customer_id = ?";
-    private static final String UPDATE_PROFILE_CUSTOMER_SQL = "UPDATE customers SET username = ?, address = ?, phone_number = ?, gender = ?, two_factor_auth = ? WHERE customer_id = ?";
-    private static final String GET_PROFILE_ADMIN_SQL = "SELECT * FROM admins WHERE admin_id = ?";
-    private static final String UPLOAD_PICTURE_ADMIN_SQL = "UPDATE admins SET picture = ? WHERE admin_id = ?";
-    private static final String REMOVE_PICTURE_ADMIN_SQL = "UPDATE admins SET picture = NULL WHERE admin_id = ?";
-    private static final String UPDATE_PROFILE_ADMIN_SQL = "UPDATE admins SET username = ?, address = ?, phone_number = ?, gender = ?, two_factor_auth = ? WHERE admin_id = ?";
+    private static final String GET_PROFILE_CUSTOMER_SQL = "SELECT * FROM customer WHERE customer_id = ?";
+    private static final String UPLOAD_PICTURE_CUSTOMER_SQL = "UPDATE customer SET picture = ? WHERE customer_id = ?";
+    private static final String REMOVE_PICTURE_CUSTOMER_SQL = "UPDATE customer SET picture = NULL WHERE customer_id = ?";
+    private static final String UPDATE_PROFILE_CUSTOMER_SQL = "UPDATE customer SET username = ?, address = ?, phone_number = ?, gender = ?, two_factor_auth = ? WHERE customer_id = ?";
+    private static final String GET_PROFILE_ADMIN_SQL = "SELECT * FROM admin WHERE admin_id = ?";
+    private static final String UPLOAD_PICTURE_ADMIN_SQL = "UPDATE admin SET picture = ? WHERE admin_id = ?";
+    private static final String REMOVE_PICTURE_ADMIN_SQL = "UPDATE admin SET picture = NULL WHERE admin_id = ?";
+    private static final String UPDATE_PROFILE_ADMIN_SQL = "UPDATE admin SET username = ?, address = ?, phone_number = ?, gender = ?, two_factor_auth = ? WHERE admin_id = ?";
 
     public ProfileResponse getProfile(ProfileRequest profileRequest, Common.Role role) {
         try (Connection connection = ConnectionController.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(getProfile(role))) {
