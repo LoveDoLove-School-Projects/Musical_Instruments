@@ -13,7 +13,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import services.AdminServices;
 import utilities.RedirectUtilities;
-import utilities.enums.RedirectType;
+import utilities.RedirectUtilities.RedirectType;
 
 public class AdminServlet extends HttpServlet {
 
@@ -99,5 +99,4 @@ public class AdminServlet extends HttpServlet {
     private void viewTransactionPage(HttpServletRequest request, HttpServletResponse response, int token) throws ServletException, IOException {
         request.getRequestDispatcher(Constants.ADMIN_VIEW_TRANSACTION_JSP_URL).forward(request, response);
     }
-
 }

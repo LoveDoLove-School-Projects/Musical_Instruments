@@ -17,8 +17,8 @@ import java.util.Map;
 import services.LoginServices;
 import services.OtpServices;
 import utilities.RedirectUtilities;
+import utilities.RedirectUtilities.RedirectType;
 import utilities.StringUtilities;
-import utilities.enums.RedirectType;
 
 public class LoginServlet extends HttpServlet {
 

@@ -12,8 +12,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import services.RegisterServices;
 import utilities.RedirectUtilities;
+import utilities.RedirectUtilities.RedirectType;
 import utilities.StringUtilities;
-import utilities.enums.RedirectType;
 
 public class RegisterServlet extends HttpServlet {
 
