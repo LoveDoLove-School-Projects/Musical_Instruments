@@ -28,13 +28,13 @@
                                             <c:choose>
                                                 <c:when test="${gender == 'Male'}">
                                                     <!-- Male -->
-                                                    <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp"
+                                                    <img src="assets/image/maleDefaultImage.webp"
                                                          alt="avatar" class="rounded-circle img-fluid"
                                                          style="width: 150px; height: 150px;">
                                                 </c:when>
                                                 <c:otherwise>
                                                     <!-- Female -->
-                                                    <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava1.webp"
+                                                    <img src="assets/image/femaleDefaultImage.webp"
                                                          alt="avatar" class="rounded-circle img-fluid"
                                                          style="width: 150px; height: 150px;">
                                                 </c:otherwise>

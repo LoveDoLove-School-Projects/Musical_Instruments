@@ -2,11 +2,23 @@
 <%@ page contentType="text/html" pageEncoding="UTF-8" %>
 <c:set var="path" value="${pageContext.request.contextPath}" />
 <c:set var="basePath" value="${pageContext.request.scheme}://${pageContext.request.serverName}:${pageContext.request.serverPort}${path}/" />
+<%@page import="domain.common.Common.Role"%>
 <!DOCTYPE html>
 <style>
     .navbar{
         z-index:2;
         position: sticky;
+    }
+    .circle-btn {
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .dropdown-menu > li {
+        cursor: pointer;
     }
 </style>
 <nav class="fixed-top navbar navbar-expand-lg navbar-light bg-body-tertiary ">
@@ -33,35 +45,33 @@
                 <li class="nav-item mx-4 my-2 p-2">
                     <a class="nav-link" href="pages/product">Product</a>
                 </li>
-                <li class="nav-item mx-4 my-2 p-2">
-                    <a class="nav-link" href="pages/admin">Admin Panel</a>
-                </li>
+                <c:if test="${sessionScope.role == 'ADMIN'}">
+                    <li class="nav-item mx-4 my-2 p-2">
+                        <a class="nav-link" href="pages/admin">Admin Panel</a>
+                    </li>
+                </c:if>
             </ul>
 
-            <ul class="nav d-flex align-items-center flex-column flex-md-row">
-                <c:if test="${sessionScope.login_id != null}">
-                    <li class="nav-item me-2 my-1 my-md-0">
-                        <a class="btn btn-primary px-3" href="pages/profile">Profile</a>
-                    </li>
-                    <li class="nav-item me-2 my-1 my-md-0">
-                        <button class="btn btn-danger px-3" id="logoutBtn">Logout</button>
-                    </li>
-                </c:if>
-                <c:if test="${sessionScope.login_id == null}">
-                    <li class="nav-item me-2 my-1 my-md-0">
-                        <a class="btn btn-primary px-3" href="pages/login">Login</a>
-                    </li>
-                    <li class="nav-item me-3 my-1 my-md-0">
-                        <a class="btn btn-primary" href="pages/register">Register for free</a>
-                    </li>
-                    <li class="nav-item me-2 my-1 my-md-0">
-                        <a class="btn btn-danger px-3" href="pages/adminLogin">Admin Login</a>
-                    </li>
-                </c:if>
-            </ul>
+            <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle circle-btn" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <c:choose>
+                        <c:when test="${sessionScope.login_id != null}">
+                            <li><a class="dropdown-item" href="pages/profile">Profile</a></li>
+                            <li><a class="dropdown-item" id="logoutBtn">Logout</a></li>
+                            </c:when>
+                            <c:otherwise>
+                            <li><a class="dropdown-item" href="pages/login">Login</a></li>
+                            <li><a class="dropdown-item" href="pages/register">Register</a></li>
+                            <li><a class="dropdown-item" href="pages/adminLogin">Admin Login</a></li>
+                            </c:otherwise>
+                        </c:choose>
+                </ul>
+            </div>
         </div>
     </div>
 </nav>
-
 <jsp:include page="message.jsp" />
 <script type="module" src="assets/js/header.js"></script>
