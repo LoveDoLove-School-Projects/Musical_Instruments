@@ -8,7 +8,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import ms.paymentgateway.domain.common.Constants;
 
-@WebServlet(name = "PaymentServlet", urlPatterns = {"/payments/transaction", "/payments/payTransaction"})
+@WebServlet(name = "PaymentServlet", urlPatterns = {"/payments/transaction", "/payments/processTransaction"})
 public class TransactionServlet extends HttpServlet {
 
     @Override

@@ -1,46 +1,49 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app version="5.0" xmlns="https://jakarta.ee/xml/ns/jakartaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_5_0.xsd">
-    <!--~~~~~~~~~~~~~~~~~~~~Don't Touch~~~~~~~~~~~~~~~~~~~~-->
-    <!--Session Timeout-->
     <session-config>
         <session-timeout>30</session-timeout>
     </session-config>
-    <!--Welcome File-->
     <welcome-file-list>
         <welcome-file>index.jsp</welcome-file>
     </welcome-file-list>
-    <!--Restriced Jsp-->
-    <security-constraint>
-        <web-resource-collection>
-            <web-resource-name>Restricted JSPs</web-resource-name>
-            <description/>
-            <url-pattern>/WEB-INF/*</url-pattern>
-        </web-resource-collection>
-        <auth-constraint/>
-    </security-constraint>
-    <!--Listener-->
     <listener>
         <description>Enviroment Entry Reader Listener</description>
         <listener-class>listeners.ServerListener</listener-class>
     </listener>
-    <!--Enviroment-->
+    <login-config>
+        <auth-method>BASIC</auth-method>
+        <realm-name>file</realm-name>
+    </login-config>
+    <security-role>
+        <description>Admin Role</description>
+        <role-name>Admin</role-name>
+    </security-role>
+    <security-role>
+        <description>Staff Role</description>
+        <role-name>Staff</role-name>
+    </security-role>
+    <security-role>
+        <description>Customer Role</description>
+        <role-name>Customer</role-name>
+    </security-role>
     <env-entry>
+        <description>For encrypt sensitive data</description>
         <env-entry-name>AES_KEY</env-entry-name>
         <env-entry-type>java.lang.String</env-entry-type>
         <env-entry-value>cdff0db1d09606c808efdb55249060207b4cdc51eb96ba5d1692a2c2f00c2948</env-entry-value>
     </env-entry>
     <env-entry>
+        <description>For send email, otp and more</description>
         <env-entry-name>SEND_MAIL_API</env-entry-name>
         <env-entry-type>java.lang.String</env-entry-type>
         <env-entry-value>Li3v31mJXIweF14+ZWfZkQicrWDGNIXuPwe1FfeAqpWHMKSkoZaHLvfgu+K7mIgm/0w9jIEfwWsTv/+Hyj6FRg==</env-entry-value>
     </env-entry>
     <env-entry>
+        <description>For signing the email signature</description>
         <env-entry-name>SECRET_KEY</env-entry-name>
         <env-entry-type>java.lang.String</env-entry-type>
         <env-entry-value>b4fb9ad7b2b95413399ba07326fa58827b90f28070f4e9bf8572344e4d0e6f57</env-entry-value>
     </env-entry>
-    <!--~~~~~~~~~~~~~~~~~~~~Don't Touch~~~~~~~~~~~~~~~~~~~~-->
-    <!--Servlet-->
     <servlet>
         <servlet-name>MainServlet</servlet-name>
         <servlet-class>controllers.MainServlet</servlet-class>
@@ -69,7 +72,6 @@
         <servlet-name>AdminServlet</servlet-name>
         <servlet-class>controllers.AdminServlet</servlet-class>
     </servlet>
-    <!--Servlet Mapping-->
     <servlet-mapping>
         <servlet-name>MainServlet</servlet-name>
         <url-pattern>/pages/main</url-pattern>
