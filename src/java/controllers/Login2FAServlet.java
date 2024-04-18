@@ -15,8 +15,8 @@ import java.util.EnumMap;
 import java.util.Map;
 import services.OtpServices;
 import utilities.RedirectUtilities;
+import utilities.RedirectUtilities.RedirectType;
 import utilities.StringUtilities;
-import utilities.enums.RedirectType;
 
 @WebServlet(name = "Login2FAServlet", urlPatterns = "/sessions/login2fa")
 public class Login2FAServlet extends HttpServlet {

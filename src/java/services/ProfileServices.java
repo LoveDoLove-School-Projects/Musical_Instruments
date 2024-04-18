@@ -13,21 +13,17 @@ import java.sql.Timestamp;
 
 public class ProfileServices {
 
-    private static final String GET_PROFILE_CUSTOMER_SQL = "SELECT * FROM customer WHERE customer_id = ?";
-    private static final String UPLOAD_PICTURE_CUSTOMER_SQL = "UPDATE customer SET picture = ? WHERE customer_id = ?";
-    private static final String REMOVE_PICTURE_CUSTOMER_SQL = "UPDATE customer SET picture = NULL WHERE customer_id = ?";
-    private static final String UPDATE_PROFILE_CUSTOMER_SQL = "UPDATE customer SET username = ?, address = ?, phone_number = ?, gender = ?, two_factor_auth = ? WHERE customer_id = ?";
-    private static final String GET_PROFILE_ADMIN_SQL = "SELECT * FROM admin WHERE admin_id = ?";
-    private static final String UPLOAD_PICTURE_ADMIN_SQL = "UPDATE admin SET picture = ? WHERE admin_id = ?";
-    private static final String REMOVE_PICTURE_ADMIN_SQL = "UPDATE admin SET picture = NULL WHERE admin_id = ?";
-    private static final String UPDATE_PROFILE_ADMIN_SQL = "UPDATE admin SET username = ?, address = ?, phone_number = ?, gender = ?, two_factor_auth = ? WHERE admin_id = ?";
+    private static final String GET_PROFILE_SQL = "SELECT * FROM users WHERE user_id = ?";
+    private static final String UPLOAD_PICTURE_SQL = "UPDATE users SET picture = ? WHERE user_id = ?";
+    private static final String REMOVE_PICTURE_SQL = "UPDATE users SET picture = NULL WHERE user_id = ?";
+    private static final String UPDATE_PROFILE_SQL = "UPDATE users SET username = ?, address = ?, phone_number = ?, gender = ?, two_factor_auth = ? WHERE user_id = ?";
 
     public ProfileResponse getProfile(ProfileRequest profileRequest, Common.Role role) {
-        try (Connection connection = ConnectionController.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(getProfile(role))) {
+        try (Connection connection = ConnectionController.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(GET_PROFILE_SQL)) {
             preparedStatement.setInt(1, profileRequest.getId());
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 if (resultSet.next()) {
-                    int id = resultSet.getInt(getId(role));
+                    int id = resultSet.getInt("user_id");
                     String username = resultSet.getString("username");
                     String email = resultSet.getString("email");
                     String address = resultSet.getString("address");
@@ -48,7 +44,7 @@ public class ProfileServices {
     }
 
     public Common.Status uploadPicture(ProfileRequest profileRequest, Common.Role role) {
-        try (Connection connection = ConnectionController.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(uploadPicture(role))) {
+        try (Connection connection = ConnectionController.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(UPLOAD_PICTURE_SQL)) {
             preparedStatement.setBytes(1, profileRequest.getPicture());
             preparedStatement.setInt(2, profileRequest.getId());
             preparedStatement.executeUpdate();
@@ -59,7 +55,7 @@ public class ProfileServices {
     }
 
     public Common.Status removePicture(ProfileRequest profileRequest, Common.Role role) {
-        try (Connection connection = ConnectionController.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(removePicture(role))) {
+        try (Connection connection = ConnectionController.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(REMOVE_PICTURE_SQL)) {
             preparedStatement.setInt(1, profileRequest.getId());
             preparedStatement.executeUpdate();
             return Common.Status.OK;
@@ -69,7 +65,7 @@ public class ProfileServices {
     }
 
     public ProfileResponse updateProfile(ProfileRequest profileRequest, Common.Role role) {
-        try (Connection connection = ConnectionController.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(updateProfile(role))) {
+        try (Connection connection = ConnectionController.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_PROFILE_SQL)) {
             preparedStatement.setString(1, profileRequest.getUsername());
             preparedStatement.setString(2, profileRequest.getAddress());
             preparedStatement.setString(3, profileRequest.getPhoneNumber());
@@ -81,25 +77,5 @@ public class ProfileServices {
         } catch (SQLException ex) {
             throw new DatabaseAccessException("Error updating profile", ex);
         }
-    }
-
-    private String getProfile(Common.Role role) {
-        return role == Common.Role.CUSTOMER ? GET_PROFILE_CUSTOMER_SQL : GET_PROFILE_ADMIN_SQL;
-    }
-
-    private String uploadPicture(Common.Role role) {
-        return role == Common.Role.CUSTOMER ? UPLOAD_PICTURE_CUSTOMER_SQL : UPLOAD_PICTURE_ADMIN_SQL;
-    }
-
-    private String removePicture(Common.Role role) {
-        return role == Common.Role.CUSTOMER ? REMOVE_PICTURE_CUSTOMER_SQL : REMOVE_PICTURE_ADMIN_SQL;
-    }
-
-    private String updateProfile(Common.Role role) {
-        return role == Common.Role.CUSTOMER ? UPDATE_PROFILE_CUSTOMER_SQL : UPDATE_PROFILE_ADMIN_SQL;
-    }
-
-    private String getId(Common.Role role) {
-        return role == Common.Role.CUSTOMER ? "customer_id" : "admin_id";
     }
 }

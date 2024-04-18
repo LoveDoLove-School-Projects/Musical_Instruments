@@ -4,9 +4,28 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
-import utilities.enums.RedirectType;
 
 public class RedirectUtilities {
+
+    public enum RedirectType {
+        PRIMARY("primary"),
+        SECONDARY("secondary"),
+        SUCCESS("success"),
+        DANGER("danger"),
+        WARNING("warning"),
+        INFO("info"),
+        LIGHT("light"),
+        DARK("dark");
+        private final String redirectType;
+
+        private RedirectType(String redirectType) {
+            this.redirectType = redirectType;
+        }
+
+        public String getRedirectType() {
+            return redirectType;
+        }
+    }
 
     public static void redirectWithMessage(HttpServletRequest request, HttpServletResponse response, RedirectType messageType, String message, String redirectUrl) throws IOException {
         setMessage(request, messageType, message);

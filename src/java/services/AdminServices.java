@@ -11,7 +11,7 @@ import java.sql.SQLException;
 
 public class AdminServices {
 
-    private static final String GET_ADMIN_NAME_SQL = "SELECT * FROM admin WHERE admin_id = ?";
+    private static final String GET_ADMIN_NAME_SQL = "SELECT * FROM admin WHERE user_id = ?";
 
     public AdminResponse getAdminProfile(AdminRequest adminRequest) {
         AdminResponse adminResponse = new AdminResponse();

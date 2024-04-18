@@ -16,8 +16,8 @@ import java.io.InputStream;
 import java.util.Base64;
 import services.ProfileServices;
 import utilities.RedirectUtilities;
+import utilities.RedirectUtilities.RedirectType;
 import utilities.StringUtilities;
-import utilities.enums.RedirectType;
 
 @MultipartConfig
 public class ProfileServlet extends HttpServlet {
