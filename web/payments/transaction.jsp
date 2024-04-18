@@ -32,13 +32,12 @@
                 <div class="row">
                     <div class="col-md-6">
                         <h2>Select Payment Method</h2>
-                        <form action="/payments/payTransaction" method="post">
+                        <form action="/payments/processTransaction" method="post">
                             <div class="form-group">
                                 <label for="paymentMethod">Payment Method</label>
                                 <select class="form-control" id="paymentMethod">
                                     <option value="" selected>Select Payment Method</option>
-                                    <option value="Credit Card">Credit Card</option>
-                                    <option value="Debit Card">Debit Card</option>
+                                    <option value="CreditDebitCard">Credit / Debit Card</option>
                                     <option value="PayPal">PayPal</option>
                                     <!-- Add more options as needed -->
                                 </select>
@@ -105,10 +104,10 @@
             </div>
         </section>
         <script>
-            const paymentMethod = ['Credit Card', 'Debit Card', 'PayPal'];
+            const paymentMethod = ['CreditDebitCard', 'PayPal'];
             $(document).ready(function () {
                 $('#paymentMethod').change(function () {
-                    if ($(this).val() === paymentMethod[0] || $(this).val() === paymentMethod[1]) {
+                    if ($(this).val() === paymentMethod[0]) {
                         $('#cardDetails').show();
                     } else {
                         $('#cardDetails').hide();
