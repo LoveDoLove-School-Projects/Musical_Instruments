@@ -19,7 +19,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 @Entity
-@Table(name = "CUSTOMER", catalog = "", schema = "NBUSER")
+@Table(name = "CUSTOMER")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Customer.findAll", query = "SELECT c FROM Customer c"),
