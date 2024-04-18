@@ -1,4 +1,4 @@
-package entities;
+package ms.paymentgateway.entities;
 
 import jakarta.persistence.Basic;
 import jakarta.persistence.CascadeType;
