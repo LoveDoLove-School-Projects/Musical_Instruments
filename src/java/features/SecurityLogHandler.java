@@ -23,7 +23,7 @@ public class SecurityLogHandler {
      * @throws IOException if an I/O error occurs
      */
     public void addSecurityLog(HttpServletRequest request, Session session, String action) throws ServletException, IOException {
-        int userId = session.getId();
+        int userId = session.getUserId();
         String role = session.getRole().getRole();
         String ipAddress = request.getRemoteAddr();
         String userAgent = request.getHeader("User-Agent");

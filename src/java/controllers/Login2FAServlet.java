@@ -85,7 +85,7 @@ public class Login2FAServlet extends HttpServlet {
         if (otpStatus == Common.Status.OK) {
             session.invalidate();
             session = request.getSession(true);
-            sessionHandler.setLoginSession(session, attributes.getId(), attributes.getRole());
+            sessionHandler.setLoginSession(session, attributes.getUserId(), attributes.getRole());
             RedirectUtilities.sendRedirect(request, response, Constants.PROFILE_URL);
         } else {
             String message = STATUS_MESSAGES.getOrDefault(otpStatus, "Failed to verify OTP!");

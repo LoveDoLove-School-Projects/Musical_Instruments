@@ -2,7 +2,6 @@ package services;
 
 import controllers.ConnectionController;
 import domain.common.Common;
-import domain.common.Constants;
 import domain.models.Users;
 import domain.request.ProfileRequest;
 import java.sql.Connection;
@@ -27,7 +26,7 @@ public class ProfileServices {
                 if (resultSet.next()) {
                     int id = resultSet.getInt("user_id");
                     String username = resultSet.getString("username");
-                    String email = resultSet.getString(Constants.EMAIL_ATTRIBUTE);
+                    String email = resultSet.getString("email");
                     String address = resultSet.getString("address");
                     String phoneNumber = resultSet.getString("phone_number");
                     String gender = resultSet.getString("gender");

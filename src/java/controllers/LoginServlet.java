@@ -86,7 +86,7 @@ public class LoginServlet extends HttpServlet {
 
     private LoginRequest createLoginRequest(HttpServletRequest request) {
         String email = request.getParameter(Constants.EMAIL_ATTRIBUTE);
-        String password = request.getParameter("password");
+        String password = request.getParameter(Constants.PASSWORD_ATTRIBUTE);
         return new LoginRequest(email, password);
     }
 

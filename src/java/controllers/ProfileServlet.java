@@ -60,7 +60,7 @@ public class ProfileServlet extends HttpServlet {
     }
 
     private void initCustomerProfile(HttpServletRequest request, HttpServletResponse response, Session session) throws ServletException, IOException {
-        ProfileRequest profileRequest = new ProfileRequest(session.getId());
+        ProfileRequest profileRequest = new ProfileRequest(session.getUserId());
         Users users = profileServices.getProfile(profileRequest, session.getRole());
         if (users == null) {
             RedirectUtilities.redirectWithMessage(request, response, RedirectType.DANGER, "Error fetching profile details.", Constants.MAIN_URL);
@@ -87,7 +87,7 @@ public class ProfileServlet extends HttpServlet {
             return;
         }
         byte[] pictureBytes = pictureStream.readAllBytes();
-        ProfileRequest profileRequest = new ProfileRequest(session.getId(), pictureBytes);
+        ProfileRequest profileRequest = new ProfileRequest(session.getUserId(), pictureBytes);
         boolean isUploaded = profileServices.uploadPicture(profileRequest, session.getRole());
         if (isUploaded) {
             SECURITY_LOG_HANDLER.addSecurityLog(request, session, "Uploaded picture.");
@@ -99,7 +99,7 @@ public class ProfileServlet extends HttpServlet {
     }
 
     private void removePicture(HttpServletRequest request, HttpServletResponse response, Session session) throws ServletException, IOException {
-        ProfileRequest profileRequest = new ProfileRequest(session.getId());
+        ProfileRequest profileRequest = new ProfileRequest(session.getUserId());
         boolean isRemoved = profileServices.removePicture(profileRequest, session.getRole());
         if (isRemoved) {
             SECURITY_LOG_HANDLER.addSecurityLog(request, session, "Removed picture.");
@@ -120,7 +120,7 @@ public class ProfileServlet extends HttpServlet {
             RedirectUtilities.redirectWithMessage(request, response, RedirectType.DANGER, "All fields are required.", Constants.PROFILE_URL);
             return;
         }
-        ProfileRequest profileRequest = new ProfileRequest(session.getId(), username, address, phoneNumber, gender, two_factor_auth);
+        ProfileRequest profileRequest = new ProfileRequest(session.getUserId(), username, address, phoneNumber, gender, two_factor_auth);
         boolean isUpdated = profileServices.updateProfile(profileRequest, session.getRole());
         if (isUpdated) {
             SECURITY_LOG_HANDLER.addSecurityLog(request, session, "Updated profile.");

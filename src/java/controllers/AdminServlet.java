@@ -37,25 +37,25 @@ public class AdminServlet extends HttpServlet {
         String path = request.getServletPath();
         switch (path) {
             case Constants.ADMIN_URL:
-                viewAdminMainPage(request, response, session.getId());
+                viewAdminMainPage(request, response, session.getUserId());
                 return;
             case Constants.ADMIN_CONTROL_PANEL_URL:
-                viewControlPanelPage(request, response, session.getId());
+                viewControlPanelPage(request, response, session.getUserId());
                 return;
             case Constants.ADMIN_MANAGE_CUSTOMER_URL:
-                viewManageCustomerPage(request, response, session.getId());
+                viewManageCustomerPage(request, response, session.getUserId());
                 return;
             case Constants.ADMIN_MANAGE_STAFF_URL:
-                viewManageStaffPage(request, response, session.getId());
+                viewManageStaffPage(request, response, session.getUserId());
                 return;
             case Constants.ADMIN_MANAGE_STOCK_URL:
-                viewManageStockPage(request, response, session.getId());
+                viewManageStockPage(request, response, session.getUserId());
                 return;
             case Constants.ADMIN_SALES_URL:
-                viewSalesPage(request, response, session.getId());
+                viewSalesPage(request, response, session.getUserId());
                 return;
             case Constants.ADMIN_VIEW_TRANSACTION_URL:
-                viewTransactionPage(request, response, session.getId());
+                viewTransactionPage(request, response, session.getUserId());
                 return;
         }
     }

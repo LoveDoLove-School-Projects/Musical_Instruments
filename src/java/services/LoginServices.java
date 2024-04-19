@@ -5,15 +5,16 @@ import domain.common.Common;
 import domain.common.Constants;
 import domain.request.LoginRequest;
 import domain.response.LoginResponse;
-import exceptions.DatabaseAccessException;
 import features.AesHandler;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.logging.Logger;
 
 public class LoginServices {
 
+    private static final Logger LOG = Logger.getLogger(LoginServices.class.getName());
     private static final String LOGIN_SQL = "SELECT * FROM table_name WHERE email = ? AND password = ?";
 
     public LoginResponse loginServices(LoginRequest loginRequest, Common.Role role) {
@@ -28,11 +29,10 @@ public class LoginServices {
                     return new LoginResponse(Common.Status.OK, id, email, two_factor_auth);
                 }
                 return new LoginResponse(Common.Status.UNAUTHORIZED);
-            } catch (SQLException ex) {
-                throw new DatabaseAccessException("Error logging in", ex);
             }
         } catch (SQLException ex) {
-            throw new DatabaseAccessException("Error logging in", ex);
+            LOG.severe(ex.getMessage());
+            return null;
         }
     }
 
