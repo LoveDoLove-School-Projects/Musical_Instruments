@@ -1,5 +1,5 @@
 package domain.models;
 
-public class Customer extends Profile {
+public class Customer extends Users {
 
 }

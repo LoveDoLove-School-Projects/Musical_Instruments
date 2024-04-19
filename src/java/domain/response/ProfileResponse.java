@@ -1,10 +1,10 @@
 package domain.response;
 
 import domain.common.Common;
-import domain.models.Profile;
+import domain.models.Users;
 import java.sql.Timestamp;
 
-public class ProfileResponse extends Profile {
+public class ProfileResponse extends Users {
 
     private Common.Status status;
 
@@ -22,8 +22,8 @@ public class ProfileResponse extends Profile {
         this.status = status;
     }
 
-    public ProfileResponse(Common.Status status, int id, String username, String email, String address, String phoneNumber, String gender, byte[] picture, boolean two_factor_auth, Timestamp accountCreationDate, Timestamp lastLoginDate) {
-        super(id, username, email, address, phoneNumber, gender, picture, two_factor_auth, accountCreationDate, lastLoginDate);
+    public ProfileResponse(Common.Status status, int id, String username, String email, String address, String phoneNumber, String gender, byte[] picture, boolean two_factor_auth, Timestamp accountCreationDate) {
+        super(id, username, email, address, phoneNumber, gender, picture, two_factor_auth, accountCreationDate);
         this.status = status;
     }
 
