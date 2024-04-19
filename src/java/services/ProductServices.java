@@ -15,11 +15,10 @@ public class ProductServices {
 //    private final String IMG_PATH_SQL = "SELECT * FROM products WHERE images_path = ?";
     private final String PRODUCT_DETAILS_SQL = "SELECT * FROM products WHERE category = ?";
     private final String VIEW_PRODUCT_WITH_ID_SQL = "SELECT * FROM products WHERE product_id = ?";
-    private final String ADD_PRODUCT_SQL ="INSERT INTO products VALUES(?,?,?,?)";
+    private final String ADD_PRODUCT_SQL = "INSERT INTO products VALUES(?,?,?,?)";
 
     public List<Product> getAllProducts(Common.PRODUCT_CATEGORIES product) {
         List<Product> productData = new ArrayList<>();
-
         try (Connection connection = ConnectionController.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(PRODUCT_DETAILS_SQL);) {
             preparedStatement.setString(1, product.getCategory());
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
@@ -61,9 +60,7 @@ public class ProductServices {
         }
         return product;
     }
-    
-    public void addToCart(Product product){
-        
-    }
 
+    public void addToCart(Product product) {
+    }
 }

@@ -4,16 +4,15 @@ import controllers.ConnectionController;
 import domain.common.Common;
 import domain.models.Users;
 import domain.request.ProfileRequest;
+import exceptions.DatabaseException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.util.logging.Logger;
 
 public class ProfileServices {
 
-    private static final Logger LOG = Logger.getLogger(ProfileServices.class.getName());
     private static final String GET_PROFILE_SQL = "SELECT * FROM table_name WHERE user_id = ?";
     private static final String UPLOAD_PICTURE_SQL = "UPDATE table_name SET picture = ? WHERE user_id = ?";
     private static final String REMOVE_PICTURE_SQL = "UPDATE table_name SET picture = NULL WHERE user_id = ?";
@@ -38,11 +37,19 @@ public class ProfileServices {
                 return null;
             }
         } catch (Exception ex) {
-            LOG.severe(ex.getMessage());
-            return null;
+            throw new DatabaseException(ex.getMessage());
         }
     }
 
+    /**
+     * Uploads a picture for a profile.
+     *
+     * @param profileRequest The profile request containing the picture and
+     * profile ID.
+     * @param role The role of the user uploading the picture.
+     * @return true if the picture was successfully uploaded, false otherwise.
+     * @throws DatabaseException if there is an error accessing the database.
+     */
     public boolean uploadPicture(ProfileRequest profileRequest, Common.Role role) {
         try (Connection connection = ConnectionController.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(replaceToCorrectTableName(UPLOAD_PICTURE_SQL, role))) {
             preparedStatement.setBytes(1, profileRequest.getPicture());
@@ -50,22 +57,39 @@ public class ProfileServices {
             preparedStatement.executeUpdate();
             return true;
         } catch (SQLException ex) {
-            LOG.severe(ex.getMessage());
-            return false;
+            throw new DatabaseException(ex.getMessage());
         }
     }
 
+    /**
+     * Removes the picture associated with the given profile request.
+     *
+     * @param profileRequest The profile request containing the ID of the
+     * profile.
+     * @param role The role of the user performing the action.
+     * @return true if the picture was successfully removed, false otherwise.
+     * @throws DatabaseException if there is an error accessing the database.
+     */
     public boolean removePicture(ProfileRequest profileRequest, Common.Role role) {
         try (Connection connection = ConnectionController.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(replaceToCorrectTableName(REMOVE_PICTURE_SQL, role))) {
             preparedStatement.setInt(1, profileRequest.getId());
             preparedStatement.executeUpdate();
             return true;
         } catch (SQLException ex) {
-            LOG.severe(ex.getMessage());
-            return false;
+            throw new DatabaseException(ex.getMessage());
         }
     }
 
+    /**
+     * Updates the profile information for a user.
+     *
+     * @param profileRequest The profile request object containing the updated
+     * profile information.
+     * @param role The role of the user.
+     * @return true if the profile was successfully updated, false otherwise.
+     * @throws DatabaseException if there is an error updating the profile in
+     * the database.
+     */
     public boolean updateProfile(ProfileRequest profileRequest, Common.Role role) {
         try (Connection connection = ConnectionController.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(replaceToCorrectTableName(UPDATE_PROFILE_SQL, role))) {
             preparedStatement.setString(1, profileRequest.getUsername());
@@ -77,11 +101,19 @@ public class ProfileServices {
             preparedStatement.executeUpdate();
             return true;
         } catch (SQLException ex) {
-            LOG.severe(ex.getMessage());
-            return false;
+            throw new DatabaseException(ex.getMessage());
         }
     }
 
+    /**
+     * Replaces the placeholder "table_name" in the given SQL string with the
+     * correct table name based on the specified role.
+     *
+     * @param sql the SQL string with the placeholder "table_name"
+     * @param role the role used to determine the correct table name
+     * @return the SQL string with the placeholder replaced by the correct table
+     * name
+     */
     private String replaceToCorrectTableName(String sql, Common.Role role) {
         return sql.replace("table_name", role.getRole());
     }

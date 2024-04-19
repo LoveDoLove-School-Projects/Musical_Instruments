@@ -22,9 +22,9 @@ import utilities.StringUtilities;
 @MultipartConfig
 public class ProfileServlet extends HttpServlet {
 
-    private static final SecurityLogHandler SECURITY_LOG_HANDLER = new SecurityLogHandler();
-    private static final ProfileServices profileServices = new ProfileServices();
-    private static final SessionHandler sessionHandler = new SessionHandler();
+    private final SecurityLogHandler securityLogHandler = new SecurityLogHandler();
+    private final ProfileServices profileServices = new ProfileServices();
+    private final SessionHandler sessionHandler = new SessionHandler();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -90,7 +90,7 @@ public class ProfileServlet extends HttpServlet {
         ProfileRequest profileRequest = new ProfileRequest(session.getUserId(), pictureBytes);
         boolean isUploaded = profileServices.uploadPicture(profileRequest, session.getRole());
         if (isUploaded) {
-            SECURITY_LOG_HANDLER.addSecurityLog(request, session, "Uploaded picture.");
+            securityLogHandler.addSecurityLog(request, session, "Uploaded picture.");
             RedirectUtilities.setMessage(request, RedirectType.SUCCESS, "Picture uploaded successfully.");
         } else {
             RedirectUtilities.setMessage(request, RedirectType.DANGER, "Error uploading picture.");
@@ -102,7 +102,7 @@ public class ProfileServlet extends HttpServlet {
         ProfileRequest profileRequest = new ProfileRequest(session.getUserId());
         boolean isRemoved = profileServices.removePicture(profileRequest, session.getRole());
         if (isRemoved) {
-            SECURITY_LOG_HANDLER.addSecurityLog(request, session, "Removed picture.");
+            securityLogHandler.addSecurityLog(request, session, "Removed picture.");
             RedirectUtilities.setMessage(request, RedirectType.SUCCESS, "Picture removed successfully.");
         } else {
             RedirectUtilities.setMessage(request, RedirectType.DANGER, "Error removing picture.");
@@ -123,7 +123,7 @@ public class ProfileServlet extends HttpServlet {
         ProfileRequest profileRequest = new ProfileRequest(session.getUserId(), username, address, phoneNumber, gender, two_factor_auth);
         boolean isUpdated = profileServices.updateProfile(profileRequest, session.getRole());
         if (isUpdated) {
-            SECURITY_LOG_HANDLER.addSecurityLog(request, session, "Updated profile.");
+            securityLogHandler.addSecurityLog(request, session, "Updated profile.");
             RedirectUtilities.setMessage(request, RedirectType.SUCCESS, "Profile updated successfully.");
         } else {
             RedirectUtilities.setMessage(request, RedirectType.DANGER, "Error updating profile.");

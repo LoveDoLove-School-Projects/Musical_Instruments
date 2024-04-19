@@ -18,6 +18,12 @@ public class Users {
     public Users() {
     }
 
+    public Users(int id, String email, boolean two_factor_auth) {
+        this.id = id;
+        this.email = email;
+        this.two_factor_auth = two_factor_auth;
+    }
+
     public Users(String username, String password, String email, String address, String phoneNumber, String gender) {
         this.username = username;
         this.password = password;

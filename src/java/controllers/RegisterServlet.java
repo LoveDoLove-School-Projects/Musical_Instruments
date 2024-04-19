@@ -17,8 +17,8 @@ import utilities.StringUtilities;
 
 public class RegisterServlet extends HttpServlet {
 
-    private static final RegisterServices REGISTER_SERVICES = new RegisterServices();
-    private static final SessionHandler SESSION_HANDLER = new SessionHandler();
+    private final RegisterServices registerServices = new RegisterServices();
+    private final SessionHandler sessionHandler = new SessionHandler();
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -35,7 +35,7 @@ public class RegisterServlet extends HttpServlet {
     }
 
     private void handleRegister(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        Session session = SESSION_HANDLER.getLoginSession(request.getSession());
+        Session session = sessionHandler.getLoginSession(request.getSession());
         if (session.isResult()) {
             RedirectUtilities.sendRedirect(request, response, Constants.PROFILE_URL);
             return;
@@ -62,7 +62,7 @@ public class RegisterServlet extends HttpServlet {
             RedirectUtilities.setMessage(request, RedirectType.DANGER, "Password and Confirm Password should be same!");
             return Common.Status.INVALID;
         }
-        return REGISTER_SERVICES.addNewCustomer(registerRequest);
+        return registerServices.addNewCustomer(registerRequest);
     }
 
     private void handleRegisterStatus(Common.Status registerStatus, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
