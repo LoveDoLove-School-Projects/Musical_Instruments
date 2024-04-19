@@ -41,6 +41,7 @@ public class ProductServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        addCart(request,response);
     }
 
     private void viewMainPageProduct(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -89,23 +90,34 @@ public class ProductServlet extends HttpServlet {
             String imageSrc = "data:image/png;base64," + pictureBase64; // Change "image/png" based on the actual image type
             builder.append("<div class=\"row m-5 d-flex align-items-center justify-content-center\">\n")
                     .append("    <div class=\"col-12 row productPanel\">\n")
-                    .append("        <div class=\"col-7 p-2 d-flex justify-content-center align-content-centers\">\n")
-                    .append("            <img src=\"").append(imageSrc).append("\" class=\"img-fluid w-50\">\n")
+                    .append("        <div class=\"col-5 p-5 d-flex justify-content-center align-content-centers productImage\">\n")
+                    .append("            <img src=\"").append(imageSrc).append("\" class=\"img-fluid w-100 m-5\">\n")
                     .append("        </div>\n")
-                    .append("        <div class=\"col-5 my-auto text-center\">\n")
-                    .append("            <p class=\"\"><strong>Name:</strong> ").append(product.getName()).append("</p>\n")
-                    .append("            <p class=\"\"><strong>Price:</strong> ").append(product.getPrice()).append("</p>\n")
-                    .append("            <p class=\"\"><strong>Quantity:</strong> ").append(product.getQuantity()).append("</p>\n")
-                    .append("            <p class=\"\"><strong>Color:</strong> ").append(product.getColor()).append("</p>\n")
-                    .append("</p>\n")
-                    .append("            <a href=\"#\"><button class=\"m-2 px-4 py-2 addtocartbtn\"><strong>Add to cart</strong></button></a>\n")
-                    .append("        </div>\n")
-                    .append("    </div>\n")
+                    .append("        <div class=\"col-7 px-5\">\n")
+                    .append("            <h1 class=\"m-4\"><strong>").append(product.getName()).append("</p><hr>\n")
+                    .append("            <h3 class=\"my-4\"><strong>RM").append(product.getPrice()).append("</strong> </h1>\n")
+                    .append("            <h3 class=\"my-4\"><strong>Stock:</strong> ").append(product.getQuantity()).append("</h3>\n")
+                    .append("           <h3 class=\"my-4\"><strong>Color:</strong> ").append(product.getColor()).append("</h3><hr>\n")
+                    .append("  <h5 class=\"my-2\"><strong>Quantity</strong></h5>")
+                    .append(" <form action=\"ProductServlet\" method=\"post\" class=\"qty-container\">")
+                    .append("                                              <button class=\"qty-btn-minus\" type=\"button\"><i\n")
+                    .append("                                                       class=\"fa fa-minus\"></i></button>\n")
+                    .append("                                               <input type=\"text\" name=\"qty\" value=\"0\" class=\"input-qty w-50 text-center p-2\" min=\"1\"/>\n")
+                    .append("                                               <button class=\"qty-btn-plus\" type=\"button\"><i\n")
+                    .append("                                                       class=\"fa fa-plus\"></i></button><br>\n")
+                    .append("          <button type=\"submit\" class=\"my-4 mx-auto p-2 addtocartbtn\"><strong>Add to cart</strong></button>\n")
+                     .append("</form>")
+                    .append("</div>")
                     .append("</div>");
 
             request.setAttribute("productDetails", builder.toString());
         }
         request.getRequestDispatcher(Constants.VIEW_PRODUCT_JSP_URL).forward(request, response);
+    }
+
+    private void addCart(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String quantity = request.getParameter("qty");
+        
     }
 
     private void productNotFound() {

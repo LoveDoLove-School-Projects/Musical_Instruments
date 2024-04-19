@@ -15,6 +15,7 @@ public class ProductServices {
 //    private final String IMG_PATH_SQL = "SELECT * FROM products WHERE images_path = ?";
     private final String PRODUCT_DETAILS_SQL = "SELECT * FROM products WHERE category = ?";
     private final String VIEW_PRODUCT_WITH_ID_SQL = "SELECT * FROM products WHERE product_id = ?";
+    private final String ADD_PRODUCT_SQL ="INSERT INTO products VALUES(?,?,?,?)";
 
     public List<Product> getAllProducts(Common.PRODUCT_CATEGORIES product) {
         List<Product> productData = new ArrayList<>();
@@ -59,6 +60,10 @@ public class ProductServices {
             System.err.println("Error" + ex.getMessage());
         }
         return product;
+    }
+    
+    public void addToCart(Product product){
+        
     }
 
 }
