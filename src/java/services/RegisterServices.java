@@ -3,15 +3,16 @@ package services;
 import controllers.ConnectionController;
 import domain.common.Common;
 import domain.request.RegisterRequest;
-import exceptions.DatabaseAccessException;
 import features.AesHandler;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.logging.Logger;
 
 public class RegisterServices {
 
+    private static final Logger LOG = Logger.getLogger(RegisterServices.class.getName());
     private static final String ADD_NEW_CUSTOMER_SQL = "INSERT INTO Customers (username, password, email, address, phone_number, gender) VALUES (?, ?, ?, ?, ?, ?)";
     private static final String COUNT_USER_EMAIL_SQL = "SELECT COUNT(*) FROM Customers WHERE email = ?";
 
@@ -29,11 +30,10 @@ public class RegisterServices {
                 preparedStatement.setString(6, registerRequest.getGender());
                 preparedStatement.executeUpdate();
                 return Common.Status.OK;
-            } catch (SQLException ex) {
-                throw new DatabaseAccessException("Error adding new customer: " + ex.getMessage(), ex);
             }
         } catch (SQLException ex) {
-            throw new DatabaseAccessException("Error establishing database connection: " + ex.getMessage(), ex);
+            LOG.severe(ex.getMessage());
+            return Common.Status.INTERNAL_SERVER_ERROR;
         }
     }
 
@@ -44,7 +44,8 @@ public class RegisterServices {
                 return resultSet.next() && resultSet.getInt(1) > 0;
             }
         } catch (SQLException ex) {
-            throw new DatabaseAccessException("Database error while checking email existence", ex);
+            LOG.severe(ex.getMessage());
+            return false;
         }
     }
 }

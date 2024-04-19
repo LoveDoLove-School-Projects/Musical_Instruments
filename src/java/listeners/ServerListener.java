@@ -1,7 +1,6 @@
 package listeners;
 
 import domain.common.Enviroment;
-import exceptions.JndiLookupException;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.ServletContextListener;
@@ -12,10 +11,10 @@ import javax.naming.NamingException;
 import utilities.FileUtilities;
 
 public class ServerListener implements ServletContextListener {
-    
+
     private static final Logger LOG = Logger.getLogger(ServerListener.class.getName());
     public static ServletContext servletContext;
-    
+
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {
         try {
@@ -28,10 +27,10 @@ public class ServerListener implements ServletContextListener {
             LOG.info(FileUtilities.getDirectoryPath());
         } catch (NamingException ex) {
             LOG.severe(ex.getMessage());
-            throw new JndiLookupException("Error during JNDI lookup", ex);
+            throw new RuntimeException("Error during JNDI lookup", ex);
         }
     }
-    
+
     @Override
     public void contextDestroyed(ServletContextEvent servletContextEvent) {
     }

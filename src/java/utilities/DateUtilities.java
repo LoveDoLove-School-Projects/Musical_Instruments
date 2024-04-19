@@ -8,11 +8,13 @@ import static domain.common.Constants.DATE_TIME_PATTERN;
 
 public class DateUtilities {
 
-    /*
-    Usage:
-    boolean isValidDate = DateUtilities.isValidDate(31, 12, 2021);
-    String date = DateUtilities.getCurrentDate();
-    String date = DateUtilities.getCurrentDate(true);
+    /**
+     * Checks if the provided date is valid.
+     *
+     * @param day   the day of the month
+     * @param month the month of the year
+     * @param year  the year
+     * @return true if the date is valid, false otherwise
      */
     public static boolean isValidDate(int day,
             int month,

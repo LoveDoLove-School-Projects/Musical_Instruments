@@ -4,17 +4,18 @@ import controllers.ConnectionController;
 import domain.common.Common;
 import domain.request.MailRequest;
 import entities.Otps;
-import exceptions.DatabaseAccessException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.logging.Logger;
 import utilities.RandomUtilities;
 import utilities.StringUtilities;
 
 public class OtpServices {
 
+    private static final Logger LOG = Logger.getLogger(OtpServices.class.getName());
     private static final String OTP_EMAIL_SUBJECT = "OTP";
     private static final String OTP_EMAIL_BODY = "Your OTP is: ";
     private static final String GET_OTP_SQL = "SELECT * FROM otps WHERE email = ?";
@@ -23,11 +24,7 @@ public class OtpServices {
     private static final String UPDATE_OTP_SQL = "UPDATE otps SET otp = ?, try_count = ? WHERE email = ?";
     private static final String DELETE_OTP_SQL = "DELETE FROM otps WHERE email = ?";
     private static final String UPDATE_TRY_COUNT_SQL = "UPDATE otps SET try_count = ? WHERE email = ?";
-    private final MailServices mailServices;
-
-    public OtpServices() {
-        this.mailServices = new MailServices();
-    }
+    private static final MailServices MAIL_SERVICES = new MailServices();
 
     public Common.Status sendOtp(String email) {
         if (StringUtilities.anyNullOrBlank(email)) {
@@ -35,7 +32,7 @@ public class OtpServices {
         }
         String otp = RandomUtilities.generateOtp();
         MailRequest mailRequest = new MailRequest(email, OTP_EMAIL_SUBJECT, OTP_EMAIL_BODY + otp);
-        Common.Status mailStatus = mailServices.sendEmail(mailRequest);
+        Common.Status mailStatus = MAIL_SERVICES.sendEmail(mailRequest);
         if (mailStatus != Common.Status.OK) {
             return mailStatus;
         }
@@ -80,7 +77,8 @@ public class OtpServices {
             preparedStatement.executeUpdate();
             return true;
         } catch (SQLException ex) {
-            throw new DatabaseAccessException("Database error while adding OTP", ex);
+            LOG.severe(ex.getMessage());
+            return false;
         }
     }
 
@@ -92,7 +90,8 @@ public class OtpServices {
             preparedStatement.executeUpdate();
             return true;
         } catch (SQLException ex) {
-            throw new DatabaseAccessException("Database error while updating OTP", ex);
+            LOG.severe(ex.getMessage());
+            return false;
         }
     }
 
@@ -101,7 +100,7 @@ public class OtpServices {
             preparedStatement.setString(1, email);
             preparedStatement.executeUpdate();
         } catch (SQLException ex) {
-            throw new DatabaseAccessException("Database error while deleting OTP", ex);
+            LOG.severe(ex.getMessage());
         }
     }
 
@@ -111,7 +110,7 @@ public class OtpServices {
             preparedStatement.setString(2, email);
             preparedStatement.executeUpdate();
         } catch (SQLException ex) {
-            throw new DatabaseAccessException("Database error while updating try count", ex);
+            LOG.severe(ex.getMessage());
         }
     }
 
@@ -122,7 +121,8 @@ public class OtpServices {
                 return resultSet.next() ? resultSet.getInt(1) > 0 : null;
             }
         } catch (SQLException ex) {
-            throw new DatabaseAccessException("Database error while checking OTP existence", ex);
+            LOG.severe(ex.getMessage());
+            return false;
         }
     }
 
@@ -139,7 +139,8 @@ public class OtpServices {
                 return null;
             }
         } catch (SQLException ex) {
-            throw new DatabaseAccessException("Database error while getting OTP", ex);
+            LOG.severe(ex.getMessage());
+            return null;
         }
     }
 }

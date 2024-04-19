@@ -2,6 +2,12 @@ package utilities;
 
 public class ConvertUtilities {
 
+    /**
+     * Converts a string key to a byte array.
+     * 
+     * @param szKey the string key to convert
+     * @return the byte array representation of the key
+     */
     public static byte[] szConvertKeyToBytes(String szKey) {
         byte[] keyArray;
         if (szKey.length() == 16 || szKey.length() == 32 || szKey.length() == 48) {

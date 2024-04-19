@@ -77,7 +77,7 @@ public class ProfileServices {
             preparedStatement.executeUpdate();
             return true;
         } catch (SQLException ex) {
-            LOG.severe("Error updating profile: " + ex.getMessage());
+            LOG.severe(ex.getMessage());
             return false;
         }
     }
