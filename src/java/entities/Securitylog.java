@@ -1,18 +1,11 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package entities;
 
 import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
@@ -24,16 +17,14 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 import java.util.Date;
 
-/**
- *
- * @author LoveDoLove
- */
 @Entity
 @Table(name = "SECURITYLOG")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Securitylog.findAll", query = "SELECT s FROM Securitylog s"),
     @NamedQuery(name = "Securitylog.findByPkid", query = "SELECT s FROM Securitylog s WHERE s.pkid = :pkid"),
+    @NamedQuery(name = "Securitylog.findByUserId", query = "SELECT s FROM Securitylog s WHERE s.userId = :userId"),
+    @NamedQuery(name = "Securitylog.findByRole", query = "SELECT s FROM Securitylog s WHERE s.role = :role"),
     @NamedQuery(name = "Securitylog.findByAction", query = "SELECT s FROM Securitylog s WHERE s.action = :action"),
     @NamedQuery(name = "Securitylog.findByActionDate", query = "SELECT s FROM Securitylog s WHERE s.actionDate = :actionDate"),
     @NamedQuery(name = "Securitylog.findByIpAddress", query = "SELECT s FROM Securitylog s WHERE s.ipAddress = :ipAddress"),
@@ -48,6 +39,15 @@ public class Securitylog implements Serializable {
     private Integer pkid;
     @Basic(optional = false)
     @NotNull
+    @Column(name = "USER_ID")
+    private int userId;
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 255)
+    @Column(name = "ROLE")
+    private String role;
+    @Basic(optional = false)
+    @NotNull
     @Size(min = 1, max = 255)
     @Column(name = "ACTION")
     private String action;
@@ -60,9 +60,6 @@ public class Securitylog implements Serializable {
     @Size(max = 255)
     @Column(name = "USER_AGENT")
     private String userAgent;
-    @JoinColumn(name = "USER_ID", referencedColumnName = "USER_ID")
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    private Users userId;
 
     public Securitylog() {
     }
@@ -71,8 +68,10 @@ public class Securitylog implements Serializable {
         this.pkid = pkid;
     }
 
-    public Securitylog(Integer pkid, String action) {
+    public Securitylog(Integer pkid, int userId, String role, String action) {
         this.pkid = pkid;
+        this.userId = userId;
+        this.role = role;
         this.action = action;
     }
 
@@ -82,6 +81,22 @@ public class Securitylog implements Serializable {
 
     public void setPkid(Integer pkid) {
         this.pkid = pkid;
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 
     public String getAction() {
@@ -116,14 +131,6 @@ public class Securitylog implements Serializable {
         this.userAgent = userAgent;
     }
 
-    public Users getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Users userId) {
-        this.userId = userId;
-    }
-
     @Override
     public int hashCode() {
         int hash = 0;
@@ -148,5 +155,4 @@ public class Securitylog implements Serializable {
     public String toString() {
         return "entities.Securitylog[ pkid=" + pkid + " ]";
     }
-    
 }

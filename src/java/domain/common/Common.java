@@ -15,9 +15,9 @@ public final class Common {
     }
 
     public enum Role {
-        ADMIN("Admin"),
-        CUSTOMER("Customer"),
-        UNKNOWN("Unknown");
+        ADMIN("admins"),
+        CUSTOMER("customers"),
+        UNKNOWN("unknowns");
         private final String role;
 
         private Role(String role) {

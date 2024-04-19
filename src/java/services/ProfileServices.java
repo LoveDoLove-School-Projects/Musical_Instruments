@@ -13,13 +13,13 @@ import java.sql.Timestamp;
 
 public class ProfileServices {
 
-    private static final String GET_PROFILE_SQL = "SELECT * FROM users WHERE user_id = ?";
-    private static final String UPLOAD_PICTURE_SQL = "UPDATE users SET picture = ? WHERE user_id = ?";
-    private static final String REMOVE_PICTURE_SQL = "UPDATE users SET picture = NULL WHERE user_id = ?";
-    private static final String UPDATE_PROFILE_SQL = "UPDATE users SET username = ?, address = ?, phone_number = ?, gender = ?, two_factor_auth = ? WHERE user_id = ?";
+    private static final String GET_PROFILE_SQL = "SELECT * FROM table_name WHERE user_id = ?";
+    private static final String UPLOAD_PICTURE_SQL = "UPDATE table_name SET picture = ? WHERE user_id = ?";
+    private static final String REMOVE_PICTURE_SQL = "UPDATE table_name SET picture = NULL WHERE user_id = ?";
+    private static final String UPDATE_PROFILE_SQL = "UPDATE table_name SET username = ?, address = ?, phone_number = ?, gender = ?, two_factor_auth = ? WHERE user_id = ?";
 
     public ProfileResponse getProfile(ProfileRequest profileRequest, Common.Role role) {
-        try (Connection connection = ConnectionController.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(GET_PROFILE_SQL)) {
+        try (Connection connection = ConnectionController.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(replaceToCorrectTableName(GET_PROFILE_SQL, role))) {
             preparedStatement.setInt(1, profileRequest.getId());
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 if (resultSet.next()) {
@@ -32,8 +32,7 @@ public class ProfileServices {
                     boolean twoFactorAuth = resultSet.getBoolean("two_factor_auth");
                     byte[] pictureBytes = resultSet.getBytes("picture");
                     Timestamp accountCreationDate = resultSet.getTimestamp("account_creation_date");
-                    Timestamp lastLoginDate = resultSet.getTimestamp("last_login_date");
-                    return new ProfileResponse(Common.Status.OK, id, username, email, address, phoneNumber, gender, pictureBytes, twoFactorAuth, accountCreationDate, lastLoginDate);
+                    return new ProfileResponse(Common.Status.OK, id, username, email, address, phoneNumber, gender, pictureBytes, twoFactorAuth, accountCreationDate);
                 } else {
                     return new ProfileResponse(Common.Status.NOT_FOUND);
                 }
@@ -44,7 +43,7 @@ public class ProfileServices {
     }
 
     public Common.Status uploadPicture(ProfileRequest profileRequest, Common.Role role) {
-        try (Connection connection = ConnectionController.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(UPLOAD_PICTURE_SQL)) {
+        try (Connection connection = ConnectionController.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(replaceToCorrectTableName(UPLOAD_PICTURE_SQL, role))) {
             preparedStatement.setBytes(1, profileRequest.getPicture());
             preparedStatement.setInt(2, profileRequest.getId());
             preparedStatement.executeUpdate();
@@ -55,7 +54,7 @@ public class ProfileServices {
     }
 
     public Common.Status removePicture(ProfileRequest profileRequest, Common.Role role) {
-        try (Connection connection = ConnectionController.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(REMOVE_PICTURE_SQL)) {
+        try (Connection connection = ConnectionController.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(replaceToCorrectTableName(REMOVE_PICTURE_SQL, role))) {
             preparedStatement.setInt(1, profileRequest.getId());
             preparedStatement.executeUpdate();
             return Common.Status.OK;
@@ -65,7 +64,7 @@ public class ProfileServices {
     }
 
     public ProfileResponse updateProfile(ProfileRequest profileRequest, Common.Role role) {
-        try (Connection connection = ConnectionController.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_PROFILE_SQL)) {
+        try (Connection connection = ConnectionController.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(replaceToCorrectTableName(UPDATE_PROFILE_SQL, role))) {
             preparedStatement.setString(1, profileRequest.getUsername());
             preparedStatement.setString(2, profileRequest.getAddress());
             preparedStatement.setString(3, profileRequest.getPhoneNumber());
@@ -77,5 +76,9 @@ public class ProfileServices {
         } catch (SQLException ex) {
             throw new DatabaseAccessException("Error updating profile", ex);
         }
+    }
+
+    private String replaceToCorrectTableName(String sql, Common.Role role) {
+        return sql.replace("table_name", role.getRole());
     }
 }

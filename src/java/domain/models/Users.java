@@ -2,7 +2,7 @@ package domain.models;
 
 import java.sql.Timestamp;
 
-public class Profile {
+public class Users {
 
     protected int id;
     protected String username;
@@ -14,12 +14,11 @@ public class Profile {
     protected byte[] picture;
     protected boolean two_factor_auth;
     protected Timestamp accountCreationDate;
-    protected Timestamp lastLoginDate;
 
-    public Profile() {
+    public Users() {
     }
 
-    public Profile(String username, String password, String email, String address, String phoneNumber, String gender) {
+    public Users(String username, String password, String email, String address, String phoneNumber, String gender) {
         this.username = username;
         this.password = password;
         this.email = email;
@@ -28,7 +27,7 @@ public class Profile {
         this.gender = gender;
     }
 
-    public Profile(String username, String password, String email, String address, String phoneNumber, String gender, boolean two_factor_auth) {
+    public Users(String username, String password, String email, String address, String phoneNumber, String gender, boolean two_factor_auth) {
         this.username = username;
         this.password = password;
         this.email = email;
@@ -38,7 +37,7 @@ public class Profile {
         this.two_factor_auth = two_factor_auth;
     }
 
-    public Profile(int id, String username, String email, String address, String phoneNumber, String gender, byte[] picture, boolean two_factor_auth, Timestamp accountCreationDate, Timestamp lastLoginDate) {
+    public Users(int id, String username, String email, String address, String phoneNumber, String gender, byte[] picture, boolean two_factor_auth, Timestamp accountCreationDate) {
         this.id = id;
         this.username = username;
         this.email = email;
@@ -48,7 +47,6 @@ public class Profile {
         this.picture = picture;
         this.two_factor_auth = two_factor_auth;
         this.accountCreationDate = accountCreationDate;
-        this.lastLoginDate = lastLoginDate;
     }
 
     public int getId() {
@@ -129,13 +127,5 @@ public class Profile {
 
     public void setAccountCreationDate(Timestamp accountCreationDate) {
         this.accountCreationDate = accountCreationDate;
-    }
-
-    public Timestamp getLastLoginDate() {
-        return lastLoginDate;
-    }
-
-    public void setLastLoginDate(Timestamp lastLoginDate) {
-        this.lastLoginDate = lastLoginDate;
     }
 }
