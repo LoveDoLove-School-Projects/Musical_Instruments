@@ -2,8 +2,8 @@ package services;
 
 import controllers.ConnectionController;
 import domain.common.Common;
-import domain.models.Otp;
 import domain.request.MailRequest;
+import entities.Otps;
 import exceptions.DatabaseAccessException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -51,18 +51,18 @@ public class OtpServices {
         if (StringUtilities.anyNullOrBlank(email, otp)) {
             return Common.Status.INVALID;
         }
-        Otp dbOtp = getOtp(email);
+        Otps dbOtp = getOtp(email);
         if (dbOtp == null) {
             return Common.Status.NOT_FOUND;
         }
-        if (dbOtp.getTry_count() >= 5) {
+        if (dbOtp.getTryCount() >= 5) {
             return Common.Status.UNAUTHORIZED;
         }
-        if (dbOtp.getCreated_at().before(new Timestamp(System.currentTimeMillis() - 300000))) {
+        if (dbOtp.getCreatedAt().before(new Timestamp(System.currentTimeMillis() - 300000))) {
             return Common.Status.EXPIRED;
         }
         if (!dbOtp.getOtp().equals(otp)) {
-            int tryCount = dbOtp.getTry_count() + 1;
+            int tryCount = dbOtp.getTryCount() + 1;
             updateTryCount(email, tryCount);
             return Common.Status.FAILED;
         }
@@ -126,7 +126,7 @@ public class OtpServices {
         }
     }
 
-    private Otp getOtp(String email) {
+    private Otps getOtp(String email) {
         try (Connection connection = ConnectionController.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(GET_OTP_SQL)) {
             preparedStatement.setString(1, email);
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
@@ -134,7 +134,7 @@ public class OtpServices {
                     String otp = resultSet.getString("otp");
                     Timestamp timestamp = resultSet.getTimestamp("created_at");
                     int tryCount = resultSet.getInt("try_count");
-                    return new Otp(otp, email, timestamp, tryCount);
+                    return new Otps(otp, email, timestamp, tryCount);
                 }
                 return null;
             }

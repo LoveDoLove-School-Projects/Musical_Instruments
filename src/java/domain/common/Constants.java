@@ -7,6 +7,16 @@ public final class Constants {
     public static final String DATE_PATTERN = "yyyy-MM-dd";
     public static final String DATE_TIME_PATTERN = "yyyy-MM-dd HH:mm:ss";
     public static final String COMPANY_NAME = "Musical Instruments";
+    //    Register, Login, 2FA Constants
+    public static final String USERNAME_ATTRIBUTE = "username";
+    public static final String PASSWORD_ATTRIBUTE = "password";
+    public static final String EMAIL_ATTRIBUTE = "email";
+    public static final String PHONE_ATTRIBUTE = "phone_number";
+    public static final String ADDRESS_ATTRIBUTE = "address";
+    public static final String GENDER_ATTRIBUTE = "gender";
+    public static final String ROLE_ATTRIBUTE = "role";
+    public static final String TWO_FACTOR_AUTH_ATTRIBUTE = "two_factor_auth";
+    public static final String LOGIN_ID_2FA_ATTRIBUTE = "login_id_2fa";
     /* ********************************* */
  /* ********************************* */
     //    MAIN JSP URL
@@ -40,7 +50,6 @@ public final class Constants {
     //    Product JSP URL
     public static final String PRODUCT_JSP_URL = "/pages/products/product.jsp";
     public static final String VIEW_PRODUCT_JSP_URL = "/pages/products/viewProduct.jsp";
-  
     //    Product URL
     public static final String PRODUCT_URL = "/pages/product";
     public static final String VIEW_PRODUCT_URL = "/pages/product/viewProduct";

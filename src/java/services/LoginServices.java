@@ -2,6 +2,7 @@ package services;
 
 import controllers.ConnectionController;
 import domain.common.Common;
+import domain.common.Constants;
 import domain.request.LoginRequest;
 import domain.response.LoginResponse;
 import exceptions.DatabaseAccessException;
@@ -22,16 +23,16 @@ public class LoginServices {
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 if (resultSet.next()) {
                     int id = resultSet.getInt("user_id");
-                    String email = resultSet.getString("email");
+                    String email = resultSet.getString(Constants.EMAIL_ATTRIBUTE);
                     boolean two_factor_auth = resultSet.getBoolean("two_factor_auth");
                     return new LoginResponse(Common.Status.OK, id, email, two_factor_auth);
                 }
                 return new LoginResponse(Common.Status.UNAUTHORIZED);
             } catch (SQLException ex) {
-                throw new DatabaseAccessException("Database error while logging in customer", ex);
+                throw new DatabaseAccessException("Error logging in", ex);
             }
         } catch (SQLException ex) {
-            throw new DatabaseAccessException("Database error while logging in customer", ex);
+            throw new DatabaseAccessException("Error logging in", ex);
         }
     }
 

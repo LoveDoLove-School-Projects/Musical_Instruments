@@ -68,6 +68,14 @@ public class Securitylog implements Serializable {
         this.pkid = pkid;
     }
 
+    public Securitylog(int userId, String role, String action, String ipAddress, String userAgent) {
+        this.userId = userId;
+        this.role = role;
+        this.action = action;
+        this.ipAddress = ipAddress;
+        this.userAgent = userAgent;
+    }
+
     public Securitylog(Integer pkid, int userId, String role, String action) {
         this.pkid = pkid;
         this.userId = userId;

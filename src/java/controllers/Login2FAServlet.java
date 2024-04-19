@@ -22,9 +22,6 @@ import utilities.StringUtilities;
 public class Login2FAServlet extends HttpServlet {
 
     private static final String LOGIN_2FA_JSP_URL = "/sessions/login2fa.jsp";
-    private static final String LOGIN_ID_ATTRIBUTE = "login_id_2fa";
-    private static final String EMAIL_ATTRIBUTE = "email";
-    private static final String ROLE_ATTRIBUTE = "role";
     private static final Map<Common.Status, String> STATUS_MESSAGES;
 
     static {
@@ -75,9 +72,9 @@ public class Login2FAServlet extends HttpServlet {
         if (session == null) {
             return null;
         }
-        Integer loginId = (Integer) session.getAttribute(LOGIN_ID_ATTRIBUTE);
-        String email = (String) session.getAttribute(EMAIL_ATTRIBUTE);
-        Common.Role role = (Common.Role) session.getAttribute(ROLE_ATTRIBUTE);
+        Integer loginId = (Integer) session.getAttribute(Constants.LOGIN_ID_2FA_ATTRIBUTE);
+        String email = (String) session.getAttribute(Constants.EMAIL_ATTRIBUTE);
+        Common.Role role = (Common.Role) session.getAttribute(Constants.ROLE_ATTRIBUTE);
         if (loginId == null || loginId == 0 || StringUtilities.anyNullOrBlank(email) || role == null) {
             return null;
         }
