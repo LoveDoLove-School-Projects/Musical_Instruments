@@ -11,40 +11,78 @@
     </head>
     <body>
         <jsp:include page="/defaults/header.jsp" />
-        
-         <style>
-        section {
-            background-color: #d9d9e1;
-        }
 
-        .addtocartbtn {
-            background-color: #d9d9e1;
-            border: solid rgb(82, 78, 78) 2px;
-            border-radius: 20px;
-            color: black;
-        }
+        <style>
 
-        .addtocartbtn:hover {
-            background-color: #343333;
-            color: #d9d9e1;
-            transition: 0.5s ease;f
-        }
-        
-        p{
-            font-size: 20px;
-        }
-    </style>
-    
+            .addtocartbtn {
+                background-color: #d9d9e1;
+                border: solid rgb(82, 78, 78) 1px;
+                color: black;
+                font-size: 20px;
+            }
+
+            .addtocartbtn:hover {
+                background-color: #343333;
+                color: #d9d9e1;
+                transition: 0.5s ease;
+            }
+
+            .productImage{
+                background-color: #d9d9e1;
+                border: solid black 0spx;
+            }
+
+
+
+            .qty-container .input-qty{
+                border: 1px solid #d4d4d4;
+                height: 38px;
+                font-size: 20px;
+            }
+            
+            .qty-container .qty-btn-plus,
+            .qty-container .qty-btn-minus{
+                border: 1px solid #d4d4d4;
+                font-size: 20px;
+                height: 38px;
+                width: 38px;
+                transition: 0.3s;
+            }
+
+        </style>
+
         <main class="main">
-        <section class="section">
-            <div class="row m-5 d-flex align-items-center justify-content-center">
-                ${productDetails}   
-            </div>
-        </section>
-    </main>
-
-
+            <section class="section">
+                <div class="container">
+                    <div class="row m-5 d-flex align-items-center justify-content-center">
+                        ${productDetails}   
+                    </div>
+                </div>
+            </section>
         </main>
+
+        <script>
+            var buttonPlus = $(".qty-btn-plus");
+            var buttonMinus = $(".qty-btn-minus");
+
+            var incrementPlus = buttonPlus.click(function () {
+                var $n = $(this)
+                        .parent(".qty-container")
+                        .find(".input-qty");
+                $n.val(Number($n.val()) + 1);
+            });
+
+            var incrementMinus = buttonMinus.click(function () {
+                var $n = $(this)
+                        .parent(".qty-container")
+                        .find(".input-qty");
+                var amount = Number($n.val());
+                if (amount > 0) {
+                    $n.val(amount - 1);
+                }
+            });
+        </script>
+
         <jsp:include page="/defaults/footer.jsp" />
     </body>
 </html>
