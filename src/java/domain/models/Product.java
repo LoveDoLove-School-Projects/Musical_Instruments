@@ -11,7 +11,6 @@ public class Product {
     private String image_path;
 
     public Product() {
-
     }
 
     public Product(int id, String name, double price, String color, int quantity, String catogory, String image_path) {
@@ -79,5 +78,4 @@ public class Product {
     public void setImage_path(String image_path) {
         this.image_path = image_path;
     }
-
 }

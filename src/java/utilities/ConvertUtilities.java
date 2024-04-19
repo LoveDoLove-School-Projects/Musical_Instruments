@@ -4,7 +4,7 @@ public class ConvertUtilities {
 
     /**
      * Converts a string key to a byte array.
-     * 
+     *
      * @param szKey the string key to convert
      * @return the byte array representation of the key
      */

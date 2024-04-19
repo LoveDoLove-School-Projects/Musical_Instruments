@@ -1,10 +1,12 @@
 package controllers;
 
 import domain.common.Common;
+import static domain.common.Common.Role.ADMIN;
+import static domain.common.Common.Role.CUSTOMER;
 import domain.common.Constants;
 import domain.models.Session;
+import domain.models.Users;
 import domain.request.LoginRequest;
-import domain.response.LoginResponse;
 import features.SessionHandler;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
@@ -12,9 +14,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.EnumMap;
 import java.util.Map;
-import services.LoginServices;
+import services.AdminLoginServices;
+import services.CustomerLoginServices;
 import services.OtpServices;
 import utilities.RedirectUtilities;
 import utilities.RedirectUtilities.RedirectType;
@@ -31,17 +33,10 @@ public class LoginServlet extends HttpServlet {
             Constants.CUSTOMER_LOGIN_URL, "pages/login",
             Constants.ADMIN_LOGIN_URL, "pages/adminLogin"
     );
-    private static final Map<Common.Status, String> STATUS_MESSAGES;
-    private final LoginServices loginServices = new LoginServices();
+    private final AdminLoginServices adminLoginServices = new AdminLoginServices();
+    private final CustomerLoginServices customerLoginServices = new CustomerLoginServices();
     private final OtpServices otpServices = new OtpServices();
     private final SessionHandler sessionHandler = new SessionHandler();
-
-    static {
-        STATUS_MESSAGES = new EnumMap<>(Common.Status.class);
-        STATUS_MESSAGES.put(Common.Status.NOT_FOUND, "Email not found!");
-        STATUS_MESSAGES.put(Common.Status.UNAUTHORIZED, "Incorrect Email or Password!");
-        STATUS_MESSAGES.put(Common.Status.FAILED, "Failed to login!");
-    }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -77,7 +72,33 @@ public class LoginServlet extends HttpServlet {
 
     private void processPostRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String path = request.getServletPath();
-        handleLoginRequest(request, response, ROLE_MAP.get(path));
+        Common.Role role = ROLE_MAP.get(path);
+        request.setCharacterEncoding("UTF-8");
+        response.setContentType("text/plain;charset=UTF-8");
+        response.setHeader("Cache-Control", "no-store");
+        LoginRequest loginRequest = createLoginRequest(request);
+        request.setAttribute(Constants.EMAIL_ATTRIBUTE, loginRequest.getEmail());
+        if (!validateLoginRequest(loginRequest)) {
+            RedirectUtilities.setMessage(request, RedirectType.DANGER, "Please Fill In All The Fields!");
+            return;
+        }
+        Users users = null;
+        switch (role) {
+            case ADMIN:
+                users = adminLoginServices.loginToAdmin(loginRequest);
+                break;
+            case CUSTOMER:
+                users = customerLoginServices.loginToCustomer(loginRequest);
+                break;
+            default:
+                break;
+        }
+        if (users == null) {
+            RedirectUtilities.setMessage(request, RedirectType.DANGER, "Login Failed! Please Try Again!");
+            setLoginPage(request, response);
+            return;
+        }
+        checkNeedTwoFactorAuthOrNot(request, response, users, role);
     }
 
     private void setLoginPage(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -90,44 +111,25 @@ public class LoginServlet extends HttpServlet {
         return new LoginRequest(email, password);
     }
 
-    private void handleLoginRequest(HttpServletRequest request, HttpServletResponse response, Common.Role role) throws ServletException, IOException {
-        request.setCharacterEncoding("UTF-8");
-        response.setContentType("text/plain;charset=UTF-8");
-        response.setHeader("Cache-Control", "no-store");
-        LoginRequest loginRequest = createLoginRequest(request);
-        request.setAttribute(Constants.EMAIL_ATTRIBUTE, loginRequest.getEmail());
-        if (!validateLoginRequest(loginRequest)) {
-            RedirectUtilities.setMessage(request, RedirectType.DANGER, "Please Fill In All The Fields!");
-            return;
-        }
-        LoginResponse loginResponse = loginServices.loginServices(loginRequest, role);
-        if (loginResponse.getStatus() == Common.Status.OK) {
-            checkNeedTwoFactorAuthOrNot(request, response, loginResponse, role);
-        } else {
-            RedirectUtilities.setMessage(request, RedirectType.DANGER, STATUS_MESSAGES.get(loginResponse.getStatus()));
-            setLoginPage(request, response);
-        }
-    }
-
-    private void checkNeedTwoFactorAuthOrNot(HttpServletRequest request, HttpServletResponse response, LoginResponse loginResponse, Common.Role role) throws ServletException, IOException {
+    private void checkNeedTwoFactorAuthOrNot(HttpServletRequest request, HttpServletResponse response, Users users, Common.Role role) throws ServletException, IOException {
         HttpSession session = request.getSession(true);
-        if (!loginResponse.isTwo_factor_auth()) {
-            sessionHandler.setLoginSession(session, loginResponse.getLogin_id(), role);
+        if (!users.getTwo_factor_auth()) {
+            sessionHandler.setLoginSession(session, users.getId(), role);
             RedirectUtilities.sendRedirect(request, response, Constants.PROFILE_URL);
             return;
         }
-        requiredTwoFactorAuth(request, response, loginResponse, session, role);
+        requiredTwoFactorAuth(request, response, users, session, role);
     }
 
-    private void requiredTwoFactorAuth(HttpServletRequest request, HttpServletResponse response, LoginResponse loginResponse, HttpSession session, Common.Role role) throws ServletException, IOException {
-        Common.Status otpStatus = otpServices.sendOtp(loginResponse.getEmail());
+    private void requiredTwoFactorAuth(HttpServletRequest request, HttpServletResponse response, Users users, HttpSession session, Common.Role role) throws ServletException, IOException {
+        Common.Status otpStatus = otpServices.sendOtp(users.getEmail());
         if (otpStatus != Common.Status.OK) {
             RedirectUtilities.setMessage(request, RedirectType.DANGER, "There was an error from the server! Please try again later.");
             return;
         }
-        session.setAttribute(Constants.LOGIN_ID_2FA_ATTRIBUTE, loginResponse.getLogin_id());
+        session.setAttribute(Constants.LOGIN_ID_2FA_ATTRIBUTE, users.getId());
         session.setAttribute(Constants.ROLE_ATTRIBUTE, role);
-        session.setAttribute(Constants.EMAIL_ATTRIBUTE, loginResponse.getEmail());
+        session.setAttribute(Constants.EMAIL_ATTRIBUTE, users.getEmail());
         RedirectUtilities.sendRedirect(request, response, LOGIN_2FA_URL);
     }
 

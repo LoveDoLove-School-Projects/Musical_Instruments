@@ -15,6 +15,13 @@ public class ServerListener implements ServletContextListener {
     private static final Logger LOG = Logger.getLogger(ServerListener.class.getName());
     public static ServletContext servletContext;
 
+    /**
+     * Called when the ServletContext is initialized. This method performs the
+     * necessary initialization tasks for the server.
+     *
+     * @param servletContextEvent the ServletContextEvent object containing the
+     * event details
+     */
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {
         try {
@@ -26,11 +33,16 @@ public class ServerListener implements ServletContextListener {
             servletContext = servletContextEvent.getServletContext();
             LOG.info(FileUtilities.getDirectoryPath());
         } catch (NamingException ex) {
-            LOG.severe(ex.getMessage());
             throw new RuntimeException("Error during JNDI lookup", ex);
         }
     }
 
+    /**
+     * Receives notification that the ServletContext is about to be destroyed.
+     *
+     * @param servletContextEvent the ServletContextEvent containing the
+     * ServletContext that is being destroyed
+     */
     @Override
     public void contextDestroyed(ServletContextEvent servletContextEvent) {
     }

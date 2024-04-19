@@ -1,19 +1,19 @@
 package utilities;
 
+import static domain.common.Constants.DATE_PATTERN;
+import static domain.common.Constants.DATE_TIME_PATTERN;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.Date;
-import static domain.common.Constants.DATE_PATTERN;
-import static domain.common.Constants.DATE_TIME_PATTERN;
 
 public class DateUtilities {
 
     /**
      * Checks if the provided date is valid.
      *
-     * @param day   the day of the month
+     * @param day the day of the month
      * @param month the month of the year
-     * @param year  the year
+     * @param year the year
      * @return true if the date is valid, false otherwise
      */
     public static boolean isValidDate(int day,

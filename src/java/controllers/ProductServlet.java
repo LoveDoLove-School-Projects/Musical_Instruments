@@ -41,7 +41,7 @@ public class ProductServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        addCart(request,response);
+        addCart(request, response);
     }
 
     private void viewMainPageProduct(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -106,10 +106,9 @@ public class ProductServlet extends HttpServlet {
                     .append("                                               <button class=\"qty-btn-plus\" type=\"button\"><i\n")
                     .append("                                                       class=\"fa fa-plus\"></i></button><br>\n")
                     .append("          <button type=\"submit\" class=\"my-4 mx-auto p-2 addtocartbtn\"><strong>Add to cart</strong></button>\n")
-                     .append("</form>")
+                    .append("</form>")
                     .append("</div>")
                     .append("</div>");
-
             request.setAttribute("productDetails", builder.toString());
         }
         request.getRequestDispatcher(Constants.VIEW_PRODUCT_JSP_URL).forward(request, response);
@@ -117,11 +116,8 @@ public class ProductServlet extends HttpServlet {
 
     private void addCart(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String quantity = request.getParameter("qty");
-        
     }
 
     private void productNotFound() {
-
     }
-
 }

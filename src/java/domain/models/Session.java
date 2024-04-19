@@ -56,5 +56,4 @@ public class Session {
     public void setRole(Common.Role role) {
         this.role = role;
     }
-
 }
