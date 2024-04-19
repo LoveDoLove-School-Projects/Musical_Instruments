@@ -85,8 +85,8 @@ public class LoginServlet extends HttpServlet {
     }
 
     private LoginRequest createLoginRequest(HttpServletRequest request) {
-        String email = request.getParameter("email");
-        String password = request.getParameter("password");
+        String email = request.getParameter(Constants.EMAIL_ATTRIBUTE);
+        String password = request.getParameter(Constants.PASSWORD_ATTRIBUTE);
         return new LoginRequest(email, password);
     }
 
@@ -95,7 +95,7 @@ public class LoginServlet extends HttpServlet {
         response.setContentType("text/plain;charset=UTF-8");
         response.setHeader("Cache-Control", "no-store");
         LoginRequest loginRequest = createLoginRequest(request);
-        request.setAttribute("email", loginRequest.getEmail());
+        request.setAttribute(Constants.EMAIL_ATTRIBUTE, loginRequest.getEmail());
         if (!validateLoginRequest(loginRequest)) {
             RedirectUtilities.setMessage(request, RedirectType.DANGER, "Please Fill In All The Fields!");
             return;
@@ -125,9 +125,9 @@ public class LoginServlet extends HttpServlet {
             RedirectUtilities.setMessage(request, RedirectType.DANGER, "There was an error from the server! Please try again later.");
             return;
         }
-        session.setAttribute("login_id_2fa", loginResponse.getLogin_id());
-        session.setAttribute("role", role);
-        session.setAttribute("email", loginResponse.getEmail());
+        session.setAttribute(Constants.LOGIN_ID_2FA_ATTRIBUTE, loginResponse.getLogin_id());
+        session.setAttribute(Constants.ROLE_ATTRIBUTE, role);
+        session.setAttribute(Constants.EMAIL_ATTRIBUTE, loginResponse.getEmail());
         RedirectUtilities.sendRedirect(request, response, LOGIN_2FA_URL);
     }
 

@@ -17,8 +17,8 @@ import utilities.StringUtilities;
 
 public class RegisterServlet extends HttpServlet {
 
-    private final RegisterServices registerServices = new RegisterServices();
-    private final SessionHandler sessionHandler = new SessionHandler();
+    private static final RegisterServices REGISTER_SERVICES = new RegisterServices();
+    private static final SessionHandler SESSION_HANDLER = new SessionHandler();
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -35,7 +35,7 @@ public class RegisterServlet extends HttpServlet {
     }
 
     private void handleRegister(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        Session session = sessionHandler.getLoginSession(request.getSession());
+        Session session = SESSION_HANDLER.getLoginSession(request.getSession());
         if (session.isResult()) {
             RedirectUtilities.sendRedirect(request, response, Constants.PROFILE_URL);
             return;
@@ -62,7 +62,7 @@ public class RegisterServlet extends HttpServlet {
             RedirectUtilities.setMessage(request, RedirectType.DANGER, "Password and Confirm Password should be same!");
             return Common.Status.INVALID;
         }
-        return registerServices.addNewCustomer(registerRequest);
+        return REGISTER_SERVICES.addNewCustomer(registerRequest);
     }
 
     private void handleRegisterStatus(Common.Status registerStatus, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
@@ -81,18 +81,18 @@ public class RegisterServlet extends HttpServlet {
     }
 
     private RegisterRequest createRegisterRequest(HttpServletRequest request) {
-        String username = request.getParameter("username");
-        String password = request.getParameter("password");
+        String username = request.getParameter(Constants.USERNAME_ATTRIBUTE);
+        String password = request.getParameter(Constants.PASSWORD_ATTRIBUTE);
         String confirm_password = request.getParameter("confirm_password");
-        String email = request.getParameter("email");
-        String address = request.getParameter("address");
-        String phone_number = request.getParameter("phone_number");
-        String gender = request.getParameter("gender");
-        request.setAttribute("username", username);
-        request.setAttribute("email", email);
-        request.setAttribute("address", address);
-        request.setAttribute("phone_number", phone_number);
-        request.setAttribute("gender", gender);
+        String email = request.getParameter(Constants.EMAIL_ATTRIBUTE);
+        String address = request.getParameter(Constants.ADDRESS_ATTRIBUTE);
+        String phone_number = request.getParameter(Constants.PHONE_ATTRIBUTE);
+        String gender = request.getParameter(Constants.GENDER_ATTRIBUTE);
+        request.setAttribute(Constants.USERNAME_ATTRIBUTE, username);
+        request.setAttribute(Constants.EMAIL_ATTRIBUTE, email);
+        request.setAttribute(Constants.ADDRESS_ATTRIBUTE, address);
+        request.setAttribute(Constants.PHONE_ATTRIBUTE, phone_number);
+        request.setAttribute(Constants.GENDER_ATTRIBUTE, gender);
         return new RegisterRequest(username, password, confirm_password, email, address, phone_number, gender);
     }
 

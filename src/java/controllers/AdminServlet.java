@@ -17,12 +17,7 @@ import utilities.RedirectUtilities.RedirectType;
 
 public class AdminServlet extends HttpServlet {
 
-    private AdminServices adminServices;
-
-    @Override
-    public void init() throws ServletException {
-        this.adminServices = new AdminServices();
-    }
+    private static final AdminServices ADMIN_SERVICES = new AdminServices();
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -42,37 +37,37 @@ public class AdminServlet extends HttpServlet {
         String path = request.getServletPath();
         switch (path) {
             case Constants.ADMIN_URL:
-                viewAdminMainPage(request, response, session.getId());
+                viewAdminMainPage(request, response, session.getUserId());
                 return;
             case Constants.ADMIN_CONTROL_PANEL_URL:
-                viewControlPanelPage(request, response, session.getId());
+                viewControlPanelPage(request, response, session.getUserId());
                 return;
             case Constants.ADMIN_MANAGE_CUSTOMER_URL:
-                viewManageCustomerPage(request, response, session.getId());
+                viewManageCustomerPage(request, response, session.getUserId());
                 return;
             case Constants.ADMIN_MANAGE_STAFF_URL:
-                viewManageStaffPage(request, response, session.getId());
+                viewManageStaffPage(request, response, session.getUserId());
                 return;
             case Constants.ADMIN_MANAGE_STOCK_URL:
-                viewManageStockPage(request, response, session.getId());
+                viewManageStockPage(request, response, session.getUserId());
                 return;
             case Constants.ADMIN_SALES_URL:
-                viewSalesPage(request, response, session.getId());
+                viewSalesPage(request, response, session.getUserId());
                 return;
             case Constants.ADMIN_VIEW_TRANSACTION_URL:
-                viewTransactionPage(request, response, session.getId());
+                viewTransactionPage(request, response, session.getUserId());
                 return;
         }
     }
 
     private void viewAdminMainPage(HttpServletRequest request, HttpServletResponse response, int token) throws ServletException, IOException {
         AdminRequest adminRequest = new AdminRequest(token);
-        AdminResponse adminResponse = adminServices.getAdminProfile(adminRequest);
+        AdminResponse adminResponse = ADMIN_SERVICES.getAdminProfile(adminRequest);
         if (adminResponse == null || adminResponse.getStatus() == Common.Status.NOT_FOUND) { // Refer Common java class to see have what status then apply in services
             RedirectUtilities.redirectWithMessage(request, response, RedirectType.DANGER, "Invalid Admin Profile!", Constants.MAIN_URL);
             return;
         }
-        request.setAttribute("username", adminResponse.getUsername());
+        request.setAttribute(Constants.USERNAME_ATTRIBUTE, adminResponse.getUsername());
         request.getRequestDispatcher(Constants.ADMIN_JSP_URL).forward(request, response);
     }
 

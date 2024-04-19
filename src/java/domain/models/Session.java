@@ -1,26 +1,27 @@
 package domain.models;
 
 import domain.common.Common;
+import domain.common.Common.Role;
 
 public class Session {
 
     private boolean result;
-    private int id;
+    private int userId;
     private String email;
     private Common.Role role;
 
     public Session() {
     }
 
-    public Session(int id, String email, Common.Role role) {
-        this.id = id;
+    public Session(int userId, String email, Role role) {
+        this.userId = userId;
         this.email = email;
         this.role = role;
     }
 
-    public Session(boolean result, int id, Common.Role role) {
+    public Session(boolean result, int userId, Common.Role role) {
         this.result = result;
-        this.id = id;
+        this.userId = userId;
         this.role = role;
     }
 
@@ -32,12 +33,12 @@ public class Session {
         this.result = result;
     }
 
-    public int getId() {
-        return id;
+    public int getUserId() {
+        return userId;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
     public String getEmail() {

@@ -57,6 +57,13 @@ public class Otps implements Serializable {
         this.email = email;
     }
 
+    public Otps(String otp, String email, Date createdAt, Integer tryCount) {
+        this.otp = otp;
+        this.email = email;
+        this.createdAt = createdAt;
+        this.tryCount = tryCount;
+    }
+
     public String getOtp() {
         return otp;
     }

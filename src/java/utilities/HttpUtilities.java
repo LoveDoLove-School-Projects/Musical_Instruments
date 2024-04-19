@@ -3,7 +3,6 @@ package utilities;
 import com.google.gson.Gson;
 import domain.common.Common;
 import domain.common.Enviroment;
-import exceptions.HttpRequestException;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -11,6 +10,7 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
+import java.util.logging.Logger;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
@@ -18,7 +18,11 @@ import javax.net.ssl.X509TrustManager;
 
 public class HttpUtilities {
 
+    private static final Logger LOG = Logger.getLogger(HttpUtilities.class.getName());
     private static final Gson gson = new Gson();
+    /**
+     * An array of TrustManagers that trust all certificates.
+     */
     private static final TrustManager[] trustAllCerts = new TrustManager[]{
         new X509TrustManager() {
             public java.security.cert.X509Certificate[] getAcceptedIssuers() {
@@ -35,6 +39,9 @@ public class HttpUtilities {
         }
     };
 
+    /**
+     * Represents the status of an HTTP request.
+     */
     public static Common.Status sendHttpJsonRequest(String urlConnection, Object object) {
         String timestamp = String.valueOf(System.currentTimeMillis());
         String jsonPayload = gson.toJson(object);
@@ -71,7 +78,8 @@ public class HttpUtilities {
             System.out.println("Response Body: " + response.toString());
             return responseCode == 200 ? Common.Status.OK : Common.Status.INTERNAL_SERVER_ERROR;
         } catch (IOException | KeyManagementException | NoSuchAlgorithmException ex) {
-            throw new HttpRequestException("Error sending HTTP request", ex);
+            LOG.severe(ex.getMessage());
+            return Common.Status.INTERNAL_SERVER_ERROR;
         } finally {
             if (connection != null) {
                 connection.disconnect();
