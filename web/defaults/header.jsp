@@ -2,7 +2,12 @@
 <%@ page contentType="text/html" pageEncoding="UTF-8" %>
 <c:set var="path" value="${pageContext.request.contextPath}" />
 <c:set var="basePath" value="${pageContext.request.scheme}://${pageContext.request.serverName}:${pageContext.request.serverPort}${path}/" />
-<%@page import="domain.common.Common.Role"%>
+<%@ page import="java.security.Principal" %>
+<%
+Principal principal = request.getUserPrincipal();
+String j_username = principal != null ? principal.getName() : null;
+Integer login_id = (Integer) session.getAttribute("login_id");
+%>
 <!DOCTYPE html>
 <style>
     .navbar{
@@ -45,11 +50,13 @@
                 <li class="nav-item mx-4 my-2 p-2">
                     <a class="nav-link" href="pages/product">Product</a>
                 </li>
-                <c:if test="${sessionScope.role == 'ADMIN'}">
-                    <li class="nav-item mx-4 my-2 p-2">
-                        <a class="nav-link" href="pages/admin">Admin Panel</a>
-                    </li>
-                </c:if>
+                <%
+                if (principal != null) {
+                %>
+                <li class="nav-item mx-4 my-2 p-2">
+                    <a class="nav-link" href="pages/admins">Admin Panel</a>
+                </li>
+                <% } %>
             </ul>
 
             <div class="dropdown">
@@ -57,17 +64,16 @@
                     <i class="fas fa-bars"></i>
                 </button>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                    <c:choose>
-                        <c:when test="${sessionScope.login_id != null}">
-                            <li><a class="dropdown-item" href="pages/profile">Profile</a></li>
-                            <li><a class="dropdown-item" id="logoutBtn">Logout</a></li>
-                            </c:when>
-                            <c:otherwise>
-                            <li><a class="dropdown-item" href="pages/login">Login</a></li>
-                            <li><a class="dropdown-item" href="pages/register">Register</a></li>
-                            <li><a class="dropdown-item" href="pages/adminLogin">Admin Login</a></li>
-                            </c:otherwise>
-                        </c:choose>
+                    <%
+                    if (login_id != null || j_username != null) {
+                    %>
+                    <li><a class="dropdown-item" href="pages/profile">Profile</a></li>
+                    <li><a class="dropdown-item" id="logoutBtn">Logout</a></li>
+                        <% } else { %>
+                    <li><a class="dropdown-item" href="pages/login">Login</a></li>
+                    <li><a class="dropdown-item" href="pages/register">Register</a></li>
+                    <li><a class="dropdown-item" href="pages/admins">Admin Login</a></li>
+                        <% } %>
                 </ul>
             </div>
         </div>

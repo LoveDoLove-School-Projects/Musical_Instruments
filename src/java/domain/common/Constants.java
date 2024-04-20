@@ -14,7 +14,6 @@ public final class Constants {
     public static final String PHONE_ATTRIBUTE = "phone_number";
     public static final String ADDRESS_ATTRIBUTE = "address";
     public static final String GENDER_ATTRIBUTE = "gender";
-    public static final String ROLE_ATTRIBUTE = "role";
     public static final String TWO_FACTOR_AUTH_ATTRIBUTE = "two_factor_auth";
     public static final String LOGIN_ID_2FA_ATTRIBUTE = "login_id_2fa";
     /* ********************************* */
@@ -35,7 +34,6 @@ public final class Constants {
     public static final String LOGIN_JSP_URL = "/pages/login.jsp";
     //    Login URL
     public static final String CUSTOMER_LOGIN_URL = "/pages/login";
-    public static final String ADMIN_LOGIN_URL = "/pages/adminLogin";
     /* ********************************* */
  /* ********************************* */
     //    Profile JSP URL
@@ -64,12 +62,12 @@ public final class Constants {
     public static final String ADMIN_SALES_JSP_URL = "/pages/admins/sales.jsp";
     public static final String ADMIN_VIEW_TRANSACTION_JSP_URL = "/pages/admins/viewTransaction.jsp";
     //    Admin URL
-    public static final String ADMIN_URL = "/pages/admin";
-    public static final String ADMIN_CONTROL_PANEL_URL = "/pages/admin/controlPanel";
-    public static final String ADMIN_MANAGE_CUSTOMER_URL = "/pages/admin/manageCustomer";
-    public static final String ADMIN_MANAGE_STAFF_URL = "/pages/admin/manageStaff";
-    public static final String ADMIN_MANAGE_STOCK_URL = "/pages/admin/manageStock";
-    public static final String ADMIN_SALES_URL = "/pages/admin/sales";
-    public static final String ADMIN_VIEW_TRANSACTION_URL = "/pages/admin/viewTransaction";
+    public static final String ADMIN_URL = "/pages/admins";
+    public static final String ADMIN_CONTROL_PANEL_URL = "/pages/admins/controlPanel";
+    public static final String ADMIN_MANAGE_CUSTOMER_URL = "/pages/admins/manageCustomer";
+    public static final String ADMIN_MANAGE_STAFF_URL = "/pages/admins/manageStaff";
+    public static final String ADMIN_MANAGE_STOCK_URL = "/pages/admins/manageStock";
+    public static final String ADMIN_SALES_URL = "/pages/admins/sales";
+    public static final String ADMIN_VIEW_TRANSACTION_URL = "/pages/admins/viewTransaction";
     /* ********************************* */
 }

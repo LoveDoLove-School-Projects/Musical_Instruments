@@ -74,18 +74,17 @@ public class Login2FAServlet extends HttpServlet {
         }
         Integer loginId = (Integer) session.getAttribute(Constants.LOGIN_ID_2FA_ATTRIBUTE);
         String email = (String) session.getAttribute(Constants.EMAIL_ATTRIBUTE);
-        Common.Role role = (Common.Role) session.getAttribute(Constants.ROLE_ATTRIBUTE);
-        if (loginId == null || loginId == 0 || StringUtilities.anyNullOrBlank(email) || role == null) {
+        if (loginId == null || loginId == 0 || StringUtilities.anyNullOrBlank(email)) {
             return null;
         }
-        return new Session(loginId, email, role);
+        return new Session(loginId, email);
     }
 
     private void handleOtpStatus(Common.Status otpStatus, HttpServletRequest request, HttpServletResponse response, HttpSession session, Session attributes) throws IOException, ServletException {
         if (otpStatus == Common.Status.OK) {
             session.invalidate();
             session = request.getSession(true);
-            sessionHandler.setLoginSession(session, attributes.getUserId(), attributes.getRole());
+            sessionHandler.setLoginSession(session, attributes.getUserId());
             RedirectUtilities.sendRedirect(request, response, Constants.PROFILE_URL);
         } else {
             String message = STATUS_MESSAGES.getOrDefault(otpStatus, "Failed to verify OTP!");

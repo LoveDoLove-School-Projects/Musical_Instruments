@@ -1,7 +1,6 @@
 CREATE TABLE SecurityLog (
     pkid INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     user_id INT NOT NULL,
-    role VARCHAR(255) NOT NULL CHECK (role IN ('admins', 'customers')),
     action VARCHAR(255) NOT NULL,
     action_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     ip_address VARCHAR(45),

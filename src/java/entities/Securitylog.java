@@ -24,7 +24,6 @@ import java.util.Date;
     @NamedQuery(name = "Securitylog.findAll", query = "SELECT s FROM Securitylog s"),
     @NamedQuery(name = "Securitylog.findByPkid", query = "SELECT s FROM Securitylog s WHERE s.pkid = :pkid"),
     @NamedQuery(name = "Securitylog.findByUserId", query = "SELECT s FROM Securitylog s WHERE s.userId = :userId"),
-    @NamedQuery(name = "Securitylog.findByRole", query = "SELECT s FROM Securitylog s WHERE s.role = :role"),
     @NamedQuery(name = "Securitylog.findByAction", query = "SELECT s FROM Securitylog s WHERE s.action = :action"),
     @NamedQuery(name = "Securitylog.findByActionDate", query = "SELECT s FROM Securitylog s WHERE s.actionDate = :actionDate"),
     @NamedQuery(name = "Securitylog.findByIpAddress", query = "SELECT s FROM Securitylog s WHERE s.ipAddress = :ipAddress"),
@@ -41,11 +40,6 @@ public class Securitylog implements Serializable {
     @NotNull
     @Column(name = "USER_ID")
     private int userId;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 255)
-    @Column(name = "ROLE")
-    private String role;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 255)
@@ -68,19 +62,17 @@ public class Securitylog implements Serializable {
         this.pkid = pkid;
     }
 
-    public Securitylog(int userId, String role, String action, String ipAddress, String userAgent) {
+    public Securitylog(Integer pkid, int userId, String action) {
+        this.pkid = pkid;
         this.userId = userId;
-        this.role = role;
+        this.action = action;
+    }
+
+    public Securitylog(int userId, String action, String ipAddress, String userAgent) {
+        this.userId = userId;
         this.action = action;
         this.ipAddress = ipAddress;
         this.userAgent = userAgent;
-    }
-
-    public Securitylog(Integer pkid, int userId, String role, String action) {
-        this.pkid = pkid;
-        this.userId = userId;
-        this.role = role;
-        this.action = action;
     }
 
     public Integer getPkid() {
@@ -97,14 +89,6 @@ public class Securitylog implements Serializable {
 
     public void setUserId(int userId) {
         this.userId = userId;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
     }
 
     public String getAction() {

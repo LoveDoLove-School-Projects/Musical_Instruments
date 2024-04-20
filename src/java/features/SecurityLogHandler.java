@@ -12,22 +12,19 @@ public class SecurityLogHandler {
     private static final SecurityLogServices securityLogServices = new SecurityLogServices();
 
     /**
-     * Adds a security log entry based on the provided request, response,
-     * session, and action.
+     * Adds a security log entry for the specified user action.
      *
-     * @param request the HttpServletRequest object representing the incoming
-     * request
-     * @param session the Session object representing the user session
-     * @param action the action performed by the user
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
+     * @param request The HttpServletRequest object representing the incoming request.
+     * @param session The Session object representing the user session.
+     * @param action  The action performed by the user.
+     * @throws ServletException If a servlet-specific error occurs.
+     * @throws IOException      If an I/O error occurs.
      */
     public void addSecurityLog(HttpServletRequest request, Session session, String action) throws ServletException, IOException {
         int userId = session.getUserId();
-        String role = session.getRole().getRole();
         String ipAddress = request.getRemoteAddr();
         String userAgent = request.getHeader("User-Agent");
-        Securitylog securitylog = new Securitylog(userId, role, action, ipAddress, userAgent);
+        Securitylog securitylog = new Securitylog(userId, action, ipAddress, userAgent);
         securityLogServices.addSecurityLog(securitylog);
     }
 }
