@@ -9,7 +9,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-public class CustomerLoginServices {
+public class LoginServices {
 
     private static final String CUSTOMER_LOGIN_SQL = "SELECT * FROM customers WHERE email = ? AND password = ?";
 

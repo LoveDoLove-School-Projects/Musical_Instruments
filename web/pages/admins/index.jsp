@@ -51,11 +51,34 @@
     </head>
     <body>
         <jsp:include page="/defaults/header.jsp" />
-        <jsp:include page="/pages/admins/adminSidebar.jsp" />
         <!--Main layout-->
         <main style="margin-top: 58px;">
             <div class="container pt-4">
-                ${setAdminPageContent}
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-4 col-md-6 mb-4">
+                            <a href="#" class="btn btn-primary btn-lg btn-block">Main dashboard</a>
+                        </div>
+                        <div class="col-lg-4 col-md-6 mb-4">
+                            <a href="#" class="btn btn-primary btn-lg btn-block">Manage Staff</a>
+                        </div>
+                        <div class="col-lg-4 col-md-6 mb-4">
+                            <a href="pages/admins/manageCustomer" class="btn btn-primary btn-lg btn-block">Manage Customer</a>
+                        </div>
+                        <div class="col-lg-4 col-md-6 mb-4">
+                            <a href="#" class="btn btn-primary btn-lg btn-block">Manage Stock</a>
+                        </div>
+                        <div class="col-lg-4 col-md-6 mb-4">
+                            <a href="#" class="btn btn-primary btn-lg btn-block">View Transaction</a>
+                        </div>
+                        <div class="col-lg-4 col-md-6 mb-4">
+                            <a href="#" class="btn btn-primary btn-lg btn-block">Control Panel</a>
+                        </div>
+                        <div class="col-lg-4 col-md-6 mb-4">
+                            <a href="#" class="btn btn-primary btn-lg btn-block">Sales</a>
+                        </div>
+                    </div>
+                </div>
             </div>
         </main>
         <!--Main layout-->

@@ -14,45 +14,33 @@
     <body>
         <jsp:include page="/defaults/header.jsp" />
         <section style="background-color: #eee;">
-            <form method="POST" action="pages/login" id="loginForm">
+            <form method="POST" action="j_security_check" id="loginForm">
                 <center>
                     <div class="container py-5 h-100">
                         <div class="row justify-content-center align-items-center h-100">
                             <div class="col-12 col-lg-9 col-xl-7">
                                 <div class="card shadow-2-strong card-registration" style="border-radius: 15px">
                                     <div class="card-body p-4 p-md-5">
-                                        <h3 class="mb-4 pb-2 pb-md-0 mb-md-5">Login Form</h3>
+                                        <h3 class="mb-4 pb-2 pb-md-0 mb-md-5">Admin Login Form</h3>
 
                                         <div class="row">
                                             <div class="col-md-6 mb-4 pb-2">
                                                 <div class="form-outline">
-                                                    <input type="email" name="email" id="email" class="form-control form-control-lg" value="${email}" required />
-                                                    <label class="form-label" for="email">Email</label>
+                                                    <input type="text" name="j_username" id="j_username" class="form-control form-control-lg" value="" required />
+                                                    <label class="form-label" for="j_username">Username</label>
                                                 </div>
                                             </div>
 
                                             <div class="col-md-6 mb-4 pb-2">
                                                 <div class="form-outline">
-                                                    <input type="password" name="password" id="password" class="form-control form-control-lg" minlength="8" value="${password}" required />
-                                                    <label class="form-label" for="password">Password</label>
+                                                    <input type="password" name="j_password" id="j_password" class="form-control form-control-lg" value="" required />
+                                                    <label class="form-label" for="j_password">Password</label>
                                                 </div>
                                             </div>
                                         </div>
 
                                         <div class="mt-4 pt-2">
                                             <button type="submit" class="btn btn-primary btn-lg" id="loginButton">Login</button>
-                                        </div>
-
-                                        <div class="mt-4 pt-2">
-                                            <!-- Forgot Password -->
-                                            <a href="pages/forgotPassword" class="btn btn-link">Forgot Password?</a>
-                                        </div>
-
-                                        <div class="mt-4 pt-2">
-                                            <p>
-                                                No Account?
-                                                <a href="pages/register">Register Here</a>
-                                            </p>
                                         </div>
                                     </div>
                                 </div>
@@ -63,7 +51,6 @@
             </form>
         </section>
         <jsp:include page="/defaults/footer.jsp" />
-        <script type="module" src="assets/js/login.js"></script>
     </body>
 
 </html>

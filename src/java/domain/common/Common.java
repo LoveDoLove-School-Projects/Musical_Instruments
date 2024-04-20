@@ -14,21 +14,6 @@ public final class Common {
         EXPIRED
     }
 
-    public enum Role {
-        ADMIN("admins"),
-        CUSTOMER("customers"),
-        UNKNOWN("unknowns");
-        private final String role;
-
-        private Role(String role) {
-            this.role = role;
-        }
-
-        public String getRole() {
-            return role;
-        }
-    }
-
     public enum PRODUCT_CATEGORIES {
         PIANO("PIANO"),
         ELECTRICGUITARS("ELECTRICGUITARS");
