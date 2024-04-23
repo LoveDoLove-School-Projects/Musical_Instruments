@@ -1,5 +1,6 @@
 package services;
 
+import features.MailHandler;
 import controllers.ConnectionController;
 import domain.common.Common;
 import domain.request.MailRequest;
@@ -23,7 +24,7 @@ public class OtpServices {
     private static final String UPDATE_OTP_SQL = "UPDATE otps SET otp = ?, try_count = ? WHERE email = ?";
     private static final String DELETE_OTP_SQL = "DELETE FROM otps WHERE email = ?";
     private static final String UPDATE_TRY_COUNT_SQL = "UPDATE otps SET try_count = ? WHERE email = ?";
-    private static final MailServices MAIL_SERVICES = new MailServices();
+    private static final MailHandler MAIL_SERVICES = new MailHandler();
 
     public Common.Status sendOtp(String email) {
         if (StringUtilities.anyNullOrBlank(email)) {

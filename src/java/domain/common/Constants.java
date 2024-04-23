@@ -73,4 +73,10 @@ public final class Constants {
     public static final String ADMIN_VIEW_TRANSACTION_URL = "/pages/admins/viewTransaction";
     public static final String ADMIN_MAIN_DASHBOARD_URL = "/pages/admins/mainDashboard";
     /* ********************************* */
+ /* ********************************* */
+    //   Forgot Password JSP URL   
+    public static final String FORGOT_PASSWORD_JSP_URL = "/pages/forgotPassword.jsp";
+    //   Forgot Password URL
+    public static final String FORGOT_PASSWORD_URL = "/pages/forgotPassword";
+    /* ********************************* */
 }

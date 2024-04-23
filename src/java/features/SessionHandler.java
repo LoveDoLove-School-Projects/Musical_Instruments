@@ -1,7 +1,5 @@
 package features;
 
-import domain.common.Common;
-import domain.common.Constants;
 import domain.models.Session;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
