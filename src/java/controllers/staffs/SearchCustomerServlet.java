@@ -12,11 +12,12 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.transaction.UserTransaction;
 import java.io.IOException;
-import java.util.List;
+import services.StaffServices;
 import utilities.RedirectUtilities;
 
 public class SearchCustomerServlet extends HttpServlet {
 
+    private final StaffServices staffServices = new StaffServices();
     @PersistenceContext
     EntityManager entityManager;
 
@@ -26,19 +27,15 @@ public class SearchCustomerServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        // Get the search query parameter from the request
+
         String searchQuery = request.getParameter("searchQuery");
 
         if (searchQuery.isBlank() || searchQuery.trim().isEmpty()) {
             RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Please fill in the customer email!", Constants.ADMIN_MANAGE_CUSTOMER_JSP_URL);
             return;
         }
-        // Create an instance of Customer to perform search
-        List<Customers> customersList = entityManager.createNamedQuery("Customers.findByEmail").setParameter("email", searchQuery).getResultList();
-        if (customersList == null || customersList.isEmpty()) {
-            RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Customer not found!", Constants.ADMIN_MANAGE_CUSTOMER_JSP_URL);
-            return;
-        }
+
+        Customers customersList = staffServices.searchCustomerDetailsDB(searchQuery);
 
         // When found data
         HttpSession session = request.getSession();
