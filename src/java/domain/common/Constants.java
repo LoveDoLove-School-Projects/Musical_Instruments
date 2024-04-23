@@ -79,4 +79,10 @@ public final class Constants {
     //   Forgot Password URL
     public static final String FORGOT_PASSWORD_URL = "/pages/forgotPassword";
     /* ********************************* */
+ /* ********************************* */
+    //   Reset Password JSP URL   
+    public static final String RESET_PASSWORD_JSP_URL = "/pages/resetPassword.jsp";
+    //   Reset Password URL
+    public static final String RESET_PASSWORD_URL = "/pages/resetPassword";
+    /* ********************************* */
 }
