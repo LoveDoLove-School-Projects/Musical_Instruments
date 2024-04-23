@@ -17,6 +17,14 @@
 -->
 <glassfish-web-app error-url="">
   <context-root>/Musical_Instruments</context-root>
+  <security-role-mapping>
+    <role-name>Admin</role-name>
+    <group-name>Admin</group-name>
+  </security-role-mapping>
+  <security-role-mapping>
+    <role-name>Staff</role-name>
+    <group-name>Staff</group-name>
+  </security-role-mapping>
   <class-loader delegate="true"/>
   <jsp-config>
     <property name="keepgenerated" value="true">

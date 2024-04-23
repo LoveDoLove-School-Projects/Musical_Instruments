@@ -4,11 +4,11 @@ import domain.common.Enviroment;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.ServletContextListener;
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.logging.Logger;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
-import utilities.FileUtilities;
 
 public class ServerListener implements ServletContextListener {
 
@@ -31,7 +31,7 @@ public class ServerListener implements ServletContextListener {
             Enviroment.SEND_MAIL_API = (String) env.lookup(Enviroment.SEND_MAIL_API);
             Enviroment.SECRET_KEY = (String) env.lookup(Enviroment.SECRET_KEY);
             servletContext = servletContextEvent.getServletContext();
-            LOG.info(FileUtilities.getDirectoryPath());
+            LOG.info(getServerDirectoryRootPath());
         } catch (NamingException ex) {
             throw new RuntimeException("Error during JNDI lookup", ex);
         }
@@ -45,5 +45,39 @@ public class ServerListener implements ServletContextListener {
      */
     @Override
     public void contextDestroyed(ServletContextEvent servletContextEvent) {
+    }
+
+    /**
+     * Returns the root directory path of the server.
+     *
+     * @return the root directory path of the server
+     */
+    public static String getServerDirectoryRootPath() {
+        return getServerDirectoryPath("/");
+    }
+
+    /**
+     * Returns the server directory path for the given URI.
+     *
+     * @param uri the URI for which the server directory path is to be obtained
+     * @return the server directory path for the given URI
+     */
+    public static String getServerDirectoryPath(String uri) {
+        return servletContext.getRealPath("/") + uri;
+    }
+
+    /**
+     * Returns the base URL of the server.
+     *
+     * @param request the HttpServletRequest object representing the client's
+     * request
+     * @return the base URL of the server
+     */
+    public static String getServerBaseURL(HttpServletRequest request) {
+        String scheme = request.getScheme() + "://";
+        String serverName = request.getServerName();
+        String serverPort = (request.getServerPort() == 80) ? "" : ":" + request.getServerPort();
+        String contextPath = request.getContextPath();
+        return scheme + serverName + serverPort + contextPath;
     }
 }

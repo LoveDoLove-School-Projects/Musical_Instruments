@@ -12,15 +12,6 @@ public class FileUtilities {
     private static final Logger LOG = Logger.getLogger(FileUtilities.class.getName());
 
     /**
-     * Returns the directory path of the current servlet context.
-     *
-     * @return the directory path of the current servlet context
-     */
-    public static String getDirectoryPath() {
-        return ServerListener.servletContext.getRealPath("/");
-    }
-
-    /**
      * Reads the content of a file located at the specified path and returns it
      * as a byte array.
      *
@@ -28,7 +19,7 @@ public class FileUtilities {
      * @return the content of the file as a byte array
      */
     public static byte[] readDirectoryContent(String path) {
-        String fullPath = getDirectoryPath() + path;
+        String fullPath = ServerListener.getServerDirectoryRootPath() + path;
         File file = new File(fullPath);
         ByteArrayOutputStream content = new ByteArrayOutputStream();
         try (FileInputStream fis = new FileInputStream(file)) {
