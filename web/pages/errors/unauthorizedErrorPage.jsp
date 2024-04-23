@@ -2,20 +2,14 @@
 <%@ page contentType="text/html" pageEncoding="UTF-8" %>
 <c:set var="path" value="${pageContext.request.contextPath}" />
 <c:set var="basePath" value="${pageContext.request.scheme}://${pageContext.request.serverName}:${pageContext.request.serverPort}${path}/" />
-
 <!DOCTYPE html>
 <html>
     <head>
         <jsp:include page="/defaults/head.jsp" />
-        <meta charset="UTF-8">
-        <title>Manage Staff</title>
+        <title>Error</title>
     </head>
     <body>
-        <jsp:include page="/defaults/header.jsp" />
-
-
-
-        <jsp:include page="/defaults/footer.jsp" />
+        <h2>You are not authorized for this.</h2>
+        <a href="#">Go back to main page</a>
     </body>
 </html>
-

@@ -2,13 +2,19 @@
 <%@ page contentType="text/html" pageEncoding="UTF-8" %>
 <c:set var="path" value="${pageContext.request.contextPath}" />
 <c:set var="basePath" value="${pageContext.request.scheme}://${pageContext.request.serverName}:${pageContext.request.serverPort}${path}/" />
+
 <!DOCTYPE html>
 <html>
     <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Control Panel</title>
+        <jsp:include page="/defaults/head.jsp" />
+        <meta charset="UTF-8">
+        <title>control Panel</title>
     </head>
     <body>
-        <h1>Hello World!</h1>
+        <jsp:include page="/defaults/header.jsp" />
+
+
+
+        <jsp:include page="/defaults/footer.jsp" />
     </body>
 </html>

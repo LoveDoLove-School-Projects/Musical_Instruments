@@ -12,37 +12,22 @@
     <body>
         <jsp:include page="/defaults/header.jsp" />
         <div class="container">
-            <h1>Manage Customers</h1>
+            <h1>Manage Customers</h1><br>
             <!-- Search form -->
-            <form class="form-inline mb-3" action="search_customer" method="post">
-                <input class="form-control mr-2" type="text" name="query" placeholder="Search customers...">
+            <form class="form-inline mb-3" action="pages/staffs/searchCustomerServlet" method="POST">
+                <input class="form-control mr-2" type="text" name="searchQuery" placeholder="Enter customer email: "><br>
                 <button type="submit" class="btn btn-primary">Search</button>
             </form>
 
-            <!-- Customer listing -->
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Email</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>John Doe</td>
-                        <td>john@example.com</td>
-                        <td>
-                            <button class="btn btn-info mr-1">Edit</button>
-                            <button class="btn btn-danger">Delete</button>
-                        </td>
-                    </tr>
-                    <!-- Add more rows for each customer -->
-                </tbody>
-            </table>
 
-            <!-- Add customer form -->
-            <h2>Add New Customer</h2>
+        </div>
+        <jsp:include page="/defaults/footer.jsp" />
+    </body>
+</html>
+
+<!-- Customer listing -->
+<!-- Add customer form -->
+<!--            <h2>Add New Customer</h2>
             <form action="add_customer" method="POST">
                 <div class="form-group">
                     <label for="name">Name:</label>
@@ -53,8 +38,4 @@
                     <input type="email" class="form-control" id="email" name="email" required>
                 </div>
                 <button type="submit" class="btn btn-success">Add Customer</button>
-            </form>
-        </div>
-        <jsp:include page="/defaults/footer.jsp" />
-    </body>
-</html>
+            </form>-->
