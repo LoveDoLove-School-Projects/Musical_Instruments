@@ -73,7 +73,7 @@ public class Customers implements Serializable {
     private String gender;
     @Lob
     @Column(name = "PICTURE")
-    private Serializable picture;
+    private byte[] picture;
     @Column(name = "TWO_FACTOR_AUTH")
     private Boolean twoFactorAuth;
     @Column(name = "ACCOUNT_CREATION_DATE")
@@ -181,11 +181,11 @@ public class Customers implements Serializable {
         this.gender = gender;
     }
 
-    public Serializable getPicture() {
+    public byte[] getPicture() {
         return picture;
     }
 
-    public void setPicture(Serializable picture) {
+    public void setPicture(byte[] picture) {
         this.picture = picture;
     }
 

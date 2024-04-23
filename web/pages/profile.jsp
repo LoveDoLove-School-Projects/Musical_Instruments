@@ -2,6 +2,12 @@
 <%@ page contentType="text/html" pageEncoding="UTF-8" %>
 <c:set var="path" value="${pageContext.request.contextPath}" />
 <c:set var="basePath" value="${pageContext.request.scheme}://${pageContext.request.serverName}:${pageContext.request.serverPort}${path}/" />
+<%@ page import="java.security.Principal" %>
+<%
+Principal principal = request.getUserPrincipal();
+String j_username = principal != null ? principal.getName() : null;
+Integer login_id = (Integer) session.getAttribute("login_id");
+%>
 <!DOCTYPE html>
 <html>
 

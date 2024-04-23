@@ -17,7 +17,7 @@ function checkAllFields() {
   return true;
 }
 
-function setforgotPasswordForm() {
+function setForgotPasswordForm() {
   if (forgotPasswordForm === null) {
     return;
   }
@@ -33,7 +33,7 @@ function setforgotPasswordForm() {
 function init() {
   emailElement = document.getElementById("email");
   forgotPasswordForm = document.getElementById("forgotPasswordForm");
-  setforgotPasswordForm();
+  setForgotPasswordForm();
 }
 
 window.onload = init;

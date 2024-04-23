@@ -21,11 +21,11 @@
                             <div class="col-12 col-lg-9 col-xl-7">
                                 <div class="card shadow-2-strong card-registration" style="border-radius: 15px">
                                     <div class="card-body p-4 p-md-5">
-                                        <h3 class="mb-4 pb-2 pb-md-0 mb-md-5">Forgot Password Form</h3>
+                                        <h3 class="mb-4 pb-2 pb-md-0 mb-md-5">Forgot Password</h3>
 
                                         <div class="row">
                                             <div class="form-outline">
-                                                <input type="email" name="email" id="email" class="form-control form-control-lg" value="${email}" required />
+                                                <input type="email" name="email" id="email" class="form-control form-control-lg" value="${email}" placeholder="Enter email" required />
                                                 <label class="form-label" for="email">Email</label>
                                             </div>
                                         </div>

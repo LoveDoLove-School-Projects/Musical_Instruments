@@ -14,6 +14,7 @@ import services.RegisterServices;
 import utilities.RedirectUtilities;
 import utilities.RedirectUtilities.RedirectType;
 import utilities.StringUtilities;
+import utilities.ValidationUtilities;
 
 public class RegisterServlet extends HttpServlet {
 
@@ -103,20 +104,15 @@ public class RegisterServlet extends HttpServlet {
         if (StringUtilities.anyNullOrBlank(registerRequest.getUsername(), registerRequest.getPassword(), registerRequest.getConfirm_password(), registerRequest.getEmail(), registerRequest.getAddress(), registerRequest.getPhoneNumber(), registerRequest.getGender())) {
             return false;
         }
-        if (!registerRequest.getPassword().equals(registerRequest.getConfirm_password())) {
+        if (!ValidationUtilities.comparePasswords(registerRequest.getPassword(), registerRequest.getConfirm_password())) {
             return false;
         }
         if (registerRequest.getPassword().length() < 8) {
             return false;
         }
-        if (!registerRequest.getEmail().contains("@") || !registerRequest.getEmail().contains(".")) {
+        if (!ValidationUtilities.isEmailValid(registerRequest.getEmail())) {
             return false;
         }
-        for (char ch : registerRequest.getPhoneNumber().toCharArray()) {
-            if (!Character.isDigit(ch)) {
-                return false;
-            }
-        }
-        return true;
+        return ValidationUtilities.isPhoneNumberValid(registerRequest.getPhoneNumber());
     }
 }
