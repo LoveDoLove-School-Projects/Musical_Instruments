@@ -1,18 +1,68 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app version="5.0" xmlns="https://jakarta.ee/xml/ns/jakartaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_5_0.xsd">
-    <servlet-mapping>
-        <servlet-name>AdminServlet</servlet-name>
-        <url-pattern>/pages/admins/viewTransaction</url-pattern>
-        <url-pattern>/pages/admins</url-pattern>
-        <url-pattern>/pages/admins/manageStock</url-pattern>
-        <url-pattern>/pages/admins/manageStaff</url-pattern>
-        <url-pattern>/pages/admins/controlPanel</url-pattern>
-        <url-pattern>/pages/admins/sales</url-pattern>
-        <url-pattern>/pages/admins/manageCustomer</url-pattern>
-    </servlet-mapping>
+    <servlet>
+        <servlet-name>AddStaffServlet</servlet-name>
+        <servlet-class>controllers.admins.AddStaffServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ModifyStaffServlet</servlet-name>
+        <servlet-class>controllers.admins.ModifyStaffServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>DeleteStaffServlet</servlet-name>
+        <servlet-class>controllers.admins.DeleteStaffServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>SearchStaffServlet</servlet-name>
+        <servlet-class>controllers.admins.SearchStaffServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>DeleteCustomerSerlvet</servlet-name>
+        <servlet-class>controllers.admins.DeleteCustomerSerlvet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>DeleteCustomerServlet</servlet-name>
+        <servlet-class>controllers.admins.DeleteCustomerServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>SearchCustomerServlet</servlet-name>
+        <servlet-class>controllers.staffs.SearchCustomerServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ModifyCustomerServlet</servlet-name>
+        <servlet-class>controllers.admins.ModifyCustomerServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>LoginServlet</servlet-name>
         <url-pattern>/pages/login</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AddStaffServlet</servlet-name>
+        <url-pattern>/pages/admins/addStaff</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ModifyStaffServlet</servlet-name>
+        <url-pattern>/pages/admins/modifyStaff</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DeleteStaffServlet</servlet-name>
+        <url-pattern>/pages/admins/deleteStaffServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SearchStaffServlet</servlet-name>
+        <url-pattern>/pages/admins/searchStaffServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DeleteCustomerServlet</servlet-name>
+        <url-pattern>/pages/admins/DeleteCustomerServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SearchCustomerServlet</servlet-name>
+        <url-pattern>/pages/staffs/searchCustomerServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ModifyCustomerServlet</servlet-name>
+        <url-pattern>/pages/admins/modifyCustomerServlet</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>30</session-timeout>
@@ -45,7 +95,7 @@
         <web-resource-collection>
             <web-resource-name>Staff</web-resource-name>
             <description/>
-            <url-pattern>/pages/staff/*</url-pattern>
+            <url-pattern>/pages/staffs/*</url-pattern>
         </web-resource-collection>
         <auth-constraint>
             <description/>
@@ -57,7 +107,7 @@
         <auth-method>FORM</auth-method>
         <form-login-config>
             <form-login-page>/pages/adminLogin.jsp</form-login-page>
-            <form-error-page>/pages/errors/unauthorizedErrorPage.html</form-error-page>
+            <form-error-page>/pages/errors/unauthorizedErrorPage.jsp</form-error-page>
         </form-login-config>
     </login-config>
     <security-role>
@@ -109,10 +159,6 @@
     <servlet>
         <servlet-name>ProductServlet</servlet-name>
         <servlet-class>controllers.ProductServlet</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>AdminServlet</servlet-name>
-        <servlet-class>controllers.AdminServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>MainServlet</servlet-name>

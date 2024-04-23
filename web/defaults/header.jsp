@@ -54,7 +54,7 @@ Integer login_id = (Integer) session.getAttribute("login_id");
                 if (principal != null) {
                 %>
                 <li class="nav-item mx-4 my-2 p-2">
-                    <a class="nav-link" href="pages/admins">Admin Panel</a>
+                    <a class="nav-link" href="pages/staffs/">Admin Panel</a>
                 </li>
                 <% } %>
             </ul>
@@ -72,7 +72,7 @@ Integer login_id = (Integer) session.getAttribute("login_id");
                         <% } else { %>
                     <li><a class="dropdown-item" href="pages/login">Login</a></li>
                     <li><a class="dropdown-item" href="pages/register">Register</a></li>
-                    <li><a class="dropdown-item" href="pages/admins">Admin Login</a></li>
+                    <li><a class="dropdown-item" href="pages/staffs/">Admin Login</a></li>
                         <% } %>
                 </ul>
             </div>
