@@ -87,6 +87,14 @@ public class Customers implements Serializable {
         this.userId = userId;
     }
 
+    public Customers(Integer userId, String username, String address, String phoneNumber, String gender) {
+        this.userId = userId;
+        this.username = username;
+        this.address = address;
+        this.phoneNumber = phoneNumber;
+        this.gender = gender;
+    }
+
     public Customers(String username, String password, String email, String address, String phoneNumber, String gender) {
         this.username = username;
         this.password = password;
@@ -104,6 +112,17 @@ public class Customers implements Serializable {
         this.address = address;
         this.phoneNumber = phoneNumber;
         this.gender = gender;
+    }
+
+    public Customers(Integer userId, String username, String email, String address, String phoneNumber, String gender, Boolean twoFactorAuth, Date accountCreationDate) {
+        this.userId = userId;
+        this.username = username;
+        this.email = email;
+        this.address = address;
+        this.phoneNumber = phoneNumber;
+        this.gender = gender;
+        this.twoFactorAuth = twoFactorAuth;
+        this.accountCreationDate = accountCreationDate;
     }
 
     public Integer getUserId() {
@@ -208,6 +227,20 @@ public class Customers implements Serializable {
 
     @Override
     public String toString() {
-        return "entities.Customers[ userId=" + userId + " ]";
+        StringBuilder sb = new StringBuilder();
+        sb.append("Customers{");
+        sb.append("userId=").append(userId);
+        sb.append(", username=").append(username);
+        sb.append(", password=").append(password);
+        sb.append(", email=").append(email);
+        sb.append(", address=").append(address);
+        sb.append(", phoneNumber=").append(phoneNumber);
+        sb.append(", gender=").append(gender);
+        sb.append(", picture=").append(picture);
+        sb.append(", twoFactorAuth=").append(twoFactorAuth);
+        sb.append(", accountCreationDate=").append(accountCreationDate);
+        sb.append('}');
+        return sb.toString();
     }
+
 }
