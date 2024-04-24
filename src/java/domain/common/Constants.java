@@ -45,12 +45,13 @@ public final class Constants {
     public static final String PROFILE_UPDATE_URL = "/pages/profile/updateProfile";
     /* ********************************* */
  /* ********************************* */
-    //    Product JSP URL
+    //    Products JSP URL
     public static final String PRODUCT_JSP_URL = "/pages/products/product.jsp";
     public static final String VIEW_PRODUCT_JSP_URL = "/pages/products/viewProduct.jsp";
-    //    Product URL
-    public static final String PRODUCT_URL = "/pages/product";
-    public static final String VIEW_PRODUCT_URL = "/pages/product/viewProduct";
+    //    Products URL
+    public static final String PRODUCT_URL = "/pages/products";
+    public static final String VIEW_PRODUCT_URL = "/pages/products/viewProduct";
+    public static final String ADDCART_PRODUCT_URL = "/pages/products/ad";
     /* ********************************* */
  /* ********************************* */
     //    Admin JSP URL

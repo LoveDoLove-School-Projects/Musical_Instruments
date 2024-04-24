@@ -48,7 +48,7 @@ Integer login_id = (Integer) session.getAttribute("login_id");
                     <a class="nav-link" href="pages/main">Home</a>
                 </li>
                 <li class="nav-item mx-4 my-2 p-2">
-                    <a class="nav-link" href="pages/product">Product</a>
+                    <a class="nav-link" href="pages/products">Products</a>
                 </li>
                 <%
                 if (principal != null) {

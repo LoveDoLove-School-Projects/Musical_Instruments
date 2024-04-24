@@ -2,11 +2,18 @@
 <%@ page contentType="text/html" pageEncoding="UTF-8" %>
 <c:set var="path" value="${pageContext.request.contextPath}" />
 <c:set var="basePath" value="${pageContext.request.scheme}://${pageContext.request.serverName}:${pageContext.request.serverPort}${path}/" />
+<%@ page import="java.util.List"%>
+<%@ page import="java.util.Base64"%>
+<%@ page import="utilities.FileUtilities"%>
+<%@ page import="entities.Products" %>
+<%
+String IMAGE_DEFAULT_PATH = "assets/database/productImage/";
+%>
 <!DOCTYPE html>
 <html> 
     <head>
         <jsp:include page="/defaults/head.jsp" />
-        <title>Product Page</title>
+        <title>Products Page</title>
         <link rel="stylesheet" href="assets/css/product.css" />
     </head>
     <body>
@@ -39,7 +46,7 @@
                 height: 38px;
                 font-size: 20px;
             }
-            
+
             .qty-container .qty-btn-plus,
             .qty-container .qty-btn-minus{
                 border: 1px solid #d4d4d4;
@@ -55,7 +62,34 @@
             <section class="section">
                 <div class="container">
                     <div class="row m-5 d-flex align-items-center justify-content-center">
-                        ${productDetails}   
+                        <%
+                            Products product = (Products) request.getAttribute("productDetails");
+                            byte[] pictureBytes = FileUtilities.readDirectoryContent(IMAGE_DEFAULT_PATH + product.getImagePath());
+                            String pictureBase64 = Base64.getEncoder().encodeToString(pictureBytes);
+                            String imageSrc = "data:image/png;base64," + pictureBase64; // Change "image/png" based on the actual image type
+                        %>
+                        <div class="row m-5 d-flex align-items-center justify-content-center">
+                            <div class="col-12 row productPanel">
+                                <div class="col-5 p-5 d-flex justify-content-center align-content-centers productImage">
+                                    <img src="<%=imageSrc%>" class="img-fluid w-100 m-5">
+                                </div>
+                                <div class="col-7 px-5">
+                                    <h1 class="m-4"><strong><%=product.getName()%></strong></h1>
+                                    <hr>
+                                    <h3 class="my-4"><strong>RM <%=product.getPrice()%></strong></h3>
+                                    <h3 class="my-4"><strong>Stock:</strong> <%=product.getQuantity()%></h3>
+                                    <h3 class="my-4"><strong>Color:</strong> <%=product.getColor()%></h3>
+                                    <hr>
+                                    <h5 class="my-2"><strong>Quantity</strong></h5>
+                                    <form action="ProductServlet" method="post" class="qty-container">
+                                        <button class="qty-btn-minus" type="button"><i class="fa fa-minus"></i></button>
+                                        <input type="text" name="qty" value="0" class="input-qty w-50 text-center p-2" min="1"/>
+                                        <button class="qty-btn-plus" type="button"><i class="fa fa-plus"></i></button><br>
+                                        <button type="submit" class="my-4 mx-auto p-2 addtocartbtn"><strong>Add to cart</strong></button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </section>
