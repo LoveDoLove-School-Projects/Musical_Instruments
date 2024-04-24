@@ -16,7 +16,7 @@ public final class Common {
 
     public enum PRODUCT_CATEGORIES {
         PIANO("PIANO"),
-        ELECTRICGUITARS("ELECTRICGUITARS");
+        GUITAR("GUITAR");
         private final String category;
 
         PRODUCT_CATEGORIES(String category) {

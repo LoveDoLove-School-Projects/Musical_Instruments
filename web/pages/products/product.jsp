@@ -1,15 +1,19 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page contentType="text/html" pageEncoding="UTF-8" %>
-<%@page import="domain.models.Product"%>
-<jsp:useBean id="products" class="domain.models.Product" scope="session"></jsp:useBean>
-<jsp:setProperty name="country" property="*"></jsp:setProperty>
 <c:set var="path" value="${pageContext.request.contextPath}" />
 <c:set var="basePath" value="${pageContext.request.scheme}://${pageContext.request.serverName}:${pageContext.request.serverPort}${path}/" />
+<%@ page import="java.util.List"%>
+<%@ page import="java.util.Base64"%>
+<%@ page import="utilities.FileUtilities"%>
+<%@ page import="entities.Products" %>
+<%
+String IMAGE_DEFAULT_PATH = "assets/database/productImage/";
+%>
 <!DOCTYPE html>
 <html> 
     <head>
         <jsp:include page="/defaults/head.jsp" />
-        <title>Product Page</title>
+        <title>Products Page</title>
         <link rel="stylesheet" href="assets/css/product.css" />
     </head>
 
@@ -75,8 +79,24 @@
                         <div class="my-5 col-12 col-xxl-12">
                             <h3 class="text-center" style="animation:backInDown 3s;text-shadow: 0 1px 0 #ccc,0 2px 0 #c9c9c9,0 3px 0 #bbb,0 4px 0 #b9b9b9,0 5px 0 #aaa,0 6px 1px rgba(0,0,0,.1),0 0 5px rgba(0,0,0,.1),0 1px 3px rgba(0,0,0,.3),0 3px 5px rgba(0,0,0,.2),0 5px 10px rgba(0,0,0,.25),0 10px 10px rgba(0,0,0,.2),0 20px 20px rgba(0,0,0,.15);">PIANO</h3>
                             <div class="row">
-                                ${pianoProductDetails}                             
-
+                                <%
+                        List<Products> pianoProductDetails = (List<Products>) request.getAttribute("pianoProductDetails");
+                        for (Products product : pianoProductDetails) {
+               byte[] pictureBytes = FileUtilities.readDirectoryContent(IMAGE_DEFAULT_PATH + product.getImagePath());
+               String pictureBase64 = Base64.getEncoder().encodeToString(pictureBytes);
+               String imageSrc = "data:image/png;base64," + pictureBase64; // Change "image/png" based on the actual image type
+                                %>   
+                                <div class="col-6 col-xl-3 col-xxl-3">
+                                    <a href="pages/products/viewProduct?product_id=<%=product.getProductId()%>" class="MusicInstruments row1-MusicInstruments1">
+                                        <div class="pt-4 d-flex justify-content-center">
+                                            <img src="<%=imageSrc%>" class="img-fluid w-50 d-flex text-center justify-self-center align-self-center">
+                                        </div>
+                                        <p class="text-center"><strong><%=product.getName()%></br>RM<%=product.getQuantity()%></strong></p>
+                                    </a>
+                                </div>
+                                <%
+                                    }
+                                %>            
                             </div>
                         </div>
 
@@ -84,7 +104,24 @@
                         <div class="my-5 col-12 col-xxl-12">
                             <h3 class="col-12 text-center" style="animation:backInDown 3s;text-shadow: 0 1px 0 #ccc,0 2px 0 #c9c9c9,0 3px 0 #bbb,0 4px 0 #b9b9b9,0 5px 0 #aaa,0 6px 1px rgba(0,0,0,.1),0 0 5px rgba(0,0,0,.1),0 1px 3px rgba(0,0,0,.3),0 3px 5px rgba(0,0,0,.2),0 5px 10px rgba(0,0,0,.25),0 10px 10px rgba(0,0,0,.2),0 20px 20px rgba(0,0,0,.15);">Electric Guitars</h3>
                             <div class="row">
-                                ${guitarProductDetails} 
+                                <%
+                           List<Products> guitarProductDetails = (List<Products>) request.getAttribute("guitarProductDetails");
+                           for (Products product : guitarProductDetails) {
+                  byte[] pictureBytes = FileUtilities.readDirectoryContent(IMAGE_DEFAULT_PATH + product.getImagePath());
+                  String pictureBase64 = Base64.getEncoder().encodeToString(pictureBytes);
+                  String imageSrc = "data:image/png;base64," + pictureBase64; // Change "image/png" based on the actual image type
+                                %>   
+                                <div class="col-6 col-xl-3 col-xxl-3">
+                                    <a href="pages/products/viewProduct?product_id=<%=product.getProductId()%>" class="MusicInstruments row1-MusicInstruments1">
+                                        <div class="pt-4 d-flex justify-content-center">
+                                            <img src="<%=imageSrc%>" class="img-fluid w-50 d-flex text-center justify-self-center align-self-center">
+                                        </div>
+                                        <p class="text-center"><strong><%=product.getName()%></br>RM<%=product.getQuantity()%></strong></p>
+                                    </a>
+                                </div>
+                                <%
+                                    }
+                                %>        
                             </div>
                         </div>
 
@@ -92,39 +129,7 @@
                         <div class="my-5 col-12 col-xxl-12">
                             <h3 class="col-12 text-center" style="animation:backInDown 3s;text-shadow: 0 1px 0 #ccc,0 2px 0 #c9c9c9,0 3px 0 #bbb,0 4px 0 #b9b9b9,0 5px 0 #aaa,0 6px 1px rgba(0,0,0,.1),0 0 5px rgba(0,0,0,.1),0 1px 3px rgba(0,0,0,.3),0 3px 5px rgba(0,0,0,.2),0 5px 10px rgba(0,0,0,.25),0 10px 10px rgba(0,0,0,.2),0 20px 20px rgba(0,0,0,.15);">Drums</h3>
                             <div class="row">
-                                <div class="col-6 col-xl-3 col-xxl-3">
-                                    <a href="#" class="MusicInstruments row1-MusicInstruments1">
-                                        <div class="p-2">
-                                            <img src="" class="img-fluid w-100">
-                                        </div>
-                                        <p class="text-center"><strong>Nordic <br>$50.00</strong></p>
-                                    </a>
-                                </div>
-                                <div class="col-6 col-xl-3 col-xxl-3">
-                                    <a href="#" class="MusicInstruments row1-MusicInstruments2">
-                                        <div class="p-2">
-                                            <img src="" class="img-fluid w-100">
-                                        </div>
-                                        <p class="text-center"><strong>Nordic <br>$78.00</strong></p>
-                                    </a>
-                                </div>
-                                <div class="col-6 col-xl-3 col-xxl-3">
-                                    <a href="#" class="MusicInstruments row1-MusicInstruments3">
-                                        <div class="p-2">
-                                            <img src="" class="img-fluid w-100">
-                                        </div>
-                                        <p class="text-center"><strong>Nordic <br>$43.00</strong></p>
-                                    </a>
-                                </div>
 
-                                <div class="col-6 col-xl-3 col-xxl-3">
-                                    <a href="#" class="MusicInstruments row1-MusicInstruments3">
-                                        <div class="p-2">
-                                            <img src="" class="img-fluid w-100">
-                                        </div>
-                                        <p class="text-center"><strong>Nordic <br>$43.00</strong></p>
-                                    </a>
-                                </div>
 
                             </div>
                         </div>
