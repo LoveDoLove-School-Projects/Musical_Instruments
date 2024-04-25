@@ -6,16 +6,22 @@ import entities.Customers;
 import entities.Resetpassword;
 import features.AesHandler;
 import features.MailHandler;
+import jakarta.annotation.Resource;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.transaction.HeuristicMixedException;
+import jakarta.transaction.HeuristicRollbackException;
+import jakarta.transaction.NotSupportedException;
+import jakarta.transaction.RollbackException;
+import jakarta.transaction.SystemException;
+import jakarta.transaction.UserTransaction;
 import java.io.IOException;
 import java.util.List;
 import listeners.ServerListener;
-import services.ResetPasswordServices;
 import utilities.RedirectUtilities;
 import utilities.RedirectUtilities.RedirectType;
 import utilities.StringUtilities;
@@ -24,11 +30,12 @@ import utilities.ValidationUtilities;
 public class ForgotPasswordServlet extends HttpServlet {
 
     private final MailHandler mailHandler = new MailHandler();
-    private final ResetPasswordServices resetPasswordServices = new ResetPasswordServices();
     private static final String subject = "Reset Password";
     private static final String body = "Click the link to reset your password: ";
     @PersistenceContext
     EntityManager entityManager;
+    @Resource
+    UserTransaction userTransaction;
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -39,6 +46,9 @@ public class ForgotPasswordServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        request.setCharacterEncoding("UTF-8");
+        response.setContentType("text/plain;charset=UTF-8");
+        response.setHeader("Cache-Control", "no-store");
         String email = request.getParameter("email");
         request.setAttribute("email", email);
         if (StringUtilities.anyNullOrBlank(email)) {
@@ -74,10 +84,28 @@ public class ForgotPasswordServlet extends HttpServlet {
         String makeToken = email + timestamp;
         String token = AesHandler.aes256EcbEncrypt(makeToken).replace("/", "").replace("+", "").replace("=", "");
         Resetpassword resetPassword = new Resetpassword(email, token);
-        boolean isAdded = resetPasswordServices.addNewResetPassword(resetPassword);
+        boolean isAdded = addNewResetPassword(resetPassword);
         if (!isAdded) {
             return null;
         }
         return ServerListener.getServerBaseURL(request) + "/pages/resetPassword?token=" + token;
+    }
+
+    private boolean addNewResetPassword(Resetpassword resetPassword) {
+        try {
+            userTransaction.begin();
+            List<Resetpassword> existingResetPassword = entityManager.createNamedQuery("Resetpassword.findByEmail", Resetpassword.class).setParameter("email", resetPassword.getEmail()).getResultList();
+            if (existingResetPassword != null && !existingResetPassword.isEmpty()) {
+                Resetpassword existing = existingResetPassword.get(0);
+                existing.setToken(resetPassword.getToken());
+                entityManager.merge(existing);
+            } else {
+                entityManager.persist(resetPassword);
+            }
+            userTransaction.commit();
+            return true;
+        } catch (HeuristicMixedException | HeuristicRollbackException | NotSupportedException | RollbackException | SystemException | IllegalStateException | SecurityException e) {
+            return false;
+        }
     }
 }

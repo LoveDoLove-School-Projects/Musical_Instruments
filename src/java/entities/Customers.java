@@ -31,7 +31,8 @@ import java.util.Date;
     @NamedQuery(name = "Customers.findByPhoneNumber", query = "SELECT c FROM Customers c WHERE c.phoneNumber = :phoneNumber"),
     @NamedQuery(name = "Customers.findByGender", query = "SELECT c FROM Customers c WHERE c.gender = :gender"),
     @NamedQuery(name = "Customers.findByTwoFactorAuth", query = "SELECT c FROM Customers c WHERE c.twoFactorAuth = :twoFactorAuth"),
-    @NamedQuery(name = "Customers.findByAccountCreationDate", query = "SELECT c FROM Customers c WHERE c.accountCreationDate = :accountCreationDate")})
+    @NamedQuery(name = "Customers.findByAccountCreationDate", query = "SELECT c FROM Customers c WHERE c.accountCreationDate = :accountCreationDate"),
+    @NamedQuery(name = "Customers.findByEmailAndPassword", query = "SELECT c FROM Customers c WHERE c.email = :email AND c.password = :password")})
 public class Customers implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -87,12 +88,31 @@ public class Customers implements Serializable {
         this.userId = userId;
     }
 
+    public Customers(String email, String password) {
+        this.email = email;
+        this.password = password;
+    }
+
+    public Customers(Integer userId, byte[] picture) {
+        this.userId = userId;
+        this.picture = picture;
+    }
+
     public Customers(Integer userId, String username, String address, String phoneNumber, String gender) {
         this.userId = userId;
         this.username = username;
         this.address = address;
         this.phoneNumber = phoneNumber;
         this.gender = gender;
+    }
+
+    public Customers(Integer userId, String username, String address, String phoneNumber, String gender, Boolean twoFactorAuth) {
+        this.userId = userId;
+        this.username = username;
+        this.address = address;
+        this.phoneNumber = phoneNumber;
+        this.gender = gender;
+        this.twoFactorAuth = twoFactorAuth;
     }
 
     public Customers(String username, String password, String email, String address, String phoneNumber, String gender) {
@@ -242,5 +262,4 @@ public class Customers implements Serializable {
         sb.append('}');
         return sb.toString();
     }
-
 }

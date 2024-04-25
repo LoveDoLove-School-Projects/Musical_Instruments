@@ -103,8 +103,32 @@
         <listener-class>listeners.ServerListener</listener-class>
     </listener>
     <error-page>
+        <error-code>400</error-code>
+        <location>/pages/errors/4xxErrorPage.jsp</location>
+    </error-page>
+    <error-page>
+        <error-code>401</error-code>
+        <location>/pages/errors/unauthorizedErrorPage.jsp</location>
+    </error-page>
+    <error-page>
         <error-code>403</error-code>
         <location>/pages/errors/unauthorizedErrorPage.html</location>
+    </error-page>
+    <error-page>
+        <error-code>404</error-code>
+        <location>/pages/errors/4xxErrorPage.jsp</location>
+    </error-page>
+    <error-page>
+        <error-code>405</error-code>
+        <location>/pages/errors/4xxErrorPage.jsp</location>
+    </error-page>
+    <error-page>
+        <error-code>500</error-code>
+        <location>/pages/errors/5xxErrorPage.jsp</location>
+    </error-page>
+    <error-page>
+        <error-code>503</error-code>
+        <location>/pages/errors/5xxErrorPage.jsp</location>
     </error-page>
     <security-constraint>
         <display-name>Admin Constraints</display-name>
@@ -165,10 +189,6 @@
         <env-entry-value>b4fb9ad7b2b95413399ba07326fa58827b90f28070f4e9bf8572344e4d0e6f57</env-entry-value>
     </env-entry>
     <servlet>
-        <servlet-name>MainServlet</servlet-name>
-        <servlet-class>controllers.MainServlet</servlet-class>
-    </servlet>
-    <servlet>
         <servlet-name>RegisterServlet</servlet-name>
         <servlet-class>controllers.RegisterServlet</servlet-class>
     </servlet>
@@ -188,10 +208,6 @@
         <servlet-name>ProductServlet</servlet-name>
         <servlet-class>controllers.products.ProductServlet</servlet-class>
     </servlet>
-    <servlet-mapping>
-        <servlet-name>MainServlet</servlet-name>
-        <url-pattern>/pages/main</url-pattern>
-    </servlet-mapping>
     <servlet-mapping>
         <servlet-name>RegisterServlet</servlet-name>
         <url-pattern>/pages/register</url-pattern>

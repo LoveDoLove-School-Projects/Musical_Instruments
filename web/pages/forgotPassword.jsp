@@ -7,7 +7,7 @@
 
     <head>
         <jsp:include page="/defaults/head.jsp" />
-        <title>Login</title>
+        <title>Forgot Password</title>
         <link rel="stylesheet" href="assets/css/form.css" />
     </head>
 

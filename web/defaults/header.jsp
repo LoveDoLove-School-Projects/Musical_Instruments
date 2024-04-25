@@ -28,7 +28,7 @@ Integer login_id = (Integer) session.getAttribute("login_id");
 </style>
 <nav class="fixed-top navbar navbar-expand-lg navbar-light bg-body-tertiary ">
     <div class="container">
-        <a class="navbar-brand me-2" href="pages/main">
+        <a class="navbar-brand me-2" href="#">
             <img src="assets/image/logo.png" width="38" height="38" alt="Musical Instruments Logo"
                  loading="lazy" style="margin-top: -1px;" />
         </a>
@@ -45,7 +45,7 @@ Integer login_id = (Integer) session.getAttribute("login_id");
         <div class="collapse navbar-collapse" id="navbarButtonsExample">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item mx-4 my-2 p-2">
-                    <a class="nav-link" href="pages/main">Home</a>
+                    <a class="nav-link" href="#">Home</a>
                 </li>
                 <li class="nav-item mx-4 my-2 p-2">
                     <a class="nav-link" href="pages/products">Products</a>

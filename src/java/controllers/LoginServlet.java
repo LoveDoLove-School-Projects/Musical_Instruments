@@ -3,16 +3,19 @@ package controllers;
 import domain.common.Common;
 import domain.common.Constants;
 import domain.models.Session;
-import domain.models.Users;
-import domain.request.LoginRequest;
+import entities.Customers;
+import exceptions.DatabaseException;
+import features.AesHandler;
 import features.SessionHandler;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
-import services.LoginServices;
+import java.util.List;
 import services.OtpServices;
 import utilities.RedirectUtilities;
 import utilities.RedirectUtilities.RedirectType;
@@ -21,9 +24,10 @@ import utilities.StringUtilities;
 public class LoginServlet extends HttpServlet {
 
     private static final String LOGIN_2FA_URL = "/sessions/login2fa";
-    private final LoginServices customerLoginServices = new LoginServices();
     private final OtpServices otpServices = new OtpServices();
     private final SessionHandler sessionHandler = new SessionHandler();
+    @PersistenceContext
+    EntityManager entityManager;
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -43,7 +47,7 @@ public class LoginServlet extends HttpServlet {
         }
         switch (request.getMethod()) {
             case "GET":
-                processGetRequest(request, response);
+                setLoginPage(request, response);
                 break;
             case "POST":
                 processPostRequest(request, response);
@@ -51,71 +55,70 @@ public class LoginServlet extends HttpServlet {
         }
     }
 
-    private void processGetRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        setLoginPage(request, response);
-    }
-
     private void processPostRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String path = request.getServletPath();
         request.setCharacterEncoding("UTF-8");
         response.setContentType("text/plain;charset=UTF-8");
         response.setHeader("Cache-Control", "no-store");
-        LoginRequest loginRequest = createLoginRequest(request);
-        request.setAttribute(Constants.EMAIL_ATTRIBUTE, loginRequest.getEmail());
-        if (!validateLoginRequest(loginRequest)) {
+        String email = request.getParameter("email");
+        String password = request.getParameter("password");
+        Customers customer = new Customers(email, password);
+        request.setAttribute("email", email);
+        if (!validateLoginRequest(customer)) {
             RedirectUtilities.setMessage(request, RedirectType.DANGER, "Please Fill In All The Fields!");
+            setLoginPage(request, response);
             return;
         }
-        Users users = customerLoginServices.loginToCustomer(loginRequest);
-        if (users == null) {
+        customer = tryCustomerLogin(customer);
+        if (customer == null) {
             RedirectUtilities.setMessage(request, RedirectType.DANGER, "Login Failed! Please Try Again!");
             setLoginPage(request, response);
             return;
         }
-        checkNeedTwoFactorAuthOrNot(request, response, users);
+        checkNeedTwoFactorAuthOrNot(request, response, customer);
     }
 
     private void setLoginPage(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.getRequestDispatcher(Constants.LOGIN_JSP_URL).forward(request, response);
     }
 
-    private LoginRequest createLoginRequest(HttpServletRequest request) {
-        String email = request.getParameter(Constants.EMAIL_ATTRIBUTE);
-        String password = request.getParameter(Constants.PASSWORD_ATTRIBUTE);
-        return new LoginRequest(email, password);
-    }
-
-    private void checkNeedTwoFactorAuthOrNot(HttpServletRequest request, HttpServletResponse response, Users users) throws ServletException, IOException {
-        HttpSession session = request.getSession(true);
-        if (!users.getTwo_factor_auth()) {
-            sessionHandler.setLoginSession(session, users.getId());
-            RedirectUtilities.sendRedirect(request, response, Constants.PROFILE_URL);
-            return;
+    private Customers tryCustomerLogin(Customers customer) throws DatabaseException {
+        try {
+            String encryptedPassword = AesHandler.aes256EcbEncrypt(customer.getPassword());
+            List<Customers> customerList = entityManager.createNamedQuery("Customers.findByEmailAndPassword", Customers.class)
+                    .setParameter("email", customer.getEmail())
+                    .setParameter("password", encryptedPassword)
+                    .getResultList();
+            return customerList.isEmpty() ? null : customerList.get(0);
+        } catch (Exception ex) {
+            throw new DatabaseException(ex.getMessage());
         }
-        requiredTwoFactorAuth(request, response, users, session);
     }
 
-    private void requiredTwoFactorAuth(HttpServletRequest request, HttpServletResponse response, Users users, HttpSession session) throws ServletException, IOException {
-        Common.Status otpStatus = otpServices.sendOtp(users.getEmail());
-        if (otpStatus != Common.Status.OK) {
+    private void checkNeedTwoFactorAuthOrNot(HttpServletRequest request, HttpServletResponse response, Customers customer) throws ServletException, IOException {
+        HttpSession session = request.getSession(true);
+        if (!customer.getTwoFactorAuth()) {
+            sessionHandler.setLoginSession(session, customer.getUserId());
+            RedirectUtilities.sendRedirect(request, response, Constants.PROFILE_URL);
+        } else {
+            requiredTwoFactorAuth(request, response, customer, session);
+        }
+    }
+
+    private void requiredTwoFactorAuth(HttpServletRequest request, HttpServletResponse response, Customers customer, HttpSession session) throws ServletException, IOException {
+        if (otpServices.sendOtp(customer.getEmail()) != Common.Status.OK) {
             RedirectUtilities.setMessage(request, RedirectType.DANGER, "There was an error from the server! Please try again later.");
             return;
         }
-        session.setAttribute(Constants.LOGIN_ID_2FA_ATTRIBUTE, users.getId());
-        session.setAttribute(Constants.EMAIL_ATTRIBUTE, users.getEmail());
+        session.setAttribute("login_id_2fa", customer.getUserId());
+        session.setAttribute("email", customer.getEmail());
         RedirectUtilities.sendRedirect(request, response, LOGIN_2FA_URL);
     }
 
-    private boolean validateLoginRequest(LoginRequest loginRequest) {
-        if (loginRequest == null) {
-            return false;
-        }
-        if (StringUtilities.anyNullOrBlank(loginRequest.getPassword(), loginRequest.getEmail())) {
-            return false;
-        }
-        if (loginRequest.getPassword().length() < 8) {
-            return false;
-        }
-        return !(!loginRequest.getEmail().contains("@") || !loginRequest.getEmail().contains("."));
+    private boolean validateLoginRequest(Customers customer) {
+        return customer != null
+                && !StringUtilities.anyNullOrBlank(customer.getPassword(), customer.getEmail())
+                && customer.getPassword().length() >= 8
+                && customer.getEmail().contains("@")
+                && customer.getEmail().contains(".");
     }
 }

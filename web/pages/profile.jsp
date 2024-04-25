@@ -13,7 +13,7 @@ Integer login_id = (Integer) session.getAttribute("login_id");
 
     <head>
         <jsp:include page="/defaults/head.jsp" />
-        <title>Profile Page</title>
+        <title>Profile</title>
     </head>
 
     <body>

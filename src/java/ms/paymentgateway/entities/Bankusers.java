@@ -1,23 +1,30 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
 package ms.paymentgateway.entities;
 
 import jakarta.persistence.Basic;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 import jakarta.validation.constraints.Size;
 import jakarta.xml.bind.annotation.XmlRootElement;
-import jakarta.xml.bind.annotation.XmlTransient;
 import java.io.Serializable;
-import java.util.List;
+import java.math.BigDecimal;
+import java.util.Date;
 
+/**
+ *
+ * @author LoveDoLove
+ */
 @Entity
 @Table(name = "BANKUSERS")
 @XmlRootElement
@@ -27,7 +34,12 @@ import java.util.List;
     @NamedQuery(name = "Bankusers.findByFirstname", query = "SELECT b FROM Bankusers b WHERE b.firstname = :firstname"),
     @NamedQuery(name = "Bankusers.findByLastname", query = "SELECT b FROM Bankusers b WHERE b.lastname = :lastname"),
     @NamedQuery(name = "Bankusers.findByEmail", query = "SELECT b FROM Bankusers b WHERE b.email = :email"),
-    @NamedQuery(name = "Bankusers.findByPassword", query = "SELECT b FROM Bankusers b WHERE b.password = :password")})
+    @NamedQuery(name = "Bankusers.findByPassword", query = "SELECT b FROM Bankusers b WHERE b.password = :password"),
+    @NamedQuery(name = "Bankusers.findByCardHolderName", query = "SELECT b FROM Bankusers b WHERE b.cardHolderName = :cardHolderName"),
+    @NamedQuery(name = "Bankusers.findByCardNumber", query = "SELECT b FROM Bankusers b WHERE b.cardNumber = :cardNumber"),
+    @NamedQuery(name = "Bankusers.findByExpiryDate", query = "SELECT b FROM Bankusers b WHERE b.expiryDate = :expiryDate"),
+    @NamedQuery(name = "Bankusers.findByBalance", query = "SELECT b FROM Bankusers b WHERE b.balance = :balance"),
+    @NamedQuery(name = "Bankusers.findByCurrency", query = "SELECT b FROM Bankusers b WHERE b.currency = :currency")})
 public class Bankusers implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -49,8 +61,21 @@ public class Bankusers implements Serializable {
     @Size(max = 255)
     @Column(name = "PASSWORD")
     private String password;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "userid", fetch = FetchType.LAZY)
-    private List<Bankaccounts> bankaccountsList;
+    @Size(max = 100)
+    @Column(name = "CARD_HOLDER_NAME")
+    private String cardHolderName;
+    @Size(max = 16)
+    @Column(name = "CARD_NUMBER")
+    private String cardNumber;
+    @Column(name = "EXPIRY_DATE")
+    @Temporal(TemporalType.DATE)
+    private Date expiryDate;
+    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
+    @Column(name = "BALANCE")
+    private BigDecimal balance;
+    @Size(max = 3)
+    @Column(name = "CURRENCY")
+    private String currency;
 
     public Bankusers() {
     }
@@ -99,13 +124,44 @@ public class Bankusers implements Serializable {
         this.password = password;
     }
 
-    @XmlTransient
-    public List<Bankaccounts> getBankaccountsList() {
-        return bankaccountsList;
+    public String getCardHolderName() {
+        return cardHolderName;
     }
 
-    public void setBankaccountsList(List<Bankaccounts> bankaccountsList) {
-        this.bankaccountsList = bankaccountsList;
+    public void setCardHolderName(String cardHolderName) {
+        this.cardHolderName = cardHolderName;
+    }
+
+    public String getCardNumber() {
+        return cardNumber;
+    }
+
+    public void setCardNumber(String cardNumber) {
+        this.cardNumber = cardNumber;
+    }
+
+    public Date getExpiryDate() {
+        return expiryDate;
+    }
+
+    public void setExpiryDate(Date expiryDate) {
+        this.expiryDate = expiryDate;
+    }
+
+    public BigDecimal getBalance() {
+        return balance;
+    }
+
+    public void setBalance(BigDecimal balance) {
+        this.balance = balance;
+    }
+
+    public String getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(String currency) {
+        this.currency = currency;
     }
 
     @Override
@@ -130,6 +186,7 @@ public class Bankusers implements Serializable {
 
     @Override
     public String toString() {
-        return "entities.Bankusers[ userid=" + userid + " ]";
+        return "ms.paymentgateway.entities.Bankusers[ userid=" + userid + " ]";
     }
+    
 }
