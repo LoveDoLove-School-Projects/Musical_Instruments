@@ -4,13 +4,24 @@ import domain.common.Common;
 import domain.common.Constants;
 import domain.models.Session;
 import domain.request.RegisterRequest;
+import entities.Customers;
+import features.AesHandler;
 import features.SessionHandler;
+import jakarta.annotation.Resource;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.transaction.HeuristicMixedException;
+import jakarta.transaction.HeuristicRollbackException;
+import jakarta.transaction.NotSupportedException;
+import jakarta.transaction.RollbackException;
+import jakarta.transaction.SystemException;
+import jakarta.transaction.UserTransaction;
 import java.io.IOException;
-import services.RegisterServices;
+import java.util.List;
 import utilities.RedirectUtilities;
 import utilities.RedirectUtilities.RedirectType;
 import utilities.StringUtilities;
@@ -18,8 +29,11 @@ import utilities.ValidationUtilities;
 
 public class RegisterServlet extends HttpServlet {
 
-    private final RegisterServices registerServices = new RegisterServices();
     private final SessionHandler sessionHandler = new SessionHandler();
+    @PersistenceContext
+    EntityManager entityManager;
+    @Resource
+    UserTransaction userTransaction;
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -63,7 +77,42 @@ public class RegisterServlet extends HttpServlet {
             RedirectUtilities.setMessage(request, RedirectType.DANGER, "Password and Confirm Password should be same!");
             return Common.Status.INVALID;
         }
-        return registerServices.addNewCustomer(registerRequest);
+        return registerNewCustomer(registerRequest);
+    }
+
+    private Common.Status registerNewCustomer(RegisterRequest registerRequest) {
+        Customers customer = new Customers();
+        customer.setUsername(registerRequest.getUsername());
+        customer.setPassword(AesHandler.aes256EcbEncrypt(registerRequest.getPassword()));
+        customer.setEmail(registerRequest.getEmail());
+        customer.setAddress(registerRequest.getAddress());
+        customer.setPhoneNumber(registerRequest.getPhoneNumber());
+        customer.setGender(registerRequest.getGender());
+        customer.setTwoFactorAuth(false);
+        if (doesEmailExist(registerRequest.getEmail())) {
+            return Common.Status.EXISTS;
+        }
+        try {
+            userTransaction.begin();
+            entityManager.persist(customer);
+            userTransaction.commit();
+            return Common.Status.OK;
+        } catch (HeuristicMixedException | HeuristicRollbackException | NotSupportedException | RollbackException | SystemException | IllegalStateException | SecurityException ex) {
+            try {
+                userTransaction.rollback();
+            } catch (SystemException | IllegalStateException | SecurityException e) {
+            }
+            return Common.Status.INTERNAL_SERVER_ERROR;
+        }
+    }
+
+    private boolean doesEmailExist(String email) {
+        try {
+            List<Customers> customers = entityManager.createNamedQuery("Customers.findByEmail", Customers.class).setParameter("email", email).getResultList();
+            return !customers.isEmpty();
+        } catch (Exception ex) {
+            return false;
+        }
     }
 
     private void handleRegisterStatus(Common.Status registerStatus, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
@@ -82,18 +131,18 @@ public class RegisterServlet extends HttpServlet {
     }
 
     private RegisterRequest createRegisterRequest(HttpServletRequest request) {
-        String username = request.getParameter(Constants.USERNAME_ATTRIBUTE);
-        String password = request.getParameter(Constants.PASSWORD_ATTRIBUTE);
+        String username = request.getParameter("username");
+        String password = request.getParameter("password");
         String confirm_password = request.getParameter("confirm_password");
-        String email = request.getParameter(Constants.EMAIL_ATTRIBUTE);
-        String address = request.getParameter(Constants.ADDRESS_ATTRIBUTE);
-        String phone_number = request.getParameter(Constants.PHONE_ATTRIBUTE);
-        String gender = request.getParameter(Constants.GENDER_ATTRIBUTE);
-        request.setAttribute(Constants.USERNAME_ATTRIBUTE, username);
-        request.setAttribute(Constants.EMAIL_ATTRIBUTE, email);
-        request.setAttribute(Constants.ADDRESS_ATTRIBUTE, address);
-        request.setAttribute(Constants.PHONE_ATTRIBUTE, phone_number);
-        request.setAttribute(Constants.GENDER_ATTRIBUTE, gender);
+        String email = request.getParameter("email");
+        String address = request.getParameter("address");
+        String phone_number = request.getParameter("phone_number");
+        String gender = request.getParameter("gender");
+        request.setAttribute("username", username);
+        request.setAttribute("email", email);
+        request.setAttribute("address", address);
+        request.setAttribute("phone_number", phone_number);
+        request.setAttribute("gender", gender);
         return new RegisterRequest(username, password, confirm_password, email, address, phone_number, gender);
     }
 

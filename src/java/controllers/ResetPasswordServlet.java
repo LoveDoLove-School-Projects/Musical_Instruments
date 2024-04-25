@@ -35,14 +35,13 @@ public class ResetPasswordServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String token = request.getParameter("token");
-        System.out.println(token);
         if (token == null) {
-            RedirectUtilities.redirectWithMessage(request, response, RedirectType.DANGER, "Invalid reset password link", Constants.MAIN_URL);
+            RedirectUtilities.redirectWithMessage(request, response, RedirectType.DANGER, "Invalid reset password link", "/");
             return;
         }
         Resetpassword resetpassword = isTokenValid(token);
         if (resetpassword == null) {
-            RedirectUtilities.redirectWithMessage(request, response, RedirectType.DANGER, "Invalid reset password link", Constants.MAIN_URL);
+            RedirectUtilities.redirectWithMessage(request, response, RedirectType.DANGER, "Invalid reset password link", "/");
             return;
         }
         request.setAttribute("token", token);
@@ -53,33 +52,36 @@ public class ResetPasswordServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        request.setCharacterEncoding("UTF-8");
+        response.setContentType("text/plain;charset=UTF-8");
+        response.setHeader("Cache-Control", "no-store");
         String token = request.getParameter("token");
         String newPassword = request.getParameter("newPassword");
         String confirmNewPassword = request.getParameter("confirmNewPassword");
         if (!validateResetPasswordRequest(token, newPassword, confirmNewPassword)) {
-            RedirectUtilities.redirectWithMessage(request, response, RedirectType.DANGER, "Invalid reset password request", Constants.MAIN_URL);
+            RedirectUtilities.redirectWithMessage(request, response, RedirectType.DANGER, "Invalid reset password request", "/");
             return;
         }
-        List<Resetpassword> resetPasswords = (List<Resetpassword>) entityManager.createNamedQuery("Resetpassword.findByToken").setParameter("token", token).getResultList();
-        if (resetPasswords == null || resetPasswords.isEmpty()) {
-            RedirectUtilities.redirectWithMessage(request, response, RedirectType.DANGER, "Invalid reset password link", Constants.MAIN_URL);
-            return;
-        }
-        Resetpassword resetPassword = resetPasswords.get(0);
-        List<Customers> customers = (List<Customers>) entityManager.createNamedQuery("Customers.findByEmail").setParameter("email", resetPassword.getEmail()).getResultList();
-        if (customers == null || customers.isEmpty()) {
-            RedirectUtilities.redirectWithMessage(request, response, RedirectType.DANGER, "Email not found", Constants.MAIN_URL);
-            return;
-        }
-        Customers customer = customers.get(0);
-        customer.setPassword(AesHandler.aes256EcbEncrypt(newPassword));
+        Resetpassword resetPassword = isTokenValid(token);
         try {
+            // Update password
             userTransaction.begin();
+            List<Customers> customers = (List<Customers>) entityManager.createNamedQuery("Customers.findByEmail").setParameter("email", resetPassword.getEmail()).getResultList();
+            if (customers == null || customers.isEmpty()) {
+                RedirectUtilities.redirectWithMessage(request, response, RedirectType.DANGER, "Email not found", "/");
+                return;
+            }
+            Customers customer = customers.get(0);
+            customer.setPassword(AesHandler.aes256EcbEncrypt(newPassword));
             entityManager.merge(customer);
-            entityManager.remove(resetPassword);
+            userTransaction.commit();
+            // Delete reset password token
+            userTransaction.begin();
+            Resetpassword managedResetPassword = entityManager.merge(resetPassword);
+            entityManager.remove(managedResetPassword);
             userTransaction.commit();
         } catch (HeuristicMixedException | HeuristicRollbackException | NotSupportedException | RollbackException | SystemException | IllegalStateException | SecurityException ex) {
-            RedirectUtilities.redirectWithMessage(request, response, RedirectType.DANGER, "An error occurred while resetting password", Constants.MAIN_URL);
+            RedirectUtilities.redirectWithMessage(request, response, RedirectType.DANGER, "An error occurred while resetting password", "/");
             return;
         }
         RedirectUtilities.redirectWithMessage(request, response, RedirectType.SUCCESS, "Password reset successfully", Constants.CUSTOMER_LOGIN_URL);
@@ -92,19 +94,14 @@ public class ResetPasswordServlet extends HttpServlet {
         if (!ValidationUtilities.comparePasswords(newPassword, confirmNewPassword)) {
             return false;
         }
-        if (newPassword.length() < 8) {
-            return false;
-        }
-        return true;
+        return newPassword.length() >= 8;
     }
 
     private Resetpassword isTokenValid(String token) {
-        try {
-            List<Resetpassword> resetpasswords = (List<Resetpassword>) entityManager.createNamedQuery("Resetpassword.findByToken").setParameter("token", token).getResultList();
-            Resetpassword resetpassword = resetpasswords.get(0);
-            return resetpassword;
-        } catch (Exception ex) {
+        List<Resetpassword> resetpasswords = entityManager.createNamedQuery("Resetpassword.findByToken").setParameter("token", token).getResultList();
+        if (resetpasswords == null || resetpasswords.isEmpty()) {
             return null;
         }
+        return resetpasswords.get(0);
     }
 }

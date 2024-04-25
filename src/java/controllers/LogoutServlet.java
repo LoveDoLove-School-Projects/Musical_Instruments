@@ -1,6 +1,5 @@
 package controllers;
 
-import domain.common.Constants;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -20,6 +19,6 @@ public class LogoutServlet extends HttpServlet {
     private void handleLogout(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession(false);
         session.invalidate();
-        RedirectUtilities.sendRedirect(request, response, Constants.MAIN_URL);
+        RedirectUtilities.sendRedirect(request, response, "/");
     }
 }

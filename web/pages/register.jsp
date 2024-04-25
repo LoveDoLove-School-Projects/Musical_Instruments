@@ -7,7 +7,7 @@
 
     <head>
         <jsp:include page="/defaults/head.jsp" />
-        <title>Register Page</title>
+        <title>Register</title>
         <link rel="stylesheet" href="assets/css/form.css" />
     </head>
 

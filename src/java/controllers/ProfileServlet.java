@@ -2,19 +2,27 @@ package controllers;
 
 import domain.common.Constants;
 import domain.models.Session;
-import domain.models.Users;
-import domain.request.ProfileRequest;
+import entities.Customers;
+import exceptions.DatabaseException;
 import features.SecurityLogHandler;
 import features.SessionHandler;
+import jakarta.annotation.Resource;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.transaction.HeuristicMixedException;
+import jakarta.transaction.HeuristicRollbackException;
+import jakarta.transaction.NotSupportedException;
+import jakarta.transaction.RollbackException;
+import jakarta.transaction.SystemException;
+import jakarta.transaction.UserTransaction;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Base64;
-import services.ProfileServices;
 import utilities.RedirectUtilities;
 import utilities.RedirectUtilities.RedirectType;
 import utilities.StringUtilities;
@@ -23,8 +31,11 @@ import utilities.StringUtilities;
 public class ProfileServlet extends HttpServlet {
 
     private final SecurityLogHandler securityLogHandler = new SecurityLogHandler();
-    private final ProfileServices profileServices = new ProfileServices();
     private final SessionHandler sessionHandler = new SessionHandler();
+    @PersistenceContext
+    EntityManager entityManager;
+    @Resource
+    UserTransaction userTransaction;
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -39,7 +50,7 @@ public class ProfileServlet extends HttpServlet {
     private void handleProfile(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Session session = sessionHandler.getLoginSession(request.getSession());
         if (!session.isResult()) {
-            RedirectUtilities.redirectWithMessage(request, response, RedirectType.DANGER, "Please login to view this page.", Constants.MAIN_URL);
+            RedirectUtilities.redirectWithMessage(request, response, RedirectType.DANGER, "Please login to view this page.", "/");
             return;
         }
         String path = request.getServletPath();
@@ -60,19 +71,18 @@ public class ProfileServlet extends HttpServlet {
     }
 
     private void initCustomerProfile(HttpServletRequest request, HttpServletResponse response, Session session) throws ServletException, IOException {
-        ProfileRequest profileRequest = new ProfileRequest(session.getUserId());
-        Users users = profileServices.getProfile(profileRequest);
-        if (users == null) {
-            RedirectUtilities.redirectWithMessage(request, response, RedirectType.DANGER, "Error fetching profile details.", Constants.MAIN_URL);
+        Customers existingCustomer = entityManager.find(Customers.class, session.getUserId());
+        if (existingCustomer == null) {
+            RedirectUtilities.redirectWithMessage(request, response, RedirectType.DANGER, "Error fetching profile details.", "/");
             return;
         }
-        request.setAttribute(Constants.USERNAME_ATTRIBUTE, users.getUsername());
-        request.setAttribute(Constants.EMAIL_ATTRIBUTE, users.getEmail());
-        request.setAttribute(Constants.ADDRESS_ATTRIBUTE, users.getAddress());
-        request.setAttribute(Constants.PHONE_ATTRIBUTE, users.getPhoneNumber());
-        request.setAttribute(Constants.GENDER_ATTRIBUTE, users.getGender());
-        request.setAttribute(Constants.TWO_FACTOR_AUTH_ATTRIBUTE, users.getTwo_factor_auth());
-        byte[] picture = users.getPicture();
+        request.setAttribute("username", existingCustomer.getUsername());
+        request.setAttribute("email", existingCustomer.getEmail());
+        request.setAttribute("address", existingCustomer.getAddress());
+        request.setAttribute("phone_number", existingCustomer.getPhoneNumber());
+        request.setAttribute("gender", existingCustomer.getGender());
+        request.setAttribute("two_factor_auth", existingCustomer.getTwoFactorAuth());
+        byte[] picture = existingCustomer.getPicture();
         if (picture != null) {
             String pictureBase64 = Base64.getEncoder().encodeToString(picture);
             request.setAttribute("pictureBase64", pictureBase64);
@@ -87,8 +97,8 @@ public class ProfileServlet extends HttpServlet {
             return;
         }
         byte[] pictureBytes = pictureStream.readAllBytes();
-        ProfileRequest profileRequest = new ProfileRequest(session.getUserId(), pictureBytes);
-        boolean isUploaded = profileServices.uploadPicture(profileRequest);
+        Customers customer = new Customers(session.getUserId(), pictureBytes);
+        boolean isUploaded = uploadPicture(customer);
         if (isUploaded) {
             securityLogHandler.addSecurityLog(request, session, "Uploaded picture.");
             RedirectUtilities.setMessage(request, RedirectType.SUCCESS, "Picture uploaded successfully.");
@@ -98,9 +108,27 @@ public class ProfileServlet extends HttpServlet {
         RedirectUtilities.sendRedirect(request, response, Constants.PROFILE_URL);
     }
 
+    private boolean uploadPicture(Customers customer) {
+        try {
+            userTransaction.begin();
+            Customers existingCustomer = entityManager.find(Customers.class, customer.getUserId());
+            if (existingCustomer == null) {
+                return false;
+            }
+            existingCustomer.setPicture(customer.getPicture());
+            entityManager.merge(existingCustomer);
+            userTransaction.commit();
+            return true;
+        } catch (RollbackException ex) {
+            return false;
+        } catch (HeuristicMixedException | HeuristicRollbackException | NotSupportedException | SystemException | IllegalStateException | SecurityException ex) {
+            throw new DatabaseException(ex.getMessage());
+        }
+    }
+
     private void removePicture(HttpServletRequest request, HttpServletResponse response, Session session) throws ServletException, IOException {
-        ProfileRequest profileRequest = new ProfileRequest(session.getUserId());
-        boolean isRemoved = profileServices.removePicture(profileRequest);
+        Customers customer = new Customers(session.getUserId());
+        boolean isRemoved = removePicture(customer);
         if (isRemoved) {
             securityLogHandler.addSecurityLog(request, session, "Removed picture.");
             RedirectUtilities.setMessage(request, RedirectType.SUCCESS, "Picture removed successfully.");
@@ -110,18 +138,36 @@ public class ProfileServlet extends HttpServlet {
         RedirectUtilities.sendRedirect(request, response, Constants.PROFILE_URL);
     }
 
+    private boolean removePicture(Customers customer) {
+        try {
+            userTransaction.begin();
+            Customers existingCustomer = entityManager.find(Customers.class, customer.getUserId());
+            if (existingCustomer == null) {
+                return false;
+            }
+            existingCustomer.setPicture(null);
+            entityManager.merge(existingCustomer);
+            userTransaction.commit();
+            return true;
+        } catch (RollbackException ex) {
+            return false;
+        } catch (HeuristicMixedException | HeuristicRollbackException | NotSupportedException | SystemException | IllegalStateException | SecurityException ex) {
+            throw new DatabaseException(ex.getMessage());
+        }
+    }
+
     private void updateProfile(HttpServletRequest request, HttpServletResponse response, Session session) throws ServletException, IOException {
-        String username = request.getParameter(Constants.USERNAME_ATTRIBUTE);
-        String address = request.getParameter(Constants.ADDRESS_ATTRIBUTE);
-        String phoneNumber = request.getParameter(Constants.PHONE_ATTRIBUTE);
-        String gender = request.getParameter(Constants.GENDER_ATTRIBUTE);
-        boolean two_factor_auth = request.getParameter(Constants.TWO_FACTOR_AUTH_ATTRIBUTE) != null;
+        String username = request.getParameter("username");
+        String address = request.getParameter("address");
+        String phoneNumber = request.getParameter("phone_number");
+        String gender = request.getParameter("gender");
+        boolean two_factor_auth = request.getParameter("two_factor_auth") != null;
         if (StringUtilities.anyNullOrBlank(username, address, phoneNumber, gender)) {
             RedirectUtilities.redirectWithMessage(request, response, RedirectType.DANGER, "All fields are required.", Constants.PROFILE_URL);
             return;
         }
-        ProfileRequest profileRequest = new ProfileRequest(session.getUserId(), username, address, phoneNumber, gender, two_factor_auth);
-        boolean isUpdated = profileServices.updateProfile(profileRequest);
+        Customers customer = new Customers(session.getUserId(), username, address, phoneNumber, gender, two_factor_auth);
+        boolean isUpdated = updateProfile(customer);
         if (isUpdated) {
             securityLogHandler.addSecurityLog(request, session, "Updated profile.");
             RedirectUtilities.setMessage(request, RedirectType.SUCCESS, "Profile updated successfully.");
@@ -129,5 +175,27 @@ public class ProfileServlet extends HttpServlet {
             RedirectUtilities.setMessage(request, RedirectType.DANGER, "Error updating profile.");
         }
         RedirectUtilities.sendRedirect(request, response, Constants.PROFILE_URL);
+    }
+
+    public boolean updateProfile(Customers customer) {
+        try {
+            userTransaction.begin();
+            Customers existingCustomer = entityManager.find(Customers.class, customer.getUserId());
+            if (existingCustomer == null) {
+                return false;
+            }
+            existingCustomer.setUsername(customer.getUsername());
+            existingCustomer.setAddress(customer.getAddress());
+            existingCustomer.setPhoneNumber(customer.getPhoneNumber());
+            existingCustomer.setGender(customer.getGender());
+            existingCustomer.setTwoFactorAuth(customer.getTwoFactorAuth());
+            entityManager.merge(existingCustomer);
+            userTransaction.commit();
+            return true;
+        } catch (RollbackException ex) {
+            return false;
+        } catch (HeuristicMixedException | HeuristicRollbackException | NotSupportedException | SystemException | IllegalStateException | SecurityException ex) {
+            throw new DatabaseException(ex.getMessage());
+        }
     }
 }

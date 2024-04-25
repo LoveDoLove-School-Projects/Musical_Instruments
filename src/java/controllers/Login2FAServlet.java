@@ -48,6 +48,9 @@ public class Login2FAServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        request.setCharacterEncoding("UTF-8");
+        response.setContentType("text/plain;charset=UTF-8");
+        response.setHeader("Cache-Control", "no-store");
         HttpSession session = request.getSession(false);
         Session attributes = getSessionAttributes(session);
         if (attributes == null) {
@@ -72,8 +75,8 @@ public class Login2FAServlet extends HttpServlet {
         if (session == null) {
             return null;
         }
-        Integer loginId = (Integer) session.getAttribute(Constants.LOGIN_ID_2FA_ATTRIBUTE);
-        String email = (String) session.getAttribute(Constants.EMAIL_ATTRIBUTE);
+        Integer loginId = (Integer) session.getAttribute("login_id_2fa");
+        String email = (String) session.getAttribute("email");
         if (loginId == null || loginId == 0 || StringUtilities.anyNullOrBlank(email)) {
             return null;
         }
