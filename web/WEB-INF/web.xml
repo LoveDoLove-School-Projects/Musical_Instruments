@@ -103,9 +103,6 @@
     <session-config>
         <session-timeout>30</session-timeout>
     </session-config>
-    <welcome-file-list>
-        <welcome-file>index.jsp</welcome-file>
-    </welcome-file-list>
     <listener>
         <description>Enviroment Entry Reader Listener</description>
         <listener-class>listeners.ServerListener</listener-class>

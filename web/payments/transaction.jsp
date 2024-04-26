@@ -2,43 +2,47 @@
 <%@ page contentType="text/html" pageEncoding="UTF-8" %>
 <c:set var="path" value="${pageContext.request.contextPath}" />
 <c:set var="basePath" value="${pageContext.request.scheme}://${pageContext.request.serverName}:${pageContext.request.serverPort}${path}/" />
-<!-- IMport -->
 <%@ page import="java.util.Calendar" %>
 <!DOCTYPE html>
 <html>
 
     <head>
         <jsp:include page="/defaults/head.jsp" />
-        <title>Transaction Page</title>
+        <title>Transaction</title>
     </head>
 
     <body>
-        <section class="py-5">
-            <div class="container justify-content-center align-items-center">
-                <div class="row">
-                    <div class="col-md-6">
-                        <h2>Transaction Details</h2>
-                        <p><strong>Transaction ID:</strong> ${transactionId}</p>
-                        <p><strong>Order ID:</strong> ${orderId}</p>
-                        <p><strong>Invoice ID:</strong> ${invoiceId}</p>
-                        <p><strong>Amount:</strong> ${amount}</p>
-                        <!-- Add more details as needed -->
+        <form action="/payments/processTransaction" method="post">
+            <section class="py-5">
+                <div class="container justify-content-center align-items-center">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h2>Transaction Details</h2>
+                            <p><strong>Transaction ID:</strong> ${transaction_id}</p>
+                            <p><strong>Order ID:</strong> ${parent_order_id}</p>
+                            <p><strong>Amount:</strong> ${total_amount}</p>
+                            <p><strong>Date: ${date_created_gmt}</strong></p>
+                            <!-- Add more details as needed -->
+                        </div>
+                        <input type="hidden" name="transaction_id" value="${transaction_id}" />
+                        <input type="hidden" name="parent_order_id" value="${parent_order_id}" />
+                        <input type="hidden" name="total_amount" value="${total_amount}" />
+                        <input type="hidden" name="date_created_gmt" value="${date_created_gmt}" />
                     </div>
                 </div>
-            </div>
-        </section>
-        <section class="py-5">
-            <div class="container justify-content-center align-items-center">
-                <div class="row">
-                    <div class="col-md-6">
-                        <h2>Select Payment Method</h2>
-                        <form action="/payments/processTransaction" method="post">
+            </section>
+            <section class="py-5">
+                <div class="container justify-content-center align-items-center">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h2>Select Payment Method</h2>
                             <div class="form-group">
-                                <label for="paymentMethod">Payment Method</label>
-                                <select class="form-control" id="paymentMethod">
+                                <label for="payment_method">Payment Method</label>
+                                <select class="form-control" id="payment_method">
                                     <option value="" selected>Select Payment Method</option>
-                                    <option value="CreditDebitCard">Credit / Debit Card</option>
-                                    <option value="PayPal">PayPal</option>
+                                    <option value="CreditOrDebitCard">Credit / Debit Card</option>
+                                    <option value="Paypal">PayPal</option>
+                                    <option value="CashOnDelivery">Cash On Delivery</option>
                                     <!-- Add more options as needed -->
                                 </select>
                             </div>
@@ -78,7 +82,6 @@
                                 <div class="form-group row">
                                     <label for="expDate" class="col-form-label">Expiration Date</label>
                                     <div class="col">
-                                        <!-- First year block -->
                                         <select class="form-control" id="expYear">
                                             <option value="">Year</option>
                                             <c:forEach var="year" begin="<%= Calendar.getInstance().get(Calendar.YEAR) %>" end="<%= Calendar.getInstance().get(Calendar.YEAR) + 30 %>">
@@ -87,7 +90,6 @@
                                         </select>
                                     </div>
                                     <div class="col">
-                                        <!-- Second date block -->
                                         <select class="form-control" id="expMonth">
                                             <option value="">Month</option>
                                             <c:forEach var="month" begin="1" end="12">
@@ -97,23 +99,82 @@
                                     </div>
                                 </div>
                             </div>
-                            <button type="submit" class="btn btn-primary mt-3">Pay Now</button>
-                        </form>
+                            <div id="paypal-button-container" style="display: none;"></div>
+                            <button type="submit" class="btn btn-primary mt-3" data-id="paymentButton">Pay Now</button>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </section>
+            </section>
+        </form>
+        <script src="https://www.paypal.com/sdk/js?client-id=AV2LS6xYVmbVxvE8GrMwyhzi2zopTUPEbkybzONAXYK5t4oNLScaUD3XW-4aybvisbntDIbePzhYObtJ&currency=MYR&disable-funding=credit,card"></script>
+        <script src="payments/transaction.js"></script>
         <script>
-            const paymentMethod = ['CreditDebitCard', 'PayPal'];
+            const payment_method = ['CreditOrDebitCard', 'Paypal', 'CashOnDelivery'];
             $(document).ready(function () {
-                $('#paymentMethod').change(function () {
-                    if ($(this).val() === paymentMethod[0]) {
+                $('#paypal-button-container').hide();
+                $('#payment_method').change(function () {
+                    if ($(this).val() === payment_method[0]) {
                         $('#cardDetails').show();
                     } else {
                         $('#cardDetails').hide();
                     }
+
+                    if ($(this).val() === payment_method[1]) {
+                        $('#paypal-button-container').show();
+                    } else {
+                        $('#paypal-button-container').hide();
+                        paypal.Buttons().close();
+                    }
                 });
             });
+            let transaction_id = $('#transaction_id');
+            let parent_order_id = $('#parent_order_id');
+            let total_amount = $('#total_amount');
+            let date_created_gmt = $('#date_created_gmt');
+            paypal
+                    .Buttons({
+                        style: {
+                            shape: "rect",
+                            color: "gold",
+                            layout: "vertical",
+                            label: "pay",
+                            tagline: false,
+                        },
+                        onClick: function (data, actions) {},
+                        createOrder: function (data, actions) {
+                            return actions.order.create({
+                                purchase_units: [
+                                    {
+                                        description: `Transaction ID: ${transaction_id.value}`,
+                                        amount: {
+                                            currency_code: "MYR",
+                                            value: "200",
+                                        },
+                                    },
+                                ],
+                            });
+                        },
+                        onApprove: function (data, actions) {
+                            return actions.order.capture().then(function (details) {
+                                alert("Transaction completed by " + details.payer.name.given_name);
+                                return fetch("/payments/processTransaction", {
+                                    method: "post",
+                                    headers: {
+                                        "content-type": "application/json",
+                                    },
+                                    body: JSON.stringify({
+                                        orderID: data.orderID,
+                                        payerID: data.payerID,
+                                        transactionID: transaction_id.value,
+                                    }),
+                                });
+                            });
+                        },
+                        onError: function (error) {
+                            console.error("PayPal error:", error);
+                        },
+                    })
+                    .render("#paypal-button-container");
         </script>
     </body>
 
