@@ -7,17 +7,19 @@
     <head>
         <jsp:include page="/defaults/head.jsp" />
         <meta charset="UTF-8">
-        <title>Manage Customer</title>
+        <title>Manage Product</title>
     </head>
     <body>
         <jsp:include page="/defaults/header.jsp" />
         <div class="container">
-            <h1>Manage Customer</h1><br>
+            <h1>Manage Product</h1><br>
             <!-- Search form -->
-            <form class="form-inline mb-3" action="pages/staffs/searchCustomerServlet" method="POST">
-                <input class="form-control mr-2" type="text" name="searchQuery" placeholder="Enter customer email: "><br>
+            <form class="form-inline mb-3" action="pages/staffs/SearchProductServlet" method="POST">
+                <input class="form-control mr-2" type="text" name="searchQuery" placeholder="Enter product ID / Name: "><br>
                 <button type="submit" class="btn btn-primary">Search</button>
+                <a href="pages/staffs/addProduct.jsp" class="btn btn-success">Add new product</a>
             </form>
+
         </div>
         <jsp:include page="/defaults/footer.jsp" />
     </body>

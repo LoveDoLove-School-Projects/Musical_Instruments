@@ -13,14 +13,6 @@
         <servlet-class>controllers.admins.DeleteStaffServlet</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>SearchStaffServlet</servlet-name>
-        <servlet-class>controllers.admins.SearchStaffServlet</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>DeleteCustomerSerlvet</servlet-name>
-        <servlet-class>controllers.admins.DeleteCustomerSerlvet</servlet-class>
-    </servlet>
-    <servlet>
         <servlet-name>DeleteCustomerServlet</servlet-name>
         <servlet-class>controllers.admins.DeleteCustomerServlet</servlet-class>
     </servlet>
@@ -48,6 +40,18 @@
         <servlet-name>ManageCustomerServlet</servlet-name>
         <servlet-class>controllers.staffs.ManageCustomerServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ManageStaffServlet</servlet-name>
+        <servlet-class>controllers.admins.ManageStaffServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>SearchProductServlet</servlet-name>
+        <servlet-class>controllers.staffs.SearchProductServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>AddProductServlet</servlet-name>
+        <servlet-class>controllers.staffs.AddProductServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>LoginServlet</servlet-name>
         <url-pattern>/pages/login</url-pattern>
@@ -63,10 +67,6 @@
     <servlet-mapping>
         <servlet-name>DeleteStaffServlet</servlet-name>
         <url-pattern>/pages/admins/deleteStaffServlet</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>SearchStaffServlet</servlet-name>
-        <url-pattern>/pages/admins/searchStaffServlet</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>DeleteCustomerServlet</servlet-name>
@@ -99,6 +99,18 @@
     <servlet-mapping>
         <servlet-name>ManageCustomerServlet</servlet-name>
         <url-pattern>/pages/staffs/manageCustomer</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ManageStaffServlet</servlet-name>
+        <url-pattern>/pages/admins/ManageStaffServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SearchProductServlet</servlet-name>
+        <url-pattern>/pages/staffs/searchProduct</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AddProductServlet</servlet-name>
+        <url-pattern>/pages/staffs/AddProductServlet</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>30</session-timeout>
