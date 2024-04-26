@@ -13,7 +13,8 @@ public class MailHandler {
         return HttpUtilities.sendHttpJsonRequest(SEND_MAIL_API, mailRequest);
     }
 
-    public Common.Status sendEmail(String jsonPayload) {
+    public Common.Status sendEmail(String email, String subject, String body) {
+        String jsonPayload = String.format("{\"toEmail\":\"%s\",\"subject\":\"%s\",\"body\":\"%s\"}", email, subject, body);
         return HttpUtilities.sendHttpJsonRequest(SEND_MAIL_API, jsonPayload);
     }
 }

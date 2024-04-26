@@ -1,10 +1,12 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
 package entities;
 
 import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
@@ -17,24 +19,23 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 import java.util.Date;
 
+/**
+ *
+ * @author LoveDoLove
+ */
 @Entity
 @Table(name = "RESETPASSWORD")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Resetpassword.findAll", query = "SELECT r FROM Resetpassword r"),
-    @NamedQuery(name = "Resetpassword.findById", query = "SELECT r FROM Resetpassword r WHERE r.id = :id"),
     @NamedQuery(name = "Resetpassword.findByEmail", query = "SELECT r FROM Resetpassword r WHERE r.email = :email"),
     @NamedQuery(name = "Resetpassword.findByToken", query = "SELECT r FROM Resetpassword r WHERE r.token = :token"),
     @NamedQuery(name = "Resetpassword.findByCreatedAt", query = "SELECT r FROM Resetpassword r WHERE r.createdAt = :createdAt")})
 public class Resetpassword implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Basic(optional = false)
-    @Column(name = "ID")
-    private Integer id;
     // @Pattern(regexp="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message="Invalid email")//if the field contains email address consider using this annotation to enforce field validation
+    @Id
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 255)
@@ -42,11 +43,9 @@ public class Resetpassword implements Serializable {
     private String email;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 255)
+    @Size(min = 1, max = 525)
     @Column(name = "TOKEN")
     private String token;
-    @Basic(optional = false)
-    @NotNull
     @Column(name = "CREATED_AT")
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
@@ -54,28 +53,13 @@ public class Resetpassword implements Serializable {
     public Resetpassword() {
     }
 
-    public Resetpassword(Integer id) {
-        this.id = id;
+    public Resetpassword(String email) {
+        this.email = email;
     }
 
     public Resetpassword(String email, String token) {
         this.email = email;
         this.token = token;
-    }
-
-    public Resetpassword(Integer id, String email, String token, Date createdAt) {
-        this.id = id;
-        this.email = email;
-        this.token = token;
-        this.createdAt = createdAt;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
     }
 
     public String getEmail() {
@@ -105,7 +89,7 @@ public class Resetpassword implements Serializable {
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (id != null ? id.hashCode() : 0);
+        hash += (email != null ? email.hashCode() : 0);
         return hash;
     }
 
@@ -116,7 +100,7 @@ public class Resetpassword implements Serializable {
             return false;
         }
         Resetpassword other = (Resetpassword) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+        if ((this.email == null && other.email != null) || (this.email != null && !this.email.equals(other.email))) {
             return false;
         }
         return true;
@@ -124,6 +108,7 @@ public class Resetpassword implements Serializable {
 
     @Override
     public String toString() {
-        return "entities.Resetpassword[ id=" + id + " ]";
+        return "entities.Resetpassword[ email=" + email + " ]";
     }
+    
 }

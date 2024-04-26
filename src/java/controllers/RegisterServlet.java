@@ -21,6 +21,7 @@ import jakarta.transaction.RollbackException;
 import jakarta.transaction.SystemException;
 import jakarta.transaction.UserTransaction;
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 import utilities.RedirectUtilities;
 import utilities.RedirectUtilities.RedirectType;
@@ -89,6 +90,7 @@ public class RegisterServlet extends HttpServlet {
         customer.setPhoneNumber(registerRequest.getPhoneNumber());
         customer.setGender(registerRequest.getGender());
         customer.setTwoFactorAuth(false);
+        customer.setAccountCreationDate(new Date());
         if (doesEmailExist(registerRequest.getEmail())) {
             return Common.Status.EXISTS;
         }
