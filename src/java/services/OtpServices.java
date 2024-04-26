@@ -1,11 +1,10 @@
 package services;
 
-import features.MailHandler;
 import controllers.ConnectionController;
 import domain.common.Common;
-import domain.request.MailRequest;
 import entities.Otps;
 import exceptions.DatabaseException;
+import features.MailHandler;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -16,8 +15,8 @@ import utilities.StringUtilities;
 
 public class OtpServices {
 
-    private static final String OTP_EMAIL_SUBJECT = "OTP";
-    private static final String OTP_EMAIL_BODY = "Your OTP is: ";
+    private static final String SUBJECT = "OTP";
+    private static final String CONTENT = "<!DOCTYPE html><html lang='en'><head><meta charset='UTF-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Email OTP Design</title><style>body{font-family:Arial,sans-serif}.container{width:100%;max-width:600px;margin:0 auto}.card{border:1px solid #ddd;border-radius:5px;margin-top:50px;padding:20px;text-align:center}.card-title{font-size:24px;margin-bottom:20px}.card-text{font-size:18px;margin-bottom:20px}.otp{font-size:24px;font-weight:700}</style></head><body><div class='container'><div class='card'><h5 class='card-title'>OTP Verification</h5><p class='card-text'>Your One-Time Password (OTP) is:<br><span class='otp'>${otpvalue}</span></p></div></div></body></html>";
     private static final String GET_OTP_SQL = "SELECT * FROM otps WHERE email = ?";
     private static final String COUNT_OTP_SQL = "SELECT COUNT(*) FROM otps WHERE email = ?";
     private static final String ADD_OTP_SQL = "INSERT INTO OTPS(email, otp) VALUES(?, ?)";
@@ -31,8 +30,7 @@ public class OtpServices {
             return Common.Status.INVALID;
         }
         String otp = RandomUtilities.generateOtp();
-        MailRequest mailRequest = new MailRequest(email, OTP_EMAIL_SUBJECT, OTP_EMAIL_BODY + otp);
-        Common.Status mailStatus = MAIL_SERVICES.sendEmail(mailRequest);
+        Common.Status mailStatus = MAIL_SERVICES.sendEmail(email, SUBJECT, CONTENT.replace("${otpvalue}", otp));
         if (mailStatus != Common.Status.OK) {
             return mailStatus;
         }

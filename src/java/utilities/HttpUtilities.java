@@ -7,6 +7,7 @@ import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
@@ -20,9 +21,6 @@ public class HttpUtilities {
 
     private static final Logger LOG = Logger.getLogger(HttpUtilities.class.getName());
     private static final Gson gson = new Gson();
-    /**
-     * An array of TrustManagers that trust all certificates.
-     */
     private static final TrustManager[] trustAllCerts = new TrustManager[]{
         new X509TrustManager() {
             public java.security.cert.X509Certificate[] getAcceptedIssuers() {
@@ -44,13 +42,13 @@ public class HttpUtilities {
         String jsonPayload = gson.toJson(object);
         String combineContent = timestamp + jsonPayload;
         String signature = AesUtilities.aes256EcbEncrypt(combineContent, Enviroment.SECRET_KEY);
-        HttpsURLConnection connection = null;
+        HttpURLConnection connection = null;
         try {
             SSLContext sc = SSLContext.getInstance("SSL");
             sc.init(null, trustAllCerts, new java.security.SecureRandom());
             HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
             URL url = new URL(urlConnection);
-            connection = (HttpsURLConnection) url.openConnection();
+            connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("POST");
             connection.setRequestProperty("Content-Type", "application/json");
             connection.setRequestProperty("Accept", "application/json");

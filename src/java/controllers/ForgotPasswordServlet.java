@@ -4,6 +4,7 @@ import domain.common.Common;
 import domain.common.Constants;
 import entities.Customers;
 import entities.Resetpassword;
+import exceptions.DatabaseException;
 import features.AesHandler;
 import features.MailHandler;
 import jakarta.annotation.Resource;
@@ -30,8 +31,8 @@ import utilities.ValidationUtilities;
 public class ForgotPasswordServlet extends HttpServlet {
 
     private final MailHandler mailHandler = new MailHandler();
-    private static final String subject = "Reset Password";
-    private static final String body = "Click the link to reset your password: ";
+    private static final String SUBJECT = "Reset Password";
+    private static final String CONTENT = "<!DOCTYPE html><html lang='en'><head><meta charset='UTF-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Reset Password Design</title><style>body{font-family:Arial,sans-serif}.container{width:100%;max-width:600px;margin:0 auto}.card{border:1px solid #ddd;border-radius:5px;margin-top:50px;padding:20px;text-align:center}.card-title{font-size:24px;margin-bottom:20px}.card-text{font-size:18px;margin-bottom:20px}.btn{display:inline-block;color:#fff;background-color:#007bff;border-color:#007bff;padding:.375rem .75rem;font-size:1rem;line-height:1.5;border-radius:.25rem;text-decoration:none}.btn:hover{background-color:#0056b3}</style></head><body><div class='container'><div class='card'><h5 class='card-title'>Reset Your Password</h5><p class='card-text'>You requested to reset your password. Click the button below to continue.</p><a href='${resetPasswordLink}' class='btn'>Reset Password</a><p class='card-text'>If the button doesn't work, you can also use the following link to reset your password: <a href='${resetPasswordLink}'>${resetPasswordLink}</a></p></div></div></body></html>";
     @PersistenceContext
     EntityManager entityManager;
     @Resource
@@ -69,9 +70,7 @@ public class ForgotPasswordServlet extends HttpServlet {
             RedirectUtilities.redirectWithMessage(request, response, RedirectType.DANGER, "Error generating reset password URL", Constants.FORGOT_PASSWORD_URL);
             return;
         }
-        String content = body + resetPasswordURL;
-        String jsonPayload = String.format("{\"toEmail\":\"%s\",\"subject\":\"%s\",\"body\":\"%s\"}", email, subject, content);
-        Common.Status status = mailHandler.sendEmail(jsonPayload);
+        Common.Status status = mailHandler.sendEmail(email, SUBJECT, CONTENT.replace("${resetPasswordLink}", resetPasswordURL));
         if (status == Common.Status.OK) {
             RedirectUtilities.redirectWithMessage(request, response, RedirectType.SUCCESS, "Email sent successfully", Constants.FORGOT_PASSWORD_URL);
         } else {
@@ -94,18 +93,17 @@ public class ForgotPasswordServlet extends HttpServlet {
     private boolean addNewResetPassword(Resetpassword resetPassword) {
         try {
             userTransaction.begin();
-            List<Resetpassword> existingResetPassword = entityManager.createNamedQuery("Resetpassword.findByEmail", Resetpassword.class).setParameter("email", resetPassword.getEmail()).getResultList();
-            if (existingResetPassword != null && !existingResetPassword.isEmpty()) {
-                Resetpassword existing = existingResetPassword.get(0);
-                existing.setToken(resetPassword.getToken());
-                entityManager.merge(existing);
-            } else {
+            Resetpassword existingResetPassword = entityManager.find(Resetpassword.class, resetPassword.getEmail());
+            if (existingResetPassword == null) {
                 entityManager.persist(resetPassword);
+            } else {
+                existingResetPassword.setToken(resetPassword.getToken());
+                entityManager.merge(existingResetPassword);
             }
             userTransaction.commit();
             return true;
-        } catch (HeuristicMixedException | HeuristicRollbackException | NotSupportedException | RollbackException | SystemException | IllegalStateException | SecurityException e) {
-            return false;
+        } catch (HeuristicMixedException | HeuristicRollbackException | NotSupportedException | RollbackException | SystemException | IllegalStateException | SecurityException ex) {
+            throw new DatabaseException(ex.getMessage());
         }
     }
 }

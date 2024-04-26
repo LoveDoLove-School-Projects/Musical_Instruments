@@ -6,7 +6,7 @@
 <html>
     <head>
         <jsp:include page="/defaults/head.jsp" />
-        <title>Error</title>
+        <title>4xx Error</title>
     </head>
     <body>
         <div class="container">
