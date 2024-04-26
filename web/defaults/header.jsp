@@ -68,6 +68,7 @@ Integer login_id = (Integer) session.getAttribute("login_id");
                     if (login_id != null || j_username != null) {
                     %>
                     <li><a class="dropdown-item" href="pages/profile">Profile</a></li>
+                    <li><a class="dropdown-item" href="pages/cart">Carts</a></li>
                     <li><a class="dropdown-item" href="pages/settings">Settings</a></li>
                     <li><a class="dropdown-item" id="logoutBtn">Logout</a></li>
                         <% } else { %>
