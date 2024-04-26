@@ -25,7 +25,7 @@
                 <div class="col-md-6 offset-md-3">
                     <h1 class="text-center mb-4">Modify Customer Information</h1>
                     <form id="modifyForm" action="pages/staffs/modifyCustomerServlet" method="POST" onsubmit="return confirmUpdate()">
-                        <% Customers customerDetails = (Customers) session.getAttribute("customersList"); %>
+                        <% Customers customerDetails = (Customers) session.getAttribute("customerDetails"); %>
                         <div class="form-group">
                             <label for="username">Username:</label>
                             <input type="text" class="form-control" name="username" value="<%=customerDetails.getUsername()%>">
@@ -60,7 +60,7 @@
         <script>
             function confirmModification() {
                 if (confirm("Are you sure you want to cancel the modification?")) {
-                    window.location.href = "pages/staffs/showCustomerDetails.jsp";
+                    window.location.href = "pages/staffs/manageCustomer";
                 }
             }
 

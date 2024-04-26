@@ -20,7 +20,7 @@ public class ModifyCustomerServlet extends HttpServlet {
     private static final Logger LOG = Logger.getLogger(ModifyCustomerServlet.class.getName());
 
     private final StaffServices staffServices = new StaffServices();
-    private static final String SHOW_CUSTOMER_DETAILS_URL = "/pages/staffs/showCustomerDetails.jsp";
+    private static final String SHOW_CUSTOMER_DETAILS_URL = "/pages/staffs/manageCustomer";
 
     @PersistenceContext
     EntityManager entityManager;

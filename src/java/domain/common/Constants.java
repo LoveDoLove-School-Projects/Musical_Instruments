@@ -35,7 +35,7 @@ public final class Constants {
  /* ********************************* */
     //    Admin JSP URL
     public static final String ADMIN_JSP_URL = "/pages/staffs/index.jsp";
-    public static final String ADMIN_MANAGE_CUSTOMER_JSP_URL = "/pages/staffs/manageCustomer.jsp";
+    public static final String ADMIN_SEARCH_CUSTOMER_JSP_URL = "/pages/staffs/searchCustomer.jsp";
     public static final String ADMIN_MANAGE_STOCK_JSP_URL = "/pages/staffs/manageStock.jsp";
     public static final String ADMIN_VIEW_TRANSACTION_JSP_URL = "/pages/staffs/viewTransaction.jsp";
     //    Admin JSP URL
@@ -46,7 +46,7 @@ public final class Constants {
     //    Admin URL
     public static final String ADMIN_URL = "/pages/admins";
     public static final String ADMIN_CONTROL_PANEL_URL = "/pages/admins/controlPanel";
-    public static final String ADMIN_MANAGE_CUSTOMER_URL = "/pages/admins/manageCustomer";
+    public static final String ADMIN_SEARCH_CUSTOMER_URL = "/pages/admins/searchCustomer";
     public static final String ADMIN_MANAGE_STAFF_URL = "/pages/admins/manageStaff";
     public static final String ADMIN_MANAGE_STOCK_URL = "/pages/admins/manageStock";
     public static final String ADMIN_SALES_URL = "/pages/admins/sales";
