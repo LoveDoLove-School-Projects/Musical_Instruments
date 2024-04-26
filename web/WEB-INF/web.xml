@@ -44,6 +44,10 @@
         <servlet-name>ViewProductServlet</servlet-name>
         <servlet-class>controllers.products.ViewProductServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ManageCustomerServlet</servlet-name>
+        <servlet-class>controllers.staffs.ManageCustomerServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>LoginServlet</servlet-name>
         <url-pattern>/pages/login</url-pattern>
@@ -69,10 +73,6 @@
         <url-pattern>/pages/admins/DeleteCustomerServlet</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>SearchCustomerServlet</servlet-name>
-        <url-pattern>/pages/staffs/searchCustomerServlet</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
         <servlet-name>ForgotPasswordServlet</servlet-name>
         <url-pattern>/pages/forgotPassword</url-pattern>
     </servlet-mapping>
@@ -91,6 +91,14 @@
     <servlet-mapping>
         <servlet-name>ViewProductServlet</servlet-name>
         <url-pattern>/pages/products/viewProduct</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SearchCustomerServlet</servlet-name>
+        <url-pattern>/pages/staffs/searchCustomerServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ManageCustomerServlet</servlet-name>
+        <url-pattern>/pages/staffs/manageCustomer</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>30</session-timeout>
