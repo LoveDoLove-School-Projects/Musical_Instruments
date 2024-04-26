@@ -8,6 +8,7 @@
 <%@ page import="entities.Products" %>
 <%
 String IMAGE_DEFAULT_PATH = "assets/database/productImage/";
+
 %>
 <!DOCTYPE html>
 <html> 
@@ -64,6 +65,7 @@ String IMAGE_DEFAULT_PATH = "assets/database/productImage/";
                     <div class="row m-5 d-flex align-items-center justify-content-center">
                         <%
                             Products product = (Products) request.getAttribute("productDetails");
+                            int productId = product.getProductId();
                             byte[] pictureBytes = FileUtilities.readDirectoryContent(IMAGE_DEFAULT_PATH + product.getImagePath());
                             String pictureBase64 = Base64.getEncoder().encodeToString(pictureBytes);
                             String imageSrc = "data:image/png;base64," + pictureBase64; // Change "image/png" based on the actual image type
@@ -81,9 +83,10 @@ String IMAGE_DEFAULT_PATH = "assets/database/productImage/";
                                     <h3 class="my-4"><strong>Color:</strong> <%=product.getColor()%></h3>
                                     <hr>
                                     <h5 class="my-2"><strong>Quantity</strong></h5>
-                                    <form action="ProductServlet" method="post" class="qty-container">
+                                    <form method="POST" action="pages/products/addProductToCart" class="qty-container">
                                         <button class="qty-btn-minus" type="button"><i class="fa fa-minus"></i></button>
-                                        <input type="text" name="qty" value="0" class="input-qty w-50 text-center p-2" min="1"/>
+                                        <input type="number" name="productQuantity" value="1" class="input-qty w-50 text-center p-2" min="1"/>
+                                        <input type="hidden" name="productId" value="<%=productId%>"/>
                                         <button class="qty-btn-plus" type="button"><i class="fa fa-plus"></i></button><br>
                                         <button type="submit" class="my-4 mx-auto p-2 addtocartbtn"><strong>Add to cart</strong></button>
                                     </form>

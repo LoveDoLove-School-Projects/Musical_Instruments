@@ -2,7 +2,7 @@ package domain.common;
 
 public final class Constants {
 
- /* ********************************* */
+    /* ********************************* */
     //    REGISTER JSP URL
     public static final String REGISTER_JSP_URL = "/pages/register.jsp";
     //    REGISTER URL
@@ -27,10 +27,11 @@ public final class Constants {
     //    Products JSP URL
     public static final String PRODUCT_JSP_URL = "/pages/products/product.jsp";
     public static final String VIEW_PRODUCT_JSP_URL = "/pages/products/viewProduct.jsp";
+    public static final String CART_PRODUCT_JSP_URL = "/pages/products/cart.jsp";
     //    Products URL
     public static final String PRODUCT_URL = "/pages/products";
-    public static final String VIEW_PRODUCT_URL = "/pages/products/viewProduct";
-    public static final String ADDCART_PRODUCT_URL = "/pages/products/ad";
+    public static final String VIEW_PRODUCT_URL = "/pages/products/viewProducts";
+    public static final String CART_PRODUCT_URL = "/pages/products/cart";
     /* ********************************* */
  /* ********************************* */
     //    Admin JSP URL
