@@ -12,29 +12,26 @@
     </head>
 
     <body>
-        <form action="/payments/processTransaction" method="post">
-            <section class="py-5">
-                <div class="container justify-content-center align-items-center">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <h2>Transaction Details</h2>
-                            <p><strong>Transaction ID:</strong> ${transaction_id}</p>
-                            <p><strong>Order ID:</strong> ${parent_order_id}</p>
-                            <p><strong>Amount:</strong> ${total_amount}</p>
-                            <p><strong>Date: ${date_created_gmt}</strong></p>
-                            <!-- Add more details as needed -->
-                        </div>
-                        <input type="hidden" name="transaction_id" value="${transaction_id}" />
-                        <input type="hidden" name="parent_order_id" value="${parent_order_id}" />
-                        <input type="hidden" name="total_amount" value="${total_amount}" />
-                        <input type="hidden" name="date_created_gmt" value="${date_created_gmt}" />
+        <section class="py-5">
+            <div class="container justify-content-center align-items-center">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h2>Transaction Details</h2>
+                        <p><strong>Transaction ID:</strong> ${transaction_id}</p>
+                        <p><strong>Order ID:</strong> ${parent_order_id}</p>
+                        <p><strong>Amount:</strong> ${total_amount}</p>
+                        <p><strong>Date: ${date_created_gmt}</strong></p>
+                        <!-- Add more details as needed -->
                     </div>
                 </div>
-            </section>
-            <section class="py-5">
-                <div class="container justify-content-center align-items-center">
-                    <div class="row">
-                        <div class="col-md-6">
+            </div>
+        </section>
+        <section class="py-5">
+            <div class="container justify-content-center align-items-center">
+                <div class="row">
+                    <div class="col-md-6">
+                        <form action="payments/processTransaction" method="post">
+
                             <h2>Select Payment Method</h2>
                             <div class="form-group">
                                 <label for="payment_method">Payment Method</label>
@@ -77,7 +74,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="cvv">CVV</label>
-                                    <input type="text" class="form-control" id="cvv" />
+                                    <input type="text" name="CVV" class="form-control" id="CVV" />
                                 </div>
                                 <div class="form-group row">
                                     <label for="expDate" class="col-form-label">Expiration Date</label>
@@ -99,19 +96,35 @@
                                     </div>
                                 </div>
                             </div>
-                            <div id="paypal-button-container" style="display: none;"></div>
-                            <button type="submit" class="btn btn-primary mt-3" data-id="paymentButton">Pay Now</button>
-                        </div>
+                            <input type="hidden" name="transaction_id" value="${transaction_id}" />
+                            <input type="hidden" name="parent_order_id" value="${parent_order_id}" />
+                            <input type="hidden" name="total_amount" value="${total_amount}" />
+                            <input type="hidden" name="date_created_gmt" value="${date_created_gmt}" />
+                            <button type="submit" class="btn btn-primary mt-3" id="paymentButton">Pay Now</button>
+                        </form>
+                        <form action="<%=application.getInitParameter("posturl")%>" method="post" id="paypal-button-form">
+                            <input type="hidden" name="upload" value="1" />
+                            <input type="hidden" name="return" value="<%=application.getInitParameter("returnurl")%>" />
+                            <input type="hidden" name="cmd" value="_cart" />
+                            <input type="hidden" name="business" value="<%=application.getInitParameter("business")%>" />
+
+                            <!-- Product 1 sample -->
+                            <!-- <input type="hidden" name="item_name_1" value="Item Name 1" />
+                            <input type="hidden" name="item_number_1" value="p1" />
+                            <input type="hidden" name="amount_1" value="2" />
+                            <input type="hidden" name="quantity_1" value="3" /> -->
+
+                            <!-- Image -->
+                            <input type="image" src="https://www.paypal.com/en_US/i/btn/btn_xpressCheckout.gif" alt="Paypal Button">
+                        </form>
                     </div>
                 </div>
-            </section>
-        </form>
-        <script src="https://www.paypal.com/sdk/js?client-id=AV2LS6xYVmbVxvE8GrMwyhzi2zopTUPEbkybzONAXYK5t4oNLScaUD3XW-4aybvisbntDIbePzhYObtJ&currency=MYR&disable-funding=credit,card"></script>
-        <script src="payments/transaction.js"></script>
+            </div>
+        </section>
         <script>
             const payment_method = ['CreditOrDebitCard', 'Paypal', 'CashOnDelivery'];
             $(document).ready(function () {
-                $('#paypal-button-container').hide();
+                $('#paypal-button-form').hide();
                 $('#payment_method').change(function () {
                     if ($(this).val() === payment_method[0]) {
                         $('#cardDetails').show();
@@ -120,61 +133,14 @@
                     }
 
                     if ($(this).val() === payment_method[1]) {
-                        $('#paypal-button-container').show();
+                        $('#paymentButton').hide();
+                        $('#paypal-button-form').show();
                     } else {
-                        $('#paypal-button-container').hide();
-                        paypal.Buttons().close();
+                        $('#paypal-button-form').hide();
+                        $('#paymentButton').show();
                     }
                 });
             });
-            let transaction_id = $('#transaction_id');
-            let parent_order_id = $('#parent_order_id');
-            let total_amount = $('#total_amount');
-            let date_created_gmt = $('#date_created_gmt');
-            paypal
-                    .Buttons({
-                        style: {
-                            shape: "rect",
-                            color: "gold",
-                            layout: "vertical",
-                            label: "pay",
-                            tagline: false,
-                        },
-                        onClick: function (data, actions) {},
-                        createOrder: function (data, actions) {
-                            return actions.order.create({
-                                purchase_units: [
-                                    {
-                                        description: `Transaction ID: ${transaction_id.value}`,
-                                        amount: {
-                                            currency_code: "MYR",
-                                            value: "200",
-                                        },
-                                    },
-                                ],
-                            });
-                        },
-                        onApprove: function (data, actions) {
-                            return actions.order.capture().then(function (details) {
-                                alert("Transaction completed by " + details.payer.name.given_name);
-                                return fetch("/payments/processTransaction", {
-                                    method: "post",
-                                    headers: {
-                                        "content-type": "application/json",
-                                    },
-                                    body: JSON.stringify({
-                                        orderID: data.orderID,
-                                        payerID: data.payerID,
-                                        transactionID: transaction_id.value,
-                                    }),
-                                });
-                            });
-                        },
-                        onError: function (error) {
-                            console.error("PayPal error:", error);
-                        },
-                    })
-                    .render("#paypal-button-container");
         </script>
     </body>
 

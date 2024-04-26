@@ -7,6 +7,7 @@ CREATE TABLE BankUsers (
     Card_Holder_Name VARCHAR(100),
     Card_Number VARCHAR(16),
     Expiry_Date DATE,
+    CVV VARCHAR(3),
     Balance DECIMAL(10, 2),
     Currency VARCHAR(3)
 );
@@ -30,9 +31,9 @@ CREATE TABLE Transactions (
 
 -- Insert sample data into BankUsers table
 INSERT INTO BankUsers (FirstName, LastName, Email, Password, Card_Holder_Name, Card_Number, Expiry_Date, Balance, Currency)
-VALUES ('Jun Xiang', 'Chong', 'chongjx-wm22@student.tarc.edu.my', 'chongjx-wm22', 'Chong Jun Xiang', '5555444433332222', '2025-12-31', 1000.00, 'MYR'); -- Mastercard
+VALUES ('Jun Xiang', 'Chong', 'chongjx-wm22@student.tarc.edu.my', 'chongjx-wm22', 'Chong Jun Xiang', '5555444433332222', '2025-12-31', '123', 1000.00, 'MYR'); -- Mastercard
 INSERT INTO BankUsers (FirstName, LastName, Email, Password, Card_Holder_Name, Card_Number, Expiry_Date, Balance, Currency)
-VALUES ('Jia Jie', 'Tan', 'jjtan-wm22@student.tarc.edu.my', 'jjtan-wm22', 'Tan Jia Jie', '4444333322221111', '2026-12-31', 2000.00, 'MYR'); -- Visa
+VALUES ('Jia Jie', 'Tan', 'jjtan-wm22@student.tarc.edu.my', 'jjtan-wm22', 'Tan Jia Jie', '4444333322221111', '2026-12-31', '123', 2000.00, 'MYR'); -- Visa
 
 -- Insert sample data into Transactions table
 INSERT INTO Transactions (status, currency, total_amount, customer_id, parent_order_id, payment_method, transaction_id, ip_address, user_agent, customer_note)

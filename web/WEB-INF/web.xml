@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app version="5.0" xmlns="https://jakarta.ee/xml/ns/jakartaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_5_0.xsd">
     <servlet>
-        <servlet-name>AddStaffServlet</servlet-name>
-        <servlet-class>controllers.admins.AddStaffServlet</servlet-class>
-    </servlet>
-    <servlet>
         <servlet-name>ModifyStaffServlet</servlet-name>
         <servlet-class>controllers.admins.ModifyStaffServlet</servlet-class>
     </servlet>
@@ -55,10 +51,6 @@
     <servlet-mapping>
         <servlet-name>LoginServlet</servlet-name>
         <url-pattern>/pages/login</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>AddStaffServlet</servlet-name>
-        <url-pattern>/pages/admins/addStaff</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>ModifyStaffServlet</servlet-name>
@@ -115,6 +107,26 @@
     <session-config>
         <session-timeout>30</session-timeout>
     </session-config>
+    <context-param>
+        <description>authtoken</description>
+        <param-name>authtoken</param-name>
+        <param-value>AZrjdHeC-KD9nsZVH8HR54O-3ZgvAshjqYq4hiPgXGL7ZKcps159a3mTW-YqLlvLQzBNveUjdpSELOuX</param-value>
+    </context-param>
+    <context-param>
+        <description>posturl</description>
+        <param-name>posturl</param-name>
+        <param-value>https://www.sandbox.paypal.com/cgi-bin/webscr</param-value>
+    </context-param>
+    <context-param>
+        <description>business</description>
+        <param-name>business</param-name>
+        <param-value>sb-kfbrj14644364@business.example.com</param-value>
+    </context-param>
+    <context-param>
+        <description>returnurl</description>
+        <param-name>returnurl</param-name>
+        <param-value>http://localhost:8080/Musical_Instruments/payments/paypal/success</param-value>
+    </context-param>
     <listener>
         <description>Enviroment Entry Reader Listener</description>
         <listener-class>listeners.ServerListener</listener-class>

@@ -34,4 +34,33 @@ public class FileUtilities {
             return null;
         }
     }
+
+    /**
+     * Writes the given content to a file at the specified path. If the file
+     * does not exist, it will be created.
+     *
+     * @param path the path of the file to write to
+     * @param content the content to write to the file
+     * @return true if the content was successfully written to the file, false
+     * otherwise
+     */
+    public static boolean writeContentToFile(String path, byte[] content) {
+        String fullPath = ServerListener.getServerDirectoryRootPath() + path;
+        File file = new File(fullPath);
+        try {
+            if (!file.exists()) {
+                file.createNewFile();
+            }
+            try (FileInputStream fis = new FileInputStream(file)) {
+                byte[] buffer = new byte[1024];
+                while ((fis.read(buffer)) != -1) {
+                    content = buffer;
+                }
+            }
+            return true;
+        } catch (IOException ex) {
+            LOG.severe(ex.getMessage());
+            return false;
+        }
+    }
 }

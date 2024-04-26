@@ -12,9 +12,6 @@
     </head>
     <body>
         <jsp:include page="/defaults/header.jsp" />
-
-
-
         <jsp:include page="/defaults/footer.jsp" />
     </body>
 </html>
