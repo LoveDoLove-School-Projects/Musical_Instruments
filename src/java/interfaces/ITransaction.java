@@ -1,4 +1,4 @@
-package ms.paymentgateway.interfaces;
+package interfaces;
 
 public interface ITransaction {
 

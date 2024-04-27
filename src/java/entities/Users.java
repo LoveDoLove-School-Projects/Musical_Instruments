@@ -1,4 +1,4 @@
-package domain.models;
+package entities;
 
 import java.sql.Timestamp;
 

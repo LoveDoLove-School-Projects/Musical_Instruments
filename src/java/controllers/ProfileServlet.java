@@ -1,7 +1,7 @@
 package controllers;
 
-import domain.common.Constants;
-import domain.models.Session;
+import common.Constants;
+import entities.Session;
 import entities.Customers;
 import exceptions.DatabaseException;
 import features.SecurityLogHandler;

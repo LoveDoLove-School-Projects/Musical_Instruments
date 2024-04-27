@@ -1,4 +1,4 @@
-package domain.common;
+package enviroments;
 
 public class Enviroment {
 

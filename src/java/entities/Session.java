@@ -1,4 +1,4 @@
-package domain.models;
+package entities;
 
 public class Session {
 

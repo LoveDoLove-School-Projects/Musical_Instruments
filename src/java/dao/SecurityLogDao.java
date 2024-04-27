@@ -1,4 +1,4 @@
-package services;
+package dao;
 
 import controllers.ConnectionController;
 import entities.Securitylog;
@@ -6,7 +6,7 @@ import exceptions.DatabaseException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 
-public class SecurityLogServices {
+public class SecurityLogDao {
 
     private static final String ADD_SECURITY_LOG_SQL = "INSERT INTO SECURITYLOG (USER_ID, ACTION, IP_ADDRESS, USER_AGENT) VALUES (?, ?, ?, ?)";
 

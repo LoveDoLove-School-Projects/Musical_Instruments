@@ -1,7 +1,7 @@
 package controllers.products;
 
-import domain.common.Common;
-import domain.common.Constants;
+import common.Common;
+import common.Constants;
 import entities.Products;
 import features.SessionHandler;
 import jakarta.persistence.EntityManager;

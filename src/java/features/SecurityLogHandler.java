@@ -1,15 +1,15 @@
 package features;
 
-import domain.models.Session;
+import entities.Session;
 import entities.Securitylog;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import services.SecurityLogServices;
+import dao.SecurityLogDao;
 
 public class SecurityLogHandler {
 
-    private static final SecurityLogServices securityLogServices = new SecurityLogServices();
+    private static final SecurityLogDao securityLogServices = new SecurityLogDao();
 
     /**
      * Adds a security log entry for the specified request, session, and action.

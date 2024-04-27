@@ -1,7 +1,7 @@
 package controllers;
 
-import domain.common.Common;
-import domain.common.Constants;
+import common.Common;
+import common.Constants;
 import entities.Customers;
 import entities.Resetpassword;
 import exceptions.DatabaseException;
@@ -22,7 +22,7 @@ import jakarta.transaction.SystemException;
 import jakarta.transaction.UserTransaction;
 import java.io.IOException;
 import java.util.List;
-import listeners.ServerListener;
+import enviroments.EnviromentInitialize;
 import utilities.RedirectUtilities;
 import utilities.RedirectUtilities.RedirectType;
 import utilities.StringUtilities;
@@ -87,7 +87,7 @@ public class ForgotPasswordServlet extends HttpServlet {
         if (!isAdded) {
             return null;
         }
-        return ServerListener.getServerBaseURL(request) + "/pages/resetPassword?token=" + token;
+        return EnviromentInitialize.getServerBaseURL(request) + "/pages/resetPassword?token=" + token;
     }
 
     private boolean addNewResetPassword(Resetpassword resetPassword) {

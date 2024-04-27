@@ -1,4 +1,4 @@
-package ms.paymentgateway.domain.models;
+package entities;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;

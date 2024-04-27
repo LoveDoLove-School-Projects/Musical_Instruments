@@ -1,7 +1,7 @@
-package services;
+package dao;
 
 import controllers.ConnectionController;
-import domain.common.Common;
+import common.Common;
 import entities.Otps;
 import exceptions.DatabaseException;
 import features.MailHandler;
@@ -13,7 +13,7 @@ import java.sql.Timestamp;
 import utilities.RandomUtilities;
 import utilities.StringUtilities;
 
-public class OtpServices {
+public class OtpDao {
 
     private static final String SUBJECT = "OTP";
     private static final String CONTENT = "<!DOCTYPE html><html lang='en'><head><meta charset='UTF-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Email OTP Design</title><style>body{font-family:Arial,sans-serif}.container{width:100%;max-width:600px;margin:0 auto}.card{border:1px solid #ddd;border-radius:5px;margin-top:50px;padding:20px;text-align:center}.card-title{font-size:24px;margin-bottom:20px}.card-text{font-size:18px;margin-bottom:20px}.otp{font-size:24px;font-weight:700}</style></head><body><div class='container'><div class='card'><h5 class='card-title'>OTP Verification</h5><p class='card-text'>Your One-Time Password (OTP) is:<br><span class='otp'>${otpvalue}</span></p></div></div></body></html>";
