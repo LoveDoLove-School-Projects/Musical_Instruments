@@ -1,6 +1,6 @@
 package features;
 
-import domain.common.Enviroment;
+import enviroments.Enviroment;
 import utilities.AesUtilities;
 
 public class AesHandler {

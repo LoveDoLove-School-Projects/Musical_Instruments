@@ -1,15 +1,15 @@
-package domain.request;
+package entities;
 
-public class MailRequest {
+public class Mail {
 
     private String toEmail;
     private String subject;
     private String body;
 
-    public MailRequest() {
+    public Mail() {
     }
 
-    public MailRequest(String toEmail, String subject, String body) {
+    public Mail(String toEmail, String subject, String body) {
         this.toEmail = toEmail;
         this.subject = subject;
         this.body = body;

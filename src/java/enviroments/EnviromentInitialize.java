@@ -1,6 +1,5 @@
-package listeners;
+package enviroments;
 
-import domain.common.Enviroment;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.ServletContextListener;
@@ -10,9 +9,9 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
-public class ServerListener implements ServletContextListener {
+public class EnviromentInitialize implements ServletContextListener {
 
-    private static final Logger LOG = Logger.getLogger(ServerListener.class.getName());
+    private static final Logger LOG = Logger.getLogger(EnviromentInitialize.class.getName());
     public static ServletContext servletContext;
 
     /**

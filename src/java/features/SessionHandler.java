@@ -1,6 +1,6 @@
 package features;
 
-import domain.models.Session;
+import entities.Session;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 

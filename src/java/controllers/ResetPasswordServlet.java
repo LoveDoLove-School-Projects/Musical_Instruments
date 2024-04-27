@@ -1,6 +1,6 @@
 package controllers;
 
-import domain.common.Constants;
+import common.Constants;
 import entities.Customers;
 import entities.Resetpassword;
 import features.AesHandler;

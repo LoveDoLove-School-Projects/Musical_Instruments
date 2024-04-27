@@ -1,8 +1,8 @@
 package controllers;
 
-import domain.common.Common;
-import domain.common.Constants;
-import domain.models.Session;
+import common.Common;
+import common.Constants;
+import entities.Session;
 import entities.Customers;
 import exceptions.DatabaseException;
 import features.AesHandler;
@@ -16,7 +16,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
-import services.OtpServices;
+import dao.OtpDao;
 import utilities.RedirectUtilities;
 import utilities.RedirectUtilities.RedirectType;
 import utilities.StringUtilities;
@@ -24,7 +24,7 @@ import utilities.StringUtilities;
 public class LoginServlet extends HttpServlet {
 
     private static final String LOGIN_2FA_URL = "/sessions/login2fa";
-    private final OtpServices otpServices = new OtpServices();
+    private final OtpDao otpServices = new OtpDao();
     private final SessionHandler sessionHandler = new SessionHandler();
     @PersistenceContext
     EntityManager entityManager;

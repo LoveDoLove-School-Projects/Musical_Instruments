@@ -1,8 +1,8 @@
 package utilities;
 
 import com.google.gson.Gson;
-import domain.common.Common;
-import domain.common.Enviroment;
+import common.Common;
+import enviroments.Enviroment;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;

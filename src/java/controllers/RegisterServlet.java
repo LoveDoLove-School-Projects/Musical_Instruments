@@ -1,10 +1,9 @@
 package controllers;
 
-import domain.common.Common;
-import domain.common.Constants;
-import domain.models.Session;
-import domain.request.RegisterRequest;
+import common.Common;
+import common.Constants;
 import entities.Customers;
+import entities.Session;
 import features.AesHandler;
 import features.SessionHandler;
 import jakarta.annotation.Resource;
@@ -69,29 +68,40 @@ public class RegisterServlet extends HttpServlet {
     }
 
     private Common.Status addNewCustomer(HttpServletRequest request) throws ServletException, IOException {
-        RegisterRequest registerRequest = createRegisterRequest(request);
-        if (!validateRegisterRequest(registerRequest)) {
+        String username = request.getParameter("username");
+        String password = request.getParameter("password");
+        String confirm_password = request.getParameter("confirm_password");
+        String email = request.getParameter("email");
+        String address = request.getParameter("address");
+        String phone_number = request.getParameter("phone_number");
+        String gender = request.getParameter("gender");
+        request.setAttribute("username", username);
+        request.setAttribute("email", email);
+        request.setAttribute("address", address);
+        request.setAttribute("phone_number", phone_number);
+        request.setAttribute("gender", gender);
+        Customers customer = new Customers(username, password, confirm_password, email, address, phone_number, gender);
+        if (!validateCustomerDetails(customer)) {
             RedirectUtilities.setMessage(request, RedirectType.DANGER, "Please Fill In All The Fields!");
             return Common.Status.INVALID;
         }
-        if (!registerRequest.getPassword().equals(registerRequest.getConfirm_password())) {
+        if (!customer.getPassword().equals(confirm_password)) {
             RedirectUtilities.setMessage(request, RedirectType.DANGER, "Password and Confirm Password should be same!");
             return Common.Status.INVALID;
         }
-        return registerNewCustomer(registerRequest);
+        return registerNewCustomer(customer);
     }
 
-    private Common.Status registerNewCustomer(RegisterRequest registerRequest) {
-        Customers customer = new Customers();
-        customer.setUsername(registerRequest.getUsername());
-        customer.setPassword(AesHandler.aes256EcbEncrypt(registerRequest.getPassword()));
-        customer.setEmail(registerRequest.getEmail());
-        customer.setAddress(registerRequest.getAddress());
-        customer.setPhoneNumber(registerRequest.getPhoneNumber());
-        customer.setGender(registerRequest.getGender());
+    private Common.Status registerNewCustomer(Customers customer) {
+        customer.setUsername(customer.getUsername());
+        customer.setPassword(AesHandler.aes256EcbEncrypt(customer.getPassword()));
+        customer.setEmail(customer.getEmail());
+        customer.setAddress(customer.getAddress());
+        customer.setPhoneNumber(customer.getPhoneNumber());
+        customer.setGender(customer.getGender());
         customer.setTwoFactorAuth(false);
         customer.setAccountCreationDate(new Date());
-        if (doesEmailExist(registerRequest.getEmail())) {
+        if (doesEmailExist(customer.getEmail())) {
             return Common.Status.EXISTS;
         }
         try {
@@ -132,38 +142,19 @@ public class RegisterServlet extends HttpServlet {
         setRegisterPage(request, response);
     }
 
-    private RegisterRequest createRegisterRequest(HttpServletRequest request) {
-        String username = request.getParameter("username");
-        String password = request.getParameter("password");
-        String confirm_password = request.getParameter("confirm_password");
-        String email = request.getParameter("email");
-        String address = request.getParameter("address");
-        String phone_number = request.getParameter("phone_number");
-        String gender = request.getParameter("gender");
-        request.setAttribute("username", username);
-        request.setAttribute("email", email);
-        request.setAttribute("address", address);
-        request.setAttribute("phone_number", phone_number);
-        request.setAttribute("gender", gender);
-        return new RegisterRequest(username, password, confirm_password, email, address, phone_number, gender);
-    }
-
-    private boolean validateRegisterRequest(RegisterRequest registerRequest) {
-        if (registerRequest == null) {
+    private boolean validateCustomerDetails(Customers customer) {
+        if (customer == null) {
             return false;
         }
-        if (StringUtilities.anyNullOrBlank(registerRequest.getUsername(), registerRequest.getPassword(), registerRequest.getConfirm_password(), registerRequest.getEmail(), registerRequest.getAddress(), registerRequest.getPhoneNumber(), registerRequest.getGender())) {
+        if (StringUtilities.anyNullOrBlank(customer.getUsername(), customer.getPassword(), customer.getEmail(), customer.getAddress(), customer.getPhoneNumber(), customer.getGender())) {
             return false;
         }
-        if (!ValidationUtilities.comparePasswords(registerRequest.getPassword(), registerRequest.getConfirm_password())) {
+        if (customer.getPassword().length() < 8) {
             return false;
         }
-        if (registerRequest.getPassword().length() < 8) {
+        if (!ValidationUtilities.isEmailValid(customer.getEmail())) {
             return false;
         }
-        if (!ValidationUtilities.isEmailValid(registerRequest.getEmail())) {
-            return false;
-        }
-        return ValidationUtilities.isPhoneNumberValid(registerRequest.getPhoneNumber());
+        return ValidationUtilities.isPhoneNumberValid(customer.getPhoneNumber());
     }
 }

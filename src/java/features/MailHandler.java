@@ -1,16 +1,16 @@
 package features;
 
-import domain.common.Common;
-import domain.common.Enviroment;
-import domain.request.MailRequest;
+import common.Common;
+import enviroments.Enviroment;
+import entities.Mail;
 import utilities.HttpUtilities;
 
 public class MailHandler {
 
     private static final String SEND_MAIL_API = AesHandler.aes256EcbDecrypt(Enviroment.SEND_MAIL_API);
 
-    public Common.Status sendEmail(MailRequest mailRequest) {
-        return HttpUtilities.sendHttpJsonRequest(SEND_MAIL_API, mailRequest);
+    public Common.Status sendEmail(Mail mail) {
+        return HttpUtilities.sendHttpJsonRequest(SEND_MAIL_API, mail);
     }
 
     public Common.Status sendEmail(String email, String subject, String body) {

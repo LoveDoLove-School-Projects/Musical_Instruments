@@ -1,4 +1,4 @@
-package domain.common;
+package common;
 
 public final class Common {
 

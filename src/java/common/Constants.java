@@ -1,4 +1,4 @@
-package domain.common;
+package common;
 
 public final class Constants {
 
@@ -65,5 +65,13 @@ public final class Constants {
     public static final String RESET_PASSWORD_JSP_URL = "/pages/resetPassword.jsp";
     //   Reset Password URL
     public static final String RESET_PASSWORD_URL = "/pages/resetPassword";
+    /* ********************************* */
+ /* ********************************* */
+    //    Transaction JSP URL
+    public static final String TRANSACTION_JSP_URL = "/payments/transaction.jsp";
+    //    Transaction URL
+    public static final String TRANSACTION_URL = "/payments/transaction";
+    public static final String PAY_TRANSACTION_URL = "/payments/processTransaction";
+
     /* ********************************* */
 }

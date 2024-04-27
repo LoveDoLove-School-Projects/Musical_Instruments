@@ -1,8 +1,8 @@
 package controllers;
 
-import domain.common.Common;
-import domain.common.Constants;
-import domain.models.Session;
+import common.Common;
+import common.Constants;
+import entities.Session;
 import features.SessionHandler;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -13,7 +13,7 @@ import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.EnumMap;
 import java.util.Map;
-import services.OtpServices;
+import dao.OtpDao;
 import utilities.RedirectUtilities;
 import utilities.RedirectUtilities.RedirectType;
 import utilities.StringUtilities;
@@ -33,7 +33,7 @@ public class Login2FAServlet extends HttpServlet {
         STATUS_MESSAGES.put(Common.Status.INVALID, "Invalid OTP!");
     }
     private final SessionHandler sessionHandler = new SessionHandler();
-    private final OtpServices otpServices = new OtpServices();
+    private final OtpDao otpServices = new OtpDao();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

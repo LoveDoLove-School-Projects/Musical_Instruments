@@ -1,8 +1,8 @@
 package controllers.products;
 
-import domain.common.Constants;
-import domain.models.Session;
+import common.Constants;
 import entities.Products;
+import entities.Session;
 import features.SessionHandler;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -17,10 +17,8 @@ import utilities.RedirectUtilities;
 public class ViewProductServlet extends HttpServlet {
 
     private static final SessionHandler sessionHandler = new SessionHandler();
-
     @PersistenceContext
     EntityManager entityManager;
-   
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -42,6 +40,5 @@ public class ViewProductServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
     }
 }
