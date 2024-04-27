@@ -3,12 +3,18 @@
 <c:set var="path" value="${pageContext.request.contextPath}" />
 <c:set var="basePath" value="${pageContext.request.scheme}://${pageContext.request.serverName}:${pageContext.request.serverPort}${path}/" />
 <%@ page import="java.util.List" %>
+<%@ page import="java.util.Base64"%>
+<%@ page import="utilities.FileUtilities"%>
 <%@ page import="entities.Products" %>
+<jsp:useBean id="productDetails" class="entities.Products" scope="session"></jsp:useBean>
+<%
+String IMAGE_DEFAULT_PATH = "assets/database/productImage/";
+%>
 <!DOCTYPE html>
 <html>
     <head>
         <jsp:include page="/defaults/head.jsp" />
-        <title>Pr Details</title>
+        <title>Product Details</title>
         <style>
             body {
                 padding-top: 20px;
@@ -16,41 +22,59 @@
             .card {
                 margin-bottom: 20px;
             }
+
+            .productImage{
+                background-color: #d9d9e1;
+                border: solid black 0px;
+            }
         </style>
     </head>
     <body>
         <jsp:include page="/defaults/header.jsp" />
 
         <div class="container">
+
             <div class="row">
                 <div class="col-md-10 offset-md-1">
-                    <h1 class="text-center mb-4">Customer Details</h1>
-                    <% Customers customerDetails = (Customers) session.getAttribute("customerDetails"); %>
+                    <h1 class="text-center mb-4">Product Details</h1>
                     <div class="card">
+                        <%
+
+            String imageSrc = null;
+            byte[] pictureBytes = FileUtilities.readDirectoryContent(IMAGE_DEFAULT_PATH + productDetails.getImagePath());
+            if (pictureBytes != null && pictureBytes.length != 0) {
+                String pictureBase64 = Base64.getEncoder().encodeToString(pictureBytes);
+                imageSrc = "data:image/png;base64," + pictureBase64; // Change "image/png" based on the actual image type
+            }
+                        %>
                         <div class="card-body">
-                            <h5 class="card-title"><strong><%=customerDetails.getUsername() %></strong></h5>
+
+                            <div class="col-3 p-1 d-flex justify-content-center align-content-centers productImage">
+                                <img src="<%if(imageSrc!=null) { %><%=imageSrc%> <%}%>" class="img-fluid w-100 m-5" alt="<%=productDetails.getName() %>">
+                            </div>
                             <ul class="list-group list-group-flush">
-                                <li class="list-group-item"><strong>ID:</strong> <%=customerDetails.getUserId() %></li>
-                                <li class="list-group-item"><strong>Gender:</strong> <%=customerDetails.getGender() %></li>
-                                <li class="list-group-item"><strong>Email:</strong> <%=customerDetails.getEmail() %></li>
-                                <li class="list-group-item"><strong>Address:</strong> <%=customerDetails.getAddress() %></li>
-                                <li class="list-group-item"><strong>Phone Number:</strong> <%=customerDetails.getPhoneNumber() %></li>
-                                <li class="list-group-item"><strong>Two Factor Authentication:</strong> <%=customerDetails.getTwoFactorAuth() ? "Activated" : "Deactivated" %></li>
-                                <li class="list-group-item"><strong>Account Creation Date:</strong> <%=customerDetails.getAccountCreationDate() %></li>
+
+                                <li class="list-group-item"><strong>Product ID:</strong> <%=productDetails.getProductId() %></li>
+                                <li class="list-group-item"><strong>Name:</strong> <%=productDetails.getName() %></li>
+                                <li class="list-group-item"><strong>Price(RM):</strong> <%=productDetails.getPrice() %></li>
+                                <li class="list-group-item"><strong>Color:</strong> <%=productDetails.getColor() %></li>
+                                <li class="list-group-item"><strong>Quantity:</strong> <%=productDetails.getQuantity() %></li>
+                                <li class="list-group-item"><strong>Category:</strong> <%=productDetails.getCategory() %></li>
+
                             </ul>
                             <div class="row">
                                 <div class="col-md-2">
-                                    <a href="pages/staffs/searchCustomer.jsp" class="btn btn-primary mr-2">Go back</a>
+                                    <a href="pages/staffs/searchProduct.jsp" class="btn btn-primary mr-2">Go back</a>
                                 </div>
                                 <div class="col-md-2">
-                                    <a href="pages/staffs/modifyCustomer.jsp" class="btn btn-success mr-2">Modify</a>
+                                    <a href="pages/staffs/#" class="btn btn-success mr-2">Modify</a>
                                 </div>
                                 <div class="col-md-1">
                                     <%
-                                        boolean isAdmin = request.isUserInRole("Admin");
-                                        if (isAdmin) { %>
+                                     boolean isAdmin = request.isUserInRole("Admin");
+                                     if (isAdmin) { %>
                                     <form action="pages/admins/DeleteCustomerServlet" method="post" id="deleteCustomerForm">
-                                        <input type="hidden" name="userId" value="<%=customerDetails.getUserId() %>"/>
+                                        <input type="hidden" name="productID" value="<%=productDetails.getProductId() %>" />
                                         <button class="btn btn-danger">Delete</button>
                                     </form>
                                     <% } %>

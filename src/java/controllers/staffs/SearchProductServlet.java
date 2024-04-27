@@ -1,7 +1,6 @@
 package controllers.staffs;
 
-import common.Constants;
-import entities.Customers;
+import entities.Products;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.servlet.ServletException;
@@ -11,9 +10,13 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
+import java.util.logging.Logger;
+
 import utilities.RedirectUtilities;
 
 public class SearchProductServlet extends HttpServlet {
+
+    private static final Logger LOG = Logger.getLogger(SearchProductServlet.class.getName());
 
     @PersistenceContext
     EntityManager entityManager;
@@ -21,21 +24,26 @@ public class SearchProductServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
         String searchQuery = request.getParameter("searchQuery");
+
         if (searchQuery.isBlank() || searchQuery.trim().isEmpty()) {
-            RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Please fill in the customer email!", Constants.ADMIN_SEARCH_CUSTOMER_JSP_URL);
+            RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Please fill in the product ID!", "/pages/staffs/searchProduct.jsp");
             return;
         }
-        List<Customers> customerList = entityManager.createNamedQuery("Customers.findByEmail", Customers.class).setParameter("email", searchQuery).getResultList();
-        if (customerList == null || customerList.isEmpty()) {
-            RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Email address does not exist!", Constants.ADMIN_SEARCH_CUSTOMER_JSP_URL);
-            return;
+
+        try {
+            List<Products> productList = entityManager.createNamedQuery("Products.findByProductId", Products.class).setParameter("productId", Integer.valueOf(searchQuery)).getResultList();
+            if (productList == null || productList.isEmpty()) {
+                RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Product not existed!", "/pages/staffs/searchProduct.jsp");
+                return;
+            }
+            Products product = productList.get(0);
+            HttpSession session = request.getSession(false);
+            session.setAttribute("productDetails", product);
+            RedirectUtilities.sendRedirect(request, response, "/pages/staffs/manageProduct.jsp");
+        } catch (IOException | NumberFormatException ex) {
+            RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Please a valid product ID!", "/pages/staffs/searchProduct.jsp");
         }
-        Customers customer = customerList.get(0);
-        HttpSession session = request.getSession();
-        session.setAttribute("customerDetails", customer);
-        RedirectUtilities.sendRedirect(request, response, "/pages/staffs/manageCustomer");
     }
 
 }
