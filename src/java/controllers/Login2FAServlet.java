@@ -2,10 +2,10 @@ package controllers;
 
 import common.Common;
 import common.Constants;
+import dao.OtpDao;
 import entities.Session;
 import features.SessionChecker;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -13,12 +13,10 @@ import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.EnumMap;
 import java.util.Map;
-import dao.OtpDao;
 import utilities.RedirectUtilities;
 import utilities.RedirectUtilities.RedirectType;
 import utilities.StringUtilities;
 
-@WebServlet(name = "Login2FAServlet", urlPatterns = "/sessions/login2fa")
 public class Login2FAServlet extends HttpServlet {
 
     private static final String LOGIN_2FA_JSP_URL = "/sessions/login2fa.jsp";
@@ -32,7 +30,7 @@ public class Login2FAServlet extends HttpServlet {
         STATUS_MESSAGES.put(Common.Status.FAILED, "Failed to verify OTP! Please try again.");
         STATUS_MESSAGES.put(Common.Status.INVALID, "Invalid OTP!");
     }
-    private final SessionChecker sessionHandler = new SessionChecker();
+    private final SessionChecker sessionChecker = new SessionChecker();
     private final OtpDao otpDao = new OtpDao();
 
     @Override
@@ -87,7 +85,7 @@ public class Login2FAServlet extends HttpServlet {
         if (otpStatus == Common.Status.OK) {
             session.invalidate();
             session = request.getSession(true);
-            sessionHandler.setLoginSession(session, attributes.getUserId());
+            sessionChecker.setLoginSession(session, attributes.getUserId());
             RedirectUtilities.sendRedirect(request, response, Constants.PROFILE_URL);
         } else {
             String message = STATUS_MESSAGES.getOrDefault(otpStatus, "Failed to verify OTP!");

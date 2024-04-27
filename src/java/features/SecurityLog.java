@@ -1,4 +1,4 @@
-package utilities;
+package features;
 
 import dao.SecurityLogDao;
 import entities.Internalsecuritylog;
@@ -8,7 +8,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
-public class SecurityLogUtilities {
+public class SecurityLog {
 
     private static final SecurityLogDao SECURITY_LOG_DAO = new SecurityLogDao();
 

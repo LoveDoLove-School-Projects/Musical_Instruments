@@ -16,13 +16,13 @@ import utilities.RedirectUtilities;
 
 public class ViewProductServlet extends HttpServlet {
 
-    private static final SessionChecker sessionHandler = new SessionChecker();
+    private static final SessionChecker sessionChecker = new SessionChecker();
     @PersistenceContext
     EntityManager entityManager;
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        Session session = sessionHandler.getLoginSession(request.getSession());
+        Session session = sessionChecker.getLoginSession(request.getSession());
         if (session.isResult()) {
             String productId = request.getParameter("product_id");
             List<Products> productList = entityManager.createNamedQuery("Products.findByProductId").setParameter("productId", Integer.valueOf(productId)).getResultList();

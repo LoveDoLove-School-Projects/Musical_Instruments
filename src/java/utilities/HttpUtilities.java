@@ -1,7 +1,6 @@
 package utilities;
 
 import com.google.gson.Gson;
-import common.Common;
 import enviroments.Enviroment;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -17,7 +16,7 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
-public class HttpUtilities {
+public final class HttpUtilities {
 
     private static final Logger LOG = Logger.getLogger(HttpUtilities.class.getName());
     private static final Gson gson = new Gson();
@@ -37,7 +36,7 @@ public class HttpUtilities {
         }
     };
 
-    public static Common.Status sendHttpJsonRequest(String urlConnection, Object object) {
+    public static boolean sendHttpJsonRequest(String urlConnection, Object object) {
         String timestamp = String.valueOf(System.currentTimeMillis());
         String jsonPayload = gson.toJson(object);
         String combineContent = timestamp + jsonPayload;
@@ -71,10 +70,10 @@ public class HttpUtilities {
             }
             System.out.println("Response Code: " + responseCode);
             System.out.println("Response Body: " + response.toString());
-            return responseCode == 200 ? Common.Status.OK : Common.Status.INTERNAL_SERVER_ERROR;
+            return responseCode == 200;
         } catch (IOException | KeyManagementException | NoSuchAlgorithmException ex) {
             LOG.severe(ex.getMessage());
-            return Common.Status.INTERNAL_SERVER_ERROR;
+            return false;
         } finally {
             if (connection != null) {
                 connection.disconnect();
@@ -82,7 +81,7 @@ public class HttpUtilities {
         }
     }
 
-    public static Common.Status sendHttpJsonRequest(String urlConnection, String jsonPayload) {
+    public static boolean sendHttpJsonRequest(String urlConnection, String jsonPayload) {
         String timestamp = String.valueOf(System.currentTimeMillis());
         String combineContent = timestamp + jsonPayload;
         String signature = AesUtilities.aes256EcbEncrypt(combineContent, Enviroment.SECRET_KEY);
@@ -115,10 +114,10 @@ public class HttpUtilities {
             }
             System.out.println("Response Code: " + responseCode);
             System.out.println("Response Body: " + response.toString());
-            return responseCode == 200 ? Common.Status.OK : Common.Status.INTERNAL_SERVER_ERROR;
+            return responseCode == 200;
         } catch (IOException | KeyManagementException | NoSuchAlgorithmException ex) {
             LOG.severe(ex.getMessage());
-            return Common.Status.INTERNAL_SERVER_ERROR;
+            return false;
         } finally {
             if (connection != null) {
                 connection.disconnect();
