@@ -158,6 +158,17 @@ public class Products implements Serializable {
 
     @Override
     public String toString() {
-        return "entities.Products[ productId=" + productId + " ]";
+        StringBuilder sb = new StringBuilder();
+        sb.append("Products{");
+        sb.append("productId=").append(productId);
+        sb.append(", name=").append(name);
+        sb.append(", price=").append(price);
+        sb.append(", color=").append(color);
+        sb.append(", quantity=").append(quantity);
+        sb.append(", category=").append(category);
+        sb.append(", imagePath=").append(imagePath);
+        sb.append('}');
+        return sb.toString();
     }
+
 }
