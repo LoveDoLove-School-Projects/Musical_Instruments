@@ -3,7 +3,7 @@ package controllers.products;
 import common.Common;
 import common.Constants;
 import entities.Products;
-import features.SessionHandler;
+import features.SessionChecker;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.servlet.ServletException;
@@ -17,7 +17,7 @@ import java.util.Map;
 
 public class ProductServlet extends HttpServlet {
 
-    private static final SessionHandler sessionHandle =new SessionHandler();
+    private static final SessionChecker sessionHandle =new SessionChecker();
     private static final Map<Common.PRODUCT_CATEGORIES, String> PRODUCT_DETAILS;
     @PersistenceContext
     EntityManager entityManager;

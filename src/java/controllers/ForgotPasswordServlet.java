@@ -5,8 +5,8 @@ import common.Constants;
 import entities.Customers;
 import entities.Resetpassword;
 import exceptions.DatabaseException;
-import features.AesHandler;
-import features.MailHandler;
+import features.AesProtector;
+import features.MailSender;
 import jakarta.annotation.Resource;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -30,7 +30,7 @@ import utilities.ValidationUtilities;
 
 public class ForgotPasswordServlet extends HttpServlet {
 
-    private final MailHandler mailHandler = new MailHandler();
+    private final MailSender mailHandler = new MailSender();
     private static final String SUBJECT = "Reset Password";
     private static final String CONTENT = "<!DOCTYPE html><html lang='en'><head><meta charset='UTF-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Reset Password Design</title><style>body{font-family:Arial,sans-serif}.container{width:100%;max-width:600px;margin:0 auto}.card{border:1px solid #ddd;border-radius:5px;margin-top:50px;padding:20px;text-align:center}.card-title{font-size:24px;margin-bottom:20px}.card-text{font-size:18px;margin-bottom:20px}.btn{display:inline-block;color:#fff;background-color:#007bff;border-color:#007bff;padding:.375rem .75rem;font-size:1rem;line-height:1.5;border-radius:.25rem;text-decoration:none}.btn:hover{background-color:#0056b3}</style></head><body><div class='container'><div class='card'><h5 class='card-title'>Reset Your Password</h5><p class='card-text'>You requested to reset your password. Click the button below to continue.</p><a href='${resetPasswordLink}' class='btn'>Reset Password</a><p class='card-text'>If the button doesn't work, you can also use the following link to reset your password: <a href='${resetPasswordLink}'>${resetPasswordLink}</a></p></div></div></body></html>";
     @PersistenceContext
@@ -81,7 +81,7 @@ public class ForgotPasswordServlet extends HttpServlet {
     private String generateResetPasswordURL(HttpServletRequest request, String email) {
         String timestamp = String.valueOf(System.currentTimeMillis());
         String makeToken = email + timestamp;
-        String token = AesHandler.aes256EcbEncrypt(makeToken).replace("/", "").replace("+", "").replace("=", "");
+        String token = AesProtector.aes256EcbEncrypt(makeToken).replace("/", "").replace("+", "").replace("=", "");
         Resetpassword resetPassword = new Resetpassword(email, token);
         boolean isAdded = addNewResetPassword(resetPassword);
         if (!isAdded) {

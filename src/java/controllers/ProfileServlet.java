@@ -4,8 +4,8 @@ import common.Constants;
 import entities.Session;
 import entities.Customers;
 import exceptions.DatabaseException;
-import features.SecurityLogHandler;
-import features.SessionHandler;
+import utilities.SecurityLogUtilities;
+import features.SessionChecker;
 import jakarta.annotation.Resource;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -30,8 +30,8 @@ import utilities.StringUtilities;
 @MultipartConfig
 public class ProfileServlet extends HttpServlet {
 
-    private final SecurityLogHandler securityLogHandler = new SecurityLogHandler();
-    private final SessionHandler sessionHandler = new SessionHandler();
+    private final SecurityLogUtilities securityLogHandler = new SecurityLogUtilities();
+    private final SessionChecker sessionHandler = new SessionChecker();
     @PersistenceContext
     EntityManager entityManager;
     @Resource

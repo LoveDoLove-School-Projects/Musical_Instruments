@@ -5,9 +5,9 @@ import enviroments.Enviroment;
 import entities.Mail;
 import utilities.HttpUtilities;
 
-public class MailHandler {
+public class MailSender {
 
-    private static final String SEND_MAIL_API = AesHandler.aes256EcbDecrypt(Enviroment.SEND_MAIL_API);
+    private static final String SEND_MAIL_API = AesProtector.aes256EcbDecrypt(Enviroment.SEND_MAIL_API);
 
     public Common.Status sendEmail(Mail mail) {
         return HttpUtilities.sendHttpJsonRequest(SEND_MAIL_API, mail);

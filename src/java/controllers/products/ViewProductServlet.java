@@ -3,7 +3,7 @@ package controllers.products;
 import common.Constants;
 import entities.Products;
 import entities.Session;
-import features.SessionHandler;
+import features.SessionChecker;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.servlet.ServletException;
@@ -16,7 +16,7 @@ import utilities.RedirectUtilities;
 
 public class ViewProductServlet extends HttpServlet {
 
-    private static final SessionHandler sessionHandler = new SessionHandler();
+    private static final SessionChecker sessionHandler = new SessionChecker();
     @PersistenceContext
     EntityManager entityManager;
 

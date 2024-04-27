@@ -1,10 +1,10 @@
 package dao;
 
-import controllers.ConnectionController;
 import common.Common;
+import controllers.ConnectionController;
 import entities.Otps;
 import exceptions.DatabaseException;
-import features.MailHandler;
+import features.MailSender;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -23,14 +23,14 @@ public class OtpDao {
     private static final String UPDATE_OTP_SQL = "UPDATE otps SET otp = ?, try_count = ? WHERE email = ?";
     private static final String DELETE_OTP_SQL = "DELETE FROM otps WHERE email = ?";
     private static final String UPDATE_TRY_COUNT_SQL = "UPDATE otps SET try_count = ? WHERE email = ?";
-    private static final MailHandler MAIL_SERVICES = new MailHandler();
+    private static final MailSender MAIL_HANDLER = new MailSender();
 
     public Common.Status sendOtp(String email) {
         if (StringUtilities.anyNullOrBlank(email)) {
             return Common.Status.INVALID;
         }
         String otp = RandomUtilities.generateOtp();
-        Common.Status mailStatus = MAIL_SERVICES.sendEmail(email, SUBJECT, CONTENT.replace("${otpvalue}", otp));
+        Common.Status mailStatus = MAIL_HANDLER.sendEmail(email, SUBJECT, CONTENT.replace("${otpvalue}", otp));
         if (mailStatus != Common.Status.OK) {
             return mailStatus;
         }

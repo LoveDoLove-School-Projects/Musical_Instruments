@@ -3,7 +3,7 @@ package controllers;
 import common.Constants;
 import entities.Customers;
 import entities.Resetpassword;
-import features.AesHandler;
+import features.AesProtector;
 import jakarta.annotation.Resource;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -72,7 +72,7 @@ public class ResetPasswordServlet extends HttpServlet {
                 return;
             }
             Customers customer = customers.get(0);
-            customer.setPassword(AesHandler.aes256EcbEncrypt(newPassword));
+            customer.setPassword(AesProtector.aes256EcbEncrypt(newPassword));
             entityManager.merge(customer);
             userTransaction.commit();
             // Delete reset password token

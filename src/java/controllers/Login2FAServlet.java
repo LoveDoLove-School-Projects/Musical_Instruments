@@ -3,7 +3,7 @@ package controllers;
 import common.Common;
 import common.Constants;
 import entities.Session;
-import features.SessionHandler;
+import features.SessionChecker;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -32,8 +32,8 @@ public class Login2FAServlet extends HttpServlet {
         STATUS_MESSAGES.put(Common.Status.FAILED, "Failed to verify OTP! Please try again.");
         STATUS_MESSAGES.put(Common.Status.INVALID, "Invalid OTP!");
     }
-    private final SessionHandler sessionHandler = new SessionHandler();
-    private final OtpDao otpServices = new OtpDao();
+    private final SessionChecker sessionHandler = new SessionChecker();
+    private final OtpDao otpDao = new OtpDao();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -63,7 +63,7 @@ public class Login2FAServlet extends HttpServlet {
             setLogin2FAPage(request, response);
             return;
         }
-        Common.Status otpStatus = otpServices.verifyOtp(attributes.getEmail(), otp);
+        Common.Status otpStatus = otpDao.verifyOtp(attributes.getEmail(), otp);
         handleOtpStatus(otpStatus, request, response, session, attributes);
     }
 
