@@ -17,7 +17,7 @@ response.setHeader("Cache-Control", "no-store");
     <body>
         <jsp:include page="/defaults/message.jsp" />
         <section class="vh-100" style="background-color: #eee;">
-            <form method="POST" action="sessions/login2fa" id="otpForm">
+            <form method="POST" action="sessions/register2fa" id="otpForm">
                 <center>
                     <div class="container py-5 h-100">
                         <div class="row justify-content-center align-items-center h-100">

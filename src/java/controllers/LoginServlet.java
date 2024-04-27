@@ -2,8 +2,9 @@ package controllers;
 
 import common.Common;
 import common.Constants;
-import entities.Session;
+import dao.OtpDao;
 import entities.Customers;
+import entities.Session;
 import exceptions.DatabaseException;
 import features.AesProtector;
 import features.SessionChecker;
@@ -16,7 +17,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
-import dao.OtpDao;
 import utilities.RedirectUtilities;
 import utilities.RedirectUtilities.RedirectType;
 import utilities.StringUtilities;
@@ -24,8 +24,8 @@ import utilities.StringUtilities;
 public class LoginServlet extends HttpServlet {
 
     private static final String LOGIN_2FA_URL = "/sessions/login2fa";
+    private final SessionChecker sessionChecker = new SessionChecker();
     private final OtpDao otpDao = new OtpDao();
-    private final SessionChecker sessionHandler = new SessionChecker();
     @PersistenceContext
     EntityManager entityManager;
 
@@ -40,7 +40,7 @@ public class LoginServlet extends HttpServlet {
     }
 
     private void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        Session session = sessionHandler.getLoginSession(request.getSession());
+        Session session = sessionChecker.getLoginSession(request.getSession());
         if (session.isResult()) {
             RedirectUtilities.sendRedirect(request, response, Constants.PROFILE_URL);
             return;
@@ -97,7 +97,7 @@ public class LoginServlet extends HttpServlet {
     private void checkNeedTwoFactorAuthOrNot(HttpServletRequest request, HttpServletResponse response, Customers customer) throws ServletException, IOException {
         HttpSession session = request.getSession(true);
         if (!customer.getTwoFactorAuth()) {
-            sessionHandler.setLoginSession(session, customer.getUserId());
+            sessionChecker.setLoginSession(session, customer.getUserId());
             RedirectUtilities.sendRedirect(request, response, Constants.PROFILE_URL);
         } else {
             requiredTwoFactorAuth(request, response, customer, session);

@@ -23,16 +23,16 @@ public class OtpDao {
     private static final String UPDATE_OTP_SQL = "UPDATE otps SET otp = ?, try_count = ? WHERE email = ?";
     private static final String DELETE_OTP_SQL = "DELETE FROM otps WHERE email = ?";
     private static final String UPDATE_TRY_COUNT_SQL = "UPDATE otps SET try_count = ? WHERE email = ?";
-    private static final MailSender MAIL_HANDLER = new MailSender();
+    private static final MailSender MAIL_SENDER = new MailSender();
 
     public Common.Status sendOtp(String email) {
         if (StringUtilities.anyNullOrBlank(email)) {
             return Common.Status.INVALID;
         }
         String otp = RandomUtilities.generateOtp();
-        Common.Status mailStatus = MAIL_HANDLER.sendEmail(email, SUBJECT, CONTENT.replace("${otpvalue}", otp));
-        if (mailStatus != Common.Status.OK) {
-            return mailStatus;
+        boolean mailStatus = MAIL_SENDER.sendEmail(email, SUBJECT, CONTENT.replace("${otpvalue}", otp));
+        if (!mailStatus) {
+            return Common.Status.INTERNAL_SERVER_ERROR;
         }
         boolean otpExists = isOtpExists(email);
         if (otpExists ? updateOtp(email, otp) : addOtp(email, otp)) {

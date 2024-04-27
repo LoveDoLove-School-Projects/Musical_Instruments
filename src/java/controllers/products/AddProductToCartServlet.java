@@ -24,7 +24,7 @@ import utilities.RedirectUtilities;
 
 public class AddProductToCartServlet extends HttpServlet {
 
-    private static final SessionChecker sessionHandler = new SessionChecker();
+    private static final SessionChecker sessionChecker = new SessionChecker();
     @PersistenceContext
     EntityManager entityManager;
     @Resource
@@ -33,7 +33,7 @@ public class AddProductToCartServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        Session session = sessionHandler.getLoginSession(request.getSession());
+        Session session = sessionChecker.getLoginSession(request.getSession());
         if (!session.isResult()) {
             RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Please login to view this page.", Constants.CUSTOMER_LOGIN_URL);
             return;

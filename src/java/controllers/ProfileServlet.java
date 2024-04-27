@@ -1,10 +1,10 @@
 package controllers;
 
 import common.Constants;
-import entities.Session;
 import entities.Customers;
+import entities.Session;
 import exceptions.DatabaseException;
-import utilities.SecurityLogUtilities;
+import features.SecurityLog;
 import features.SessionChecker;
 import jakarta.annotation.Resource;
 import jakarta.persistence.EntityManager;
@@ -30,8 +30,7 @@ import utilities.StringUtilities;
 @MultipartConfig
 public class ProfileServlet extends HttpServlet {
 
-    private final SecurityLogUtilities securityLogHandler = new SecurityLogUtilities();
-    private final SessionChecker sessionHandler = new SessionChecker();
+    private final SessionChecker sessionChecker = new SessionChecker();
     @PersistenceContext
     EntityManager entityManager;
     @Resource
@@ -48,7 +47,7 @@ public class ProfileServlet extends HttpServlet {
     }
 
     private void handleProfile(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        Session session = sessionHandler.getLoginSession(request.getSession());
+        Session session = sessionChecker.getLoginSession(request.getSession());
         if (!session.isResult()) {
             RedirectUtilities.redirectWithMessage(request, response, RedirectType.DANGER, "Please login to view this page.", "/");
             return;
@@ -100,7 +99,7 @@ public class ProfileServlet extends HttpServlet {
         Customers customer = new Customers(session.getUserId(), pictureBytes);
         boolean isUploaded = uploadPicture(customer);
         if (isUploaded) {
-            securityLogHandler.addSecurityLog(request, session, "Uploaded picture.");
+            SecurityLog.addSecurityLog(request, session, "Uploaded picture.");
             RedirectUtilities.setMessage(request, RedirectType.SUCCESS, "Picture uploaded successfully.");
         } else {
             RedirectUtilities.setMessage(request, RedirectType.DANGER, "Error uploading picture.");
@@ -130,7 +129,7 @@ public class ProfileServlet extends HttpServlet {
         Customers customer = new Customers(session.getUserId());
         boolean isRemoved = removePicture(customer);
         if (isRemoved) {
-            securityLogHandler.addSecurityLog(request, session, "Removed picture.");
+            SecurityLog.addSecurityLog(request, session, "Removed picture.");
             RedirectUtilities.setMessage(request, RedirectType.SUCCESS, "Picture removed successfully.");
         } else {
             RedirectUtilities.setMessage(request, RedirectType.DANGER, "Error removing picture.");
@@ -169,7 +168,7 @@ public class ProfileServlet extends HttpServlet {
         Customers customer = new Customers(session.getUserId(), username, address, phoneNumber, gender, two_factor_auth);
         boolean isUpdated = updateProfile(customer);
         if (isUpdated) {
-            securityLogHandler.addSecurityLog(request, session, "Updated profile.");
+            SecurityLog.addSecurityLog(request, session, "Updated profile.");
             RedirectUtilities.setMessage(request, RedirectType.SUCCESS, "Profile updated successfully.");
         } else {
             RedirectUtilities.setMessage(request, RedirectType.DANGER, "Error updating profile.");

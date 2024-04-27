@@ -145,10 +145,6 @@ public class Customers implements Serializable {
         this.accountCreationDate = accountCreationDate;
     }
 
-    public Customers(String username, String password, String confirm_password, String email, String address, String phone_number, String gender) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
     public Integer getUserId() {
         return userId;
     }
