@@ -1,9 +1,9 @@
 package controllers.products;
 
-import domain.common.Constants;
-import domain.models.Session;
+import common.Constants;
 import entities.Carts;
 import entities.Products;
+import entities.Session;
 import exceptions.DatabaseException;
 import features.SessionHandler;
 import jakarta.annotation.Resource;
@@ -25,7 +25,6 @@ import utilities.RedirectUtilities;
 public class AddProductToCartServlet extends HttpServlet {
 
     private static final SessionHandler sessionHandler = new SessionHandler();
-
     @PersistenceContext
     EntityManager entityManager;
     @Resource
@@ -59,7 +58,6 @@ public class AddProductToCartServlet extends HttpServlet {
             entityManager.persist(cart);
             userTransaction.commit();
             RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.SUCCESS, "Your cart has been added!", Constants.PRODUCT_URL);
-
         } catch (HeuristicMixedException | HeuristicRollbackException | NotSupportedException | RollbackException | SystemException | IOException | IllegalStateException | NumberFormatException | SecurityException ex) {
             throw new DatabaseException(ex.getMessage());
         }
