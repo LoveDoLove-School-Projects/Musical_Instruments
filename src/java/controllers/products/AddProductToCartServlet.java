@@ -5,7 +5,7 @@ import entities.Carts;
 import entities.Products;
 import entities.Session;
 import exceptions.DatabaseException;
-import features.SessionHandler;
+import features.SessionChecker;
 import jakarta.annotation.Resource;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -24,7 +24,7 @@ import utilities.RedirectUtilities;
 
 public class AddProductToCartServlet extends HttpServlet {
 
-    private static final SessionHandler sessionHandler = new SessionHandler();
+    private static final SessionChecker sessionHandler = new SessionChecker();
     @PersistenceContext
     EntityManager entityManager;
     @Resource

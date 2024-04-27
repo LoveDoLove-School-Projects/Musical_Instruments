@@ -4,8 +4,8 @@ import common.Common;
 import common.Constants;
 import entities.Customers;
 import entities.Session;
-import features.AesHandler;
-import features.SessionHandler;
+import features.AesProtector;
+import features.SessionChecker;
 import jakarta.annotation.Resource;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -29,7 +29,7 @@ import utilities.ValidationUtilities;
 
 public class RegisterServlet extends HttpServlet {
 
-    private final SessionHandler sessionHandler = new SessionHandler();
+    private final SessionChecker sessionHandler = new SessionChecker();
     @PersistenceContext
     EntityManager entityManager;
     @Resource
@@ -94,7 +94,7 @@ public class RegisterServlet extends HttpServlet {
 
     private Common.Status registerNewCustomer(Customers customer) {
         customer.setUsername(customer.getUsername());
-        customer.setPassword(AesHandler.aes256EcbEncrypt(customer.getPassword()));
+        customer.setPassword(AesProtector.aes256EcbEncrypt(customer.getPassword()));
         customer.setEmail(customer.getEmail());
         customer.setAddress(customer.getAddress());
         customer.setPhoneNumber(customer.getPhoneNumber());

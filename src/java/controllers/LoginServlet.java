@@ -5,8 +5,8 @@ import common.Constants;
 import entities.Session;
 import entities.Customers;
 import exceptions.DatabaseException;
-import features.AesHandler;
-import features.SessionHandler;
+import features.AesProtector;
+import features.SessionChecker;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.servlet.ServletException;
@@ -24,8 +24,8 @@ import utilities.StringUtilities;
 public class LoginServlet extends HttpServlet {
 
     private static final String LOGIN_2FA_URL = "/sessions/login2fa";
-    private final OtpDao otpServices = new OtpDao();
-    private final SessionHandler sessionHandler = new SessionHandler();
+    private final OtpDao otpDao = new OtpDao();
+    private final SessionChecker sessionHandler = new SessionChecker();
     @PersistenceContext
     EntityManager entityManager;
 
@@ -83,7 +83,7 @@ public class LoginServlet extends HttpServlet {
 
     private Customers tryCustomerLogin(Customers customer) throws DatabaseException {
         try {
-            String encryptedPassword = AesHandler.aes256EcbEncrypt(customer.getPassword());
+            String encryptedPassword = AesProtector.aes256EcbEncrypt(customer.getPassword());
             List<Customers> customerList = entityManager.createNamedQuery("Customers.findByEmailAndPassword", Customers.class)
                     .setParameter("email", customer.getEmail())
                     .setParameter("password", encryptedPassword)
@@ -105,7 +105,7 @@ public class LoginServlet extends HttpServlet {
     }
 
     private void requiredTwoFactorAuth(HttpServletRequest request, HttpServletResponse response, Customers customer, HttpSession session) throws ServletException, IOException {
-        if (otpServices.sendOtp(customer.getEmail()) != Common.Status.OK) {
+        if (otpDao.sendOtp(customer.getEmail()) != Common.Status.OK) {
             RedirectUtilities.setMessage(request, RedirectType.DANGER, "There was an error from the server! Please try again later.");
             return;
         }
