@@ -137,10 +137,6 @@
         <url-pattern>/pages/products/addProductToCart</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>CartServlet</servlet-name>
-        <url-pattern>/pages/products/cart</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
         <servlet-name>PaypalServlet</servlet-name>
         <url-pattern>/payments/paypal/success</url-pattern>
     </servlet-mapping>
@@ -160,6 +156,10 @@
     <servlet-mapping>
         <servlet-name>Login2FAServlet</servlet-name>
         <url-pattern>/sessions/login2fa</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CartServlet</servlet-name>
+        <url-pattern>/pages/cart</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>30</session-timeout>

@@ -27,7 +27,7 @@ public final class Constants {
     //    Products JSP URL
     public static final String PRODUCT_JSP_URL = "/pages/products/product.jsp";
     public static final String VIEW_PRODUCT_JSP_URL = "/pages/products/viewProduct.jsp";
-    public static final String CART_PRODUCT_JSP_URL = "/pages/products/cart.jsp";
+    public static final String CART_PRODUCT_JSP_URL = "/pages/cart.jsp";
     //    Products URL
     public static final String PRODUCT_URL = "/pages/products";
     public static final String VIEW_PRODUCT_URL = "/pages/products/viewProducts";
