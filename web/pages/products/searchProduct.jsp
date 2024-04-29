@@ -48,8 +48,7 @@ List<Products> productDetails = (List<Products>) request.getAttribute("products"
                         if (searchResults != null && !searchResults.isEmpty()) {
 
                             for (Products product : searchResults) {
-                                byte[] pictureBytes = FileUtilities.readDirectoryContent(IMAGE_DEFAULT_PATH + product.getImagePath());
-                                String pictureBase64 = Base64.getEncoder().encodeToString(pictureBytes);
+                                 String pictureBase64 = Base64.getEncoder().encodeToString(product.getImage());
                                 String imageSrc = "data:image/png;base64," + pictureBase64; // Change "image/png" based on the actual image type
                         %>
                         <div class="col-6 col-xl-3 col-xxl-3">

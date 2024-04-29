@@ -6,10 +6,10 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
-import java.io.Serializable;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @Entity
@@ -17,22 +17,22 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Carts.findAll", query = "SELECT c FROM Carts c"),
-    @NamedQuery(name = "Carts.findByCardId", query = "SELECT c FROM Carts c WHERE c.cardId = :cardId"),
+    @NamedQuery(name = "Carts.findByCartId", query = "SELECT c FROM Carts c WHERE c.cartId = :cartId"),
     @NamedQuery(name = "Carts.findByCustomerId", query = "SELECT c FROM Carts c WHERE c.customerId = :customerId"),
     @NamedQuery(name = "Carts.findByProductId", query = "SELECT c FROM Carts c WHERE c.productId = :productId"),
     @NamedQuery(name = "Carts.findByProductName", query = "SELECT c FROM Carts c WHERE c.productName = :productName"),
     @NamedQuery(name = "Carts.findByProductQuantity", query = "SELECT c FROM Carts c WHERE c.productQuantity = :productQuantity"),
     @NamedQuery(name = "Carts.findByProductColor", query = "SELECT c FROM Carts c WHERE c.productColor = :productColor"),
     @NamedQuery(name = "Carts.findByProductPrice", query = "SELECT c FROM Carts c WHERE c.productPrice = :productPrice"),
-    @NamedQuery(name = "Carts.findByProductImagePath", query = "SELECT c FROM Carts c WHERE c.productImagePath = :productImagePath")})
-public class Carts implements Serializable {
+    @NamedQuery(name = "Carts.findByProductTotalprice", query = "SELECT c FROM Carts c WHERE c.productTotalprice = :productTotalprice")})
+public class Carts {
 
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
-    @Column(name = "CARD_ID")
-    private Integer cardId;
+    @Column(name = "CART_ID")
+    private Integer cartId;
     @Basic(optional = false)
     @Column(name = "CUSTOMER_ID")
     private int customerId;
@@ -52,33 +52,38 @@ public class Carts implements Serializable {
     @Column(name = "PRODUCT_PRICE")
     private double productPrice;
     @Basic(optional = false)
-    @Column(name = "PRODUCT_IMAGE_PATH")
-    private String productImagePath;
+    @Lob
+    @Column(name = "PRODUCT_IMAGE")
+    private byte[] productImage;
+    @Basic(optional = false)
+    @Column(name = "PRODUCT_TOTALPRICE")
+    private double productTotalprice;
 
     public Carts() {
     }
 
-    public Carts(Integer cardId) {
-        this.cardId = cardId;
+    public Carts(Integer cartId) {
+        this.cartId = cartId;
     }
 
-    public Carts(Integer cardId, int customerId, int productId, String productName, int productQuantity, String productColor, double productPrice, String productImagePath) {
-        this.cardId = cardId;
+    public Carts(Integer cartId, int customerId, int productId, String productName, int productQuantity, String productColor, double productPrice, byte[] productImage, double productTotalprice) {
+        this.cartId = cartId;
         this.customerId = customerId;
         this.productId = productId;
         this.productName = productName;
         this.productQuantity = productQuantity;
         this.productColor = productColor;
         this.productPrice = productPrice;
-        this.productImagePath = productImagePath;
+        this.productImage = productImage;
+        this.productTotalprice = productTotalprice;
     }
 
-    public Integer getCardId() {
-        return cardId;
+    public Integer getCartId() {
+        return cartId;
     }
 
-    public void setCardId(Integer cardId) {
-        this.cardId = cardId;
+    public void setCartId(Integer cartId) {
+        this.cartId = cartId;
     }
 
     public int getCustomerId() {
@@ -129,18 +134,26 @@ public class Carts implements Serializable {
         this.productPrice = productPrice;
     }
 
-    public String getProductImagePath() {
-        return productImagePath;
+    public byte[] getProductImage() {
+        return productImage;
     }
 
-    public void setProductImagePath(String productImagePath) {
-        this.productImagePath = productImagePath;
+    public void setProductImage(byte[] productImage) {
+        this.productImage = productImage;
+    }
+
+    public double getProductTotalprice() {
+        return productTotalprice;
+    }
+
+    public void setProductTotalprice(double productTotalprice) {
+        this.productTotalprice = productTotalprice;
     }
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (cardId != null ? cardId.hashCode() : 0);
+        hash += (cartId != null ? cartId.hashCode() : 0);
         return hash;
     }
 
@@ -151,7 +164,7 @@ public class Carts implements Serializable {
             return false;
         }
         Carts other = (Carts) object;
-        if ((this.cardId == null && other.cardId != null) || (this.cardId != null && !this.cardId.equals(other.cardId))) {
+        if ((this.cartId == null && other.cartId != null) || (this.cartId != null && !this.cartId.equals(other.cartId))) {
             return false;
         }
         return true;
@@ -159,6 +172,6 @@ public class Carts implements Serializable {
 
     @Override
     public String toString() {
-        return "entities.Carts[ cardId=" + cardId + " ]";
+        return "entities.Carts[ cartId=" + cartId + " ]";
     }
 }

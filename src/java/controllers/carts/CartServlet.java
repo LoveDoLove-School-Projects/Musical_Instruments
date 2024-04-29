@@ -29,12 +29,13 @@ public class CartServlet extends HttpServlet {
             return;
         }
         List<Carts> carts = entityManager.createNamedQuery("Carts.findByCustomerId").setParameter("customerId", session.getUserId()).getResultList();
-        if (carts == null) {
+        if (carts == null || carts.isEmpty()) {
             RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Product Not Found!", Constants.PRODUCT_URL);
             return;
+        } else {
+            request.setAttribute("cartDetails", carts);
+            request.getRequestDispatcher(Constants.CART_JSP_URL).forward(request, response);
         }
-        request.setAttribute("cartDetails", carts);
-        request.getRequestDispatcher(Constants.CART_PRODUCT_JSP_URL).forward(request, response);
     }
 
     @Override

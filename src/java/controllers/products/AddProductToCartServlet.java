@@ -39,7 +39,7 @@ public class AddProductToCartServlet extends HttpServlet {
             return;
         }
         String productId = request.getParameter("productId");
-        String productQuantity = request.getParameter("productQuantity");
+        int productQuantity = Integer.valueOf(request.getParameter("productQuantity"));
         Products product = entityManager.find(Products.class, Integer.valueOf(productId));
         if (product == null) {
             RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.WARNING, "Product not found!", Constants.PRODUCT_URL);
@@ -50,14 +50,15 @@ public class AddProductToCartServlet extends HttpServlet {
             Carts cart = new Carts();
             cart.setCustomerId(session.getUserId());
             cart.setProductId(product.getProductId());
-            cart.setProductQuantity(Integer.parseInt(productQuantity));
+            cart.setProductQuantity(productQuantity);
             cart.setProductName(product.getName());
             cart.setProductColor(product.getColor());
             cart.setProductPrice(product.getPrice());
-            cart.setProductImagePath(product.getImagePath());
+            cart.setProductImage(product.getImage());
+            cart.setProductTotalprice(productQuantity*product.getPrice());
             entityManager.persist(cart);
             userTransaction.commit();
-            RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.SUCCESS, "Your cart has been added!", Constants.PRODUCT_URL);
+            RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.SUCCESS, "Your products has been added to cart!", Constants.PRODUCT_URL);
         } catch (HeuristicMixedException | HeuristicRollbackException | NotSupportedException | RollbackException | SystemException | IOException | IllegalStateException | NumberFormatException | SecurityException ex) {
             throw new DatabaseException(ex.getMessage());
         }

@@ -5,18 +5,15 @@
 <%@ page import="java.util.List"%>
 <%@ page import="java.util.Base64"%>
 <%@ page import="utilities.FileUtilities"%>
-<%@ page import="entities.Products" %>
-<%
-String IMAGE_DEFAULT_PATH = "assets/database/productImage/";
-
-%>
+<%@ page import="entities.Carts" %>
 <!DOCTYPE html>
-<html> 
+<html>
     <head>
         <jsp:include page="/defaults/head.jsp" />
         <title>Products Page</title>
     </head>
     <body>
+
         <jsp:include page="/defaults/header.jsp" />
 
         <style>
@@ -63,9 +60,8 @@ String IMAGE_DEFAULT_PATH = "assets/database/productImage/";
                 <div class="container">
                     <div class="row m-5 d-flex align-items-center justify-content-center">
                         <%
-                            Products product = (Products) request.getAttribute("productDetails");
-                            int productId = product.getProductId();
-                            String pictureBase64 = Base64.getEncoder().encodeToString(product.getImage());
+                            Carts carts = (Carts) request.getAttribute("editCartDetails");
+                            String pictureBase64 = Base64.getEncoder().encodeToString(carts.getProductImage());
                             String imageSrc = "data:image/png;base64," + pictureBase64; // Change "image/png" based on the actual image type
                         %>
                         <div class="row m-5 d-flex align-items-center justify-content-center">
@@ -74,19 +70,19 @@ String IMAGE_DEFAULT_PATH = "assets/database/productImage/";
                                     <img src="<%=imageSrc%>" class="img-fluid w-100 m-5">
                                 </div>
                                 <div class="col-7 px-5">
-                                    <h1 class="m-4"><strong><%=product.getName()%></strong></h1>
+                                    <h1 class="m-4"><strong><%=carts.getProductName()%></strong></h1>
                                     <hr>
-                                    <h3 class="my-4"><strong>RM <%=product.getPrice()%></strong></h3>
-                                    <h3 class="my-4"><strong>Stock:</strong> <%=product.getQuantity()%></h3>
-                                    <h3 class="my-4"><strong>Color:</strong> <%=product.getColor()%></h3>
+                                    <h3 class="my-4"><strong>RM <%=carts.getProductPrice()%></strong></h3>
+                                    <h3 class="my-4"><strong>Stock:</strong> <%=carts.getProductQuantity()%></h3>
+                                    <h3 class="my-4"><strong>Color:</strong> <%=carts.getProductColor()%></h3>
                                     <hr>
                                     <h5 class="my-2"><strong>Quantity</strong></h5>
                                     <form method="POST" action="pages/products/addProductToCart" class="qty-container">
                                         <button class="qty-btn-minus" type="button"><i class="fa fa-minus"></i></button>
-                                        <input type="number" name="productQuantity" value="1" class="input-qty w-50 text-center p-2" min="1" max="<%=product.getQuantity()%>"/>
-                                        <input type="hidden" name="productId" value="<%=productId%>"/>
+                                        <input type="number" name="productQuantity" value="1" class="input-qty w-50 text-center p-2" min="1"/>
+                                        <input type="hidden" name="productId" value="<%=carts.getCartId()%>"/>
                                         <button class="qty-btn-plus" type="button"><i class="fa fa-plus"></i></button><br>
-                                        <button type="submit" class="my-4 mx-auto p-2 addtocartbtn"><strong>Add to cart</strong></button>
+                                        <button type="submit" class="my-4 mx-auto p-2 addtocartbtn"><strong>Update cart</strong></button>
                                     </form>
                                 </div>
                             </div>
@@ -95,6 +91,7 @@ String IMAGE_DEFAULT_PATH = "assets/database/productImage/";
                 </div>
             </section>
         </main>
+
 
         <script>
             var buttonPlus = $(".qty-btn-plus");
@@ -119,5 +116,6 @@ String IMAGE_DEFAULT_PATH = "assets/database/productImage/";
         </script>
 
         <jsp:include page="/defaults/footer.jsp" />
+
     </body>
 </html>

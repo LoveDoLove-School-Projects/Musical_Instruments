@@ -30,11 +30,13 @@ public final class Constants {
     public static final String PRODUCT_JSP_URL = "/pages/products/product.jsp";
     public static final String VIEW_PRODUCT_JSP_URL = "/pages/products/viewProduct.jsp";
     public static final String SEARCH_PRODUCT_JSP_URL = "/pages/products/searchProduct.jsp";
-    public static final String CART_PRODUCT_JSP_URL = "/pages/cart.jsp";
+    public static final String CART_JSP_URL = "/pages/carts/cart.jsp";
+    public static final String EDITCART_JSP_URL = "/pages/carts/editCart.jsp";
     //    Products URL
     public static final String PRODUCT_URL = "/pages/products";
     public static final String VIEW_PRODUCT_URL = "/pages/products/viewProducts";
-    public static final String CART_PRODUCT_URL = "/pages/products/cart";
+    public static final String CART_URL = "/pages/products/cart";
+    public static final String EDITCART_URL = "/pages/products/editCart";
     /* ********************************* */
  /* ********************************* */
     //    Admin JSP URL

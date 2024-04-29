@@ -100,6 +100,10 @@
         <servlet-name>RemoveProfilePictureServlet</servlet-name>
         <servlet-class>controllers.RemoveProfilePictureServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>EditCart</servlet-name>
+        <servlet-class>controllers.carts.EditCartServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>LoginServlet</servlet-name>
         <url-pattern>/pages/login</url-pattern>
@@ -215,6 +219,10 @@
     <servlet-mapping>
         <servlet-name>RemoveProfilePictureServlet</servlet-name>
         <url-pattern>/pages/profile/removePicture</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>EditCart</servlet-name>
+        <url-pattern>/pages/carts/editCart</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>30</session-timeout>
