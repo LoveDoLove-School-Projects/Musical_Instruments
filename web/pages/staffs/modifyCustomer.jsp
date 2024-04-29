@@ -15,6 +15,10 @@
             .form-group {
                 margin-bottom: 20px;
             }
+
+            label {
+                font-weight: bold;
+            }
         </style>
     </head>
     <body>

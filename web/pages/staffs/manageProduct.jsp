@@ -39,7 +39,6 @@ String IMAGE_DEFAULT_PATH = "assets/database/productImage/";
                     <h1 class="text-center mb-4">Product Details</h1>
                     <div class="card">
                         <%
-
             String imageSrc = null;
             byte[] pictureBytes = FileUtilities.readDirectoryContent(IMAGE_DEFAULT_PATH + productDetails.getImagePath());
             if (pictureBytes != null && pictureBytes.length != 0) {
@@ -62,19 +61,20 @@ String IMAGE_DEFAULT_PATH = "assets/database/productImage/";
                                 <li class="list-group-item"><strong>Category:</strong> <%=productDetails.getCategory() %></li>
 
                             </ul>
+                            <br>
                             <div class="row">
                                 <div class="col-md-2">
                                     <a href="pages/staffs/searchProduct.jsp" class="btn btn-primary mr-2">Go back</a>
                                 </div>
                                 <div class="col-md-2">
-                                    <a href="pages/staffs/#" class="btn btn-success mr-2">Modify</a>
+                                    <a href="pages/staffs/modifyProduct.jsp" class="btn btn-success mr-2">Modify</a>
                                 </div>
                                 <div class="col-md-1">
                                     <%
                                      boolean isAdmin = request.isUserInRole("Admin");
                                      if (isAdmin) { %>
-                                    <form action="pages/admins/DeleteCustomerServlet" method="post" id="deleteCustomerForm">
-                                        <input type="hidden" name="productID" value="<%=productDetails.getProductId() %>" />
+                                    <form action="pages/admins/DeleteProduct" method="post" id="deleteProductForm">
+                                        <input type="hidden" name="productId" value="<%=productDetails.getProductId() %>" />
                                         <button class="btn btn-danger">Delete</button>
                                     </form>
                                     <% } %>
@@ -91,13 +91,13 @@ String IMAGE_DEFAULT_PATH = "assets/database/productImage/";
         %>
         <script type="module">
             import { showErrorDialog } from "${basePath}assets/js/dialog.js";
-            let deleteCustomerFormElement = document.getElementById("deleteCustomerForm");
-            function setDeleteCustomerForm() {
-                if (deleteCustomerFormElement === null) {
+            let deleteProductFormElement = document.getElementById("deleteProductForm");
+            function setDeleteProductForm() {
+                if (deleteProductFormElement === null) {
                     showErrorDialog("Delete button not found");
                     return;
                 }
-                deleteCustomerFormElement.onsubmit = function (event) {
+                deleteProductFormElement.onsubmit = function (event) {
                     event.preventDefault();
                     Swal.fire({
                         title: "Are you sure?",
@@ -112,11 +112,11 @@ String IMAGE_DEFAULT_PATH = "assets/database/productImage/";
                             event.preventDefault();
                             return
                         }
-                        deleteCustomerFormElement.submit();
+                        deleteProductFormElement.submit();
                     });
                 }
             }
-            setDeleteCustomerForm();
+            setDeleteProductForm();
         </script>
         <%
             }
