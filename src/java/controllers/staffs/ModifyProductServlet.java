@@ -5,6 +5,7 @@ import jakarta.annotation.Resource;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -18,6 +19,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import utilities.RedirectUtilities;
 
+@MultipartConfig
 public class ModifyProductServlet extends HttpServlet {
 
     @PersistenceContext

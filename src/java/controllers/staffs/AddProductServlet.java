@@ -6,6 +6,7 @@ import jakarta.annotation.Resource;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -19,6 +20,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import utilities.RedirectUtilities;
 
+@MultipartConfig
 public class AddProductServlet extends HttpServlet {
 
     @PersistenceContext
@@ -35,7 +37,7 @@ public class AddProductServlet extends HttpServlet {
         String color = request.getParameter("color");
         int quantity = Integer.parseInt(request.getParameter("quantity"));
         String category = request.getParameter("category");
-        InputStream pictureStream = request.getPart("file").getInputStream();
+        InputStream pictureStream = request.getPart("imagePath").getInputStream();
         if (pictureStream == null) {
 //            RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Error uploading picture.", Constants.PROFILE_URL);
             return;

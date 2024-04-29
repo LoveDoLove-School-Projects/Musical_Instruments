@@ -9,11 +9,8 @@ import com.paypal.api.payments.ItemList;
 import com.paypal.api.payments.Payer;
 import com.paypal.api.payments.PayerInfo;
 import com.paypal.api.payments.Payment;
-import com.paypal.api.payments.PaymentExecution;
 import com.paypal.api.payments.RedirectUrls;
 import com.paypal.api.payments.Transaction;
-import com.paypal.base.rest.APIContext;
-import com.paypal.base.rest.PayPalRESTException;
 import entities.Carts;
 import entities.OrderDetails;
 import environments.Enviroment;
@@ -22,25 +19,20 @@ import features.AesProtector;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 import utilities.HttpUtilities;
 
 public class PaypalServices {
 
-    private static final Logger LOG = Logger.getLogger(PaypalServices.class.getName());
     private static final String CLIENT_ID = "AZrjdHeC-KD9nsZVH8HR54O-3ZgvAshjqYq4hiPgXGL7ZKcps159a3mTW-YqLlvLQzBNveUjdpSELOuX";
     private static final String CLIENT_SECRET = "EGwkzMhtunT9dpkeIGuanST6nkKzdwRVFWHofvCYv8HFHy-RMk_A65bfFVw_p08ZCQaIMEtZKXVOswOY";
-    private static final String MODE = "sandbox";
     private static final String RETURN_URL = "http://localhost:8080/Musical_Instruments/payments/paypal/review";
     private static final String CANCEL_URL = "http://localhost:8080/Musical_Instruments/payments/cancel.html";
     private static final String ACCESS_TOKEN_API = AesProtector.aes256EcbDecrypt(Enviroment.ACCESS_TOKEN_API);
     private static final String CREATE_PAYMENT_API = AesProtector.aes256EcbDecrypt(Enviroment.CREATE_PAYMENT_API);
-    private static final String PAYMENT_METHOD = "paypal";
     private static final String CURRENCY = "MYR";
     private static final double TAX_RATE = 0.1;
     private static final double FREE_SHIPPING_THRESHOLD = 1000;
     private static final double SHIPPING_COST = 10;
-    private final APIContext apiContext = new APIContext(CLIENT_ID, CLIENT_SECRET, MODE);
 
     public String createPayment(List<Carts> cartList) {
         try {
@@ -158,20 +150,19 @@ public class PaypalServices {
             throw new PaymentException(ex.getMessage());
         }
     }
-
-    public Payment getPaymentDetails(String paymentId) throws PayPalRESTException {
-        return Payment.get(apiContext, paymentId);
-    }
-
-    public Payment executePayment(String paymentId, String payerId) {
-        try {
-            Payment payment = new Payment();
-            payment.setId(paymentId);
-            PaymentExecution paymentExecute = new PaymentExecution();
-            paymentExecute.setPayerId(payerId);
-            return payment.execute(apiContext, paymentExecute);
-        } catch (PayPalRESTException ex) {
-            throw new PaymentException(ex.getMessage());
-        }
-    }
+//    public Payment getPaymentDetails(String paymentId) throws PayPalRESTException {
+//        return Payment.get(apiContext, paymentId);
+//    }
+//
+//    public Payment executePayment(String paymentId, String payerId) {
+//        try {
+//            Payment payment = new Payment();
+//            payment.setId(paymentId);
+//            PaymentExecution paymentExecute = new PaymentExecution();
+//            paymentExecute.setPayerId(payerId);
+//            return payment.execute(apiContext, paymentExecute);
+//        } catch (PayPalRESTException ex) {
+//            throw new PaymentException(ex.getMessage());
+//        }
+//    }
 }
