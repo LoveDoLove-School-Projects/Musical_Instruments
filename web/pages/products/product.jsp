@@ -10,7 +10,7 @@
 String IMAGE_DEFAULT_PATH = "assets/database/productImage/";
 %>
 <!DOCTYPE html>
-<html> 
+<html>
     <head>
         <jsp:include page="/defaults/head.jsp" />
         <title>Products Page</title>
@@ -85,7 +85,7 @@ String IMAGE_DEFAULT_PATH = "assets/database/productImage/";
                byte[] pictureBytes = FileUtilities.readDirectoryContent(IMAGE_DEFAULT_PATH + product.getImagePath());
                String pictureBase64 = Base64.getEncoder().encodeToString(pictureBytes);
                String imageSrc = "data:image/png;base64," + pictureBase64; // Change "image/png" based on the actual image type
-                                %>   
+                                %>
                                 <div class="col-6 col-xl-3 col-xxl-3">
                                     <a href="pages/products/viewProduct?product_id=<%=product.getProductId()%>" class="MusicInstruments row1-MusicInstruments1">
                                         <div class="pt-4 d-flex justify-content-center">
@@ -96,7 +96,7 @@ String IMAGE_DEFAULT_PATH = "assets/database/productImage/";
                                 </div>
                                 <%
                                     }
-                                %>            
+                                %>
                             </div>
                         </div>
 
@@ -110,7 +110,7 @@ String IMAGE_DEFAULT_PATH = "assets/database/productImage/";
                   byte[] pictureBytes = FileUtilities.readDirectoryContent(IMAGE_DEFAULT_PATH + product.getImagePath());
                   String pictureBase64 = Base64.getEncoder().encodeToString(pictureBytes);
                   String imageSrc = "data:image/png;base64," + pictureBase64; // Change "image/png" based on the actual image type
-                                %>   
+                                %>
                                 <div class="col-6 col-xl-3 col-xxl-3">
                                     <a href="pages/products/viewProduct?product_id=<%=product.getProductId()%>" class="MusicInstruments row1-MusicInstruments1">
                                         <div class="pt-4 d-flex justify-content-center">
@@ -121,7 +121,7 @@ String IMAGE_DEFAULT_PATH = "assets/database/productImage/";
                                 </div>
                                 <%
                                     }
-                                %>        
+                                %>
                             </div>
                         </div>
 

@@ -27,6 +27,7 @@ public final class Constants {
     //    Products JSP URL
     public static final String PRODUCT_JSP_URL = "/pages/products/product.jsp";
     public static final String VIEW_PRODUCT_JSP_URL = "/pages/products/viewProduct.jsp";
+    public static final String SEARCH_PRODUCT_JSP_URL = "/pages/products/searchProduct.jsp";
     public static final String CART_PRODUCT_JSP_URL = "/pages/cart.jsp";
     //    Products URL
     public static final String PRODUCT_URL = "/pages/products";
@@ -55,13 +56,13 @@ public final class Constants {
     public static final String ADMIN_MAIN_DASHBOARD_URL = "/pages/admins/mainDashboard";
     /* ********************************* */
  /* ********************************* */
-    //   Forgot Password JSP URL   
+    //   Forgot Password JSP URL
     public static final String FORGOT_PASSWORD_JSP_URL = "/pages/forgotPassword.jsp";
     //   Forgot Password URL
     public static final String FORGOT_PASSWORD_URL = "/pages/forgotPassword";
     /* ********************************* */
  /* ********************************* */
-    //   Reset Password JSP URL   
+    //   Reset Password JSP URL
     public static final String RESET_PASSWORD_JSP_URL = "/pages/resetPassword.jsp";
     //   Reset Password URL
     public static final String RESET_PASSWORD_URL = "/pages/resetPassword";

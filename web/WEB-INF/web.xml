@@ -42,7 +42,7 @@
     </servlet>
     <servlet>
         <servlet-name>SearchProductServlet</servlet-name>
-        <servlet-class>controllers.staffs.SearchProductServlet</servlet-class>
+        <servlet-class>controllers.products.SearchProductServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>AddProductServlet</servlet-name>
@@ -137,10 +137,6 @@
         <url-pattern>/pages/admins/ManageStaffServlet</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>SearchProductServlet</servlet-name>
-        <url-pattern>/pages/staffs/searchProduct</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
         <servlet-name>AddProductServlet</servlet-name>
         <url-pattern>/pages/staffs/AddProductServlet</url-pattern>
     </servlet-mapping>
@@ -184,6 +180,10 @@
     <servlet-mapping>
         <servlet-name>ManageProductServlet</servlet-name>
         <url-pattern>/pages/staffs/manageProduct</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SearchProductServlet</servlet-name>
+        <url-pattern>/pages/productsearch</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>30</session-timeout>
