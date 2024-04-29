@@ -23,7 +23,7 @@ public class CheckoutServlet extends HttpServlet {
     private final SessionChecker sessionChecker = new SessionChecker();
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         Session session = sessionChecker.getLoginSession(request.getSession());
         if (!session.isResult()) {
@@ -37,10 +37,5 @@ public class CheckoutServlet extends HttpServlet {
         }
         request.setAttribute("cartList", cartList);
         request.getRequestDispatcher(CHECKOUT_JSP_URL).forward(request, response);
-    }
-
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
     }
 }

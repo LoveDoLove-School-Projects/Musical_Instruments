@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <meta charset="UTF-8">
+        <jsp:include page="/defaults/head.jsp" />
         <title>Review</title>
         <style type="text/css">
             table {
@@ -19,7 +19,7 @@
     <body>
         <div align="center">
             <h1>Please Review Before Paying</h1>
-            <form action="execute_payment" method="post">
+            <form action="payments/paypal/execute" method="post">
                 <table>
                     <tr>
                         <td colspan="2"><b>Transaction Details:</b></td>
@@ -30,23 +30,23 @@
                     </tr>
                     <tr>
                         <td>Description:</td>
-                        <td>${transaction.description}</td>
+                        <td>${description}</td>
                     </tr>
                     <tr>
                         <td>Subtotal:</td>
-                        <td>${transaction.amount.details.subtotal} USD</td>
+                        <td>${subtotal} MYR</td>
                     </tr>
                     <tr>
                         <td>Shipping:</td>
-                        <td>${transaction.amount.details.shipping} USD</td>
+                        <td>${shipping} MYR</td>
                     </tr>
                     <tr>
                         <td>Tax:</td>
-                        <td>${transaction.amount.details.tax} USD</td>
+                        <td>${tax} MYR</td>
                     </tr>
                     <tr>
                         <td>Total:</td>
-                        <td>${transaction.amount.total} USD</td>
+                        <td>${total} MYR</td>
                     </tr>
                     <tr><td><br/></td></tr>
                     <tr>
@@ -54,15 +54,15 @@
                     </tr>
                     <tr>
                         <td>First Name:</td>
-                        <td>${payer.firstName}</td>
+                        <td>${firstName}</td>
                     </tr>
                     <tr>
                         <td>Last Name:</td>
-                        <td>${payer.lastName}</td>
+                        <td>${lastName}</td>
                     </tr>
                     <tr>
                         <td>Email:</td>
-                        <td>${payer.email}</td>
+                        <td>${email}</td>
                     </tr>
                     <tr><td><br/></td></tr>
                     <tr>
@@ -70,27 +70,27 @@
                     </tr>
                     <tr>
                         <td>Recipient Name:</td>
-                        <td>${shippingAddress.recipientName}</td>
+                        <td>${recipientName}</td>
                     </tr>
                     <tr>
                         <td>Line 1:</td>
-                        <td>${shippingAddress.line1}</td>
+                        <td>${line1}</td>
                     </tr>
                     <tr>
                         <td>City:</td>
-                        <td>${shippingAddress.city}</td>
+                        <td>${city}</td>
                     </tr>
                     <tr>
                         <td>State:</td>
-                        <td>${shippingAddress.state}</td>
+                        <td>${state}</td>
                     </tr>
                     <tr>
                         <td>Country Code:</td>
-                        <td>${shippingAddress.countryCode}</td>
+                        <td>${countryCode}</td>
                     </tr>
                     <tr>
                         <td>Postal Code:</td>
-                        <td>${shippingAddress.postalCode}</td>
+                        <td>${postalCode}</td>
                     </tr>
                     <tr>
                         <td colspan="2" align="center">

@@ -23,7 +23,7 @@
             <div class="row">
                 <div class="col-md-6 offset-md-3">
                     <h1 class="text-center mb-4">Add Product</h1>
-                    <form id="addForm" action="pages/staffs/AddProductServlet" method="POST" onsubmit="return confirmAdd()">
+                    <form id="addForm" action="pages/staffs/AddProductServlet" enctype="multipart/form-data" method="POST" onsubmit="return confirmAdd()">
 
                         <div class="form-group">
                             <label for="productName">Product Name:  </label>
@@ -58,10 +58,10 @@
                         <div class="form-group">
                             <label for="category">Please select a category: </label>
                             <select class="form-control" id="category" name="category" required>
-                                <option value="Piano" >Piano</option>
-                                <option value="Drum" checked>Drum</option>
-                                <option value="Guitar">Guitar</option>
-                                <option value="Violin">Violin</option>
+                                <option value="PIANO" >Piano</option>
+                                <option value="DRUM" checked>Drum</option>
+                                <option value="GUITAR">Guitar</option>
+                                <option value="VIOLIN">Violin</option>
                             </select>
                         </div>
 
