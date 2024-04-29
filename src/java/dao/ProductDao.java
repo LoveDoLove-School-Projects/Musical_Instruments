@@ -31,7 +31,7 @@ public class ProductDao {
                     product.setColor(resultSet.getString("color"));
                     product.setQuantity(resultSet.getInt("quantity"));
                     product.setCategory(resultSet.getString("category"));
-                    product.setImagePath(resultSet.getString("image_path"));
+                    product.setImage(resultSet.getBytes("image"));
                     LOG.info(product.toString());
                     productList.add(product);
                 }

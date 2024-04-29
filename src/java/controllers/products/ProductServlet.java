@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
+import utilities.RedirectUtilities;
 
 public class ProductServlet extends HttpServlet {
 
@@ -44,7 +45,11 @@ public class ProductServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         for (PRODUCT_CATEGORIES category : PRODUCT_DETAILS.keySet()) {
-            List<Products> products = (List<Products>) entityManager.createNamedQuery("Products.findByCategory").setParameter("category", category.getCategory()).getResultList();
+            List<Products> products = entityManager.createNamedQuery("Products.findByCategory").setParameter("category", category.getCategory()).getResultList();
+            if (products.isEmpty()) {
+                RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "product not found", "/");
+                return;
+            }
             request.setAttribute(PRODUCT_DETAILS.get(category), products);
         }
         request.getRequestDispatcher(Constants.PRODUCT_JSP_URL).forward(request, response);

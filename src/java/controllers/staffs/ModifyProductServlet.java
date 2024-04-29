@@ -15,6 +15,7 @@ import jakarta.transaction.RollbackException;
 import jakarta.transaction.SystemException;
 import jakarta.transaction.UserTransaction;
 import java.io.IOException;
+import java.io.InputStream;
 import utilities.RedirectUtilities;
 
 public class ModifyProductServlet extends HttpServlet {
@@ -33,8 +34,13 @@ public class ModifyProductServlet extends HttpServlet {
         String color = request.getParameter("color");
         int quantity = Integer.parseInt(request.getParameter("quantity"));
         String category = request.getParameter("category");
-        String imagePath = request.getParameter("imagePath");
-        Products product = new Products(productId, productName, price, color, quantity, category, imagePath);
+        InputStream pictureStream = request.getPart("image").getInputStream();
+        if (pictureStream == null) {
+//            RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Error uploading picture.", Constants.PROFILE_URL);
+            return;
+        }
+        byte[] pictureBytes = pictureStream.readAllBytes();
+        Products product = new Products(productId, productName, price, color, quantity, category, pictureBytes);
         boolean isUpdated = updateProductDetails(product);
         if (!isUpdated) {
             showError(request, response);
@@ -55,7 +61,7 @@ public class ModifyProductServlet extends HttpServlet {
             productFromDB.setColor(product.getColor());
             productFromDB.setQuantity(product.getQuantity());
             productFromDB.setCategory(product.getCategory());
-            productFromDB.setImagePath(product.getImagePath());
+            productFromDB.setImage(product.getImage());
             entityManager.merge(productFromDB);
             userTransaction.commit();
             return true;

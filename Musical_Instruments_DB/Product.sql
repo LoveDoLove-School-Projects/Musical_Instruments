@@ -5,7 +5,7 @@ CREATE TABLE products (
     color VARCHAR(255) NOT NULL,
     quantity INT NOT NULL,
     category VARCHAR(255) NOT NULL,
-    image_path VARCHAR(255) NOT NULL
+    image BLOB NOT NULL
 );
 
 

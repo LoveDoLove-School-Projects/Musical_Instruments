@@ -6,9 +6,6 @@
 <%@ page import="java.util.Base64"%>
 <%@ page import="utilities.FileUtilities"%>
 <%@ page import="entities.Products" %>
-<%
-String IMAGE_DEFAULT_PATH = "assets/database/productImage/";
-%>
 <!DOCTYPE html>
 <html>
     <head>
@@ -82,9 +79,8 @@ String IMAGE_DEFAULT_PATH = "assets/database/productImage/";
                                 <%
                         List<Products> pianoProductDetails = (List<Products>) request.getAttribute("pianoProductDetails");
                         for (Products product : pianoProductDetails) {
-               byte[] pictureBytes = FileUtilities.readDirectoryContent(IMAGE_DEFAULT_PATH + product.getImagePath());
-               String pictureBase64 = Base64.getEncoder().encodeToString(pictureBytes);
-               String imageSrc = "data:image/png;base64," + pictureBase64; // Change "image/png" based on the actual image type
+                        String pictureBase64 = Base64.getEncoder().encodeToString(product.getImage());
+                         String imageSrc = "data:image/png;base64," + pictureBase64; // Change "image/png" based on the actual image type
                                 %>
                                 <div class="col-6 col-xl-3 col-xxl-3">
                                     <a href="pages/products/viewProduct?product_id=<%=product.getProductId()%>" class="MusicInstruments row1-MusicInstruments1">
@@ -107,8 +103,7 @@ String IMAGE_DEFAULT_PATH = "assets/database/productImage/";
                                 <%
                            List<Products> guitarProductDetails = (List<Products>) request.getAttribute("guitarProductDetails");
                            for (Products product : guitarProductDetails) {
-                  byte[] pictureBytes = FileUtilities.readDirectoryContent(IMAGE_DEFAULT_PATH + product.getImagePath());
-                  String pictureBase64 = Base64.getEncoder().encodeToString(pictureBytes);
+                  String pictureBase64 = Base64.getEncoder().encodeToString(product.getImage());
                   String imageSrc = "data:image/png;base64," + pictureBase64; // Change "image/png" based on the actual image type
                                 %>
                                 <div class="col-6 col-xl-3 col-xxl-3">

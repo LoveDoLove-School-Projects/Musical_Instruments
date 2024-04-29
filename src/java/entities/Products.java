@@ -6,13 +6,12 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
-import jakarta.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
+import javax.xml.bind.annotation.XmlRootElement;
 
 @Entity
 @Table(name = "PRODUCTS")
@@ -24,8 +23,7 @@ import java.io.Serializable;
     @NamedQuery(name = "Products.findByPrice", query = "SELECT p FROM Products p WHERE p.price = :price"),
     @NamedQuery(name = "Products.findByColor", query = "SELECT p FROM Products p WHERE p.color = :color"),
     @NamedQuery(name = "Products.findByQuantity", query = "SELECT p FROM Products p WHERE p.quantity = :quantity"),
-    @NamedQuery(name = "Products.findByCategory", query = "SELECT p FROM Products p WHERE p.category = :category"),
-    @NamedQuery(name = "Products.findByImagePath", query = "SELECT p FROM Products p WHERE p.imagePath = :imagePath")})
+    @NamedQuery(name = "Products.findByCategory", query = "SELECT p FROM Products p WHERE p.category = :category")})
 public class Products implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -35,33 +33,24 @@ public class Products implements Serializable {
     @Column(name = "PRODUCT_ID")
     private Integer productId;
     @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 255)
     @Column(name = "NAME")
     private String name;
     @Basic(optional = false)
-    @NotNull
     @Column(name = "PRICE")
     private double price;
     @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 255)
     @Column(name = "COLOR")
     private String color;
     @Basic(optional = false)
-    @NotNull
     @Column(name = "QUANTITY")
     private int quantity;
     @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 255)
     @Column(name = "CATEGORY")
     private String category;
     @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 255)
-    @Column(name = "IMAGE_PATH")
-    private String imagePath;
+    @Lob
+    @Column(name = "IMAGE")
+    private byte[] image;
 
     public Products() {
     }
@@ -70,14 +59,14 @@ public class Products implements Serializable {
         this.productId = productId;
     }
 
-    public Products(Integer productId, String name, double price, String color, int quantity, String category, String imagePath) {
+    public Products(Integer productId, String name, double price, String color, int quantity, String category, byte[] image) {
         this.productId = productId;
         this.name = name;
         this.price = price;
         this.color = color;
         this.quantity = quantity;
         this.category = category;
-        this.imagePath = imagePath;
+        this.image = image;
     }
 
     public Integer getProductId() {
@@ -128,12 +117,12 @@ public class Products implements Serializable {
         this.category = category;
     }
 
-    public String getImagePath() {
-        return imagePath;
+    public byte[] getImage() {
+        return image;
     }
 
-    public void setImagePath(String imagePath) {
-        this.imagePath = imagePath;
+    public void setImage(byte[] image) {
+        this.image = image;
     }
 
     @Override
@@ -166,7 +155,7 @@ public class Products implements Serializable {
         sb.append(", color=").append(color);
         sb.append(", quantity=").append(quantity);
         sb.append(", category=").append(category);
-        sb.append(", imagePath=").append(imagePath);
+        sb.append(", image=").append(image);
         sb.append('}');
         return sb.toString();
     }
