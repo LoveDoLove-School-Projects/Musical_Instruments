@@ -6,7 +6,7 @@
 <html>
     <head>
         <jsp:include page="/defaults/head.jsp" />
-        <title>Modify Customer Information</title>
+        <title>Add Staff</title>
         <style>
             body {
                 padding-top: 20px;
@@ -22,32 +22,40 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-6 offset-md-3">
-                    <h1 class="text-center mb-4">New Staff Information</h1>
-                    <form id="modifyForm" action="pages/staffs/modifyCustomerServlet" method="POST" onsubmit="return confirmUpdate()">
-                        <% Customers customerDetails = (Customers) session.getAttribute("customerDetails"); %>
+                    <h1 class="text-center mb-4">New Staff Registration</h1>
+                    <form id="addForm" action="pages/admins/AddStaff" method="POST" onsubmit="return confirmAdd()">
                         <div class="form-group">
                             <label for="username">Username:</label>
-                            <input type="text" class="form-control" name="username" value="<%=customerDetails.getUsername()%>">
+                            <input type="text" class="form-control" name="username" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Password:</label>
+                            <input type="password" class="form-control" name="password" minlength="8" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email:</label>
+                            <input type="email" class="form-control" name="email" required>
                         </div>
                         <div class="form-group">
                             <label for="gender">Gender:</label>
                             <select class="form-control" id="gender" name="gender">
-                                <option value="Male" <c:if test="${customerDetails.getGender().equals('Male')}">selected</c:if>>Male</option>
-                                <option value="Female" <c:if test="${customerDetails.getGender().equals('Female')}">selected</c:if>>Female</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="address">Address:</label>
-                                <textarea class="form-control" name="address" rows="3" required><%=customerDetails.getAddress()%></textarea>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="address">Address:</label>
+                            <textarea class="form-control" name="address" rows="3" required></textarea>
                         </div>
                         <div class="form-group">
                             <label for="phoneNumber">Phone Number:</label>
-                            <input type="text" class="form-control" name="phoneNumber" value="<%=customerDetails.getPhoneNumber()%>" pattern="[0-9]+" required>
+                            <input type="text" class="form-control" name="phoneNumber" pattern="[0-9]+" required>
                         </div>
-                        <input type="hidden" name="userId" value="<%=customerDetails.getUserId()%>">
+                        <input type="hidden" name="twoFactorAuth" value="false">
+                        <input type="hidden" name="accountCreationDate" value="<%= new java.util.Date() %>">
                         <div class="form-group">
-                            <button type="submit" class="btn btn-success">Update</button>
-                            <button type="button" class="btn btn-danger" onclick="confirmModification()">Cancel</button>
+                            <button type="submit" class="btn btn-success">Add Staff</button>
+                            <button type="button" class="btn btn-danger">Cancel</button>
                         </div>
                     </form>
                 </div>
@@ -57,13 +65,8 @@
         <jsp:include page="/defaults/footer.jsp" />
 
         <script>
-            function confirmModification() {
-                if (confirm("Are you sure you want to cancel the modification?")) {
-                    window.location.href = "pages/staffs/manageCustomer";
-                }
-            }
 
-            function confirmUpdate() {
+            function confirmAdd() {
                 return confirm("Are you sure you want to submit the form?");
             }
         </script>
