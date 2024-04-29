@@ -8,4 +8,5 @@ CREATE TABLE products (
     image_path VARCHAR(255) NOT NULL
 );
 
+
 DROP TABLE products;

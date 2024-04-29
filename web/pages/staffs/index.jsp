@@ -59,9 +59,13 @@
                         <div class="col-lg-4 col-md-6 mb-4">
                             <a href="pages/admins/mainDashboard.jsp" class="btn btn-primary btn-lg btn-block">Main dashboard</a>
                         </div>
+                        <%
+                                      boolean isAdmin = request.isUserInRole("Admin");
+                                      if (isAdmin) { %>
                         <div class="col-lg-4 col-md-6 mb-4">
                             <a href="pages/admins/searchStaff.jsp" class="btn btn-primary btn-lg btn-block">Manage Staff</a>
                         </div>
+                        <% } %>
                         <div class="col-lg-4 col-md-6 mb-4">
                             <a href="pages/staffs/searchCustomer.jsp" class="btn btn-primary btn-lg btn-block">Manage Customer</a>
                         </div>
