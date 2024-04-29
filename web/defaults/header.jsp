@@ -50,6 +50,9 @@ Integer login_id = (Integer) session.getAttribute("login_id");
                 <li class="nav-item mx-4 my-2 p-2">
                     <a class="nav-link" href="pages/products">Products</a>
                 </li>
+                <li class="nav-item mx-4 my-2 p-2">
+                    <a class="nav-link" href="pages/productsearch">Search Products</a>
+                </li>
                 <%
                 if (principal != null) {
                 %>
