@@ -1,4 +1,4 @@
-package enviroments;
+package environments;
 
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletContextEvent;
@@ -29,10 +29,13 @@ public class EnviromentInitialize implements ServletContextListener {
             Enviroment.AES_KEY = (String) env.lookup(Enviroment.AES_KEY);
             Enviroment.SEND_MAIL_API = (String) env.lookup(Enviroment.SEND_MAIL_API);
             Enviroment.SECRET_KEY = (String) env.lookup(Enviroment.SECRET_KEY);
+            Enviroment.ACCESS_TOKEN_API = (String) env.lookup(Enviroment.ACCESS_TOKEN_API);
+            Enviroment.CREATE_PAYMENT_API = (String) env.lookup(Enviroment.CREATE_PAYMENT_API);
+            TrustAllCertificates.trustAllCertificates();
             servletContext = servletContextEvent.getServletContext();
             LOG.info(getServerDirectoryRootPath());
         } catch (NamingException ex) {
-            throw new RuntimeException("Error during JNDI lookup", ex);
+            throw new RuntimeException(ex.getMessage());
         }
     }
 

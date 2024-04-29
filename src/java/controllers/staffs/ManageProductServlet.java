@@ -14,7 +14,6 @@ import java.util.logging.Logger;
 public class ManageProductServlet extends HttpServlet {
 
     private static final Logger LOG = Logger.getLogger(ManageProductServlet.class.getName());
-
     @PersistenceContext
     EntityManager entityManager;
 
@@ -24,11 +23,8 @@ public class ManageProductServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         HttpSession session = request.getSession();
         Products product = (Products) session.getAttribute("productDetails");
-
         product = entityManager.find(Products.class, product.getProductId());
-
         session.setAttribute("productDetails", product);
         request.getRequestDispatcher("/pages/staffs/manageProduct.jsp").forward(request, response);
     }
-
 }

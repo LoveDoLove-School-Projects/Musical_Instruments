@@ -1,8 +1,9 @@
 package controllers;
 
-import common.Common;
 import common.Constants;
 import dao.OtpDao;
+import entities.OtpStatus;
+import entities.Role;
 import entities.Session;
 import features.SessionChecker;
 import jakarta.servlet.ServletException;
@@ -20,15 +21,15 @@ import utilities.StringUtilities;
 public class Login2FAServlet extends HttpServlet {
 
     private static final String LOGIN_2FA_JSP_URL = "/sessions/login2fa.jsp";
-    private static final Map<Common.Status, String> STATUS_MESSAGES;
+    private static final Map<OtpStatus, String> STATUS_MESSAGES;
 
     static {
-        STATUS_MESSAGES = new EnumMap<>(Common.Status.class);
-        STATUS_MESSAGES.put(Common.Status.NOT_FOUND, "OTP not found!");
-        STATUS_MESSAGES.put(Common.Status.UNAUTHORIZED, "Too many attempts! Please click on 'Resend OTP' to try again.");
-        STATUS_MESSAGES.put(Common.Status.EXPIRED, "OTP expired! Please click on 'Resend OTP' to try again.");
-        STATUS_MESSAGES.put(Common.Status.FAILED, "Failed to verify OTP! Please try again.");
-        STATUS_MESSAGES.put(Common.Status.INVALID, "Invalid OTP!");
+        STATUS_MESSAGES = new EnumMap<>(OtpStatus.class);
+        STATUS_MESSAGES.put(OtpStatus.NOT_FOUND, "OTP not found!");
+        STATUS_MESSAGES.put(OtpStatus.UNAUTHORIZED, "Too many attempts! Please click on 'Resend OTP' to try again.");
+        STATUS_MESSAGES.put(OtpStatus.EXPIRED, "OTP expired! Please click on 'Resend OTP' to try again.");
+        STATUS_MESSAGES.put(OtpStatus.FAILED, "Failed to verify OTP! Please try again.");
+        STATUS_MESSAGES.put(OtpStatus.INVALID, "Invalid OTP!");
     }
     private final SessionChecker sessionChecker = new SessionChecker();
     private final OtpDao otpDao = new OtpDao();
@@ -61,7 +62,7 @@ public class Login2FAServlet extends HttpServlet {
             setLogin2FAPage(request, response);
             return;
         }
-        Common.Status otpStatus = otpDao.verifyOtp(attributes.getEmail(), otp);
+        OtpStatus otpStatus = otpDao.verifyOtp(attributes.getEmail(), otp);
         handleOtpStatus(otpStatus, request, response, session, attributes);
     }
 
@@ -75,17 +76,18 @@ public class Login2FAServlet extends HttpServlet {
         }
         Integer loginId = (Integer) session.getAttribute("login_id_2fa");
         String email = (String) session.getAttribute("email");
-        if (loginId == null || loginId == 0 || StringUtilities.anyNullOrBlank(email)) {
+        Role role = (Role) session.getAttribute("role");
+        if (loginId == null || loginId == 0 || StringUtilities.anyNullOrBlank(email) || role == Role.UNKNOWN) {
             return null;
         }
-        return new Session(loginId, email);
+        return new Session(loginId, email, role);
     }
 
-    private void handleOtpStatus(Common.Status otpStatus, HttpServletRequest request, HttpServletResponse response, HttpSession session, Session attributes) throws IOException, ServletException {
-        if (otpStatus == Common.Status.OK) {
+    private void handleOtpStatus(OtpStatus otpStatus, HttpServletRequest request, HttpServletResponse response, HttpSession session, Session attributes) throws IOException, ServletException {
+        if (otpStatus == OtpStatus.OK) {
             session.invalidate();
             session = request.getSession(true);
-            sessionChecker.setLoginSession(session, attributes.getUserId());
+            sessionChecker.setLoginSession(session, attributes.getUserId(), attributes.getRole());
             RedirectUtilities.sendRedirect(request, response, Constants.PROFILE_URL);
         } else {
             String message = STATUS_MESSAGES.getOrDefault(otpStatus, "Failed to verify OTP!");

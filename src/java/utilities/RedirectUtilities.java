@@ -5,7 +5,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 
-public class RedirectUtilities {
+public final class RedirectUtilities {
 
     /**
      * Enum representing different types of redirects.

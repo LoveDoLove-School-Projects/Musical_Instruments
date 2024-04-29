@@ -37,5 +37,4 @@ public class SearchCustomerServlet extends HttpServlet {
         session.setAttribute("customerDetails", customer);
         RedirectUtilities.sendRedirect(request, response, "/pages/staffs/manageCustomer");
     }
-
 }

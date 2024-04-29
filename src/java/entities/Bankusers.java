@@ -188,5 +188,4 @@ public class Bankusers implements Serializable {
     public String toString() {
         return "ms.paymentgateway.entities.Bankusers[ userid=" + userid + " ]";
     }
-    
 }

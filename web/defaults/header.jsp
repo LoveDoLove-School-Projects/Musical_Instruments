@@ -3,10 +3,11 @@
 <c:set var="path" value="${pageContext.request.contextPath}" />
 <c:set var="basePath" value="${pageContext.request.scheme}://${pageContext.request.serverName}:${pageContext.request.serverPort}${path}/" />
 <%@ page import="java.security.Principal" %>
+<%@ page import="entities.Session" %>
 <%
 Principal principal = request.getUserPrincipal();
 String j_username = principal != null ? principal.getName() : null;
-Integer login_id = (Integer) session.getAttribute("login_id");
+Session user_session = (Session) session.getAttribute("user_session");
 %>
 <!DOCTYPE html>
 <style>
@@ -68,7 +69,7 @@ Integer login_id = (Integer) session.getAttribute("login_id");
                 </button>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                     <%
-                    if (login_id != null || j_username != null) {
+                    if (user_session != null || j_username != null) {
                     %>
                     <li><a class="dropdown-item" href="pages/profile">Profile</a></li>
                     <li><a class="dropdown-item" href="pages/cart">Carts</a></li>
@@ -77,6 +78,7 @@ Integer login_id = (Integer) session.getAttribute("login_id");
                         <% } else { %>
                     <li><a class="dropdown-item" href="pages/login">Login</a></li>
                     <li><a class="dropdown-item" href="pages/register">Register</a></li>
+                    <li><a class="dropdown-item" href="pages/staffLogin">Staff Login</a></li>
                     <li><a class="dropdown-item" href="pages/staffs/">Admin Login</a></li>
                         <% } %>
                 </ul>

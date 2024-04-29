@@ -1,6 +1,5 @@
 package controllers.products;
 
-import common.Common;
 import common.Constants;
 import entities.Products;
 import features.SessionChecker;
@@ -17,20 +16,34 @@ import java.util.Map;
 
 public class ProductServlet extends HttpServlet {
 
-    private static final SessionChecker sessionHandle =new SessionChecker();
-    private static final Map<Common.PRODUCT_CATEGORIES, String> PRODUCT_DETAILS;
+    private static final SessionChecker sessionHandle = new SessionChecker();
+    private static final Map<PRODUCT_CATEGORIES, String> PRODUCT_DETAILS;
     @PersistenceContext
     EntityManager entityManager;
 
     static {
-        PRODUCT_DETAILS = new EnumMap<>(Common.PRODUCT_CATEGORIES.class);
-        PRODUCT_DETAILS.put(Common.PRODUCT_CATEGORIES.PIANO, "pianoProductDetails");
-        PRODUCT_DETAILS.put(Common.PRODUCT_CATEGORIES.GUITAR, "guitarProductDetails");
+        PRODUCT_DETAILS = new EnumMap<>(PRODUCT_CATEGORIES.class);
+        PRODUCT_DETAILS.put(PRODUCT_CATEGORIES.PIANO, "pianoProductDetails");
+        PRODUCT_DETAILS.put(PRODUCT_CATEGORIES.GUITAR, "guitarProductDetails");
+    }
+
+    public enum PRODUCT_CATEGORIES {
+        PIANO("PIANO"),
+        GUITAR("GUITAR");
+        private final String category;
+
+        PRODUCT_CATEGORIES(String category) {
+            this.category = category;
+        }
+
+        public String getCategory() {
+            return category;
+        }
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        for (Common.PRODUCT_CATEGORIES category : PRODUCT_DETAILS.keySet()) {
+        for (PRODUCT_CATEGORIES category : PRODUCT_DETAILS.keySet()) {
             List<Products> products = (List<Products>) entityManager.createNamedQuery("Products.findByCategory").setParameter("category", category.getCategory()).getResultList();
             request.setAttribute(PRODUCT_DETAILS.get(category), products);
         }

@@ -3,10 +3,11 @@
 <c:set var="path" value="${pageContext.request.contextPath}" />
 <c:set var="basePath" value="${pageContext.request.scheme}://${pageContext.request.serverName}:${pageContext.request.serverPort}${path}/" />
 <%@ page import="java.security.Principal" %>
+<%@ page import="entities.Session" %>
 <%
 Principal principal = request.getUserPrincipal();
 String j_username = principal != null ? principal.getName() : null;
-Integer login_id = (Integer) session.getAttribute("login_id");
+Session user_session = (Session) session.getAttribute("user_session");
 %>
 <!DOCTYPE html>
 <html>

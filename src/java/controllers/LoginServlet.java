@@ -1,9 +1,9 @@
 package controllers;
 
-import common.Common;
 import common.Constants;
 import dao.OtpDao;
 import entities.Customers;
+import entities.Role;
 import entities.Session;
 import exceptions.DatabaseException;
 import features.AesProtector;
@@ -97,20 +97,21 @@ public class LoginServlet extends HttpServlet {
     private void checkNeedTwoFactorAuthOrNot(HttpServletRequest request, HttpServletResponse response, Customers customer) throws ServletException, IOException {
         HttpSession session = request.getSession(true);
         if (!customer.getTwoFactorAuth()) {
-            sessionChecker.setLoginSession(session, customer.getUserId());
+            sessionChecker.setLoginSession(session, customer.getUserId(), Role.CUSTOMER);
             RedirectUtilities.sendRedirect(request, response, Constants.PROFILE_URL);
-        } else {
-            requiredTwoFactorAuth(request, response, customer, session);
+            return;
         }
+        requiredTwoFactorAuth(request, response, customer, session);
     }
 
     private void requiredTwoFactorAuth(HttpServletRequest request, HttpServletResponse response, Customers customer, HttpSession session) throws ServletException, IOException {
-        if (otpDao.sendOtp(customer.getEmail()) != Common.Status.OK) {
+        if (!otpDao.sendOtp(customer.getEmail())) {
             RedirectUtilities.setMessage(request, RedirectType.DANGER, "There was an error from the server! Please try again later.");
             return;
         }
         session.setAttribute("login_id_2fa", customer.getUserId());
         session.setAttribute("email", customer.getEmail());
+        session.setAttribute("role", Role.CUSTOMER);
         RedirectUtilities.sendRedirect(request, response, LOGIN_2FA_URL);
     }
 

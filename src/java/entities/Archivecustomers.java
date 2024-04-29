@@ -214,5 +214,4 @@ public class Archivecustomers implements Serializable {
     public String toString() {
         return "entities.Archivecustomers[ userId=" + userId + " ]";
     }
-
 }

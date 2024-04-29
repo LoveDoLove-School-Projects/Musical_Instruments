@@ -1,6 +1,6 @@
 package utilities;
 
-public class ValidationUtilities {
+public final class ValidationUtilities {
 
     public static boolean compareValues(String value1, String value2) {
         return value1.equals(value2);

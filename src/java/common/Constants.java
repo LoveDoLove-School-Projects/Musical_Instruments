@@ -11,8 +11,10 @@ public final class Constants {
  /* ********************************* */
     //    LOGIN JSP URL
     public static final String LOGIN_JSP_URL = "/pages/login.jsp";
+    public static final String STAFF_LOGIN_JSP_URL = "/pages/staffLogin.jsp";
     //    Login URL
     public static final String CUSTOMER_LOGIN_URL = "/pages/login";
+    public static final String STAFF_LOGIN_URL = "/pages/staffLogin";
     /* ********************************* */
  /* ********************************* */
     //    Profile JSP URL
@@ -72,7 +74,7 @@ public final class Constants {
     public static final String TRANSACTION_JSP_URL = "/payments/transaction.jsp";
     //    Transaction URL
     public static final String TRANSACTION_URL = "/payments/transaction";
-    public static final String PAY_TRANSACTION_URL = "/payments/processTransaction";
+    public static final String PAYPAL_TRANSACTION_URL = "/payments/paypal";
 
     /* ********************************* */
 }

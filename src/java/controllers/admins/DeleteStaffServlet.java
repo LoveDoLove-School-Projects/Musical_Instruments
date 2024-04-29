@@ -64,5 +64,4 @@ public class DeleteStaffServlet extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
-
 }

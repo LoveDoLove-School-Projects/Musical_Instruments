@@ -1,0 +1,125 @@
+package controllers;
+
+import common.Constants;
+import dao.OtpDao;
+import entities.Role;
+import entities.Session;
+import entities.Staffs;
+import exceptions.DatabaseException;
+import features.AesProtector;
+import features.SessionChecker;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import java.io.IOException;
+import java.util.List;
+import utilities.RedirectUtilities;
+import utilities.RedirectUtilities.RedirectType;
+import utilities.StringUtilities;
+
+public class LoginStaffServlet extends HttpServlet {
+
+    private static final String LOGIN_2FA_URL = "/sessions/login2fa";
+    private final SessionChecker sessionChecker = new SessionChecker();
+    private final OtpDao otpDao = new OtpDao();
+    @PersistenceContext
+    EntityManager entityManager;
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        processRequest(request, response);
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        processRequest(request, response);
+    }
+
+    private void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        Session session = sessionChecker.getLoginSession(request.getSession());
+        if (session.isResult()) {
+            RedirectUtilities.sendRedirect(request, response, Constants.PROFILE_URL);
+            return;
+        }
+        switch (request.getMethod()) {
+            case "GET":
+                setLoginPage(request, response);
+                break;
+            case "POST":
+                processPostRequest(request, response);
+                break;
+        }
+    }
+
+    private void processPostRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        request.setCharacterEncoding("UTF-8");
+        response.setContentType("text/plain;charset=UTF-8");
+        response.setHeader("Cache-Control", "no-store");
+        String email = request.getParameter("email");
+        String password = request.getParameter("password");
+        Staffs staff = new Staffs(email, password);
+        request.setAttribute("email", email);
+        if (!validateLoginRequest(staff)) {
+            RedirectUtilities.setMessage(request, RedirectType.DANGER, "Please Fill In All The Fields!");
+            setLoginPage(request, response);
+            return;
+        }
+        staff = tryStaffLogin(staff);
+        if (staff == null) {
+            RedirectUtilities.setMessage(request, RedirectType.DANGER, "Login Failed! Please Try Again!");
+            setLoginPage(request, response);
+            return;
+        }
+        checkNeedTwoFactorAuthOrNot(request, response, staff);
+    }
+
+    private void setLoginPage(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        request.getRequestDispatcher(Constants.STAFF_LOGIN_JSP_URL).forward(request, response);
+    }
+
+    private Staffs tryStaffLogin(Staffs staff) throws DatabaseException {
+        try {
+            String encryptedPassword = AesProtector.aes256EcbEncrypt(staff.getPassword());
+            List<Staffs> staffList = entityManager.createNamedQuery("Staffs.findByEmailAndPassword", Staffs.class)
+                    .setParameter("email", staff.getEmail())
+                    .setParameter("password", encryptedPassword)
+                    .getResultList();
+            return staffList.isEmpty() ? null : staffList.get(0);
+        } catch (Exception ex) {
+            throw new DatabaseException(ex.getMessage());
+        }
+    }
+
+    private void checkNeedTwoFactorAuthOrNot(HttpServletRequest request, HttpServletResponse response, Staffs staff) throws ServletException, IOException {
+        HttpSession session = request.getSession(true);
+        if (!staff.getTwoFactorAuth()) {
+            sessionChecker.setLoginSession(session, staff.getUserId(), Role.STAFF);
+            RedirectUtilities.sendRedirect(request, response, Constants.PROFILE_URL);
+            return;
+        }
+        requiredTwoFactorAuth(request, response, staff, session);
+    }
+
+    private void requiredTwoFactorAuth(HttpServletRequest request, HttpServletResponse response, Staffs staff, HttpSession session) throws ServletException, IOException {
+        if (!otpDao.sendOtp(staff.getEmail())) {
+            RedirectUtilities.setMessage(request, RedirectType.DANGER, "There was an error from the server! Please try again later.");
+            return;
+        }
+        session.setAttribute("login_id_2fa", staff.getUserId());
+        session.setAttribute("email", staff.getEmail());
+        session.setAttribute("role", Role.STAFF);
+        RedirectUtilities.sendRedirect(request, response, LOGIN_2FA_URL);
+    }
+
+    private boolean validateLoginRequest(Staffs staff) {
+        return staff != null
+                && !StringUtilities.anyNullOrBlank(staff.getPassword(), staff.getEmail())
+                && staff.getPassword().length() >= 8
+                && staff.getEmail().contains("@")
+                && staff.getEmail().contains(".");
+    }
+}

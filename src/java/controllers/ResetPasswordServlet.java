@@ -3,6 +3,7 @@ package controllers;
 import common.Constants;
 import entities.Customers;
 import entities.Resetpassword;
+import entities.Staffs;
 import features.AesProtector;
 import jakarta.annotation.Resource;
 import jakarta.persistence.EntityManager;
@@ -35,8 +36,13 @@ public class ResetPasswordServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String token = request.getParameter("token");
-        if (token == null) {
+        String role = request.getParameter("role");
+        if (token == null || role == null) {
             RedirectUtilities.redirectWithMessage(request, response, RedirectType.DANGER, "Invalid reset password link", "/");
+            return;
+        }
+        if (role == null || (!role.equals("customer") && !role.equals("staff"))) {
+            RedirectUtilities.redirectWithMessage(request, response, RedirectType.DANGER, "Invalid role", "/");
             return;
         }
         Resetpassword resetpassword = isTokenValid(token);
@@ -46,6 +52,7 @@ public class ResetPasswordServlet extends HttpServlet {
         }
         request.setAttribute("token", token);
         request.setAttribute("email", resetpassword.getEmail());
+        request.setAttribute("role", role);
         request.getRequestDispatcher(Constants.RESET_PASSWORD_JSP_URL).forward(request, response);
     }
 
@@ -56,9 +63,10 @@ public class ResetPasswordServlet extends HttpServlet {
         response.setContentType("text/plain;charset=UTF-8");
         response.setHeader("Cache-Control", "no-store");
         String token = request.getParameter("token");
+        String role = request.getParameter("role");
         String newPassword = request.getParameter("newPassword");
         String confirmNewPassword = request.getParameter("confirmNewPassword");
-        if (!validateResetPasswordRequest(token, newPassword, confirmNewPassword)) {
+        if (!validateResetPasswordRequest(token, role, newPassword, confirmNewPassword)) {
             RedirectUtilities.redirectWithMessage(request, response, RedirectType.DANGER, "Invalid reset password request", "/");
             return;
         }
@@ -66,15 +74,33 @@ public class ResetPasswordServlet extends HttpServlet {
         try {
             // Update password
             userTransaction.begin();
-            List<Customers> customers = (List<Customers>) entityManager.createNamedQuery("Customers.findByEmail").setParameter("email", resetPassword.getEmail()).getResultList();
-            if (customers == null || customers.isEmpty()) {
-                RedirectUtilities.redirectWithMessage(request, response, RedirectType.DANGER, "Email not found", "/");
-                return;
+            switch (role) {
+                case "customer":
+                    List<Customers> customers = (List<Customers>) entityManager.createNamedQuery("Customers.findByEmail").setParameter("email", resetPassword.getEmail()).getResultList();
+                    if (customers == null || customers.isEmpty()) {
+                        RedirectUtilities.redirectWithMessage(request, response, RedirectType.DANGER, "Email not found", "/");
+                        return;
+                    }
+                    Customers customer = customers.get(0);
+                    customer.setPassword(AesProtector.aes256EcbEncrypt(newPassword));
+                    entityManager.merge(customer);
+                    userTransaction.commit();
+                    break;
+                case "staff":
+                    List<Staffs> staffs = (List<Staffs>) entityManager.createNamedQuery("Staffs.findByEmail").setParameter("email", resetPassword.getEmail()).getResultList();
+                    if (staffs == null || staffs.isEmpty()) {
+                        RedirectUtilities.redirectWithMessage(request, response, RedirectType.DANGER, "Email not found", "/");
+                        return;
+                    }
+                    Staffs staff = staffs.get(0);
+                    staff.setPassword(AesProtector.aes256EcbEncrypt(newPassword));
+                    entityManager.merge(staff);
+                    userTransaction.commit();
+                    break;
+                default:
+                    RedirectUtilities.redirectWithMessage(request, response, RedirectType.DANGER, "Invalid role", "/");
+                    return;
             }
-            Customers customer = customers.get(0);
-            customer.setPassword(AesProtector.aes256EcbEncrypt(newPassword));
-            entityManager.merge(customer);
-            userTransaction.commit();
             // Delete reset password token
             userTransaction.begin();
             Resetpassword managedResetPassword = entityManager.merge(resetPassword);
@@ -84,14 +110,17 @@ public class ResetPasswordServlet extends HttpServlet {
             RedirectUtilities.redirectWithMessage(request, response, RedirectType.DANGER, "An error occurred while resetting password", "/");
             return;
         }
-        RedirectUtilities.redirectWithMessage(request, response, RedirectType.SUCCESS, "Password reset successfully", Constants.CUSTOMER_LOGIN_URL);
+        RedirectUtilities.redirectWithMessage(request, response, RedirectType.SUCCESS, "Password reset successfully", "/");
     }
 
-    private boolean validateResetPasswordRequest(String token, String newPassword, String confirmNewPassword) {
+    private boolean validateResetPasswordRequest(String token, String role, String newPassword, String confirmNewPassword) {
         if (StringUtilities.anyNullOrBlank(token, newPassword, confirmNewPassword)) {
             return false;
         }
         if (!ValidationUtilities.comparePasswords(newPassword, confirmNewPassword)) {
+            return false;
+        }
+        if (role == null || (!role.equals("customer") && !role.equals("staff"))) {
             return false;
         }
         return newPassword.length() >= 8;

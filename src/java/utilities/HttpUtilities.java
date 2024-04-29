@@ -1,51 +1,28 @@
 package utilities;
 
 import com.google.gson.Gson;
-import enviroments.Enviroment;
+import environments.Enviroment;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
 import java.util.logging.Logger;
 import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
 
 public final class HttpUtilities {
 
     private static final Logger LOG = Logger.getLogger(HttpUtilities.class.getName());
     private static final Gson gson = new Gson();
-    private static final TrustManager[] trustAllCerts = new TrustManager[]{
-        new X509TrustManager() {
-            public java.security.cert.X509Certificate[] getAcceptedIssuers() {
-                return null;
-            }
 
-            public void checkClientTrusted(
-                    java.security.cert.X509Certificate[] certs, String authType) {
-            }
-
-            public void checkServerTrusted(
-                    java.security.cert.X509Certificate[] certs, String authType) {
-            }
-        }
-    };
-
-    public static boolean sendHttpJsonRequest(String urlConnection, Object object) {
+    public static String sendHttpJsonRequest(String urlConnection, Object object) {
         String timestamp = String.valueOf(System.currentTimeMillis());
         String jsonPayload = gson.toJson(object);
         String combineContent = timestamp + jsonPayload;
         String signature = AesUtilities.aes256EcbEncrypt(combineContent, Enviroment.SECRET_KEY);
         HttpURLConnection connection = null;
         try {
-            SSLContext sc = SSLContext.getInstance("SSL");
-            sc.init(null, trustAllCerts, new java.security.SecureRandom());
-            HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
             URL url = new URL(urlConnection);
             connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("POST");
@@ -70,10 +47,10 @@ public final class HttpUtilities {
             }
             System.out.println("Response Code: " + responseCode);
             System.out.println("Response Body: " + response.toString());
-            return responseCode == 200;
-        } catch (IOException | KeyManagementException | NoSuchAlgorithmException ex) {
+            return response.toString();
+        } catch (IOException ex) {
             LOG.severe(ex.getMessage());
-            return false;
+            return null;
         } finally {
             if (connection != null) {
                 connection.disconnect();
@@ -81,15 +58,12 @@ public final class HttpUtilities {
         }
     }
 
-    public static boolean sendHttpJsonRequest(String urlConnection, String jsonPayload) {
+    public static String sendHttpJsonRequest(String urlConnection, String jsonPayload) {
         String timestamp = String.valueOf(System.currentTimeMillis());
         String combineContent = timestamp + jsonPayload;
         String signature = AesUtilities.aes256EcbEncrypt(combineContent, Enviroment.SECRET_KEY);
         HttpsURLConnection connection = null;
         try {
-            SSLContext sc = SSLContext.getInstance("SSL");
-            sc.init(null, trustAllCerts, new java.security.SecureRandom());
-            HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
             URL url = new URL(urlConnection);
             connection = (HttpsURLConnection) url.openConnection();
             connection.setRequestMethod("POST");
@@ -114,10 +88,10 @@ public final class HttpUtilities {
             }
             System.out.println("Response Code: " + responseCode);
             System.out.println("Response Body: " + response.toString());
-            return responseCode == 200;
-        } catch (IOException | KeyManagementException | NoSuchAlgorithmException ex) {
+            return response.toString();
+        } catch (IOException ex) {
             LOG.severe(ex.getMessage());
-            return false;
+            return null;
         } finally {
             if (connection != null) {
                 connection.disconnect();

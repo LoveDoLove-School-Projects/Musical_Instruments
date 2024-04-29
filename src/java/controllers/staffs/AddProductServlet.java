@@ -22,7 +22,6 @@ public class AddProductServlet extends HttpServlet {
 
     @PersistenceContext
     EntityManager entityManager;
-
     @Resource
     UserTransaction userTransaction;
 
@@ -50,8 +49,6 @@ public class AddProductServlet extends HttpServlet {
         } catch (NotSupportedException | SystemException | RollbackException | HeuristicMixedException | HeuristicRollbackException | SecurityException | IllegalStateException ex) {
             throw new DatabaseException(ex.getMessage());
         }
-
         RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.SUCCESS, "Product Added successful!", "/pages/staffs/searchProduct.jsp");
     }
-
 }

@@ -161,5 +161,4 @@ public class Carts implements Serializable {
     public String toString() {
         return "entities.Carts[ cardId=" + cardId + " ]";
     }
-
 }

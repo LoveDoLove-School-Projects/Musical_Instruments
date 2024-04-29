@@ -22,7 +22,6 @@ public class DeleteProductServlet extends HttpServlet {
 
     @PersistenceContext
     EntityManager entityManager;
-
     @Resource
     UserTransaction userTransaction;
 

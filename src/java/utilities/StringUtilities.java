@@ -1,6 +1,6 @@
 package utilities;
 
-public class StringUtilities {
+public final class StringUtilities {
 
     /**
      * Checks if a string is null or blank.

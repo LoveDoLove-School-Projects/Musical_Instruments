@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package entities;
 
 import jakarta.persistence.Basic;
@@ -22,10 +18,6 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 import java.util.Date;
 
-/**
- *
- * @author tanji
- */
 @Entity
 @Table(name = "STAFFS")
 @XmlRootElement
@@ -39,7 +31,8 @@ import java.util.Date;
     @NamedQuery(name = "Staffs.findByPhoneNumber", query = "SELECT s FROM Staffs s WHERE s.phoneNumber = :phoneNumber"),
     @NamedQuery(name = "Staffs.findByGender", query = "SELECT s FROM Staffs s WHERE s.gender = :gender"),
     @NamedQuery(name = "Staffs.findByTwoFactorAuth", query = "SELECT s FROM Staffs s WHERE s.twoFactorAuth = :twoFactorAuth"),
-    @NamedQuery(name = "Staffs.findByAccountCreationDate", query = "SELECT s FROM Staffs s WHERE s.accountCreationDate = :accountCreationDate")})
+    @NamedQuery(name = "Staffs.findByAccountCreationDate", query = "SELECT s FROM Staffs s WHERE s.accountCreationDate = :accountCreationDate"),
+    @NamedQuery(name = "Staffs.findByEmailAndPassword", query = "SELECT s FROM Staffs s WHERE s.email = :email AND s.password = :password")})
 public class Staffs implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -81,7 +74,7 @@ public class Staffs implements Serializable {
     private String gender;
     @Lob
     @Column(name = "PICTURE")
-    private Serializable picture;
+    private byte[] picture;
     @Column(name = "TWO_FACTOR_AUTH")
     private Boolean twoFactorAuth;
     @Column(name = "ACCOUNT_CREATION_DATE")
@@ -95,6 +88,16 @@ public class Staffs implements Serializable {
         this.userId = userId;
     }
 
+    public Staffs(String email, String password) {
+        this.email = email;
+        this.password = password;
+    }
+
+    public Staffs(Integer userId, byte[] picture) {
+        this.userId = userId;
+        this.picture = picture;
+    }
+
     public Staffs(Integer userId, String username, String password, String email, String address, String phoneNumber, String gender) {
         this.userId = userId;
         this.username = username;
@@ -103,6 +106,15 @@ public class Staffs implements Serializable {
         this.address = address;
         this.phoneNumber = phoneNumber;
         this.gender = gender;
+    }
+
+    public Staffs(Integer userId, String username, String address, String phoneNumber, String gender, Boolean twoFactorAuth) {
+        this.userId = userId;
+        this.username = username;
+        this.address = address;
+        this.phoneNumber = phoneNumber;
+        this.gender = gender;
+        this.twoFactorAuth = twoFactorAuth;
     }
 
     public Integer getUserId() {
@@ -161,11 +173,11 @@ public class Staffs implements Serializable {
         this.gender = gender;
     }
 
-    public Serializable getPicture() {
+    public byte[] getPicture() {
         return picture;
     }
 
-    public void setPicture(Serializable picture) {
+    public void setPicture(byte[] picture) {
         this.picture = picture;
     }
 
@@ -207,7 +219,19 @@ public class Staffs implements Serializable {
 
     @Override
     public String toString() {
-        return "entities.Staffs[ userId=" + userId + " ]";
+        StringBuilder sb = new StringBuilder();
+        sb.append("Staffs{");
+        sb.append("userId=").append(userId);
+        sb.append(", username=").append(username);
+        sb.append(", password=").append(password);
+        sb.append(", email=").append(email);
+        sb.append(", address=").append(address);
+        sb.append(", phoneNumber=").append(phoneNumber);
+        sb.append(", gender=").append(gender);
+        sb.append(", picture=").append(picture);
+        sb.append(", twoFactorAuth=").append(twoFactorAuth);
+        sb.append(", accountCreationDate=").append(accountCreationDate);
+        sb.append('}');
+        return sb.toString();
     }
-
 }
