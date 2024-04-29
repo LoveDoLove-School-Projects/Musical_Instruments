@@ -261,5 +261,4 @@ public class Transactions implements Serializable {
     public String toString() {
         return "ms.paymentgateway.entities.Transactions[ id=" + id + " ]";
     }
-    
 }

@@ -1,37 +1,38 @@
 package controllers;
 
 import common.Constants;
+import entities.Session;
+import features.SessionChecker;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import utilities.RedirectUtilities;
 
+@WebServlet(name = "TransactionServlet", urlPatterns = {"/payments/processTransaction", "/payments/transaction"})
 public class TransactionServlet extends HttpServlet {
 
+    private final SessionChecker sessionChecker = new SessionChecker();
+
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         // RedirectUtilities.redirectWithMessage(request, response, RedirectType.DANGER,
         // "Invalid request", Constants.MAIN_URL);
         request.getRequestDispatcher(Constants.TRANSACTION_JSP_URL).forward(request, response);
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        String path = request.getServletPath();
-        switch (path) {
-            case Constants.TRANSACTION_URL:
-                processTransaction(request, response);
-                break;
-            case Constants.PAY_TRANSACTION_URL:
-                break;
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        Session session = sessionChecker.getLoginSession(request.getSession());
+        if (!session.isResult()) {
+            RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Please login to view this page.", Constants.CUSTOMER_LOGIN_URL);
+            return;
         }
+        processTransaction(request, response);
     }
 
-    private void processTransaction(HttpServletRequest request, HttpServletResponse response) {
-        String orderId = request.getParameter("orderId");
-        String amount = request.getParameter("amount");
+    private void processTransaction(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     }
 }

@@ -110,5 +110,4 @@ public class Resetpassword implements Serializable {
     public String toString() {
         return "entities.Resetpassword[ email=" + email + " ]";
     }
-    
 }

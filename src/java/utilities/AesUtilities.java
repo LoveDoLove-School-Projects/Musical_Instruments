@@ -11,7 +11,7 @@ import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
-public class AesUtilities {
+public final class AesUtilities {
 
     private static final Logger LOG = Logger.getLogger(AesUtilities.class.getName());
 

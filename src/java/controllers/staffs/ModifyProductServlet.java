@@ -27,7 +27,6 @@ public class ModifyProductServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
         int productId = Integer.parseInt(request.getParameter("productId"));
         String productName = request.getParameter("productName");
         double price = Double.parseDouble(request.getParameter("price"));
@@ -35,7 +34,6 @@ public class ModifyProductServlet extends HttpServlet {
         int quantity = Integer.parseInt(request.getParameter("quantity"));
         String category = request.getParameter("category");
         String imagePath = request.getParameter("imagePath");
-
         Products product = new Products(productId, productName, price, color, quantity, category, imagePath);
         boolean isUpdated = updateProductDetails(product);
         if (!isUpdated) {
@@ -58,7 +56,6 @@ public class ModifyProductServlet extends HttpServlet {
             productFromDB.setQuantity(product.getQuantity());
             productFromDB.setCategory(product.getCategory());
             productFromDB.setImagePath(product.getImagePath());
-
             entityManager.merge(productFromDB);
             userTransaction.commit();
             return true;

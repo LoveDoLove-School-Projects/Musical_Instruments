@@ -3,6 +3,11 @@
 <c:set var="path" value="${pageContext.request.contextPath}" />
 <c:set var="basePath" value="${pageContext.request.scheme}://${pageContext.request.serverName}:${pageContext.request.serverPort}${path}/" />
 <%@ page import="java.util.Calendar" %>
+<%@ page import="java.util.List" %>
+<%@ page import="entities.Carts" %>
+<%
+response.setHeader("Cache-Control", "no-store");
+%>
 <!DOCTYPE html>
 <html>
 
@@ -97,7 +102,7 @@
                             <input type="hidden" name="date_created_gmt" value="${date_created_gmt}" />
                             <button type="submit" class="btn btn-primary mt-3" id="paymentButton">Pay Now</button>
                         </form>
-                        <form action="<%=application.getInitParameter("posturl")%>" method="post" id="paypal-button-form">
+                        <form action="payments/paypal" method="post" id="paypal-button-form">
                             <input type="hidden" name="upload" value="1" />
                             <input type="hidden" name="return" value="<%=application.getInitParameter("returnurl")%>" />
                             <input type="hidden" name="cmd" value="_cart" />
@@ -109,8 +114,22 @@
                             <input type="hidden" name="amount_1" value="2" />
                             <input type="hidden" name="quantity_1" value="3" /> -->
 
+                            <%
+                                List<Carts> cartList = (List<Carts>) request.getAttribute("cartList");
+                                int i = 1;
+                                for (Carts cart : cartList) {
+                            %>
+                            <input type="hidden" name="item_name_<%=i%>" value="<%=cart.getProductName()%>" />
+                            <input type="hidden" name="item_number_<%=i%>" value="<%=cart.getProductId()%>" />
+                            <input type="hidden" name="amount_<%=i%>" value="<%=cart.getProductPrice()%>" />
+                            <input type="hidden" name="quantity_<%=i%>" value="<%=cart.getProductQuantity()%>" />
+                            <%
+                                i++;
+                                }
+                            %>
+
                             <!-- Image -->
-                            <input type="image" src="https://www.paypal.com/en_US/i/btn/btn_xpressCheckout.gif" alt="Paypal Button">
+                            <input type="image" src="https://www.paypal.com/en_US/i/btn/btn_xpressCheckout.gif" alt="Paypal Button" class="mt-3" />
                         </form>
                     </div>
                 </div>

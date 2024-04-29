@@ -11,13 +11,11 @@ import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
 import java.util.logging.Logger;
-
 import utilities.RedirectUtilities;
 
 public class SearchProductServlet extends HttpServlet {
 
     private static final Logger LOG = Logger.getLogger(SearchProductServlet.class.getName());
-
     @PersistenceContext
     EntityManager entityManager;
 
@@ -25,12 +23,10 @@ public class SearchProductServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String searchQuery = request.getParameter("searchQuery");
-
         if (searchQuery.isBlank() || searchQuery.trim().isEmpty()) {
             RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Please fill in the product ID!", "/pages/staffs/searchProduct.jsp");
             return;
         }
-
         try {
             List<Products> productList = entityManager.createNamedQuery("Products.findByProductId", Products.class).setParameter("productId", Integer.valueOf(searchQuery)).getResultList();
             if (productList == null || productList.isEmpty()) {
@@ -45,5 +41,4 @@ public class SearchProductServlet extends HttpServlet {
             RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Please a valid product ID!", "/pages/staffs/searchProduct.jsp");
         }
     }
-
 }

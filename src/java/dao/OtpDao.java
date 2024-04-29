@@ -1,7 +1,7 @@
 package dao;
 
-import common.Common;
 import controllers.ConnectionController;
+import entities.OtpStatus;
 import entities.Otps;
 import exceptions.DatabaseException;
 import features.MailSender;
@@ -25,47 +25,43 @@ public class OtpDao {
     private static final String UPDATE_TRY_COUNT_SQL = "UPDATE otps SET try_count = ? WHERE email = ?";
     private static final MailSender MAIL_SENDER = new MailSender();
 
-    public Common.Status sendOtp(String email) {
+    public boolean sendOtp(String email) {
         if (StringUtilities.anyNullOrBlank(email)) {
-            return Common.Status.INVALID;
+            return false;
         }
         String otp = RandomUtilities.generateOtp();
         boolean mailStatus = MAIL_SENDER.sendEmail(email, SUBJECT, CONTENT.replace("${otpvalue}", otp));
         if (!mailStatus) {
-            return Common.Status.INTERNAL_SERVER_ERROR;
+            return false;
         }
         boolean otpExists = isOtpExists(email);
-        if (otpExists ? updateOtp(email, otp) : addOtp(email, otp)) {
-            return Common.Status.OK;
-        } else {
-            return Common.Status.INTERNAL_SERVER_ERROR;
-        }
+        return otpExists ? updateOtp(email, otp) : addOtp(email, otp);
     }
 
-    public Common.Status verifyOtp(String email, String otp) {
+    public OtpStatus verifyOtp(String email, String otp) {
         if (StringUtilities.anyNullOrBlank(email, otp)) {
-            return Common.Status.INVALID;
+            return OtpStatus.INVALID;
         }
         Otps dbOtp = getOtp(email);
         if (dbOtp == null) {
-            return Common.Status.NOT_FOUND;
+            return OtpStatus.NOT_FOUND;
         }
         if (dbOtp.getTryCount() >= 5) {
-            return Common.Status.UNAUTHORIZED;
+            return OtpStatus.UNAUTHORIZED;
         }
         if (dbOtp.getCreatedAt().before(new Timestamp(System.currentTimeMillis() - 300000))) {
-            return Common.Status.EXPIRED;
+            return OtpStatus.EXPIRED;
         }
         if (!dbOtp.getOtp().equals(otp)) {
             int tryCount = dbOtp.getTryCount() + 1;
             updateTryCount(email, tryCount);
-            return Common.Status.FAILED;
+            return OtpStatus.FAILED;
         }
         if (otp.equals(dbOtp.getOtp())) {
             deleteOtp(email);
-            return Common.Status.OK;
+            return OtpStatus.OK;
         }
-        return Common.Status.INVALID;
+        return OtpStatus.INVALID;
     }
 
     /**

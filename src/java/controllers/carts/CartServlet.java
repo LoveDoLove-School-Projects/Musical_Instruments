@@ -27,13 +27,11 @@ public class CartServlet extends HttpServlet {
         if (!session.isResult()) {
             RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Please login to view this page.", Constants.CUSTOMER_LOGIN_URL);
             return;
-           
         }
         List<Carts> carts = entityManager.createNamedQuery("Carts.findByCustomerId").setParameter("customerId", session.getUserId()).getResultList();
         if (carts == null) {
             RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Product Not Found!", Constants.PRODUCT_URL);
             return;
-            
         }
         request.setAttribute("cartDetails", carts);
         request.getRequestDispatcher(Constants.CART_PRODUCT_JSP_URL).forward(request, response);
@@ -42,7 +40,5 @@ public class CartServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
     }
-
 }

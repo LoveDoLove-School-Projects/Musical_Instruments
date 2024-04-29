@@ -5,9 +5,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.logging.Logger;
-import enviroments.EnviromentInitialize;
+import environments.EnviromentInitialize;
 
-public class FileUtilities {
+public final class FileUtilities {
 
     private static final Logger LOG = Logger.getLogger(FileUtilities.class.getName());
 

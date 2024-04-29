@@ -1,24 +1,28 @@
 package features;
 
+import entities.Role;
 import entities.Session;
 import jakarta.servlet.http.HttpSession;
+import java.util.logging.Logger;
 
 /**
  * This class provides methods to manage login sessions.
  */
 public class SessionChecker {
 
-    private static final String LOGIN_ID = "login_id";
+    private static final Logger LOG = Logger.getLogger(SessionChecker.class.getName());
+    private static final String USER_SESSION = "user_session";
 
     /**
      * Sets the login session attribute in the provided HttpSession object.
      *
      * @param session The HttpSession object to set the attribute in.
      * @param loginId The login ID to be stored in the session attribute.
+     * @param role The role to be stored in the session attribute.
      */
-    public void setLoginSession(HttpSession session, Integer loginId) {
+    public void setLoginSession(HttpSession session, Integer loginId, Role role) {
         if (session != null) {
-            session.setAttribute(LOGIN_ID, loginId);
+            session.setAttribute(USER_SESSION, new Session(true, loginId, role));
         }
     }
 
@@ -35,10 +39,11 @@ public class SessionChecker {
         if (session == null) {
             return new Session(false, 0);
         }
-        Integer loginId = (Integer) session.getAttribute(LOGIN_ID);
-        if (loginId == null) {
-            return new Session(false, 0);
+        Session userSession = (Session) session.getAttribute(USER_SESSION);
+        if (userSession == null) {
+            return new Session(false, 0, Role.UNKNOWN);
         }
-        return new Session(true, loginId);
+        LOG.info(userSession.toString());
+        return userSession;
     }
 }

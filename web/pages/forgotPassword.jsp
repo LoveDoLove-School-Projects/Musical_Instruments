@@ -8,7 +8,6 @@
     <head>
         <jsp:include page="/defaults/head.jsp" />
         <title>Forgot Password</title>
-        <link rel="stylesheet" href="assets/css/form.css" />
     </head>
 
     <body>
@@ -31,6 +30,7 @@
                                         </div>
 
                                         <div class="mt-4 pt-2">
+                                            <input type="hidden" name="role" value="${role}"/>
                                             <button type="submit" class="btn btn-primary btn-lg" id="forgotPasswordButton">Reset Password</button>
                                         </div>
                                     </div>

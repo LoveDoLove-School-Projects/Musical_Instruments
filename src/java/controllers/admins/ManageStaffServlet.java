@@ -17,7 +17,6 @@ import utilities.RedirectUtilities;
 public class ManageStaffServlet extends HttpServlet {
 
     private static final Logger LOG = Logger.getLogger(ManageStaffServlet.class.getName());
-
     @PersistenceContext
     EntityManager entityManager;
 
@@ -41,5 +40,4 @@ public class ManageStaffServlet extends HttpServlet {
         session.setAttribute("customerDetails", customer);
         request.getRequestDispatcher("/pages/staffs/manageCustomer.jsp").forward(request, response);
     }
-
 }

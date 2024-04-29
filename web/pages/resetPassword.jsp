@@ -8,7 +8,6 @@
     <head>
         <jsp:include page="/defaults/head.jsp" />
         <title>Reset Password</title>
-        <link rel="stylesheet" href="assets/css/form.css" />
     </head>
 
     <body>
@@ -44,11 +43,8 @@
                                             </div>
                                         </div>
 
-                                        <%
-                                        String token = request.getParameter("token");
-                                        %>
-                                        <input type="hidden" name="token" id="token" value="<%=token%>">
-
+                                        <input type="hidden" name="token" id="token" value="${token}">
+                                        <input type="hidden" name="role" id="role" value="${role}">
                                         <div class="mt-4 pt-2">
                                             <button type="submit" class="btn btn-primary btn-lg" id="resetPasswordButton">Reset Password</button>
                                         </div>

@@ -1,6 +1,5 @@
 package controllers;
 
-import common.Common;
 import common.Constants;
 import dao.OtpDao;
 import entities.Customers;
@@ -45,7 +44,7 @@ public class RegisterServlet extends HttpServlet {
             setRegisterPage(request, response);
             return;
         }
-        if (otpDao.sendOtp(customer.getEmail()) != Common.Status.OK) {
+        if (!otpDao.sendOtp(customer.getEmail())) {
             RedirectUtilities.setMessage(request, RedirectType.DANGER, "There was an error from the server! Please try again later.");
             return;
         }

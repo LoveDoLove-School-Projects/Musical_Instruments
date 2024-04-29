@@ -11,7 +11,6 @@ response.setHeader("Cache-Control", "no-store");
     <head>
         <jsp:include page="/defaults/head.jsp" />
         <title>2FA Session</title>
-        <link rel="stylesheet" href="assets/css/form.css" />
     </head>
 
     <body>

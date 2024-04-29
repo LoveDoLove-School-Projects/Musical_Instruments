@@ -57,14 +57,6 @@
         <servlet-class>controllers.carts.CartServlet</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>PaypalServlet</servlet-name>
-        <servlet-class>controllers.PaypalServlet</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>TransactionServlet</servlet-name>
-        <servlet-class>controllers.TransactionServlet</servlet-class>
-    </servlet>
-    <servlet>
         <servlet-name>CheckoutServlet</servlet-name>
         <servlet-class>controllers.CheckoutServlet</servlet-class>
     </servlet>
@@ -91,6 +83,22 @@
     <servlet>
         <servlet-name>AddStaffServlet</servlet-name>
         <servlet-class>controllers.admins.AddStaffServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>LoginStaffServlet</servlet-name>
+        <servlet-class>controllers.LoginStaffServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>UpdateProfileServlet</servlet-name>
+        <servlet-class>controllers.UpdateProfileServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>UploadProfilePictureServlet</servlet-name>
+        <servlet-class>controllers.UploadProfilePictureServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>RemoveProfilePictureServlet</servlet-name>
+        <servlet-class>controllers.RemoveProfilePictureServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>LoginServlet</servlet-name>
@@ -149,13 +157,8 @@
         <url-pattern>/pages/products/addProductToCart</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>PaypalServlet</servlet-name>
-        <url-pattern>/payments/paypal/success</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>TransactionServlet</servlet-name>
-        <url-pattern>/payments/transaction</url-pattern>
-        <url-pattern>/payments/processTransaction</url-pattern>
+        <servlet-name>CartServlet</servlet-name>
+        <url-pattern>/pages/products/cart</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>CheckoutServlet</servlet-name>
@@ -193,32 +196,32 @@
         <servlet-name>AddStaffServlet</servlet-name>
         <url-pattern>/pages/admins/AddStaff</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>LoginStaffServlet</servlet-name>
+        <url-pattern>/pages/staffLogin</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>UpdateProfileServlet</servlet-name>
+        <url-pattern>/pages/profile/updateProfile</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>UploadProfilePictureServlet</servlet-name>
+        <url-pattern>/pages/profile/uploadPicture</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ProfileServlet</servlet-name>
+        <url-pattern>/pages/profile</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>RemoveProfilePictureServlet</servlet-name>
+        <url-pattern>/pages/profile/removePicture</url-pattern>
+    </servlet-mapping>
     <session-config>
         <session-timeout>30</session-timeout>
     </session-config>
-    <context-param>
-        <description>authtoken</description>
-        <param-name>authtoken</param-name>
-        <param-value>AZrjdHeC-KD9nsZVH8HR54O-3ZgvAshjqYq4hiPgXGL7ZKcps159a3mTW-YqLlvLQzBNveUjdpSELOuX</param-value>
-    </context-param>
-    <context-param>
-        <description>posturl</description>
-        <param-name>posturl</param-name>
-        <param-value>https://www.sandbox.paypal.com/cgi-bin/webscr</param-value>
-    </context-param>
-    <context-param>
-        <description>business</description>
-        <param-name>business</param-name>
-        <param-value>sb-kfbrj14644364@business.example.com</param-value>
-    </context-param>
-    <context-param>
-        <description>returnurl</description>
-        <param-name>returnurl</param-name>
-        <param-value>http://localhost:8080/Musical_Instruments/payments/paypal/success</param-value>
-    </context-param>
     <listener>
         <description>Enviroment Entry Reader Listener</description>
-        <listener-class>enviroments.EnviromentInitialize</listener-class>
+        <listener-class>environments.EnviromentInitialize</listener-class>
     </listener>
     <error-page>
         <error-code>400</error-code>
@@ -306,6 +309,18 @@
         <env-entry-type>java.lang.String</env-entry-type>
         <env-entry-value>b4fb9ad7b2b95413399ba07326fa58827b90f28070f4e9bf8572344e4d0e6f57</env-entry-value>
     </env-entry>
+    <env-entry>
+        <description>For getting payapl access token</description>
+        <env-entry-name>ACCESS_TOKEN_API</env-entry-name>
+        <env-entry-type>java.lang.String</env-entry-type>
+        <env-entry-value>Li3v31mJXIweF14+ZWfZkWdUCRU/VklPZKstrAiP9OfEUe9KQMcQA157kh184TjOAZHeLgB3Y2qrrcf9PEDAZw==</env-entry-value>
+    </env-entry>
+    <env-entry>
+        <description>For creating paypal payment link</description>
+        <env-entry-name>CREATE_PAYMENT_API</env-entry-name>
+        <env-entry-type>java.lang.String</env-entry-type>
+        <env-entry-value>Li3v31mJXIweF14+ZWfZkWdUCRU/VklPZKstrAiP9Ocrj3fJ77ve8hk7qA5WtfPN7ZCQZCJ5EPcNAuMM55rBVQ==</env-entry-value>
+    </env-entry>
     <servlet>
         <servlet-name>RegisterServlet</servlet-name>
         <servlet-class>controllers.RegisterServlet</servlet-class>
@@ -333,12 +348,5 @@
     <servlet-mapping>
         <servlet-name>LogoutServlet</servlet-name>
         <url-pattern>/pages/logout</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>ProfileServlet</servlet-name>
-        <url-pattern>/pages/profile</url-pattern>
-        <url-pattern>/pages/profile/uploadPicture</url-pattern>
-        <url-pattern>/pages/profile/removePicture</url-pattern>
-        <url-pattern>/pages/profile/updateProfile</url-pattern>
     </servlet-mapping>
 </web-app>

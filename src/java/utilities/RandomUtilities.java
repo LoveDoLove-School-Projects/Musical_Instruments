@@ -1,6 +1,6 @@
 package utilities;
 
-public class RandomUtilities {
+public final class RandomUtilities {
 
     /**
      * Generates a random OTP (One-Time Password) as a string.

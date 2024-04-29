@@ -1,6 +1,6 @@
 package utilities;
 
-public class ConvertUtilities {
+public final class ConvertUtilities {
 
     /**
      * Converts a string key to a byte array.
