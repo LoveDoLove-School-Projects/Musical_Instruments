@@ -15,12 +15,13 @@ public class ProductDao {
 
     private static final Logger LOG = Logger.getLogger(ProductDao.class.getName());
 
-    private static final String SEARCH_PRODUCT_SQL = "SELECT * FROM PRODUCTS WHERE name LIKE ?";
+    private static final String SEARCH_PRODUCT_SQL = "SELECT * FROM PRODUCTS WHERE UPPER(name) LIKE ? OR UPPER(category) LIKE ?";
 
     public List<Products> searchProduct(String searchQuery) {
         try (Connection connection = ConnectionController.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(SEARCH_PRODUCT_SQL)) {
-            String searchTerm = "%" + searchQuery + "%";
+            String searchTerm = "%" + searchQuery.toUpperCase() + "%";
             preparedStatement.setString(1, searchTerm);
+            preparedStatement.setString(2, searchTerm);
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 List<Products> productList = new ArrayList<>();
                 while (resultSet.next()) {

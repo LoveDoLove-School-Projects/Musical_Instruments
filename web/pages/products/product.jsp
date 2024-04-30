@@ -12,12 +12,14 @@
         <jsp:include page="/defaults/head.jsp" />
         <title>Products Page</title>
         <link rel="stylesheet" href="assets/css/product.css" />
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     </head>
 
 
     <body>
         <jsp:include page="/defaults/header.jsp" />
-        <main class="main">
+        <main class="main" data-bs-spy="scroll" data-bs-target=".d-block">
             <section class="section1">
                 <div class="container">
                     <div class="row justify-content-center align-items-center">
@@ -25,7 +27,7 @@
                             <h1>Welcome to music instruments</h1>
                             <p>Enjoy the music, Malaysia top 1 music website</p>
                             <button class="m-2 px-4 py-2 button"><strong>Shop now</strong></button>
-                            <button class="m-2 px-4 py-2 button"><strong>Explore</strong></button>
+                            <button class="m-2 px-4 py-2 button"><a href="#section3"><strong>Explore</strong></a></button>
                         </div>
 
                         <div class="col-12 col-xl-7">
@@ -65,10 +67,10 @@
             <section class="section3">
                 <div class="container-fluid">
                     <div class="row m-2 m-xxl-5 p-0 p-xxl-5 d-flex align-items-center justify-content-center">
-                        <div class="col-12 col-xxl-12">
+                        <div class="col-12 col-xxl-12"  id="section3" >
                             <div class="m-5 d-block text-center" style="animation:fadeInUp 5s">
                                 <h1>This is our product that we have</h1>
-                                <h5>Here have almost 10 category to let you choose</h5>
+                                <h5>Here have 4 category of products to let you choose</h5>
                             </div>
                         </div>
 
