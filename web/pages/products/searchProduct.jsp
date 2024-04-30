@@ -18,28 +18,36 @@ List<Products> productDetails = (List<Products>) request.getAttribute("products"
         <jsp:include page="/defaults/head.jsp" />
         <title>Search Products Page</title>
         <link rel="stylesheet" href="assets/css/product.css" />
+
     </head>
 
     <body>
         <jsp:include page="/defaults/header.jsp" />
         <main class="main">
-
             <section class="section1">
                 <div class="container-fluid">
                     <div class="row m-2 m-xxl-5 p-0 p-xxl-5 d-flex align-items-center justify-content-center">
                         <div class="col-12 col-xxl-12">
                             <div class="m-5 d-block text-center" style="animation:fadeInUp 5s">
                                 <h1>This is our product that we have</h1>
-                                <h5>Here have almost 10 category to let you choose</h5>
+                                <h5>Here have 4 category with various products to let you choose</h5>
                             </div>
                         </div>
 
                         <!-- Display search bar -->
-                        <div class="col-12 col-xxl-12 ">
-                            <form action="pages/productsearch" method="POST" >
-                                <input type="text" name="searchQuery" placeholder="Search...">
-                                <button type="submit">Search</button>
-                            </form>
+                        <div class="container">
+                            <div class="row justify-content-center">
+                                <div class="col-12 col-xxl-6">
+                                    <form action="pages/productsearch" method="POST">
+                                        <div class="input-group mb-3">
+                                            <input type="text" class="form-control" name="searchQuery" placeholder="Search...">
+                                            <div class="input-group-append">
+                                                <button type="submit" class="btn btn-primary">Search</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
                         </div>
 
                         <!-- Display search results or all products -->
@@ -65,7 +73,8 @@ List<Products> productDetails = (List<Products>) request.getAttribute("products"
                         %>
                     </div>
                 </div>
-            </section>        </main>
-            <jsp:include page="/defaults/footer.jsp" />
+            </section>
+        </main>
+        <jsp:include page="/defaults/footer.jsp" />
     </body>
 </html>
