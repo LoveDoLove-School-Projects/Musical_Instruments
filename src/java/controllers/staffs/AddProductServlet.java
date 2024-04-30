@@ -37,9 +37,9 @@ public class AddProductServlet extends HttpServlet {
         String color = request.getParameter("color");
         int quantity = Integer.parseInt(request.getParameter("quantity"));
         String category = request.getParameter("category");
-        InputStream pictureStream = request.getPart("imagePath").getInputStream();
+        InputStream pictureStream = request.getPart("image").getInputStream();
         if (pictureStream == null) {
-//            RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Error uploading picture.", Constants.PROFILE_URL);
+            RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Error uploading picture.", "/pages/staffs/AddProduct.jsp");
             return;
         }
         byte[] pictureBytes = pictureStream.readAllBytes();

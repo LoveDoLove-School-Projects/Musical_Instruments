@@ -1,6 +1,8 @@
 package controllers.admins;
 
 import entities.Staffs;
+import exceptions.DatabaseException;
+import features.AesProtector;
 import jakarta.annotation.Resource;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -16,7 +18,6 @@ import jakarta.transaction.SystemException;
 import jakarta.transaction.UserTransaction;
 import java.io.IOException;
 import java.util.Date;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import utilities.RedirectUtilities;
 import utilities.StringUtilities;
@@ -26,39 +27,30 @@ public class AddStaffServlet extends HttpServlet {
 
     @PersistenceContext
     EntityManager entityManager;
-
     @Resource
     UserTransaction userTransaction;
+    private static final Logger LOG = Logger.getLogger(AddStaffServlet.class.getName());
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
+        String username = request.getParameter("username");
+        String password = request.getParameter("password");
+        String email = request.getParameter("email");
+        String gender = request.getParameter("gender");
+        String address = request.getParameter("address");
+        String phoneNumber = request.getParameter("phoneNumber");
+        Staffs staff = new Staffs(username, password, email, address, phoneNumber, gender);
+        LOG.info(staff.toString());
+        if (!validateStaffDetails(staff)) {
+            throw new IllegalArgumentException("Invalid staff details.");
+        }
+
         try {
-            response.setContentType("text/html;charset=UTF-8");
-
-            String username = request.getParameter("username");
-            String password = request.getParameter("password");
-            String email = request.getParameter("email");
-            String gender = request.getParameter("gender");
-            String address = request.getParameter("address");
-            String phoneNumber = request.getParameter("phoneNumber");
-
-            Staffs staff = new Staffs();
-
-            if (!validateStaffDetails(username, password, email, gender, address, phoneNumber)) {
-                throw new IllegalArgumentException("Invalid staff details.");
-            }
-
-            try {
-                userTransaction.begin();
-            } catch (NotSupportedException ex) {
-                Logger.getLogger(AddStaffServlet.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (SystemException ex) {
-                Logger.getLogger(AddStaffServlet.class.getName()).log(Level.SEVERE, null, ex);
-            }
-
+            userTransaction.begin();
             staff.setUsername(username);
-            staff.setPassword(password);
+            staff.setPassword(AesProtector.aes256EcbEncrypt(password));
             staff.setEmail(email);
             staff.setGender(gender);
             staff.setAddress(address);
@@ -67,33 +59,24 @@ public class AddStaffServlet extends HttpServlet {
             staff.setAccountCreationDate(new Date());
             entityManager.persist(staff);
             userTransaction.commit();
-
-            RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.SUCCESS, "Staff Added successful!", "/pages/admins/searchStaff.jsp");
-        } catch (RollbackException ex) {
-            Logger.getLogger(AddStaffServlet.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (HeuristicMixedException ex) {
-            Logger.getLogger(AddStaffServlet.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (HeuristicRollbackException ex) {
-            Logger.getLogger(AddStaffServlet.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SecurityException ex) {
-            Logger.getLogger(AddStaffServlet.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IllegalStateException ex) {
-            Logger.getLogger(AddStaffServlet.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SystemException ex) {
-            Logger.getLogger(AddStaffServlet.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NotSupportedException | RollbackException | HeuristicMixedException | HeuristicRollbackException | SecurityException | IllegalStateException | SystemException ex) {
+            LOG.severe(ex.getMessage());
+            throw new DatabaseException(ex.getMessage());
         }
+
+        RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.SUCCESS, "Staff Added successful!", "/pages/admins/searchStaff.jsp");
     }
 
-    private boolean validateStaffDetails(String username, String password, String email, String gender, String address, String phoneNumber) {
-        if (StringUtilities.anyNullOrBlank(username, password, email, gender, address, phoneNumber)) {
+    private boolean validateStaffDetails(Staffs staff) {
+        if (StringUtilities.anyNullOrBlank(staff.getUsername(), staff.getPassword(), staff.getEmail(), staff.getGender(), staff.getAddress(), staff.getPhoneNumber())) {
             return false;
         }
-        if (password.length() < 8) {
+        if (staff.getPassword().length() < 8) {
             return false;
         }
-        if (!ValidationUtilities.isEmailValid(email)) {
+        if (!ValidationUtilities.isEmailValid(staff.getEmail())) {
             return false;
         }
-        return ValidationUtilities.isPhoneNumberValid(phoneNumber);
+        return ValidationUtilities.isPhoneNumberValid(staff.getPhoneNumber());
     }
 }

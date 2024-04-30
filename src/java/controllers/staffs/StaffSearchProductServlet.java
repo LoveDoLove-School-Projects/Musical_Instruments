@@ -13,9 +13,9 @@ import java.util.List;
 import java.util.logging.Logger;
 import utilities.RedirectUtilities;
 
-public class SearchProductServlet extends HttpServlet {
+public class StaffSearchProductServlet extends HttpServlet {
 
-    private static final Logger LOG = Logger.getLogger(SearchProductServlet.class.getName());
+    private static final Logger LOG = Logger.getLogger(StaffSearchProductServlet.class.getName());
     @PersistenceContext
     EntityManager entityManager;
 

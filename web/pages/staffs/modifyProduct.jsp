@@ -29,7 +29,7 @@
             <div class="row">
                 <div class="col-md-6 offset-md-3">
                     <h1 class="text-center mb-4">Modify Product Information</h1>
-                    <form id="modifyForm" action="pages/staffs/modifyProduct" method="POST" onsubmit="return confirmUpdate()">
+                    <form id="modifyForm" action="pages/staffs/modifyProduct" enctype="multipart/form-data" method="POST" onsubmit="return confirmUpdate()">
                         <% Products productDetails = (Products) session.getAttribute("productDetails"); %>
                         <div class="form-group">
                             <label for="productId">Product ID: <%=productDetails.getProductId()%></label>
@@ -77,7 +77,7 @@
                         </div>
                         <div class="form-group">
                             <label for="imagePath">Image : </label>
-                            <input type="file" name="imagePath" required>
+                            <input type="file" name="image" required>
                         </div>
                         <div class="form-group">
                             <button type="submit" class="btn btn-success">Modify</button>

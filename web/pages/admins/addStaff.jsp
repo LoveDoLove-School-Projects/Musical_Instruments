@@ -18,7 +18,6 @@
     </head>
     <body>
         <jsp:include page="/defaults/header.jsp" />
-
         <div class="container">
             <div class="row">
                 <div class="col-md-6 offset-md-3">
@@ -51,8 +50,6 @@
                             <label for="phoneNumber">Phone Number:</label>
                             <input type="text" class="form-control" name="phoneNumber" pattern="[0-9]+" required>
                         </div>
-                        <input type="hidden" name="twoFactorAuth" value="false">
-                        <input type="hidden" name="accountCreationDate" value="<%= new java.util.Date() %>">
                         <div class="form-group">
                             <button type="submit" class="btn btn-success">Add Staff</button>
                             <button type="button" class="btn btn-danger">Cancel</button>

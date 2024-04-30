@@ -7,12 +7,9 @@
 <%@ page import="utilities.FileUtilities"%>
 <%@ page import="entities.Products" %>
 <jsp:useBean id="productDetails" class="entities.Products" scope="session"></jsp:useBean>
-<%
-String IMAGE_DEFAULT_PATH = "assets/database/productImage/";
-%>
-<!DOCTYPE html>
-<html>
-    <head>
+    <!DOCTYPE html>
+    <html>
+        <head>
         <jsp:include page="/defaults/head.jsp" />
         <title>Product Details</title>
         <style>
@@ -39,12 +36,8 @@ String IMAGE_DEFAULT_PATH = "assets/database/productImage/";
                     <h1 class="text-center mb-4">Product Details</h1>
                     <div class="card">
                         <%
-            String imageSrc = null;
-            byte[] pictureBytes = FileUtilities.readDirectoryContent(IMAGE_DEFAULT_PATH + productDetails.getImagePath());
-            if (pictureBytes != null && pictureBytes.length != 0) {
-                String pictureBase64 = Base64.getEncoder().encodeToString(pictureBytes);
-                imageSrc = "data:image/png;base64," + pictureBase64; // Change "image/png" based on the actual image type
-            }
+                String pictureBase64 = Base64.getEncoder().encodeToString(productDetails.getImage());
+                String imageSrc = "data:image/png;base64," + pictureBase64; // Change "image/png" based on the actual image type
                         %>
                         <div class="card-body">
 
