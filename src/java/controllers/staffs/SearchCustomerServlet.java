@@ -2,7 +2,6 @@ package controllers.staffs;
 
 import common.Constants;
 import entities.Customers;
-import entities.Role;
 import entities.Session;
 import features.SessionChecker;
 import jakarta.persistence.EntityManager;
@@ -25,13 +24,11 @@ public class SearchCustomerServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        Session session = sessionChecker.getLoginSession(request.getSession());
-        if (!session.isResult()) {
-            RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Please Login As Admin!", "/");
-            return;
-        }
-        if (session.getRole() != Role.ADMIN && session.getRole() != Role.STAFF) {
-            RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "You are not authorized to view this page!", "/");
+        HttpSession httpSession = request.getSession();
+        Session session = sessionChecker.getLoginSession(httpSession);
+        boolean isAdminOrNot = sessionChecker.getIsAdminOrNot(request);
+        if (!session.isResult() || !isAdminOrNot) {
+            RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Please login as staff to view this page!", "/");
             return;
         }
         request.getRequestDispatcher("/pages/staffs/searchCustomer.jsp").forward(request, response);

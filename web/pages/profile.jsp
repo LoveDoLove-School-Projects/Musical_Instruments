@@ -5,8 +5,6 @@
 <%@ page import="java.security.Principal" %>
 <%@ page import="entities.Session" %>
 <%
-Principal principal = request.getUserPrincipal();
-String j_username = principal != null ? principal.getName() : null;
 Session user_session = (Session) session.getAttribute("user_session");
 %>
 <!DOCTYPE html>

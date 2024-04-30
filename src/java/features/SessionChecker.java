@@ -2,6 +2,7 @@ package features;
 
 import entities.Role;
 import entities.Session;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import java.nio.file.attribute.UserPrincipal;
 import java.util.logging.Logger;
@@ -41,20 +42,14 @@ public class SessionChecker {
         if (userSession == null) {
             return new Session(false, 0, Role.GUEST);
         }
-        if (getIsAdminOrNot(session)) {
-            userSession.setRole(Role.ADMIN);
-        }
         return userSession;
     }
 
-    /**
-     * Checks if the user in the given session is an admin.
-     *
-     * @param session the HttpSession object containing the user session
-     * @return true if the user is an admin, false otherwise
-     */
-    private boolean getIsAdminOrNot(HttpSession session) {
-        UserPrincipal userPrincipal = (UserPrincipal) session.getAttribute("javax.security.auth.subject");
-        return userPrincipal != null && userPrincipal.getName().equals("ADMIN");
+    public boolean getIsAdminOrNot(HttpServletRequest request) {
+        UserPrincipal userPrincipal = (UserPrincipal) request.getUserPrincipal();
+        if (userPrincipal == null) {
+            return false;
+        }
+        return request.isUserInRole("Admin");
     }
 }
