@@ -13,7 +13,7 @@
         <jsp:include page="/defaults/header.jsp" />
         <div class="container">
             <h1>Manage Customer</h1><br>
-            <!-- Search form -->
+
             <form class="form-inline mb-3" action="pages/staffs/searchCustomerServlet" method="POST">
                 <input class="form-control mr-2" type="text" name="searchQuery" placeholder="Enter customer email: "><br>
                 <button type="submit" class="btn btn-primary">Search</button>

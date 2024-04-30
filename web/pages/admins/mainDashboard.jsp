@@ -8,7 +8,7 @@
     <head>
         <jsp:include page="/defaults/head.jsp" />
         <meta charset="UTF-8">
-        <title>Manage Customers</title>
+        <title>Admin Dashboard</title>
     </head>
     <body>
         <jsp:include page="/defaults/header.jsp" />
