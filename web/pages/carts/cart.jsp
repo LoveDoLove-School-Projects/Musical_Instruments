@@ -15,44 +15,11 @@ double subTotal=0;
     <head>
         <jsp:include page="/defaults/head.jsp" />
         <title>Cart Page</title>
+         <link rel="stylesheet" href="assets/css/cart.css" />
     </head>
     <body>
         <jsp:include page="/defaults/header.jsp" />
 
-        <style>
-            .Title{
-                border-bottom: solid black 3px;
-            }
-
-            .TitleBar{
-                background-color: aliceblue;
-            }
-
-            .CheckoutBar{
-                position: fixed;
-                border-top: solid black 1px;
-                background-color: white;
-            }
-            .chkOutPrice{
-                color: rgb(238, 59, 59);
-            }
-
-            .ChkoutBtn{
-                background-color: rgb(238, 59, 59);
-                border: none;
-                box-shadow: 3px 3px 5px;
-                color: rgb(255, 253, 253);
-                font-size: 20px;
-            }
-
-            .editBtn{
-                background-color: green;
-            }
-
-            .deleteBtn{
-                background-color: red;
-            }
-        </style>
         <main>
             <section class="section">
                 <table class="table">
@@ -89,14 +56,14 @@ double subTotal=0;
                             <th class="col">RM<%=carts.getProductTotalprice()%></th>
                             <th class="col">
                                 <div class="row align-content-center justify-content-center">
-                                    <form method="POST" action="spages/carts/editCart">
-                                        <button type="submit" class="col-6 editBtn"><strong>EDIT</strong></button>
-                                        <input type="hidden" name="cartId" value="<%=carts.getCartId()%>"/>
-                                    </form>
-                                    <form method="POST" action="">
-                                        <button class="col-6 deleteBtn" type="submit"><strong>DELETE</strong></button>
-                                    </form>
+                                    <a href="pages/carts/editCart?cart_id=<%=carts.getCartId()%>" class="MusicInstruments row1-MusicInstruments1">
+                                        <button type="button" class="w-50 mx-auto my-1 p-2 editBtn"><strong>Edit</strong></button>
+                                    </a>
                                 </div>
+                                <form action="pages/carts/deleteCartServlet" method="POST">
+                                    <input type="hidden" name="cartId" value="<%=carts.getCartId()%>"/>
+                                    <button type="submit" class="w-50 mx-auto my-1 p-2 deleteBtn"><strong>Delete</strong></button>
+                                </form>
                             </th>
 
 
@@ -106,25 +73,13 @@ double subTotal=0;
                             }
                         %>
                     </tbody>
-                    <!--                    <div class="row justify-content-center align-items-center">
-                                            <tfoot class="col-12 text-center" style="float:right;">
-                                                <tr class="d-flex justify-content-end">
-                                                    <th class="col">Subtotal :</th>
-                                                    <th class="col">RM subtotal</th>
-                                                </tr>
-                                                <tr class="d-flex justify-content-end">
-                                                    <th class="col">delivery fee :</th>
-                                                    <th class="col">RM4.99</th>
-                                                </tr>
-                                            </tfoot>
-                                        </div>-->
                 </table>
 
                 <div class="w-100 fixed-bottom CheckoutBar">
                     <div class="row align-items-center justify-content-center">
                         <h4 class="col-10 d-flex justify-content-end">Total : <strong class="chkOutPrice">  RM<%=String.format("%.2f",subTotal)%></strong></h4>
-                        <form action="payments/checkout" method="post" class="col-2">
-                            <input type="submit" class=" p-4 text-center ChkoutBtn" name="W-100 chekout" value="Check Out">
+                        <form action="payments/checkout" method="post" class="col-2 text-center">
+                            <input type="submit" class=" p-4 text-center ChkoutBtn" name="chekout" value="Check Out">
                         </form>
                     </div>
                 </div>

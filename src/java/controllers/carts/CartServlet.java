@@ -21,8 +21,7 @@ public class CartServlet extends HttpServlet {
     EntityManager entityManager;
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Session session = sessionHandler.getLoginSession(request.getSession());
         if (!session.isResult()) {
             RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Please login to view this page.", Constants.CUSTOMER_LOGIN_URL);
@@ -30,7 +29,7 @@ public class CartServlet extends HttpServlet {
         }
         List<Carts> carts = entityManager.createNamedQuery("Carts.findByCustomerId").setParameter("customerId", session.getUserId()).getResultList();
         if (carts == null || carts.isEmpty()) {
-            RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Product Not Found!", Constants.PRODUCT_URL);
+            RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Your card is empty !", Constants.PRODUCT_URL);
             return;
         } else {
             request.setAttribute("cartDetails", carts);

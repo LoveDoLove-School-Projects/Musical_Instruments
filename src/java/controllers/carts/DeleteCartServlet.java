@@ -1,8 +1,7 @@
-package controllers.products;
+package controllers.carts;
 
 import common.Constants;
 import entities.Carts;
-import entities.Products;
 import entities.Session;
 import exceptions.DatabaseException;
 import features.SessionChecker;
@@ -22,7 +21,7 @@ import jakarta.transaction.UserTransaction;
 import java.io.IOException;
 import utilities.RedirectUtilities;
 
-public class AddProductToCartServlet extends HttpServlet {
+public class DeleteCartServlet extends HttpServlet {
 
     private static final SessionChecker sessionChecker = new SessionChecker();
     @PersistenceContext
@@ -31,36 +30,38 @@ public class AddProductToCartServlet extends HttpServlet {
     UserTransaction userTransaction;
 
     @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+    }
+
+    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
         Session session = sessionChecker.getLoginSession(request.getSession());
         if (!session.isResult()) {
             RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Please login to view this page.", Constants.CUSTOMER_LOGIN_URL);
             return;
         }
-        String productId = request.getParameter("productId");
-        int productQuantity = Integer.valueOf(request.getParameter("productQuantity"));
-        Products product = entityManager.find(Products.class, Integer.valueOf(productId));
-        if (product == null) {
-            RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.WARNING, "Product not found!", Constants.PRODUCT_URL);
-            return;
-        }
+        
+        String cartId = request.getParameter("cartId");
         try {
             userTransaction.begin();
-            Carts carts = new Carts();
-            carts.setCustomerId(session.getUserId());
-            carts.setProductId(product.getProductId());
-            carts.setProductQuantity(productQuantity);
-            carts.setProductName(product.getName());
-            carts.setProductColor(product.getColor());
-            carts.setProductPrice(product.getPrice());
-            carts.setProductImage(product.getImage());
-            carts.setProductTotalprice(productQuantity*product.getPrice());
-            entityManager.persist(carts);
+
+            Carts cartToDelete = entityManager.find(Carts.class, Integer.valueOf(cartId));
+
+            if (cartToDelete != null) {
+                entityManager.remove(cartToDelete);
+                RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.SUCCESS, "Your cart has been delete successfull !", Constants.CART_URL);
+            } else {
+                RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "No this cart exist", Constants.CART_URL);
+                return;
+            }
             userTransaction.commit();
-            RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.SUCCESS, "Add to card successfull !", Constants.CART_URL);
         } catch (HeuristicMixedException | HeuristicRollbackException | NotSupportedException | RollbackException | SystemException | IOException | IllegalStateException | NumberFormatException | SecurityException ex) {
             throw new DatabaseException(ex.getMessage());
         }
     }
+
 }
