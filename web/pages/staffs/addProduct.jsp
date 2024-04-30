@@ -23,7 +23,7 @@
             <div class="row">
                 <div class="col-md-6 offset-md-3">
                     <h1 class="text-center mb-4">Add Product</h1>
-                    <form id="addForm" action="pages/staffs/AddProductServlet" enctype="multipart/form-data" method="POST" onsubmit="return confirmAdd()">
+                    <form id="addForm" action="pages/staffs/addProduct" enctype="multipart/form-data" method="POST" onsubmit="return confirmAdd()">
 
                         <div class="form-group">
                             <label for="productName">Product Name:  </label>

@@ -153,10 +153,6 @@
         <url-pattern>/pages/admins/ManageStaffServlet</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>AddProductServlet</servlet-name>
-        <url-pattern>/pages/staffs/AddProductServlet</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
         <servlet-name>AddProductToCartServlet</servlet-name>
         <url-pattern>/pages/products/addProductToCart</url-pattern>
     </servlet-mapping>
@@ -231,6 +227,10 @@
     <servlet-mapping>
         <servlet-name>SearchCustomerServlet</servlet-name>
         <url-pattern>/pages/staffs/searchCustomer</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AddProductServlet</servlet-name>
+        <url-pattern>/pages/staffs/addProduct</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>30</session-timeout>

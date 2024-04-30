@@ -1,7 +1,9 @@
 package controllers.staffs;
 
 import entities.Products;
+import entities.Session;
 import exceptions.DatabaseException;
+import features.SessionChecker;
 import jakarta.annotation.Resource;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -10,6 +12,7 @@ import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import jakarta.transaction.HeuristicMixedException;
 import jakarta.transaction.HeuristicRollbackException;
 import jakarta.transaction.NotSupportedException;
@@ -27,6 +30,20 @@ public class AddProductServlet extends HttpServlet {
     EntityManager entityManager;
     @Resource
     UserTransaction userTransaction;
+    private final SessionChecker sessionChecker = new SessionChecker();
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        HttpSession httpSession = request.getSession();
+        Session session = sessionChecker.getLoginSession(httpSession);
+        boolean isAdminOrNot = sessionChecker.getIsAdminOrNot(request);
+        if (!session.isResult() || !isAdminOrNot) {
+            RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Please login as staff to view this page!", "/");
+            return;
+        }
+        request.getRequestDispatcher("/pages/staffs/addProduct.jsp").forward(request, response);
+    }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
