@@ -2,6 +2,7 @@ package controllers.staffs;
 
 import common.Constants;
 import entities.Customers;
+import entities.Role;
 import entities.Session;
 import features.SessionChecker;
 import jakarta.persistence.EntityManager;
@@ -24,10 +25,11 @@ public class SearchCustomerServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        HttpSession httpSession = request.getSession();
+        HttpSession httpSession = request.getSession(false);
+        boolean isAdmin = sessionChecker.getIsAdminOrNot(request);
         Session session = sessionChecker.getLoginSession(httpSession);
-        boolean isAdminOrNot = sessionChecker.getIsAdminOrNot(request);
-        if (!session.isResult() || !isAdminOrNot) {
+        boolean isLoggedIn = session.isResult();
+        if (!isAdmin && (!isLoggedIn || session.getRole() != Role.STAFF)) {
             RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Please login as staff to view this page!", "/");
             return;
         }

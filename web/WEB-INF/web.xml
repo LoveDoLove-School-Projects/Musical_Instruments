@@ -108,6 +108,18 @@
         <servlet-name>EditCart</servlet-name>
         <servlet-class>controllers.carts.EditCartServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>LoginAdminServlet</servlet-name>
+        <servlet-class>controllers.LoginAdminServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>StaffServlet</servlet-name>
+        <servlet-class>controllers.staffs.StaffServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>SearchStaffServlet</servlet-name>
+        <servlet-class>controllers.admins.SearchStaffServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>LoginServlet</servlet-name>
         <url-pattern>/pages/login</url-pattern>
@@ -117,20 +129,8 @@
         <url-pattern>/pages/admins/modifyStaff</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>DeleteStaffServlet</servlet-name>
-        <url-pattern>/pages/admins/deleteStaffServlet</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>DeleteCustomerServlet</servlet-name>
-        <url-pattern>/pages/admins/DeleteCustomerServlet</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
         <servlet-name>ForgotPasswordServlet</servlet-name>
         <url-pattern>/pages/forgotPassword</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>ModifyCustomerServlet</servlet-name>
-        <url-pattern>/pages/staffs/modifyCustomerServlet</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>ResetPasswordServlet</servlet-name>
@@ -147,10 +147,6 @@
     <servlet-mapping>
         <servlet-name>ManageCustomerServlet</servlet-name>
         <url-pattern>/pages/staffs/manageCustomer</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>ManageStaffServlet</servlet-name>
-        <url-pattern>/pages/admins/ManageStaffServlet</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>AddProductToCartServlet</servlet-name>
@@ -177,10 +173,6 @@
         <url-pattern>/pages/cart</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>DeleteProductServlet</servlet-name>
-        <url-pattern>/pages/admins/DeleteProduct</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
         <servlet-name>ModifyProductServlet</servlet-name>
         <url-pattern>/pages/staffs/modifyProduct</url-pattern>
     </servlet-mapping>
@@ -191,14 +183,6 @@
     <servlet-mapping>
         <servlet-name>SearchProductServlet</servlet-name>
         <url-pattern>/pages/productsearch</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>StaffSearchProductServlet</servlet-name>
-        <url-pattern>/pages/staffs/SearchProduct</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>AddStaffServlet</servlet-name>
-        <url-pattern>/pages/admins/AddStaff</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>LoginStaffServlet</servlet-name>
@@ -231,6 +215,46 @@
     <servlet-mapping>
         <servlet-name>AddProductServlet</servlet-name>
         <url-pattern>/pages/staffs/addProduct</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DeleteStaffServlet</servlet-name>
+        <url-pattern>/pages/admins/deleteStaff</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DeleteCustomerServlet</servlet-name>
+        <url-pattern>/pages/admins/deleteCustomer</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ModifyCustomerServlet</servlet-name>
+        <url-pattern>/pages/staffs/modifyCustomer</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ManageStaffServlet</servlet-name>
+        <url-pattern>/pages/admins/manageStaff</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>StaffSearchProductServlet</servlet-name>
+        <url-pattern>/pages/staffs/searchProduct</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DeleteProductServlet</servlet-name>
+        <url-pattern>/pages/admins/deleteProduct</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>LoginAdminServlet</servlet-name>
+        <url-pattern>/pages/adminLogin</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>StaffServlet</servlet-name>
+        <url-pattern>/pages/staffs</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SearchStaffServlet</servlet-name>
+        <url-pattern>/pages/admins/searchStaff</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AddStaffServlet</servlet-name>
+        <url-pattern>/pages/admins/addStaff</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>30</session-timeout>

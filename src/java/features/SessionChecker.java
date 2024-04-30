@@ -4,7 +4,7 @@ import entities.Role;
 import entities.Session;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
-import java.nio.file.attribute.UserPrincipal;
+import java.security.Principal;
 import java.util.logging.Logger;
 
 public class SessionChecker {
@@ -46,8 +46,8 @@ public class SessionChecker {
     }
 
     public boolean getIsAdminOrNot(HttpServletRequest request) {
-        UserPrincipal userPrincipal = (UserPrincipal) request.getUserPrincipal();
-        if (userPrincipal == null) {
+        Principal principal = request.getUserPrincipal();
+        if (principal == null) {
             return false;
         }
         return request.isUserInRole("Admin");

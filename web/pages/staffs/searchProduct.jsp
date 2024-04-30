@@ -13,7 +13,7 @@
         <jsp:include page="/defaults/header.jsp" />
         <div class="container">
             <h1>Manage Product</h1><br>
-            <form class="form-inline mb-3" action="pages/staffs/SearchProduct" method="POST">
+            <form class="form-inline mb-3" action="pages/staffs/searchProduct" method="POST">
                 <input class="form-control mr-2" type="text" name="searchQuery" placeholder="Enter product ID: "><br>
                 <button type="submit" class="btn btn-primary">Search</button>
                 <a href="pages/staffs/addProduct" class="btn btn-success">Add new product</a>

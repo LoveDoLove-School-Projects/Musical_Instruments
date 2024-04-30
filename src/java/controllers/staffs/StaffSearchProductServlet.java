@@ -1,6 +1,9 @@
 package controllers.staffs;
 
 import entities.Products;
+import entities.Role;
+import entities.Session;
+import features.SessionChecker;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.servlet.ServletException;
@@ -18,6 +21,21 @@ public class StaffSearchProductServlet extends HttpServlet {
     private static final Logger LOG = Logger.getLogger(StaffSearchProductServlet.class.getName());
     @PersistenceContext
     EntityManager entityManager;
+    private final SessionChecker sessionChecker = new SessionChecker();
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        HttpSession httpSession = request.getSession(false);
+        boolean isAdmin = sessionChecker.getIsAdminOrNot(request);
+        Session session = sessionChecker.getLoginSession(httpSession);
+        boolean isLoggedIn = session.isResult();
+        if (!isAdmin && (!isLoggedIn || session.getRole() != Role.STAFF)) {
+            RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Please login as staff to view this page!", "/");
+            return;
+        }
+        request.getRequestDispatcher("/pages/staffs/searchProduct.jsp").forward(request, response);
+    }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)

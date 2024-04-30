@@ -52,16 +52,16 @@
                             </ul>
                             <div class="row">
                                 <div class="col-md-2">
-                                    <a href="pages/staffs/searchCustomer.jsp" class="btn btn-primary mr-2">Go back</a>
+                                    <a href="pages/staffs/searchCustomer" class="btn btn-primary mr-2">Go back</a>
                                 </div>
                                 <div class="col-md-2">
-                                    <a href="pages/staffs/modifyCustomer.jsp" class="btn btn-success mr-2">Modify</a>
+                                    <a href="pages/staffs/modifyCustomer" class="btn btn-success mr-2">Modify</a>
                                 </div>
                                 <%
                                      boolean isAdmin = request.isUserInRole("Admin");
                                          if (isAdmin) { %>
                                 <div class="col-md-1">
-                                    <form action="pages/admins/DeleteCustomerServlet" method="post" id="deleteCustomerForm">
+                                    <form action="pages/admins/deleteCustomer" method="post" id="deleteCustomerForm">
                                         <input type="hidden" name="userId" value="<%=customerDetails.getUserId() %>"/>
                                         <button class="btn btn-danger">Delete</button>
                                     </form>
