@@ -3,11 +3,9 @@ package features;
 import entities.Role;
 import entities.Session;
 import jakarta.servlet.http.HttpSession;
+import java.nio.file.attribute.UserPrincipal;
 import java.util.logging.Logger;
 
-/**
- * This class provides methods to manage login sessions.
- */
 public class SessionChecker {
 
     private static final Logger LOG = Logger.getLogger(SessionChecker.class.getName());
@@ -41,9 +39,22 @@ public class SessionChecker {
         }
         Session userSession = (Session) session.getAttribute(USER_SESSION);
         if (userSession == null) {
-            return new Session(false, 0, Role.UNKNOWN);
+            return new Session(false, 0, Role.GUEST);
         }
-        LOG.info(userSession.toString());
+        if (getIsAdminOrNot(session)) {
+            userSession.setRole(Role.ADMIN);
+        }
         return userSession;
+    }
+
+    /**
+     * Checks if the user in the given session is an admin.
+     *
+     * @param session the HttpSession object containing the user session
+     * @return true if the user is an admin, false otherwise
+     */
+    private boolean getIsAdminOrNot(HttpSession session) {
+        UserPrincipal userPrincipal = (UserPrincipal) session.getAttribute("javax.security.auth.subject");
+        return userPrincipal != null && userPrincipal.getName().equals("ADMIN");
     }
 }

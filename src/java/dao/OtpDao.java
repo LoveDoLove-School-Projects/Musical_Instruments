@@ -1,7 +1,7 @@
 package dao;
 
 import controllers.ConnectionController;
-import entities.OtpStatus;
+import entities.OtpsType;
 import entities.Otps;
 import exceptions.DatabaseException;
 import features.MailSender;
@@ -38,30 +38,30 @@ public class OtpDao {
         return otpExists ? updateOtp(email, otp) : addOtp(email, otp);
     }
 
-    public OtpStatus verifyOtp(String email, String otp) {
+    public OtpsType verifyOtp(String email, String otp) {
         if (StringUtilities.anyNullOrBlank(email, otp)) {
-            return OtpStatus.INVALID;
+            return OtpsType.INVALID;
         }
         Otps dbOtp = getOtp(email);
         if (dbOtp == null) {
-            return OtpStatus.NOT_FOUND;
+            return OtpsType.NOT_FOUND;
         }
         if (dbOtp.getTryCount() >= 5) {
-            return OtpStatus.UNAUTHORIZED;
+            return OtpsType.UNAUTHORIZED;
         }
         if (dbOtp.getCreatedAt().before(new Timestamp(System.currentTimeMillis() - 300000))) {
-            return OtpStatus.EXPIRED;
+            return OtpsType.EXPIRED;
         }
         if (!dbOtp.getOtp().equals(otp)) {
             int tryCount = dbOtp.getTryCount() + 1;
             updateTryCount(email, tryCount);
-            return OtpStatus.FAILED;
+            return OtpsType.FAILED;
         }
         if (otp.equals(dbOtp.getOtp())) {
             deleteOtp(email);
-            return OtpStatus.OK;
+            return OtpsType.OK;
         }
-        return OtpStatus.INVALID;
+        return OtpsType.INVALID;
     }
 
     /**

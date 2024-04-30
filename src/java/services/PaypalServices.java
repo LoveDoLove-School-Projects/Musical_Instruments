@@ -13,7 +13,7 @@ import com.paypal.api.payments.RedirectUrls;
 import com.paypal.api.payments.Transaction;
 import entities.Carts;
 import entities.OrderDetails;
-import environments.Enviroment;
+import entities.Enviroment;
 import exceptions.PaymentException;
 import features.AesProtector;
 import java.io.IOException;
@@ -137,15 +137,14 @@ public class PaypalServices {
 //        return Payment.get(apiContext, paymentId);
 //    }
 //
-//    public Payment executePayment(String paymentId, String payerId) {
-//        try {
-//            Payment payment = new Payment();
-//            payment.setId(paymentId);
-//            PaymentExecution paymentExecute = new PaymentExecution();
-//            paymentExecute.setPayerId(payerId);
-//            return payment.execute(apiContext, paymentExecute);
-//        } catch (PayPalRESTException ex) {
-//            throw new PaymentException(ex.getMessage());
-//        }
-//    }
+
+    public String executePayment(String payment_id, String payer_id) {
+        try {
+            String accessToken = getAccessToken();
+            String jsonPayload = "{\"access_token\":\"" + accessToken + "\",\"payment_id\":" + payment_id + ",\"payer_id\":" + payer_id + "}";
+            return HttpUtilities.sendHttpJsonRequest(CREATE_PAYMENT_API, jsonPayload);
+        } catch (IOException ex) {
+            throw new PaymentException(ex.getMessage());
+        }
+    }
 }

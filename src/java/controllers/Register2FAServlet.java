@@ -3,7 +3,7 @@ package controllers;
 import common.Constants;
 import dao.OtpDao;
 import entities.Customers;
-import entities.OtpStatus;
+import entities.OtpsType;
 import features.AesProtector;
 import jakarta.annotation.Resource;
 import jakarta.persistence.EntityManager;
@@ -30,15 +30,15 @@ import utilities.StringUtilities;
 public class Register2FAServlet extends HttpServlet {
 
     private static final String REGISTER_2FA_JSP_URL = "/sessions/register2fa.jsp";
-    private static final Map<OtpStatus, String> STATUS_MESSAGES;
+    private static final Map<OtpsType, String> STATUS_MESSAGES;
 
     static {
-        STATUS_MESSAGES = new EnumMap<>(OtpStatus.class);
-        STATUS_MESSAGES.put(OtpStatus.NOT_FOUND, "OTP not found!");
-        STATUS_MESSAGES.put(OtpStatus.UNAUTHORIZED, "Too many attempts! Please click on 'Resend OTP' to try again.");
-        STATUS_MESSAGES.put(OtpStatus.EXPIRED, "OTP expired! Please click on 'Resend OTP' to try again.");
-        STATUS_MESSAGES.put(OtpStatus.FAILED, "Failed to verify OTP! Please try again.");
-        STATUS_MESSAGES.put(OtpStatus.INVALID, "Invalid OTP!");
+        STATUS_MESSAGES = new EnumMap<>(OtpsType.class);
+        STATUS_MESSAGES.put(OtpsType.NOT_FOUND, "OTP not found!");
+        STATUS_MESSAGES.put(OtpsType.UNAUTHORIZED, "Too many attempts! Please click on 'Resend OTP' to try again.");
+        STATUS_MESSAGES.put(OtpsType.EXPIRED, "OTP expired! Please click on 'Resend OTP' to try again.");
+        STATUS_MESSAGES.put(OtpsType.FAILED, "Failed to verify OTP! Please try again.");
+        STATUS_MESSAGES.put(OtpsType.INVALID, "Invalid OTP!");
     }
     private final OtpDao otpDao = new OtpDao();
     @PersistenceContext
@@ -74,7 +74,7 @@ public class Register2FAServlet extends HttpServlet {
             setRegister2FAPage(request, response);
             return;
         }
-        OtpStatus otpStatus = otpDao.verifyOtp(customer.getEmail(), otp);
+        OtpsType otpStatus = otpDao.verifyOtp(customer.getEmail(), otp);
         handleOtpStatus(otpStatus, request, response, session, customer);
     }
 
@@ -89,8 +89,8 @@ public class Register2FAServlet extends HttpServlet {
         return (Customers) session.getAttribute("customer");
     }
 
-    private void handleOtpStatus(OtpStatus otpStatus, HttpServletRequest request, HttpServletResponse response, HttpSession session, Customers customer) throws IOException, ServletException {
-        if (otpStatus == OtpStatus.OK) {
+    private void handleOtpStatus(OtpsType otpStatus, HttpServletRequest request, HttpServletResponse response, HttpSession session, Customers customer) throws IOException, ServletException {
+        if (otpStatus == OtpsType.OK) {
             session.invalidate();
             boolean isRegistered = registerNewCustomer(customer);
             if (isRegistered) {

@@ -1,5 +1,5 @@
 package entities;
 
-public enum OtpStatus {
+public enum OtpsType {
     NOT_FOUND, UNAUTHORIZED, EXPIRED, FAILED, INVALID, OK
 }

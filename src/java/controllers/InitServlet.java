@@ -1,5 +1,7 @@
-package environments;
+package controllers;
 
+import entities.TrustAllCertificates;
+import entities.Enviroment;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.ServletContextListener;
@@ -9,9 +11,9 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
-public class EnviromentInitialize implements ServletContextListener {
+public class InitServlet implements ServletContextListener {
 
-    private static final Logger LOG = Logger.getLogger(EnviromentInitialize.class.getName());
+    private static final Logger LOG = Logger.getLogger(InitServlet.class.getName());
     public static ServletContext servletContext;
 
     /**

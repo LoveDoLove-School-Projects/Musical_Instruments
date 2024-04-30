@@ -4,7 +4,6 @@ import common.Constants;
 import entities.Customers;
 import entities.Resetpassword;
 import entities.Staffs;
-import environments.EnviromentInitialize;
 import exceptions.DatabaseException;
 import features.AesProtector;
 import features.MailSender;
@@ -108,7 +107,7 @@ public class ForgotPasswordServlet extends HttpServlet {
         if (!isAdded) {
             return null;
         }
-        return EnviromentInitialize.getServerBaseURL(request) + "/pages/resetPassword?token=" + token + "&role=" + role;
+        return InitServlet.getServerBaseURL(request) + "/pages/resetPassword?token=" + token + "&role=" + role;
     }
 
     private boolean addNewResetPassword(Resetpassword resetPassword) {

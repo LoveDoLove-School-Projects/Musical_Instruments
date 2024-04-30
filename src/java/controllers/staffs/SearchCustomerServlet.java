@@ -2,6 +2,9 @@ package controllers.staffs;
 
 import common.Constants;
 import entities.Customers;
+import entities.Role;
+import entities.Session;
+import features.SessionChecker;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.servlet.ServletException;
@@ -17,6 +20,22 @@ public class SearchCustomerServlet extends HttpServlet {
 
     @PersistenceContext
     EntityManager entityManager;
+    private final SessionChecker sessionChecker = new SessionChecker();
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        Session session = sessionChecker.getLoginSession(request.getSession());
+        if (!session.isResult()) {
+            RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Please Login As Admin!", "/");
+            return;
+        }
+        if (session.getRole() != Role.ADMIN && session.getRole() != Role.STAFF) {
+            RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "You are not authorized to view this page!", "/");
+            return;
+        }
+        request.getRequestDispatcher("/pages/staffs/searchCustomer.jsp").forward(request, response);
+    }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)

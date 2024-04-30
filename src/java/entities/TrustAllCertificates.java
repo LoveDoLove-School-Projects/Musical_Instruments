@@ -1,4 +1,4 @@
-package environments;
+package entities;
 
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;

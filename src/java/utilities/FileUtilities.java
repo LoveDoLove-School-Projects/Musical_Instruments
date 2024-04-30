@@ -5,7 +5,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.logging.Logger;
-import environments.EnviromentInitialize;
+import controllers.InitServlet;
 
 public final class FileUtilities {
 
@@ -19,7 +19,7 @@ public final class FileUtilities {
      * @return the content of the file as a byte array
      */
     public static byte[] readDirectoryContent(String path) {
-        String fullPath = EnviromentInitialize.getServerDirectoryRootPath() + path;
+        String fullPath = InitServlet.getServerDirectoryRootPath() + path;
         File file = new File(fullPath);
         ByteArrayOutputStream content = new ByteArrayOutputStream();
         try (FileInputStream fis = new FileInputStream(file)) {
@@ -45,7 +45,7 @@ public final class FileUtilities {
      * otherwise
      */
     public static boolean writeContentToFile(String path, byte[] content) {
-        String fullPath = EnviromentInitialize.getServerDirectoryRootPath() + path;
+        String fullPath = InitServlet.getServerDirectoryRootPath() + path;
         File file = new File(fullPath);
         try {
             if (!file.exists()) {

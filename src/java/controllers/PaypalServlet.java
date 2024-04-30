@@ -21,7 +21,7 @@ import java.util.logging.Logger;
 import services.PaypalServices;
 import utilities.RedirectUtilities;
 
-@WebServlet(name = "PaypalServlet", urlPatterns = {"/payments/paypal"})
+@WebServlet(name = "PaypalServlet", urlPatterns = {"/payments/paypal", "/payments/paypal/execute"})
 public class PaypalServlet extends HttpServlet {
 
     @PersistenceContext
@@ -59,12 +59,4 @@ public class PaypalServlet extends HttpServlet {
             throw new PaymentException(ex.getMessage());
         }
     }
-//    public String successPay(String paymentId, String payerId) {
-//        Payment payment = paypalServices.executePayment(paymentId, payerId);
-//        System.out.println(payment.toJSON());
-//        if (payment.getState().equals("approved")) {
-//            return "success";
-//        }
-//        return "redirect:/";
-//    }
 }
