@@ -279,9 +279,6 @@
             <role-name>Admin</role-name>
         </auth-constraint>
     </security-constraint>
-    <security-constraint>
-        <display-name>Staff Constraints</display-name>
-    </security-constraint>
     <login-config>
         <auth-method>FORM</auth-method>
         <form-login-config>
@@ -292,10 +289,6 @@
     <security-role>
         <description>Admin Role</description>
         <role-name>Admin</role-name>
-    </security-role>
-    <security-role>
-        <description>Staff Role</description>
-        <role-name>Staff</role-name>
     </security-role>
     <env-entry>
         <description>For encrypt sensitive data</description>

@@ -56,7 +56,7 @@ Session user_session = (Session) session.getAttribute("user_session");
                     <a class="nav-link" href="pages/productsearch">Search Products</a>
                 </li>
                 <%
-                if (principal != null || user_session.getRole() == Role.STAFF) {
+                if (principal != null || user_session != null && user_session.getRole() == Role.STAFF) {
                 %>
                 <li class="nav-item mx-4 my-2 p-2">
                     <a class="nav-link" href="pages/staffs/">Admin Panel</a>
