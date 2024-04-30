@@ -57,16 +57,16 @@
                             <br>
                             <div class="row">
                                 <div class="col-md-2">
-                                    <a href="pages/staffs/searchProduct.jsp" class="btn btn-primary mr-2">Go back</a>
+                                    <a href="pages/staffs/searchProduct" class="btn btn-primary mr-2">Go back</a>
                                 </div>
                                 <div class="col-md-2">
-                                    <a href="pages/staffs/modifyProduct.jsp" class="btn btn-success mr-2">Modify</a>
+                                    <a href="pages/staffs/modifyProduct" class="btn btn-success mr-2">Modify</a>
                                 </div>
                                 <div class="col-md-1">
                                     <%
                                      boolean isAdmin = request.isUserInRole("Admin");
                                      if (isAdmin) { %>
-                                    <form action="pages/admins/DeleteProduct" method="post" id="deleteProductForm">
+                                    <form action="pages/admins/deleteProduct" method="post" id="deleteProductForm">
                                         <input type="hidden" name="productId" value="<%=productDetails.getProductId() %>" />
                                         <button class="btn btn-danger">Delete</button>
                                     </form>

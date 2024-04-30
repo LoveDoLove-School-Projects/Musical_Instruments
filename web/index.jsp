@@ -20,7 +20,7 @@
                     <div class="content m-5">
                         <h1>Welcome to Our Music Store</h1>
                         <p class="lead">Find your favorite musical instruments here.</p>
-                        <a href="product.jsp" class="btn btn-primary">Shop Now</a>
+                        <a href="pages/products" class="btn btn-primary">Shop Now</a>
                     </div>
                 </div>
             </div>
@@ -38,7 +38,7 @@
                         <div class="card-body">
                             <h5 class="card-title">Guitar</h5>
 
-                            <a href="product.jsp" class="btn btn-primary">Buy Now</a>
+                            <a href="pages/products" class="btn btn-primary">Buy Now</a>
                         </div>
                     </div>
                 </div>

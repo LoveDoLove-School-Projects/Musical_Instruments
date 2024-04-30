@@ -17,7 +17,7 @@
             <form class="form-inline mb-3" action="pages/admins/StaffServlet" method="post">
                 <input class="col-12 form-control mr-2" type="text" name="searchQuery" placeholder="Enter staff email: "><br>
                 <button type="submit" class="btn btn-primary">Search</button>
-                <a href="pages/admins/addStaff.jsp" class="btn btn-success">Register new Staff</a>
+                <a href="pages/admins/addStaff" class="btn btn-success">Register new Staff</a>
             </form>
 
         </div>

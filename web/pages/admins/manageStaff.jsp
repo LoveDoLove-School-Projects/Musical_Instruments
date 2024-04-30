@@ -44,14 +44,14 @@
                             </ul>
                             <div class="row">
                                 <div class="col-md-2">
-                                    <a href="pages/admins/searchStaff.jsp" class="btn btn-primary mr-2">Go back</a>
+                                    <a href="pages/admins/searchStaff" class="btn btn-primary mr-2">Go back</a>
                                 </div>
                                 <div class="col-md-2">
-                                    <a href="pages/admins/modifyStaff.jsp" class="btn btn-success mr-2">Modify</a>
+                                    <a href="pages/admins/modifyStaff" class="btn btn-success mr-2">Modify</a>
                                 </div>
                                 <div class="col-md-1">
 
-                                    <form action="pages/admins/DeleteStaffServlet" method="post" id="deleteStaffForm">
+                                    <form action="pages/admins/deleteStaff" method="post" id="deleteStaffForm">
                                         <input type="hidden" name="userId" value="<%=staffDetails.getUserId() %>"/>
                                         <button class="btn btn-danger">Delete</button>
                                     </form>

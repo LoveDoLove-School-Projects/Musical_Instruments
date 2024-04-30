@@ -14,7 +14,7 @@
         <div class="container">
             <h1>Manage Customer</h1><br>
 
-            <form class="form-inline mb-3" action="pages/staffs/searchCustomerServlet" method="POST">
+            <form class="form-inline mb-3" action="pages/staffs/searchCustomer" method="POST">
                 <input class="form-control mr-2" type="text" name="searchQuery" placeholder="Enter customer email: "><br>
                 <button type="submit" class="btn btn-primary">Search</button>
             </form>

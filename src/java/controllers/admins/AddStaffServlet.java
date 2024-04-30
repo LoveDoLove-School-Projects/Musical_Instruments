@@ -32,6 +32,12 @@ public class AddStaffServlet extends HttpServlet {
     private static final Logger LOG = Logger.getLogger(AddStaffServlet.class.getName());
 
     @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        request.getRequestDispatcher("/pages/admins/addStaff.jsp").forward(request, response);
+    }
+
+    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
@@ -46,7 +52,6 @@ public class AddStaffServlet extends HttpServlet {
         if (!validateStaffDetails(staff)) {
             throw new IllegalArgumentException("Invalid staff details.");
         }
-
         try {
             userTransaction.begin();
             staff.setUsername(username);
@@ -63,7 +68,6 @@ public class AddStaffServlet extends HttpServlet {
             LOG.severe(ex.getMessage());
             throw new DatabaseException(ex.getMessage());
         }
-
         RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.SUCCESS, "Staff Added successful!", "/pages/admins/searchStaff.jsp");
     }
 

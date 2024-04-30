@@ -57,29 +57,29 @@
                 <div class="container">
                     <div class="row">
                         <div class="col-lg-4 col-md-6 mb-4">
-                            <a href="pages/admins/mainDashboard.jsp" class="btn btn-primary btn-lg btn-block">Main dashboard</a>
+                            <a href="pages/admins/mainDashboard" class="btn btn-primary btn-lg btn-block">Main dashboard</a>
                         </div>
                         <%
                                       boolean isAdmin = request.isUserInRole("Admin");
                                       if (isAdmin) { %>
                         <div class="col-lg-4 col-md-6 mb-4">
-                            <a href="pages/admins/searchStaff.jsp" class="btn btn-primary btn-lg btn-block">Manage Staff</a>
+                            <a href="pages/admins/searchStaff" class="btn btn-primary btn-lg btn-block">Manage Staff</a>
                         </div>
                         <% } %>
                         <div class="col-lg-4 col-md-6 mb-4">
-                            <a href="pages/staffs/searchCustomer.jsp" class="btn btn-primary btn-lg btn-block">Manage Customer</a>
+                            <a href="pages/staffs/searchCustomer" class="btn btn-primary btn-lg btn-block">Manage Customer</a>
                         </div>
                         <div class="col-lg-4 col-md-6 mb-4">
-                            <a href="pages/staffs/searchProduct.jsp" class="btn btn-primary btn-lg btn-block">Manage Product</a>
+                            <a href="pages/staffs/searchProduct" class="btn btn-primary btn-lg btn-block">Manage Product</a>
                         </div>
                         <div class="col-lg-4 col-md-6 mb-4">
-                            <a href="pages/admins/viewTransaction.jsp" class="btn btn-primary btn-lg btn-block">View Transaction</a>
+                            <a href="pages/admins/viewTransaction" class="btn btn-primary btn-lg btn-block">View Transaction</a>
                         </div>
                         <div class="col-lg-4 col-md-6 mb-4">
-                            <a href="pages/admins/controlPanel.jsp" class="btn btn-primary btn-lg btn-block">Control Panel</a>
+                            <a href="pages/admins/controlPanel" class="btn btn-primary btn-lg btn-block">Control Panel</a>
                         </div>
                         <div class="col-lg-4 col-md-6 mb-4">
-                            <a href="pages/admins/sales.jsp" class="btn btn-primary btn-lg btn-block">Sales</a>
+                            <a href="pages/admins/sales" class="btn btn-primary btn-lg btn-block">Sales</a>
                         </div>
                     </div>
                 </div>

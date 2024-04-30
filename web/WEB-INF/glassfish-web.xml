@@ -19,7 +19,8 @@
   <context-root>/Musical_Instruments</context-root>
   <security-role-mapping>
     <role-name>Admin</role-name>
-    <principal-name>root</principal-name>
+    <principal-name>admin</principal-name>
+    <group-name>Admin</group-name>
   </security-role-mapping>
   <class-loader delegate="true"/>
   <jsp-config>
