@@ -16,21 +16,15 @@
     SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
 -->
 <glassfish-web-app error-url="">
-    <context-root>/Musical_Instruments</context-root>
-    <security-role-mapping>
-        <role-name>Admin</role-name>
-        <principal-name>root</principal-name>
-        <group-name>Admin</group-name>
-    </security-role-mapping>
-    <security-role-mapping>
-        <role-name>Staff</role-name>
-        <principal-name>staff1</principal-name>
-        <group-name>Staff</group-name>
-    </security-role-mapping>
-    <class-loader delegate="true"/>
-    <jsp-config>
-        <property name="keepgenerated" value="true">
-            <description>Keep a copy of the generated servlet class' java code.</description>
-        </property>
-    </jsp-config>
+  <context-root>/Musical_Instruments</context-root>
+  <security-role-mapping>
+    <role-name>Admin</role-name>
+    <principal-name>root</principal-name>
+  </security-role-mapping>
+  <class-loader delegate="true"/>
+  <jsp-config>
+    <property name="keepgenerated" value="true">
+      <description>Keep a copy of the generated servlet class' java code.</description>
+    </property>
+  </jsp-config>
 </glassfish-web-app>
