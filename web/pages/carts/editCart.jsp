@@ -6,6 +6,7 @@
 <%@ page import="java.util.Base64"%>
 <%@ page import="utilities.FileUtilities"%>
 <%@ page import="entities.Carts" %>
+<%@ page import="entities.Products" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -13,7 +14,6 @@
         <title>Products Page</title>
     </head>
     <body>
-
         <jsp:include page="/defaults/header.jsp" />
 
         <style>
@@ -61,6 +61,7 @@
                     <div class="row m-5 d-flex align-items-center justify-content-center">
                         <%
                             Carts carts = (Carts) request.getAttribute("editCartDetails");
+                            Products products = (Products) request.getAttribute("productDetails");
                             String pictureBase64 = Base64.getEncoder().encodeToString(carts.getProductImage());
                             String imageSrc = "data:image/png;base64," + pictureBase64; // Change "image/png" based on the actual image type
                         %>
@@ -73,16 +74,16 @@
                                     <h1 class="m-4"><strong><%=carts.getProductName()%></strong></h1>
                                     <hr>
                                     <h3 class="my-4"><strong>RM <%=carts.getProductPrice()%></strong></h3>
-                                    <h3 class="my-4"><strong>Stock:</strong> <%=carts.getProductQuantity()%></h3>
+                                    <h3 class="my-4"><strong>Stock:</strong> <%=products.getQuantity()%></h3>
                                     <h3 class="my-4"><strong>Color:</strong> <%=carts.getProductColor()%></h3>
                                     <hr>
                                     <h5 class="my-2"><strong>Quantity</strong></h5>
-                                    <form method="POST" action="pages/products/addProductToCart" class="qty-container">
+                                    <form method="POST" action="pages/carts/editCart" class="qty-container" id="updateCartForm">
                                         <button class="qty-btn-minus" type="button"><i class="fa fa-minus"></i></button>
-                                        <input type="number" name="productQuantity" value="1" class="input-qty w-50 text-center p-2" min="1"/>
-                                        <input type="hidden" name="productId" value="<%=carts.getCartId()%>"/>
+                                        <input type="number" name="productQuantity" value="<%=carts.getProductQuantity()%>" class="input-qty w-50 text-center p-2" min="1" max="<%=products.getQuantity()%>"/>
+                                        <input type="hidden" name="cartId" value="<%=carts.getCartId()%>"/>
                                         <button class="qty-btn-plus" type="button"><i class="fa fa-plus"></i></button><br>
-                                        <button type="submit" class="my-4 mx-auto p-2 addtocartbtn"><strong>Update cart</strong></button>
+                                        <button type="submit" class="my-4 mx-auto p-2 addtocartbtn" id="editCartBtn"><strong>Update cart</strong></button>
                                     </form>
                                 </div>
                             </div>
@@ -92,30 +93,7 @@
             </section>
         </main>
 
-
-        <script>
-            var buttonPlus = $(".qty-btn-plus");
-            var buttonMinus = $(".qty-btn-minus");
-
-            var incrementPlus = buttonPlus.click(function () {
-                var $n = $(this)
-                        .parent(".qty-container")
-                        .find(".input-qty");
-                $n.val(Number($n.val()) + 1);
-            });
-
-            var incrementMinus = buttonMinus.click(function () {
-                var $n = $(this)
-                        .parent(".qty-container")
-                        .find(".input-qty");
-                var amount = Number($n.val());
-                if (amount > 0) {
-                    $n.val(amount - 1);
-                }
-            });
-        </script>
-
         <jsp:include page="/defaults/footer.jsp" />
-
+        <script type="module" src="assets/js/carts.js"></script>
     </body>
 </html>

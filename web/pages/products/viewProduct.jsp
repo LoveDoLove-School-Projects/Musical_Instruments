@@ -95,29 +95,7 @@ String IMAGE_DEFAULT_PATH = "assets/database/productImage/";
                 </div>
             </section>
         </main>
-
-        <script>
-            var buttonPlus = $(".qty-btn-plus");
-            var buttonMinus = $(".qty-btn-minus");
-
-            var incrementPlus = buttonPlus.click(function () {
-                var $n = $(this)
-                        .parent(".qty-container")
-                        .find(".input-qty");
-                $n.val(Number($n.val()) + 1);
-            });
-
-            var incrementMinus = buttonMinus.click(function () {
-                var $n = $(this)
-                        .parent(".qty-container")
-                        .find(".input-qty");
-                var amount = Number($n.val());
-                if (amount > 0) {
-                    $n.val(amount - 1);
-                }
-            });
-        </script>
-
         <jsp:include page="/defaults/footer.jsp" />
+        <script type="module" src="assets/js/carts.js"></script>
     </body>
 </html>

@@ -1,3 +1,7 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
 package entities;
 
 import jakarta.persistence.Basic;
@@ -12,6 +16,10 @@ import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 
+/**
+ *
+ * @author Kai Quan
+ */
 @Entity
 @Table(name = "CARTS")
 @XmlRootElement
@@ -25,7 +33,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Carts.findByProductColor", query = "SELECT c FROM Carts c WHERE c.productColor = :productColor"),
     @NamedQuery(name = "Carts.findByProductPrice", query = "SELECT c FROM Carts c WHERE c.productPrice = :productPrice"),
     @NamedQuery(name = "Carts.findByProductTotalprice", query = "SELECT c FROM Carts c WHERE c.productTotalprice = :productTotalprice")})
-public class Carts {
+public class Carts{
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -170,8 +178,5 @@ public class Carts {
         return true;
     }
 
-    @Override
-    public String toString() {
-        return "entities.Carts[ cartId=" + cartId + " ]";
-    }
+ 
 }
