@@ -124,6 +124,10 @@
         <servlet-name>DeleteCartServlet</servlet-name>
         <servlet-class>controllers.carts.DeleteCartServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>PaymentReceiptServlet</servlet-name>
+        <servlet-class>controllers.PaymentReceiptServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>LoginServlet</servlet-name>
         <url-pattern>/pages/login</url-pattern>
@@ -263,6 +267,10 @@
     <servlet-mapping>
         <servlet-name>DeleteCartServlet</servlet-name>
         <url-pattern>/pages/carts/deleteCartServlet</url-pattern>
+    </servlet>
+    <servlet>
+        <servlet-name>PaymentReceiptServlet</servlet-name>
+        <url-pattern>/payments/receipt</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>30</session-timeout>
@@ -394,5 +402,11 @@
         <env-entry-name>EXECUTE_PAYMENT_API</env-entry-name>
         <env-entry-type>java.lang.String</env-entry-type>
         <env-entry-value>Li3v31mJXIweF14+ZWfZkWdUCRU/VklPZKstrAiP9Of5vEZbXb+IZXuJuOB2vZBwbgwbu8PZaWN5DwW96T9wyw==</env-entry-value>
+    </env-entry>
+    <env-entry>
+        <description>For get paypal payment details</description>
+        <env-entry-name>GET_PAYMENT_API</env-entry-name>
+        <env-entry-type>java.lang.String</env-entry-type>
+        <env-entry-value>Li3v31mJXIweF14+ZWfZkWdUCRU/VklPZKstrAiP9Of98Z0xXAq2av1j0LUgcF2Qr1haCB+lVgT2zHB7zmpWGg==</env-entry-value>
     </env-entry>
 </web-app>

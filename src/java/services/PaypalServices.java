@@ -2,6 +2,7 @@ package services;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonSyntaxException;
 import com.paypal.api.payments.Amount;
 import com.paypal.api.payments.Details;
 import com.paypal.api.payments.Item;
@@ -12,8 +13,9 @@ import com.paypal.api.payments.Payment;
 import com.paypal.api.payments.RedirectUrls;
 import com.paypal.api.payments.Transaction;
 import entities.Carts;
-import entities.OrderDetails;
 import entities.Enviroment;
+import entities.OrderDetails;
+import entities.PaypalPayment;
 import exceptions.PaymentException;
 import features.AesProtector;
 import java.io.IOException;
@@ -30,6 +32,8 @@ public class PaypalServices {
     private static final String CANCEL_URL = "http://localhost:8080/Musical_Instruments/payments/cancel.html";
     private static final String ACCESS_TOKEN_API = AesProtector.aes256EcbDecrypt(Enviroment.ACCESS_TOKEN_API);
     private static final String CREATE_PAYMENT_API = AesProtector.aes256EcbDecrypt(Enviroment.CREATE_PAYMENT_API);
+    private static final String GET_PAYMENT_API = AesProtector.aes256EcbDecrypt(Enviroment.GET_PAYMENT_API);
+    private static final String EXECUTE_PAYMENT_API = AesProtector.aes256EcbDecrypt(Enviroment.EXECUTE_PAYMENT_API);
     private static final String CURRENCY = "MYR";
 
     public String createPayment(List<Carts> cartList) {
@@ -49,13 +53,6 @@ public class PaypalServices {
         RedirectUrls redirectUrls = getRedirectURLs();
         payment.setRedirectUrls(redirectUrls);
         return payment.toJSON();
-    }
-
-    private String getAccessToken() throws IOException {
-        String jsonPayload = "{\"client_id\":\"" + CLIENT_ID + "\",\"client_secret\":\"" + CLIENT_SECRET + "\"}";
-        String response = HttpUtilities.sendHttpJsonRequest(ACCESS_TOKEN_API, jsonPayload);
-        JsonObject jsonObject = new Gson().fromJson(response, JsonObject.class);
-        return jsonObject.get("access_token").getAsString();
     }
 
     private Payer getPayerInformation() {
@@ -88,7 +85,7 @@ public class PaypalServices {
         Amount amount = getAmountDetails(cartList);
         Transaction transaction = new Transaction();
         transaction.setAmount(amount);
-        transaction.setDescription("Demo Transaction");
+        transaction.setDescription("Sandbox Transaction");
         ItemList itemList = getItemList(cartList);
         transaction.setItemList(itemList);
         List<Transaction> listTransaction = new ArrayList<>();
@@ -125,25 +122,48 @@ public class PaypalServices {
         return itemList;
     }
 
+    private String getAccessToken() throws IOException {
+        String jsonPayload = "{\"client_id\":\"" + CLIENT_ID + "\",\"client_secret\":\"" + CLIENT_SECRET + "\"}";
+        String response = HttpUtilities.sendHttpJsonRequest(ACCESS_TOKEN_API, jsonPayload);
+        JsonObject jsonObject = new Gson().fromJson(response, JsonObject.class);
+        return jsonObject.get("access_token").getAsString();
+    }
+
     private String createPayment(String accessToken, String paymentJsonPayload) {
         try {
             String jsonPayload = "{\"access_token\":\"" + accessToken + "\",\"payment_body\":" + paymentJsonPayload + "}";
-            return HttpUtilities.sendHttpJsonRequest(CREATE_PAYMENT_API, jsonPayload);
-        } catch (Exception ex) {
+            String response = HttpUtilities.sendHttpJsonRequest(CREATE_PAYMENT_API, jsonPayload);
+            PaypalPayment payment = new Gson().fromJson(response, PaypalPayment.class);
+            String approval_url = null;
+            for (PaypalPayment.Link link : payment.getLinks()) {
+                if (link.getRel().equals("approval_url")) {
+                    approval_url = link.getHref();
+                }
+            }
+            return approval_url;
+        } catch (JsonSyntaxException ex) {
             throw new PaymentException(ex.getMessage());
         }
     }
-//    public Payment getPaymentDetails(String paymentId) throws PayPalRESTException {
-//        return Payment.get(apiContext, paymentId);
-//    }
-//
 
-    public String executePayment(String payment_id, String payer_id) {
+    public PaypalPayment getPaymentDetails(String paymentId) {
         try {
             String accessToken = getAccessToken();
-            String jsonPayload = "{\"access_token\":\"" + accessToken + "\",\"payment_id\":" + payment_id + ",\"payer_id\":" + payer_id + "}";
-            return HttpUtilities.sendHttpJsonRequest(CREATE_PAYMENT_API, jsonPayload);
-        } catch (IOException ex) {
+            String jsonPayload = "{\"access_token\":\"" + accessToken + "\",\"payment_id\":\"" + paymentId + "\"}";
+            String response = HttpUtilities.sendHttpJsonRequest(GET_PAYMENT_API, jsonPayload);
+            return new Gson().fromJson(response, PaypalPayment.class);
+        } catch (JsonSyntaxException | IOException ex) {
+            throw new PaymentException(ex.getMessage());
+        }
+    }
+
+    public PaypalPayment executePayment(String payment_id, String payer_id) {
+        try {
+            String accessToken = getAccessToken();
+            String jsonPayload = "{\"access_token\":\"" + accessToken + "\",\"payment_id\":\"" + payment_id + "\",\"payer_id\":\"" + payer_id + "\"}";
+            String response = HttpUtilities.sendHttpJsonRequest(EXECUTE_PAYMENT_API, jsonPayload);
+            return new Gson().fromJson(response, PaypalPayment.class);
+        } catch (JsonSyntaxException | IOException ex) {
             throw new PaymentException(ex.getMessage());
         }
     }

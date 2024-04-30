@@ -48,7 +48,7 @@ public class Register2FAServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        HttpSession session = request.getSession(false);
+        HttpSession session = request.getSession();
         Customers customer = getSessionAttributes(session);
         if (customer == null) {
             RedirectUtilities.redirectWithMessage(request, response, RedirectType.DANGER, "Invalid request!", Constants.CUSTOMER_LOGIN_URL);
@@ -62,7 +62,7 @@ public class Register2FAServlet extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         response.setContentType("text/plain;charset=UTF-8");
         response.setHeader("Cache-Control", "no-store");
-        HttpSession session = request.getSession(false);
+        HttpSession session = request.getSession();
         Customers customer = getSessionAttributes(session);
         if (customer == null) {
             RedirectUtilities.redirectWithMessage(request, response, RedirectType.DANGER, "Invalid request!", Constants.CUSTOMER_LOGIN_URL);

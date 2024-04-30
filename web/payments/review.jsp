@@ -2,6 +2,9 @@
 <%@ page contentType="text/html" pageEncoding="UTF-8" %>
 <c:set var="path" value="${pageContext.request.contextPath}" />
 <c:set var="basePath" value="${pageContext.request.scheme}://${pageContext.request.serverName}:${pageContext.request.serverPort}${path}/" />
+<%
+response.setHeader("Cache-Control", "no-store");
+%>
 <!DOCTYPE html>
 <html>
     <head>
@@ -30,23 +33,23 @@
                     </tr>
                     <tr>
                         <td>Description:</td>
-                        <td>${description}</td>
+                        <td>${transaction.description}</td>
                     </tr>
                     <tr>
                         <td>Subtotal:</td>
-                        <td>${subtotal} MYR</td>
+                        <td>MYR ${transaction.amount.details.subtotal}</td>
                     </tr>
                     <tr>
                         <td>Shipping:</td>
-                        <td>${shipping} MYR</td>
+                        <td>MYR ${transaction.amount.details.shipping}</td>
                     </tr>
                     <tr>
                         <td>Tax:</td>
-                        <td>${tax} MYR</td>
+                        <td>MYR ${transaction.amount.details.tax}</td>
                     </tr>
                     <tr>
                         <td>Total:</td>
-                        <td>${total} MYR</td>
+                        <td>MYR ${transaction.amount.total}</td>
                     </tr>
                     <tr><td><br/></td></tr>
                     <tr>
@@ -54,15 +57,15 @@
                     </tr>
                     <tr>
                         <td>First Name:</td>
-                        <td>${firstName}</td>
+                        <td>${payer.first_name}</td>
                     </tr>
                     <tr>
                         <td>Last Name:</td>
-                        <td>${lastName}</td>
+                        <td>${payer.last_name}</td>
                     </tr>
                     <tr>
                         <td>Email:</td>
-                        <td>${email}</td>
+                        <td>${payer.email}</td>
                     </tr>
                     <tr><td><br/></td></tr>
                     <tr>
@@ -70,27 +73,27 @@
                     </tr>
                     <tr>
                         <td>Recipient Name:</td>
-                        <td>${recipientName}</td>
+                        <td>${shippingAddress.recipient_name}</td>
                     </tr>
                     <tr>
                         <td>Line 1:</td>
-                        <td>${line1}</td>
+                        <td>${shippingAddress.line1}</td>
                     </tr>
                     <tr>
                         <td>City:</td>
-                        <td>${city}</td>
+                        <td>${shippingAddress.city}</td>
                     </tr>
                     <tr>
                         <td>State:</td>
-                        <td>${state}</td>
+                        <td>${shippingAddress.state}</td>
                     </tr>
                     <tr>
                         <td>Country Code:</td>
-                        <td>${countryCode}</td>
+                        <td>${shippingAddress.country_code}</td>
                     </tr>
                     <tr>
                         <td>Postal Code:</td>
-                        <td>${postalCode}</td>
+                        <td>${shippingAddress.postal_code}</td>
                     </tr>
                     <tr>
                         <td colspan="2" align="center">

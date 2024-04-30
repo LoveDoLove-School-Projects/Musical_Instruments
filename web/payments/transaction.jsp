@@ -3,6 +3,9 @@
 <c:set var="path" value="${pageContext.request.contextPath}" />
 <c:set var="basePath" value="${pageContext.request.scheme}://${pageContext.request.serverName}:${pageContext.request.serverPort}${path}/" />
 <%@ page import="java.util.Calendar" %>
+<%
+response.setHeader("Cache-Control", "no-store");
+%>
 <!DOCTYPE html>
 <html>
 
