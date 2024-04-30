@@ -66,8 +66,8 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="imagePath">Image : </label>
-                            <input type="file" name="imagePath" required>
+                            <label for="image">Image : </label>
+                            <input type="file" name="image" required>
                         </div>
 
                         <div class="form-group">

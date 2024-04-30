@@ -45,6 +45,10 @@
         <servlet-class>controllers.products.SearchProductServlet</servlet-class>
     </servlet>
     <servlet>
+        <servlet-name>StaffSearchProductServlet</servlet-name>
+        <servlet-class>controllers.staffs.StaffSearchProductServlet</servlet-class>
+    </servlet>
+    <servlet>
         <servlet-name>AddProductServlet</servlet-name>
         <servlet-class>controllers.staffs.AddProductServlet</servlet-class>
     </servlet>
@@ -197,6 +201,10 @@
         <url-pattern>/pages/productsearch</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
+        <servlet-name>StaffSearchProductServlet</servlet-name>
+        <url-pattern>/pages/staffs/SearchProduct</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
         <servlet-name>AddStaffServlet</servlet-name>
         <url-pattern>/pages/admins/AddStaff</url-pattern>
     </servlet-mapping>
@@ -273,16 +281,6 @@
     </security-constraint>
     <security-constraint>
         <display-name>Staff Constraints</display-name>
-        <web-resource-collection>
-            <web-resource-name>Staff</web-resource-name>
-            <description/>
-            <url-pattern>/pages/staffs/*</url-pattern>
-        </web-resource-collection>
-        <auth-constraint>
-            <description/>
-            <role-name>Admin</role-name>
-            <role-name>Staff</role-name>
-        </auth-constraint>
     </security-constraint>
     <login-config>
         <auth-method>FORM</auth-method>

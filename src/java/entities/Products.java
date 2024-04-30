@@ -10,8 +10,9 @@ import jakarta.persistence.Lob;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
-import java.io.Serializable;
-import javax.xml.bind.annotation.XmlRootElement;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
 @Entity
 @Table(name = "PRODUCTS")
@@ -24,7 +25,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Products.findByColor", query = "SELECT p FROM Products p WHERE p.color = :color"),
     @NamedQuery(name = "Products.findByQuantity", query = "SELECT p FROM Products p WHERE p.quantity = :quantity"),
     @NamedQuery(name = "Products.findByCategory", query = "SELECT p FROM Products p WHERE p.category = :category")})
-public class Products implements Serializable {
+public class Products {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -33,21 +34,30 @@ public class Products implements Serializable {
     @Column(name = "PRODUCT_ID")
     private Integer productId;
     @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 255)
     @Column(name = "NAME")
     private String name;
     @Basic(optional = false)
+    @NotNull
     @Column(name = "PRICE")
     private double price;
     @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 255)
     @Column(name = "COLOR")
     private String color;
     @Basic(optional = false)
+    @NotNull
     @Column(name = "QUANTITY")
     private int quantity;
     @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 255)
     @Column(name = "CATEGORY")
     private String category;
     @Basic(optional = false)
+    @NotNull
     @Lob
     @Column(name = "IMAGE")
     private byte[] image;
@@ -145,18 +155,4 @@ public class Products implements Serializable {
         return true;
     }
 
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Products{");
-        sb.append("productId=").append(productId);
-        sb.append(", name=").append(name);
-        sb.append(", price=").append(price);
-        sb.append(", color=").append(color);
-        sb.append(", quantity=").append(quantity);
-        sb.append(", category=").append(category);
-        sb.append(", image=").append(image);
-        sb.append('}');
-        return sb.toString();
-    }
 }

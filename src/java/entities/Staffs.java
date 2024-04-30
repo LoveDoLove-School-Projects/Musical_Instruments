@@ -98,6 +98,15 @@ public class Staffs implements Serializable {
         this.picture = picture;
     }
 
+    public Staffs(String username, String password, String email, String address, String phoneNumber, String gender) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.address = address;
+        this.phoneNumber = phoneNumber;
+        this.gender = gender;
+    }
+
     public Staffs(Integer userId, String username, String password, String email, String address, String phoneNumber, String gender) {
         this.userId = userId;
         this.username = username;
