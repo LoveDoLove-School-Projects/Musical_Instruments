@@ -145,10 +145,6 @@
         <url-pattern>/pages/products/viewProduct</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>SearchCustomerServlet</servlet-name>
-        <url-pattern>/pages/staffs/searchCustomerServlet</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
         <servlet-name>ManageCustomerServlet</servlet-name>
         <url-pattern>/pages/staffs/manageCustomer</url-pattern>
     </servlet-mapping>
@@ -232,12 +228,25 @@
         <servlet-name>EditCart</servlet-name>
         <url-pattern>/pages/carts/editCart</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SearchCustomerServlet</servlet-name>
+        <url-pattern>/pages/staffs/searchCustomer</url-pattern>
+    </servlet-mapping>
     <session-config>
         <session-timeout>30</session-timeout>
     </session-config>
+    <filter>
+        <description>JSP Filter Servlet</description>
+        <filter-name>InitFilter</filter-name>
+        <filter-class>controllers.InitFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>InitFilter</filter-name>
+        <url-pattern>*.jsp</url-pattern>
+    </filter-mapping>
     <listener>
         <description>Enviroment Entry Reader Listener</description>
-        <listener-class>environments.EnviromentInitialize</listener-class>
+        <listener-class>controllers.InitServlet</listener-class>
     </listener>
     <error-page>
         <error-code>400</error-code>
@@ -348,4 +357,10 @@
         <servlet-name>LogoutServlet</servlet-name>
         <url-pattern>/pages/logout</url-pattern>
     </servlet-mapping>
+    <env-entry>
+        <description>For executing the paypal payment approved by user</description>
+        <env-entry-name>EXECUTE_PAYMENT_API</env-entry-name>
+        <env-entry-type>java.lang.String</env-entry-type>
+        <env-entry-value>Li3v31mJXIweF14+ZWfZkWdUCRU/VklPZKstrAiP9Of5vEZbXb+IZXuJuOB2vZBwbgwbu8PZaWN5DwW96T9wyw==</env-entry-value>
+    </env-entry>
 </web-app>

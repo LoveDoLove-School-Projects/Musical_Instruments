@@ -1,8 +1,8 @@
-package interfaces;
+package entities;
 
-public interface ITransaction {
+public interface TransactionsType {
 
-    int PAGE_TIMEOUT = 30000;
+    final int PAGE_TIMEOUT = 30000;
 
     enum PaymentType {
         CreditOrDebitCard("CreditOrDebitCard"),

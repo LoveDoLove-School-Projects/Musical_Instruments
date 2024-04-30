@@ -2,20 +2,30 @@
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import common.Constants;
+import entities.Session;
+import features.SessionChecker;
 import jakarta.servlet.*;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 import java.io.IOException;
+import utilities.RedirectUtilities;
 
 @WebServlet(name = "PaypalReviewServlet", urlPatterns = {"/payments/paypal/review"})
 public class PaypalReviewServlet extends HttpServlet {
 
     private static final String REVIEW_JSP_URL = "/payments/review.jsp";
+    private final SessionChecker sessionChecker = new SessionChecker();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        HttpSession session = request.getSession(false);
-        String paypalResponse = (String) session.getAttribute("paypalResponse");
+        Session session = sessionChecker.getLoginSession(request.getSession());
+        if (!session.isResult()) {
+            RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Please login to view this page.", Constants.CUSTOMER_LOGIN_URL);
+            return;
+        }
+        HttpSession httpSession = request.getSession();
+        String paypalResponse = (String) httpSession.getAttribute("paypalResponse");
         JsonObject jsonObject = new Gson().fromJson(paypalResponse, JsonObject.class);
         JsonObject transaction = getTransaction(jsonObject);
         JsonObject payer = getPayer(jsonObject);

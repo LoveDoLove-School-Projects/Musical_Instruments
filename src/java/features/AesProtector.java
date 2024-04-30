@@ -1,6 +1,6 @@
 package features;
 
-import environments.Enviroment;
+import entities.Enviroment;
 import utilities.AesUtilities;
 
 public class AesProtector {

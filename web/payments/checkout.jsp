@@ -5,6 +5,8 @@
 <%@ page import="java.util.Calendar" %>
 <%@ page import="java.util.List" %>
 <%@ page import="entities.Carts" %>
+<%@ page import="java.util.Base64"%>
+<%@ page import="utilities.FileUtilities"%>
 <%
 response.setHeader("Cache-Control", "no-store");
 %>
@@ -22,6 +24,67 @@ response.setHeader("Cache-Control", "no-store");
                 <div class="row">
                     <div class="col-md-6">
                         <h2>Checkout</h2>
+                        <section class="section">
+                            <table class="table">
+                                <thead class="text-center TitleBar">
+                                    <tr class="row justify-content-center align-content-center">
+                                        <th class="col p-3 Title">No.</th>
+                                        <th class="col p-3 Title">Image</th>
+                                        <th class="col p-3 Title">Product Name</th>
+                                        <th class="col p-3 Title">Product Color</th>
+                                        <th class="col p-3 Title">Quantity</th>
+                                        <th class="col p-3 Title">Price</th>
+                                        <th class="col p-3 Title">Total Price</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody class="text-center">
+                                    <%
+                                        int numberCart=0;
+                                        double subTotal=0;
+                                        List<Carts> cartsDetails = (List<Carts>) request.getAttribute("cartList");
+                                        for (Carts carts : cartsDetails) {
+                                        numberCart++;
+                                        subTotal+=carts.getProductTotalprice();
+                                        String pictureBase64 = Base64.getEncoder().encodeToString(carts.getProductImage());
+                                        String imageSrc = "data:image/png;base64," + pictureBase64; // Change "image/png" based on the actual image type
+                                    %>
+                                    <tr class="row justify-content-center">
+
+                                        <th class="col"><%=numberCart%></th>
+                                        <th class="col"><img src="<%=imageSrc%>" class="img-fluid w-50 mx-auto"></th>
+                                        <th class="col "><%=carts.getProductName()%></th>
+                                        <th class="col"><%=carts.getProductColor()%></th>
+                                        <th class="col"><%=carts.getProductQuantity()%></th>
+                                        <th class="col">RM<%=carts.getProductPrice()%></th>
+                                        <th class="col">RM<%=carts.getProductTotalprice()%></th>
+                                    </tr>
+                                    <%
+                                        }
+                                    %>
+                                </tbody>
+                                <div class="row justify-content-center align-items-center">
+                                    <tfoot class="col-12 text-center" style="float:right;">
+                                        <tr class="d-flex justify-content-end">
+                                            <th class="col">Subtotal :</th>
+                                            <th class="col">RM ${subtotal}</th>
+                                        </tr>
+                                        <tr class="d-flex justify-content-end">
+                                            <th class="col">Shipping fee :</th>
+                                            <th class="col">RM ${shipping}</th>
+                                        </tr>
+                                        <tr class="d-flex justify-content-end">
+                                            <th class="col">Tax 10% :</th>
+                                            <th class="col">RM ${tax}</th>
+                                        </tr>
+                                        <tr class="d-flex justify-content-end">
+                                            <th class="col">Total :</th>
+                                            <th class="col">RM ${total}</th>
+                                        </tr>
+                                    </tfoot>
+                                </div>
+                            </table>
+                        </section>
                     </div>
                 </div>
             </div>
@@ -103,32 +166,6 @@ response.setHeader("Cache-Control", "no-store");
                             <button type="submit" class="btn btn-primary mt-3" id="paymentButton">Pay Now</button>
                         </form>
                         <form action="payments/paypal" method="post" id="paypal-button-form">
-                            <input type="hidden" name="upload" value="1" />
-                            <input type="hidden" name="return" value="<%=application.getInitParameter("returnurl")%>" />
-                            <input type="hidden" name="cmd" value="_cart" />
-                            <input type="hidden" name="business" value="<%=application.getInitParameter("business")%>" />
-
-                            <!-- Product 1 sample -->
-                            <!-- <input type="hidden" name="item_name_1" value="Item Name 1" />
-                            <input type="hidden" name="item_number_1" value="p1" />
-                            <input type="hidden" name="amount_1" value="2" />
-                            <input type="hidden" name="quantity_1" value="3" /> -->
-
-                            <%
-                                List<Carts> cartList = (List<Carts>) request.getAttribute("cartList");
-                                int i = 1;
-                                for (Carts cart : cartList) {
-                            %>
-                            <input type="hidden" name="item_name_<%=i%>" value="<%=cart.getProductName()%>" />
-                            <input type="hidden" name="item_number_<%=i%>" value="<%=cart.getProductId()%>" />
-                            <input type="hidden" name="amount_<%=i%>" value="<%=cart.getProductPrice()%>" />
-                            <input type="hidden" name="quantity_<%=i%>" value="<%=cart.getProductQuantity()%>" />
-                            <%
-                                i++;
-                                }
-                            %>
-
-                            <!-- Image -->
                             <input type="image" src="https://www.paypal.com/en_US/i/btn/btn_xpressCheckout.gif" alt="Paypal Button" class="mt-3" />
                         </form>
                     </div>

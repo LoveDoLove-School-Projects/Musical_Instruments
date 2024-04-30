@@ -2,6 +2,7 @@ package controllers;
 
 import common.Constants;
 import entities.Carts;
+import entities.OrderDetails;
 import entities.Session;
 import features.SessionChecker;
 import jakarta.persistence.EntityManager;
@@ -12,6 +13,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
+import services.TransactionServices;
 import utilities.RedirectUtilities;
 import utilities.RedirectUtilities.RedirectType;
 
@@ -19,8 +21,9 @@ public class CheckoutServlet extends HttpServlet {
 
     @PersistenceContext
     EntityManager entityManager;
-    private static final String CHECKOUT_JSP_URL = "/payments/checkout.jsp";
+    private final TransactionServices transactionServices = new TransactionServices();
     private final SessionChecker sessionChecker = new SessionChecker();
+    private static final String CHECKOUT_JSP_URL = "/payments/checkout.jsp";
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -35,7 +38,12 @@ public class CheckoutServlet extends HttpServlet {
             RedirectUtilities.redirectWithMessage(request, response, RedirectType.DANGER, "Cart is empty.", Constants.CART_URL);
             return;
         }
+        OrderDetails orderDetails = transactionServices.getOrderDetails(cartList);
         request.setAttribute("cartList", cartList);
+        request.setAttribute("subtotal", orderDetails.getSubtotal());
+        request.setAttribute("shipping", orderDetails.getShipping());
+        request.setAttribute("tax", orderDetails.getTax());
+        request.setAttribute("total", orderDetails.getTotal());
         request.getRequestDispatcher(CHECKOUT_JSP_URL).forward(request, response);
     }
 }

@@ -6,8 +6,7 @@
 <%@ page import="entities.Session" %>
 <%@ page import="entities.Role" %>
 <%
-Principal principal = request.getUserPrincipal();
-String j_username = principal != null ? principal.getName() : null;
+boolean isAdmin = request.isUserInRole("Admin");
 Session user_session = (Session) session.getAttribute("user_session");
 %>
 <!DOCTYPE html>
@@ -56,7 +55,7 @@ Session user_session = (Session) session.getAttribute("user_session");
                     <a class="nav-link" href="pages/productsearch">Search Products</a>
                 </li>
                 <%
-                if (principal != null || user_session != null && user_session.getRole() == Role.STAFF) {
+                if (isAdmin || user_session != null && user_session.getRole() == Role.STAFF) {
                 %>
                 <li class="nav-item mx-4 my-2 p-2">
                     <a class="nav-link" href="pages/staffs/">Admin Panel</a>
@@ -70,7 +69,7 @@ Session user_session = (Session) session.getAttribute("user_session");
                 </button>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                     <%
-                    if (user_session != null || j_username != null) {
+                    if (user_session != null || isAdmin) {
                     %>
                     <li><a class="dropdown-item" href="pages/profile">Profile</a></li>
                     <li><a class="dropdown-item" href="pages/cart">Carts</a></li>

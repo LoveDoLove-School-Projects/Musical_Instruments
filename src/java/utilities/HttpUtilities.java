@@ -1,7 +1,7 @@
 package utilities;
 
 import com.google.gson.Gson;
-import environments.Enviroment;
+import entities.Enviroment;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;

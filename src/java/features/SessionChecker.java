@@ -2,12 +2,11 @@ package features;
 
 import entities.Role;
 import entities.Session;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import java.nio.file.attribute.UserPrincipal;
 import java.util.logging.Logger;
 
-/**
- * This class provides methods to manage login sessions.
- */
 public class SessionChecker {
 
     private static final Logger LOG = Logger.getLogger(SessionChecker.class.getName());
@@ -41,9 +40,16 @@ public class SessionChecker {
         }
         Session userSession = (Session) session.getAttribute(USER_SESSION);
         if (userSession == null) {
-            return new Session(false, 0, Role.UNKNOWN);
+            return new Session(false, 0, Role.GUEST);
         }
-        LOG.info(userSession.toString());
         return userSession;
+    }
+
+    public boolean getIsAdminOrNot(HttpServletRequest request) {
+        UserPrincipal userPrincipal = (UserPrincipal) request.getUserPrincipal();
+        if (userPrincipal == null) {
+            return false;
+        }
+        return request.isUserInRole("Admin");
     }
 }

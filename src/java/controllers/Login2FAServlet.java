@@ -2,7 +2,7 @@ package controllers;
 
 import common.Constants;
 import dao.OtpDao;
-import entities.OtpStatus;
+import entities.OtpsType;
 import entities.Role;
 import entities.Session;
 import features.SessionChecker;
@@ -21,15 +21,15 @@ import utilities.StringUtilities;
 public class Login2FAServlet extends HttpServlet {
 
     private static final String LOGIN_2FA_JSP_URL = "/sessions/login2fa.jsp";
-    private static final Map<OtpStatus, String> STATUS_MESSAGES;
+    private static final Map<OtpsType, String> STATUS_MESSAGES;
 
     static {
-        STATUS_MESSAGES = new EnumMap<>(OtpStatus.class);
-        STATUS_MESSAGES.put(OtpStatus.NOT_FOUND, "OTP not found!");
-        STATUS_MESSAGES.put(OtpStatus.UNAUTHORIZED, "Too many attempts! Please click on 'Resend OTP' to try again.");
-        STATUS_MESSAGES.put(OtpStatus.EXPIRED, "OTP expired! Please click on 'Resend OTP' to try again.");
-        STATUS_MESSAGES.put(OtpStatus.FAILED, "Failed to verify OTP! Please try again.");
-        STATUS_MESSAGES.put(OtpStatus.INVALID, "Invalid OTP!");
+        STATUS_MESSAGES = new EnumMap<>(OtpsType.class);
+        STATUS_MESSAGES.put(OtpsType.NOT_FOUND, "OTP not found!");
+        STATUS_MESSAGES.put(OtpsType.UNAUTHORIZED, "Too many attempts! Please click on 'Resend OTP' to try again.");
+        STATUS_MESSAGES.put(OtpsType.EXPIRED, "OTP expired! Please click on 'Resend OTP' to try again.");
+        STATUS_MESSAGES.put(OtpsType.FAILED, "Failed to verify OTP! Please try again.");
+        STATUS_MESSAGES.put(OtpsType.INVALID, "Invalid OTP!");
     }
     private final SessionChecker sessionChecker = new SessionChecker();
     private final OtpDao otpDao = new OtpDao();
@@ -62,7 +62,7 @@ public class Login2FAServlet extends HttpServlet {
             setLogin2FAPage(request, response);
             return;
         }
-        OtpStatus otpStatus = otpDao.verifyOtp(attributes.getEmail(), otp);
+        OtpsType otpStatus = otpDao.verifyOtp(attributes.getEmail(), otp);
         handleOtpStatus(otpStatus, request, response, session, attributes);
     }
 
@@ -77,14 +77,14 @@ public class Login2FAServlet extends HttpServlet {
         Integer loginId = (Integer) session.getAttribute("login_id_2fa");
         String email = (String) session.getAttribute("email");
         Role role = (Role) session.getAttribute("role");
-        if (loginId == null || loginId == 0 || StringUtilities.anyNullOrBlank(email) || role == Role.UNKNOWN) {
+        if (loginId == null || loginId == 0 || StringUtilities.anyNullOrBlank(email) || role == null) {
             return null;
         }
         return new Session(loginId, email, role);
     }
 
-    private void handleOtpStatus(OtpStatus otpStatus, HttpServletRequest request, HttpServletResponse response, HttpSession session, Session attributes) throws IOException, ServletException {
-        if (otpStatus == OtpStatus.OK) {
+    private void handleOtpStatus(OtpsType otpStatus, HttpServletRequest request, HttpServletResponse response, HttpSession session, Session attributes) throws IOException, ServletException {
+        if (otpStatus == OtpsType.OK) {
             session.invalidate();
             session = request.getSession(true);
             sessionChecker.setLoginSession(session, attributes.getUserId(), attributes.getRole());

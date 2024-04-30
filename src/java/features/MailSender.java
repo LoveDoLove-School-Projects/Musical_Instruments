@@ -1,6 +1,6 @@
 package features;
 
-import environments.Enviroment;
+import entities.Enviroment;
 import java.util.Optional;
 import utilities.HttpUtilities;
 
