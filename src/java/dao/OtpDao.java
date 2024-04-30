@@ -23,14 +23,14 @@ public class OtpDao {
     private static final String UPDATE_OTP_SQL = "UPDATE otps SET otp = ?, try_count = ? WHERE email = ?";
     private static final String DELETE_OTP_SQL = "DELETE FROM otps WHERE email = ?";
     private static final String UPDATE_TRY_COUNT_SQL = "UPDATE otps SET try_count = ? WHERE email = ?";
-    private static final MailSender MAIL_SENDER = new MailSender();
+    private final MailSender mailSender = new MailSender();
 
     public boolean sendOtp(String email) {
         if (StringUtilities.anyNullOrBlank(email)) {
             return false;
         }
         String otp = RandomUtilities.generateOtp();
-        boolean mailStatus = MAIL_SENDER.sendEmail(email, SUBJECT, CONTENT.replace("${otpvalue}", otp));
+        boolean mailStatus = mailSender.sendEmail(email, SUBJECT, CONTENT.replace("${otpvalue}", otp));
         if (!mailStatus) {
             return false;
         }

@@ -8,4 +8,5 @@ public class Enviroment {
     public static String ACCESS_TOKEN_API = "ACCESS_TOKEN_API";
     public static String CREATE_PAYMENT_API = "CREATE_PAYMENT_API";
     public static String EXECUTE_PAYMENT_API = "EXECUTE_PAYMENT_API";
+    public static String GET_PAYMENT_API = "GET_PAYMENT_API";
 }

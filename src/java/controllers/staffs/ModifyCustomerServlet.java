@@ -33,7 +33,7 @@ public class ModifyCustomerServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        HttpSession httpSession = request.getSession(false);
+        HttpSession httpSession = request.getSession();
         boolean isAdmin = sessionChecker.getIsAdminOrNot(request);
         Session session = sessionChecker.getLoginSession(httpSession);
         boolean isLoggedIn = session.isResult();

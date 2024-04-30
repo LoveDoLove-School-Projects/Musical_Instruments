@@ -17,7 +17,7 @@ public class LogoutServlet extends HttpServlet {
     }
 
     private void handleLogout(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        HttpSession session = request.getSession(false);
+        HttpSession session = request.getSession();
         session.invalidate();
         RedirectUtilities.sendRedirect(request, response, "/");
     }

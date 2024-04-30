@@ -26,7 +26,7 @@ public class StaffSearchProductServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        HttpSession httpSession = request.getSession(false);
+        HttpSession httpSession = request.getSession();
         boolean isAdmin = sessionChecker.getIsAdminOrNot(request);
         Session session = sessionChecker.getLoginSession(httpSession);
         boolean isLoggedIn = session.isResult();
@@ -52,7 +52,7 @@ public class StaffSearchProductServlet extends HttpServlet {
                 return;
             }
             Products product = productList.get(0);
-            HttpSession session = request.getSession(false);
+            HttpSession session = request.getSession();
             session.setAttribute("productDetails", product);
             RedirectUtilities.sendRedirect(request, response, "/pages/staffs/manageProduct.jsp");
         } catch (IOException | NumberFormatException ex) {

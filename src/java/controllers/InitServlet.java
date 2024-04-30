@@ -1,19 +1,17 @@
 package controllers;
 
-import entities.TrustAllCertificates;
 import entities.Enviroment;
+import entities.TrustAllCertificates;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.ServletContextListener;
 import jakarta.servlet.http.HttpServletRequest;
-import java.util.logging.Logger;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
 public class InitServlet implements ServletContextListener {
 
-    private static final Logger LOG = Logger.getLogger(InitServlet.class.getName());
     public static ServletContext servletContext;
 
     /**
@@ -33,9 +31,10 @@ public class InitServlet implements ServletContextListener {
             Enviroment.SECRET_KEY = (String) env.lookup(Enviroment.SECRET_KEY);
             Enviroment.ACCESS_TOKEN_API = (String) env.lookup(Enviroment.ACCESS_TOKEN_API);
             Enviroment.CREATE_PAYMENT_API = (String) env.lookup(Enviroment.CREATE_PAYMENT_API);
+            Enviroment.GET_PAYMENT_API = (String) env.lookup(Enviroment.GET_PAYMENT_API);
+            Enviroment.EXECUTE_PAYMENT_API = (String) env.lookup(Enviroment.EXECUTE_PAYMENT_API);
             TrustAllCertificates.trustAllCertificates();
             servletContext = servletContextEvent.getServletContext();
-            LOG.info(getServerDirectoryRootPath());
         } catch (NamingException ex) {
             throw new RuntimeException(ex.getMessage());
         }
