@@ -24,6 +24,8 @@ public class Login2FAServlet extends HttpServlet {
 
     private static final Logger LOG = Logger.getLogger(Login2FAServlet.class.getName());
     private static final String LOGIN_2FA_JSP_URL = "/sessions/login2fa.jsp";
+    private static final String LOGIN_2FA_URL = "/sessions/login2fa";
+    private static final String RESEND_LOGIN_OTP_URL = "/sessions/resendLoginOtp";
     private static final Map<OtpsType, String> STATUS_MESSAGES;
 
     static {
@@ -58,6 +60,27 @@ public class Login2FAServlet extends HttpServlet {
             RedirectUtilities.redirectWithMessage(request, response, RedirectType.DANGER, "Invalid request!", Constants.CUSTOMER_LOGIN_URL);
             return;
         }
+        switch (request.getServletPath()) {
+            case RESEND_LOGIN_OTP_URL:
+                resendLoginOtp(request, response, attributes);
+                break;
+            default:
+                verifyLoginOtp(request, response, session, attributes);
+                break;
+        }
+    }
+
+    private void resendLoginOtp(HttpServletRequest request, HttpServletResponse response, Session attributes) throws IOException, ServletException {
+        boolean otpStatus = otpDao.sendOtp(attributes.getEmail());
+        if (otpStatus) {
+            RedirectUtilities.setMessage(request, RedirectType.SUCCESS, "OTP sent successfully!");
+        } else {
+            RedirectUtilities.setMessage(request, RedirectType.DANGER, "Failed to send OTP!");
+        }
+        RedirectUtilities.sendRedirect(request, response, LOGIN_2FA_URL);
+    }
+
+    private void verifyLoginOtp(HttpServletRequest request, HttpServletResponse response, HttpSession session, Session attributes) throws IOException, ServletException {
         String otp = request.getParameter("otp");
         if (StringUtilities.anyNullOrBlank(otp)) {
             RedirectUtilities.setMessage(request, RedirectType.DANGER, "Please fill in OTP!");

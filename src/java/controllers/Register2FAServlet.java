@@ -30,7 +30,9 @@ import utilities.StringUtilities;
 public class Register2FAServlet extends HttpServlet {
 
     private static final String REGISTER_2FA_JSP_URL = "/sessions/register2fa.jsp";
-    public static final String REGISTER_URL = "/pages/register";
+    private static final String REGISTER_URL = "/pages/register";
+    private static final String REGISTER_2FA_URL = "/sessions/register2fa";
+    private static final String RESEND_REGISTER_OTP_URL = "/sessions/resendRegisterOtp";
     private static final Map<OtpsType, String> STATUS_MESSAGES;
 
     static {
@@ -69,6 +71,27 @@ public class Register2FAServlet extends HttpServlet {
             RedirectUtilities.redirectWithMessage(request, response, RedirectType.DANGER, "Invalid request!", Constants.CUSTOMER_LOGIN_URL);
             return;
         }
+        switch (request.getServletPath()) {
+            case RESEND_REGISTER_OTP_URL:
+                resendLoginOtp(request, response, customer);
+                break;
+            default:
+                verifyLoginOtp(request, response, session, customer);
+                break;
+        }
+    }
+
+    private void resendLoginOtp(HttpServletRequest request, HttpServletResponse response, Customers attributes) throws IOException, ServletException {
+        boolean otpStatus = otpDao.sendOtp(attributes.getEmail());
+        if (otpStatus) {
+            RedirectUtilities.setMessage(request, RedirectType.SUCCESS, "OTP sent successfully!");
+        } else {
+            RedirectUtilities.setMessage(request, RedirectType.DANGER, "Failed to send OTP!");
+        }
+        RedirectUtilities.sendRedirect(request, response, REGISTER_2FA_URL);
+    }
+
+    private void verifyLoginOtp(HttpServletRequest request, HttpServletResponse response, HttpSession session, Customers customer) throws IOException, ServletException {
         String otp = request.getParameter("otp");
         if (StringUtilities.anyNullOrBlank(otp)) {
             RedirectUtilities.setMessage(request, RedirectType.DANGER, "Please fill in OTP!");

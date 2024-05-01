@@ -41,9 +41,9 @@ response.setHeader("Cache-Control", "no-store");
                                         </div>
                                     </form>
 
-                                    <form method="POST" action="sessions/loginResendOtp">
+                                    <form method="POST" action="sessions/resendLoginOtp">
                                         <div class="mt-4 pt-2">
-                                            Didn’t get the code ? <a href="#" class="text-primary fw-bold text-decoration-none">Resend</a>
+                                            Didn’t get the code ? <button type="submit" class="btn btn-primary btn-lg">Resend</button>
                                         </div>
                                     </form>
                                 </div>

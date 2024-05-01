@@ -31,9 +31,11 @@ public class SecurityLog {
             new SecurityLogDao().addInternalSecurityLog(new Internalsecuritylog(0, username, null, action, ipAddress, userAgent));
             return;
         }
-        int userId = session.getUserId();
-        String email = session.getEmail();
-        new SecurityLogDao().addInternalSecurityLog(new Internalsecuritylog(userId, username, email, action, ipAddress, userAgent));
+        if (session != null) {
+            int userId = session.getUserId();
+            String email = session.getEmail();
+            new SecurityLogDao().addInternalSecurityLog(new Internalsecuritylog(userId, username, email, action, ipAddress, userAgent));
+        }
     }
 
     private static String getUsername(HttpServletRequest request, Session session) {
