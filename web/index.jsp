@@ -8,62 +8,96 @@
     <head>
         <jsp:include page="/defaults/head.jsp" />
         <title>Musical Instruments</title>
-        <link rel="stylesheet" href="assets/css/main.css"/>
+        <link rel="stylesheet" href="assets/css/main.css"/> 
     </head>
 
     <body>
         <jsp:include page="/defaults/header.jsp" />
         <!-- Hero Section -->
-        <div class="container mainImage mt-6">
-            <div class="row">
-                <div class="col-md-12 section1">
-                    <div class="content m-5">
-                        <h1>Welcome to Our Music Store</h1>
-                        <p class="lead">Find your favorite musical instruments here.</p>
-                        <a href="pages/products" class="btn btn-primary">Shop Now</a>
+        <main class="">
+            <section class="section1">
+                <div class="container">
+                    <div class="row justify-content-center align-items-center">
+                        <div class="d-block my-auto p-5 col-12 col-xl-5" style="animation:swing 1s">
+                            <h1>Welcome to music instruments</h1>
+                            <p>Enjoy the music, Malaysia top 1 music website</p>
+                            <button class="m-2 px-4 py-2 button"><strong>Shop now</strong></button>
+                            <button class="m-2 px-4 py-2 button"><a href="#section3"><strong>Explore</strong></a></button>
+                        </div>
+
+                        <div class="col-12 col-xl-7">
+                            <div class="m-3 mx-auto" style="animation:bounceInRight 2s">
+                                <img src="">
+                            </div>
+                        </div>
+                    </div>
+            </section>
+
+
+            <section class="section2">
+                <div class="container-fluid">
+                    <div class="row justify-content-center align-items-center">
+                        <div class="m-5 col-12 col-xl-6 col-xxl-5">
+                            <div class="d-block p-5  sec2_content" style="animation:bounce 2s">
+                                <h1>Want to be member ?</h1><br>
+                                <p>With our state-of-the-art content management and delivery system placing content orders has never been faster and easier. You can order content in multiple languages in just few clicks. Furthermore, our professional content writers are ready to finalise your request as fast as possible.</p>
+                            </div>
+                        </div>
+                        <div class="col-12 col-xl-6 col-xxl-5 d-flex align-content-center justify-content-center">
+                            <div class="m-5 p-5 d-block text-center PremiumBox">
+                                <h1>Premium</h1>
+                                <ul>
+                                    <li>Offer coupons and discounts</li>
+                                    <li>Birthday reward</li>
+                                    <li>Free some piano</li>
+                                    <li>online community</li>
+                                </ul>
+                                <a href="#"><button class="m-2 px-4 py-2 PremiumBoxBtn"><strong>Login</strong></button></a>
+                                <a href="#"><button class="m-2 px-4 py-2 PremiumBoxBtn"><strong>Sign up</strong></button></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+
+            <div class="container mt-5">
+                <h2>Featured Products</h2>
+                <!-- ${topsales} -->
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="card">
+                            <img src="assets/image/logo.png" class="img-fluid"  height="300" alt="...">
+                            <div class="card-body">
+                                <h5 class="card-title">Guitar</h5>
+
+                                <a href="pages/products" class="btn btn-primary">Buy Now</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card">
+                            <img src="drum.jpg" class=" card-img-top " height="300" alt="...">
+                            <div class="card-body">
+                                <h5 class="card-title">Drum</h5>
+
+                                <a href="#" class="btn btn-primary">Buy Now</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card">
+                            <img src="piano.jpg" class="card-img-top" height="300" alt="...">
+                            <div class="card-body">
+                                <h5 class="card-title">Piano</h5>
+
+                                <a href="#" class="btn btn-primary">Buy Now</a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-
-
-        <!-- Featured Products -->
-        <div class="container mt-5">
-            <h2>Featured Products</h2>
-            <!-- ${topsales} -->
-            <div class="row">
-                <div class="col-md-3">
-                    <div class="card">
-                        <img src="assets/image/logo.png" class="img-fluid"  height="300" alt="...">
-                        <div class="card-body">
-                            <h5 class="card-title">Guitar</h5>
-
-                            <a href="pages/products" class="btn btn-primary">Buy Now</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="card">
-                        <img src="drum.jpg" class=" card-img-top " height="300" alt="...">
-                        <div class="card-body">
-                            <h5 class="card-title">Drum</h5>
-
-                            <a href="#" class="btn btn-primary">Buy Now</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="card">
-                        <img src="piano.jpg" class="card-img-top" height="300" alt="...">
-                        <div class="card-body">
-                            <h5 class="card-title">Piano</h5>
-
-                            <a href="#" class="btn btn-primary">Buy Now</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        </main>
 
         <jsp:include page="/defaults/footer.jsp" />
     </body>

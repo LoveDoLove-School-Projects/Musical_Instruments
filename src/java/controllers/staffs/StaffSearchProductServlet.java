@@ -28,7 +28,7 @@ public class StaffSearchProductServlet extends HttpServlet {
             RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Please login as staff to view this page!", "/");
             return;
         }
-        request.getRequestDispatcher("/pages/staffs/searchProduct.jsp").forward(request, response);
+        request.getRequestDispatcher(Constants.SEARCH_PRODUCT_JSP_URL).forward(request, response);
     }
 
     @Override

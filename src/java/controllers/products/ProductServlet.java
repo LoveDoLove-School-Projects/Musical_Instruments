@@ -25,11 +25,15 @@ public class ProductServlet extends HttpServlet {
         PRODUCT_DETAILS = new EnumMap<>(PRODUCT_CATEGORIES.class);
         PRODUCT_DETAILS.put(PRODUCT_CATEGORIES.PIANO, "pianoProductDetails");
         PRODUCT_DETAILS.put(PRODUCT_CATEGORIES.GUITAR, "guitarProductDetails");
+        PRODUCT_DETAILS.put(PRODUCT_CATEGORIES.DRUM, "drumProductDetails");
+        PRODUCT_DETAILS.put(PRODUCT_CATEGORIES.VIOLIN, "violinProductDetails");
     }
 
     public enum PRODUCT_CATEGORIES {
         PIANO("PIANO"),
-        GUITAR("GUITAR");
+        GUITAR("GUITAR"),
+        DRUM("DRUM"),
+        VIOLIN("VIOLIN");
         private final String category;
 
         PRODUCT_CATEGORIES(String category) {
