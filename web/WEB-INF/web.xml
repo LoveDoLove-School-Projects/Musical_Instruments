@@ -267,8 +267,8 @@
     <servlet-mapping>
         <servlet-name>DeleteCartServlet</servlet-name>
         <url-pattern>/pages/carts/deleteCartServlet</url-pattern>
-    </servlet>
-    <servlet>
+    </servlet-mapping>
+    <servlet-mapping>
         <servlet-name>PaymentReceiptServlet</servlet-name>
         <url-pattern>/payments/receipt</url-pattern>
     </servlet-mapping>
@@ -285,7 +285,7 @@
         <url-pattern>*.jsp</url-pattern>
     </filter-mapping>
     <listener>
-        <description>Enviroment Entry Reader Listener</description>
+        <description>Init Enviroment and Servlet</description>
         <listener-class>controllers.InitServlet</listener-class>
     </listener>
     <error-page>
