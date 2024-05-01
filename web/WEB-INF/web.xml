@@ -241,10 +241,6 @@
         <url-pattern>/pages/admins/manageStaff</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>StaffSearchProductServlet</servlet-name>
-        <url-pattern>/pages/staffs/searchProduct</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
         <servlet-name>DeleteProductServlet</servlet-name>
         <url-pattern>/pages/admins/deleteProduct</url-pattern>
     </servlet-mapping>
@@ -271,6 +267,10 @@
     <servlet-mapping>
         <servlet-name>PaymentReceiptServlet</servlet-name>
         <url-pattern>/payments/receipt</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>StaffSearchProductServlet</servlet-name>
+        <url-pattern>/pages/staffs/staffSearchProduct</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>30</session-timeout>

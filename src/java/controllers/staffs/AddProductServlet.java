@@ -1,9 +1,10 @@
 package controllers.staffs;
 
 import entities.Products;
-import entities.Role;
 import entities.Session;
+import entities.Staffs;
 import exceptions.DatabaseException;
+import features.SecurityLog;
 import features.SessionChecker;
 import jakarta.annotation.Resource;
 import jakarta.persistence.EntityManager;
@@ -13,7 +14,6 @@ import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 import jakarta.transaction.HeuristicMixedException;
 import jakarta.transaction.HeuristicRollbackException;
 import jakarta.transaction.NotSupportedException;
@@ -22,6 +22,8 @@ import jakarta.transaction.SystemException;
 import jakarta.transaction.UserTransaction;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
+import java.util.logging.Logger;
 import utilities.RedirectUtilities;
 
 @MultipartConfig
@@ -31,25 +33,28 @@ public class AddProductServlet extends HttpServlet {
     EntityManager entityManager;
     @Resource
     UserTransaction userTransaction;
-    private final SessionChecker sessionChecker = new SessionChecker();
+    private static final Logger LOG = Logger.getLogger(AddProductServlet.class.getName());
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        HttpSession httpSession = request.getSession();
-        boolean isAdmin = sessionChecker.getIsAdminOrNot(request);
-        Session session = sessionChecker.getLoginSession(httpSession);
-        boolean isLoggedIn = session.isResult();
-        if (!isAdmin && (!isLoggedIn || session.getRole() != Role.STAFF)) {
+
+        if (!SessionChecker.checkIsStaffOrAdmin(request)) {
             RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Please login as staff to view this page!", "/");
             return;
         }
+
         request.getRequestDispatcher("/pages/staffs/addProduct.jsp").forward(request, response);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        if (!SessionChecker.checkIsStaffOrAdmin(request)) {
+            RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Please login as staff to view this page!", "/");
+            return;
+        }
+
         response.setContentType("text/html;charset=UTF-8");
         String productName = request.getParameter("productName");
         double price = Double.parseDouble(request.getParameter("price"));
@@ -73,9 +78,26 @@ public class AddProductServlet extends HttpServlet {
             product.setImage(pictureBytes);
             entityManager.persist(product);
             userTransaction.commit();
+            String username = getUsername(request);
+            String sLog = username + " added new product " + product.toString();
+            SecurityLog.addInternalSecurityLog(request, username, sLog);
         } catch (NotSupportedException | SystemException | RollbackException | HeuristicMixedException | HeuristicRollbackException | SecurityException | IllegalStateException ex) {
             throw new DatabaseException(ex.getMessage());
         }
         RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.SUCCESS, "Product Added successful!", "/pages/staffs/searchProduct");
+    }
+
+    private String getUsername(HttpServletRequest request) {
+        try {
+            Session session = SessionChecker.getLoginSession(request);
+            LOG.info(session.toString());
+            List<Staffs> staff = entityManager.createNamedQuery("Staffs.findByUserId", Staffs.class).setParameter("userId", session.getUserId()).getResultList();
+            if (staff == null || staff.isEmpty()) {
+                return SessionChecker.getPrincipalName(request);
+            }
+            return staff.get(0).getUsername();
+        } catch (Exception ex) {
+            throw new RuntimeException(ex.getMessage());
+        }
     }
 }

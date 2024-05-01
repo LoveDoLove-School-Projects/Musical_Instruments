@@ -2,8 +2,6 @@ package controllers.staffs;
 
 import common.Constants;
 import entities.Customers;
-import entities.Role;
-import entities.Session;
 import features.SessionChecker;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -22,21 +20,17 @@ public class ManageCustomerServlet extends HttpServlet {
     private static final Logger LOG = Logger.getLogger(ManageCustomerServlet.class.getName());
     @PersistenceContext
     EntityManager entityManager;
-    private final SessionChecker sessionChecker = new SessionChecker();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        HttpSession httpSession = request.getSession();
-        boolean isAdmin = sessionChecker.getIsAdminOrNot(request);
-        Session session = sessionChecker.getLoginSession(httpSession);
-        boolean isLoggedIn = session.isResult();
-        if (!isAdmin && (!isLoggedIn || session.getRole() != Role.STAFF)) {
+        if (!SessionChecker.checkIsStaffOrAdmin(request)) {
             RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Please login as staff to view this page!", "/");
             return;
         }
+        HttpSession session = request.getSession();
         response.setContentType("text/html;charset=UTF-8");
-        Customers customer = (Customers) httpSession.getAttribute("customerDetails");
+        Customers customer = (Customers) session.getAttribute("customerDetails");
         if (customer == null) {
             RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Please fill in the customer email!", Constants.ADMIN_SEARCH_CUSTOMER_URL);
             return;
@@ -47,8 +41,8 @@ public class ManageCustomerServlet extends HttpServlet {
             return;
         }
         customer = customerList.get(0);
-        httpSession.removeAttribute("customerDetails");
-        httpSession.setAttribute("customerDetails", customer);
+        session.removeAttribute("customerDetails");
+        session.setAttribute("customerDetails", customer);
         request.getRequestDispatcher("/pages/staffs/manageCustomer.jsp").forward(request, response);
     }
 }

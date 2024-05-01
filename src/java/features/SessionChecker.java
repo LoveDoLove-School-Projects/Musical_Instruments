@@ -25,6 +25,10 @@ public class SessionChecker {
         }
     }
 
+    public static Session getLoginSession(HttpServletRequest request) {
+        return getLoginSession(request.getSession());
+    }
+
     /**
      * Retrieves the login session attribute from the provided HttpSession
      * object.
@@ -34,7 +38,7 @@ public class SessionChecker {
      * or the login ID is null, a Session object representing a non-logged in
      * user is returned.
      */
-    public Session getLoginSession(HttpSession session) {
+    public static Session getLoginSession(HttpSession session) {
         if (session == null) {
             return new Session(false, 0);
         }
@@ -45,11 +49,27 @@ public class SessionChecker {
         return userSession;
     }
 
-    public boolean getIsAdminOrNot(HttpServletRequest request) {
+    private static boolean getIsAdminOrNot(HttpServletRequest request) {
         Principal principal = request.getUserPrincipal();
         if (principal == null) {
             return false;
         }
         return request.isUserInRole("Admin");
+    }
+
+    public static String getPrincipalName(HttpServletRequest request) {
+        Principal principal = request.getUserPrincipal();
+        if (principal == null) {
+            return null;
+        }
+        return principal.getName();
+    }
+
+    public static boolean checkIsStaffOrAdmin(HttpServletRequest request) {
+        HttpSession httpSession = request.getSession();
+        boolean isAdmin = getIsAdminOrNot(request);
+        Session session = getLoginSession(httpSession);
+        boolean isLoggedIn = session.isResult();
+        return isAdmin || (isLoggedIn && session.getRole() == Role.STAFF);
     }
 }

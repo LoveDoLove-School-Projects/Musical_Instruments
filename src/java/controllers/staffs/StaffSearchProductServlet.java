@@ -2,8 +2,6 @@ package controllers.staffs;
 
 import common.Constants;
 import entities.Products;
-import entities.Role;
-import entities.Session;
 import features.SessionChecker;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -22,16 +20,11 @@ public class StaffSearchProductServlet extends HttpServlet {
     private static final Logger LOG = Logger.getLogger(StaffSearchProductServlet.class.getName());
     @PersistenceContext
     EntityManager entityManager;
-    private final SessionChecker sessionChecker = new SessionChecker();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        HttpSession httpSession = request.getSession();
-        boolean isAdmin = sessionChecker.getIsAdminOrNot(request);
-        Session session = sessionChecker.getLoginSession(httpSession);
-        boolean isLoggedIn = session.isResult();
-        if (!isAdmin && (!isLoggedIn || session.getRole() != Role.STAFF)) {
+        if (!SessionChecker.checkIsStaffOrAdmin(request)) {
             RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Please login as staff to view this page!", "/");
             return;
         }
@@ -55,7 +48,7 @@ public class StaffSearchProductServlet extends HttpServlet {
             Products product = productList.get(0);
             HttpSession session = request.getSession();
             session.setAttribute("productDetails", product);
-            RedirectUtilities.sendRedirect(request, response, "/pages/staffs/manageProduct.jsp");
+            RedirectUtilities.sendRedirect(request, response, "/pages/staffs/manageProduct");
         } catch (IOException | NumberFormatException ex) {
             RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Please a valid product ID!", Constants.ADMIN_STAFF_SEARCH_PRODUCT_URL);
         }
