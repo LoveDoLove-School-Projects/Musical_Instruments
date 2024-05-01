@@ -3,7 +3,7 @@ package features;
 import entities.Enviroment;
 import utilities.AesUtilities;
 
-public class AesProtector {
+public final class AesProtector {
 
     /**
      * Encrypts the given text using AES-256 ECB encryption.

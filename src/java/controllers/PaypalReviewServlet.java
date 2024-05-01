@@ -16,13 +16,12 @@ public class PaypalReviewServlet extends HttpServlet {
 
     private static final Logger LOG = Logger.getLogger(PaypalReviewServlet.class.getName());
     private static final String REVIEW_JSP_URL = "/payments/review.jsp";
-    private final SessionChecker sessionChecker = new SessionChecker();
     private final PaypalServices paypalServices = new PaypalServices();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        Session session = sessionChecker.getLoginSession(request.getSession());
-        if (!session.isResult()) {
+        Session session = SessionChecker.getLoginSession(request.getSession());
+        if (session == null) {
             RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Please login to view this page.", Constants.CUSTOMER_LOGIN_URL);
             return;
         }

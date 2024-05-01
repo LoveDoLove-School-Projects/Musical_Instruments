@@ -11,7 +11,6 @@ import utilities.RedirectUtilities;
 public class StaffServlet extends HttpServlet {
 
     private static final String PANEL_JSP = "/pages/staffs/panel.jsp";
-    private final SessionChecker sessionChecker = new SessionChecker();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)

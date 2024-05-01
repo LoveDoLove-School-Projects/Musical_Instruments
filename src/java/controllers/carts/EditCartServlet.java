@@ -25,7 +25,6 @@ import utilities.RedirectUtilities;
 
 public class EditCartServlet extends HttpServlet {
 
-    private static final SessionChecker sessionChecker = new SessionChecker();
     @PersistenceContext
     EntityManager entityManager;
     @Resource
@@ -33,8 +32,8 @@ public class EditCartServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        Session session = sessionChecker.getLoginSession(request.getSession());
-        if (!session.isResult()) {
+        Session session = SessionChecker.getLoginSession(request.getSession());
+        if (session == null) {
             RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Please login to view this page.", Constants.CUSTOMER_LOGIN_URL);
             return;
         } else {
@@ -56,29 +55,23 @@ public class EditCartServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        Session session = sessionChecker.getLoginSession(request.getSession());
-        if (!session.isResult()) {
+        Session session = SessionChecker.getLoginSession(request.getSession());
+        if (session == null) {
             RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Please login to view this page.", Constants.CUSTOMER_LOGIN_URL);
             return;
         }
         int cardId = Integer.valueOf(request.getParameter("cartId"));
-        int productQuantity=Integer.valueOf(request.getParameter("productQuantity"));
-
+        int productQuantity = Integer.valueOf(request.getParameter("productQuantity"));
         try {
             userTransaction.begin();
             Carts carts = entityManager.find(Carts.class, cardId);
-
-           
             carts.setProductQuantity(productQuantity);
             carts.setProductTotalprice(productQuantity * carts.getProductPrice());
-
             entityManager.merge(carts);
             userTransaction.commit();
             RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.SUCCESS, "Your cart has been update !", Constants.CART_URL);
         } catch (HeuristicMixedException | HeuristicRollbackException | NotSupportedException | RollbackException | SystemException | IOException | IllegalStateException | NumberFormatException | SecurityException ex) {
             throw new DatabaseException(ex.getMessage());
         }
-
     }
-
 }

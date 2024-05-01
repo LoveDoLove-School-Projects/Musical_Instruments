@@ -5,23 +5,14 @@ import entities.Session;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import java.security.Principal;
-import java.util.logging.Logger;
 
 public class SessionChecker {
 
-    private static final Logger LOG = Logger.getLogger(SessionChecker.class.getName());
     private static final String USER_SESSION = "user_session";
 
-    /**
-     * Sets the login session attribute in the provided HttpSession object.
-     *
-     * @param session The HttpSession object to set the attribute in.
-     * @param loginId The login ID to be stored in the session attribute.
-     * @param role The role to be stored in the session attribute.
-     */
-    public void setLoginSession(HttpSession session, Integer loginId, Role role) {
+    public static void setLoginSession(HttpSession session, Integer loginId, String username, Role role) {
         if (session != null) {
-            session.setAttribute(USER_SESSION, new Session(true, loginId, role));
+            session.setAttribute(USER_SESSION, new Session(loginId, username, role));
         }
     }
 
@@ -29,24 +20,15 @@ public class SessionChecker {
         return getLoginSession(request.getSession());
     }
 
-    /**
-     * Retrieves the login session attribute from the provided HttpSession
-     * object.
-     *
-     * @param session The HttpSession object to get the attribute from.
-     * @return A Session object representing the login session. If the session
-     * or the login ID is null, a Session object representing a non-logged in
-     * user is returned.
-     */
     public static Session getLoginSession(HttpSession session) {
-        if (session == null) {
-            return new Session(false, 0);
+        if (session != null) {
+            Session userSession = (Session) session.getAttribute(USER_SESSION);
+            if (userSession == null) {
+                return null;
+            }
+            return userSession;
         }
-        Session userSession = (Session) session.getAttribute(USER_SESSION);
-        if (userSession == null) {
-            return new Session(false, 0, Role.GUEST);
-        }
-        return userSession;
+        return null;
     }
 
     private static boolean getIsAdminOrNot(HttpServletRequest request) {
@@ -69,7 +51,7 @@ public class SessionChecker {
         HttpSession httpSession = request.getSession();
         boolean isAdmin = getIsAdminOrNot(request);
         Session session = getLoginSession(httpSession);
-        boolean isLoggedIn = session.isResult();
+        boolean isLoggedIn = session != null;
         return isAdmin || (isLoggedIn && session.getRole() == Role.STAFF);
     }
 }

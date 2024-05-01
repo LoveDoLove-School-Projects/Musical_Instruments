@@ -10,8 +10,6 @@ import java.io.IOException;
 
 public class SecurityLog {
 
-    private static final SecurityLogDao SECURITY_LOG_DAO = new SecurityLogDao();
-
     /**
      * Adds a security log entry for the specified request, session, and action.
      *
@@ -37,10 +35,11 @@ public class SecurityLog {
      * @throws IOException if an I/O error occurs
      */
     public static void addSecurityLog(HttpServletRequest request, int userId, String action) throws ServletException, IOException {
+        String username = getUsername(request);
         String ipAddress = request.getRemoteAddr();
         String userAgent = request.getHeader("User-Agent");
         Securitylog securitylog = new Securitylog(userId, action, ipAddress, userAgent);
-        SECURITY_LOG_DAO.addSecurityLog(securitylog);
+        new SecurityLogDao().addSecurityLog(securitylog);
     }
 
     /**
@@ -54,10 +53,19 @@ public class SecurityLog {
      * @throws ServletException if there is a servlet exception
      * @throws IOException if there is an I/O exception
      */
-    public static void addInternalSecurityLog(HttpServletRequest request, String username, String action) throws ServletException, IOException {
+    public static void addInternalSecurityLog(HttpServletRequest request, String action) throws ServletException, IOException {
+        String username = getUsername(request);
         String ipAddress = request.getRemoteAddr();
         String userAgent = request.getHeader("User-Agent");
         Internalsecuritylog internalsecuritylog = new Internalsecuritylog(username, action, ipAddress, userAgent);
-        SECURITY_LOG_DAO.addInternalSecurityLog(internalsecuritylog);
+        new SecurityLogDao().addInternalSecurityLog(internalsecuritylog);
+    }
+
+    private static String getUsername(HttpServletRequest request) {
+        Session session = SessionChecker.getLoginSession(request);
+        if (session == null) {
+            return SessionChecker.getPrincipalName(request);
+        }
+        return session.getUsername();
     }
 }

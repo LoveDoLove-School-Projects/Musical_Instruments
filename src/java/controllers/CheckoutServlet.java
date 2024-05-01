@@ -22,14 +22,13 @@ public class CheckoutServlet extends HttpServlet {
     @PersistenceContext
     EntityManager entityManager;
     private final TransactionServices transactionServices = new TransactionServices();
-    private final SessionChecker sessionChecker = new SessionChecker();
     private static final String CHECKOUT_JSP_URL = "/payments/checkout.jsp";
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        Session session = sessionChecker.getLoginSession(request.getSession());
-        if (!session.isResult()) {
+        Session session = SessionChecker.getLoginSession(request.getSession());
+        if (session == null) {
             RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Please login to view this page.", Constants.CUSTOMER_LOGIN_URL);
             return;
         }

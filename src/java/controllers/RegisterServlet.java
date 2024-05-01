@@ -22,15 +22,14 @@ import utilities.ValidationUtilities;
 public class RegisterServlet extends HttpServlet {
 
     private static final String REGISTER_2FA_URL = "/sessions/register2fa";
-    private final SessionChecker sessionHandler = new SessionChecker();
     private final OtpDao otpDao = new OtpDao();
     @PersistenceContext
     EntityManager entityManager;
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        Session session = sessionHandler.getLoginSession(request.getSession());
-        if (session.isResult()) {
+        Session session = SessionChecker.getLoginSession(request.getSession());
+        if (session != null) {
             RedirectUtilities.sendRedirect(request, response, Constants.PROFILE_URL);
             return;
         }

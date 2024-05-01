@@ -128,6 +128,10 @@
         <servlet-name>PaymentReceiptServlet</servlet-name>
         <servlet-class>controllers.PaymentReceiptServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>PaymentCancelServlet</servlet-name>
+        <servlet-class>controllers.PaymentCancelServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>LoginServlet</servlet-name>
         <url-pattern>/pages/login</url-pattern>
@@ -271,6 +275,10 @@
     <servlet-mapping>
         <servlet-name>StaffSearchProductServlet</servlet-name>
         <url-pattern>/pages/staffs/staffSearchProduct</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>PaymentCancelServlet</servlet-name>
+        <url-pattern>/payments/cancel</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>30</session-timeout>

@@ -23,7 +23,6 @@ import utilities.RedirectUtilities;
 
 public class DeleteCartServlet extends HttpServlet {
 
-    private static final SessionChecker sessionChecker = new SessionChecker();
     @PersistenceContext
     EntityManager entityManager;
     @Resource
@@ -32,25 +31,20 @@ public class DeleteCartServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
-        Session session = sessionChecker.getLoginSession(request.getSession());
-        if (!session.isResult()) {
+        Session session = SessionChecker.getLoginSession(request.getSession());
+        if (session == null) {
             RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Please login to view this page.", Constants.CUSTOMER_LOGIN_URL);
             return;
         }
-        
         String cartId = request.getParameter("cartId");
         try {
             userTransaction.begin();
-
             Carts cartToDelete = entityManager.find(Carts.class, Integer.valueOf(cartId));
-
             if (cartToDelete != null) {
                 entityManager.remove(cartToDelete);
                 RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.SUCCESS, "Your cart has been delete successfull !", Constants.CART_URL);
@@ -63,5 +57,4 @@ public class DeleteCartServlet extends HttpServlet {
             throw new DatabaseException(ex.getMessage());
         }
     }
-
 }
