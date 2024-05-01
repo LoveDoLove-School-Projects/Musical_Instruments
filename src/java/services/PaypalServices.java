@@ -14,11 +14,11 @@ import com.paypal.api.payments.Transaction;
 import entities.AccessToken;
 import entities.Carts;
 import entities.Environment;
+import entities.MemoryCache;
 import entities.OrderDetails;
 import entities.PaypalPayment;
 import exceptions.PaymentException;
 import features.AesProtector;
-import entities.MemoryCache;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -157,15 +157,7 @@ public class PaypalServices {
     private String createPayment(String accessToken, String paymentJsonPayload) {
         try {
             String jsonPayload = "{\"access_token\":\"" + accessToken + "\",\"payment_body\":" + paymentJsonPayload + "}";
-            String response = HttpUtilities.sendHttpJsonRequest(CREATE_PAYMENT_API, jsonPayload);
-            PaypalPayment payment = new Gson().fromJson(response, PaypalPayment.class);
-            String approval_url = null;
-            for (PaypalPayment.Link link : payment.getLinks()) {
-                if (link.getRel().equals("approval_url")) {
-                    approval_url = link.getHref();
-                }
-            }
-            return approval_url;
+            return HttpUtilities.sendHttpJsonRequest(CREATE_PAYMENT_API, jsonPayload);
         } catch (JsonSyntaxException ex) {
             throw new PaymentException(ex.getMessage());
         }

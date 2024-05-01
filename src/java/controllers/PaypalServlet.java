@@ -1,8 +1,10 @@
 package controllers;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import common.Constants;
 import entities.Carts;
+import entities.PaypalPayment;
 import entities.Session;
 import exceptions.PaymentException;
 import features.SessionChecker;
@@ -39,10 +41,21 @@ public class PaypalServlet extends HttpServlet {
             return;
         }
         try {
-            String approval_link = paypalServices.createPayment(cartList);
-            response.sendRedirect(approval_link);
+            String paymentResponse = paypalServices.createPayment(cartList);
+            PaypalPayment payment = new Gson().fromJson(paymentResponse, PaypalPayment.class);
+            String approval_url = null;
+            for (PaypalPayment.Link link : payment.getLinks()) {
+                if (link.getRel().equals("approval_url")) {
+                    approval_url = link.getHref();
+                }
+            }
+            response.sendRedirect(approval_url);
         } catch (JsonSyntaxException | IOException ex) {
             throw new PaymentException(ex.getMessage());
         }
+    }
+
+    private boolean insertNewTransactionToDb(PaypalPayment paypalPayment) {
+        
     }
 }
