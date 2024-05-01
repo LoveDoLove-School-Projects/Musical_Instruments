@@ -51,12 +51,15 @@ public final class Constants {
     //    Admin URL
     public static final String ADMIN_URL = "/pages/admins";
     public static final String ADMIN_CONTROL_PANEL_URL = "/pages/admins/controlPanel";
-    public static final String ADMIN_SEARCH_CUSTOMER_URL = "/pages/admins/searchCustomer";
+    public static final String ADMIN_SEARCH_CUSTOMER_URL = "/pages/staffs/searchCustomer";
+    public static final String ADMIN_STAFF_SEARCH_PRODUCT_URL = "/pages/staffs/staffSearchProduct";
     public static final String ADMIN_MANAGE_STAFF_URL = "/pages/admins/manageStaff";
     public static final String ADMIN_MANAGE_STOCK_URL = "/pages/admins/manageStock";
+    public static final String ADMIN_MANAGE_CUSTOMER_URL = "/pages/staffs/manageCustomer";
     public static final String ADMIN_SALES_URL = "/pages/admins/sales";
     public static final String ADMIN_VIEW_TRANSACTION_URL = "/pages/admins/viewTransaction";
     public static final String ADMIN_MAIN_DASHBOARD_URL = "/pages/admins/mainDashboard";
+    public static final String ADMIN_MODIFY_CUSTOMER_URL = "/pages/staffs/modifyCustomer";
     /* ********************************* */
  /* ********************************* */
     //   Forgot Password JSP URL

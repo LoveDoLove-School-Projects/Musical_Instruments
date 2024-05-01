@@ -1,5 +1,6 @@
 package controllers.admins;
 
+import common.Constants;
 import entities.Archivecustomers;
 import entities.Customers;
 import exceptions.DatabaseException;
@@ -36,7 +37,7 @@ public class DeleteCustomerServlet extends HttpServlet {
             entityManager.remove(customer);
             entityManager.persist(archiveCustomer);
             userTransaction.commit();
-            RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.SUCCESS, customer.getUsername() + " deleted successfully.", "/pages/staffs/searchCustomer.jsp");
+            RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.SUCCESS, customer.getUsername() + " deleted successfully.", Constants.ADMIN_SEARCH_CUSTOMER_URL);
         } catch (HeuristicMixedException | HeuristicRollbackException | NotSupportedException | RollbackException | SystemException | IllegalStateException | NumberFormatException | SecurityException ex) {
             throw new DatabaseException(ex.getMessage());
         }
