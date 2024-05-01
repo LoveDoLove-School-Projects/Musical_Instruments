@@ -43,12 +43,11 @@ public class AddStaffServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         String username = request.getParameter("username");
-        String password = request.getParameter("password");
         String email = request.getParameter("email");
         String gender = request.getParameter("gender");
         String address = request.getParameter("address");
         String phoneNumber = request.getParameter("phoneNumber");
-        Staffs staff = new Staffs(username, password, email, address, phoneNumber, gender);
+        Staffs staff = new Staffs(username, email, email, address, phoneNumber, gender); // Set default password as email
         LOG.info(staff.toString());
         if (!validateStaffDetails(staff)) {
             throw new IllegalArgumentException("Invalid staff details.");
@@ -56,7 +55,7 @@ public class AddStaffServlet extends HttpServlet {
         try {
             userTransaction.begin();
             staff.setUsername(username);
-            staff.setPassword(AesProtector.aes256EcbEncrypt(password));
+            staff.setPassword(AesProtector.aes256EcbEncrypt(email));
             staff.setEmail(email);
             staff.setGender(gender);
             staff.setAddress(address);
