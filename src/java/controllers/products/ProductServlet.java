@@ -2,7 +2,7 @@ package controllers.products;
 
 import common.Constants;
 import entities.Products;
-import features.SessionChecker;
+import entities.productCategory;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.servlet.ServletException;
@@ -16,38 +16,23 @@ import java.util.Map;
 
 public class ProductServlet extends HttpServlet {
 
-    private static final SessionChecker sessionHandle = new SessionChecker();
-    private static final Map<PRODUCT_CATEGORIES, String> PRODUCT_DETAILS;
+    private static final Map<productCategory.PRODUCT_CATEGORIES, String> PRODUCT_DETAILS;
     @PersistenceContext
     EntityManager entityManager;
 
     static {
-        PRODUCT_DETAILS = new EnumMap<>(PRODUCT_CATEGORIES.class);
-        PRODUCT_DETAILS.put(PRODUCT_CATEGORIES.PIANO, "pianoProductDetails");
-        PRODUCT_DETAILS.put(PRODUCT_CATEGORIES.GUITAR, "guitarProductDetails");
-        PRODUCT_DETAILS.put(PRODUCT_CATEGORIES.DRUM, "drumProductDetails");
-        PRODUCT_DETAILS.put(PRODUCT_CATEGORIES.VIOLIN, "violinProductDetails");
+        PRODUCT_DETAILS = new EnumMap<>(productCategory.PRODUCT_CATEGORIES.class);
+        PRODUCT_DETAILS.put(productCategory.PRODUCT_CATEGORIES.PIANO, "pianoProductDetails");
+        PRODUCT_DETAILS.put(productCategory.PRODUCT_CATEGORIES.GUITAR, "guitarProductDetails");
+        PRODUCT_DETAILS.put(productCategory.PRODUCT_CATEGORIES.DRUM, "drumProductDetails");
+        PRODUCT_DETAILS.put(productCategory.PRODUCT_CATEGORIES.VIOLIN, "violinProductDetails");
     }
 
-    public enum PRODUCT_CATEGORIES {
-        PIANO("PIANO"),
-        GUITAR("GUITAR"),
-        DRUM("DRUM"),
-        VIOLIN("VIOLIN");
-        private final String category;
 
-        PRODUCT_CATEGORIES(String category) {
-            this.category = category;
-        }
-
-        public String getCategory() {
-            return category;
-        }
-    }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        for (PRODUCT_CATEGORIES category : PRODUCT_DETAILS.keySet()) {
+        for (productCategory.PRODUCT_CATEGORIES category : PRODUCT_DETAILS.keySet()) {
             List<Products> products = entityManager.createNamedQuery("Products.findByCategory").setParameter("category", category.getCategory()).getResultList();
 //            if (products.isEmpty()) {
 //                RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "product not found", "/");

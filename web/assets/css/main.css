@@ -1,10 +1,18 @@
 .section1{
-    background-color:#d9d9e1;
+    background-image: url(../image/instrument.jpg);
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
 }
 
 a{
     text-decoration: none;
     color: black;
+}
+
+.sec1Content{
+    color:white;
+    text-shadow: 5px 5px 1px #3d3535;
 }
 
 .PremiumBox {

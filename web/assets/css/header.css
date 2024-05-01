@@ -1,7 +1,9 @@
 
 .nav-item {
     padding: 1px;
+    border: black 10px groove;
     border-radius: 8px;
+    background: linear-gradient(to bottom, #C0C0C0, #FFFFFF); /* Silver to white */
 
 }
 
