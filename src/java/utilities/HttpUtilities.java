@@ -1,7 +1,7 @@
 package utilities;
 
 import com.google.gson.Gson;
-import entities.Enviroment;
+import entities.Environment;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -20,7 +20,7 @@ public final class HttpUtilities {
         String timestamp = String.valueOf(System.currentTimeMillis());
         String jsonPayload = gson.toJson(object);
         String combineContent = timestamp + jsonPayload;
-        String signature = AesUtilities.aes256EcbEncrypt(combineContent, Enviroment.SECRET_KEY);
+        String signature = AesUtilities.aes256EcbEncrypt(combineContent, Environment.SECRET_KEY);
         HttpURLConnection connection = null;
         try {
             URL url = new URL(urlConnection);
@@ -61,7 +61,7 @@ public final class HttpUtilities {
     public static String sendHttpJsonRequest(String urlConnection, String jsonPayload) {
         String timestamp = String.valueOf(System.currentTimeMillis());
         String combineContent = timestamp + jsonPayload;
-        String signature = AesUtilities.aes256EcbEncrypt(combineContent, Enviroment.SECRET_KEY);
+        String signature = AesUtilities.aes256EcbEncrypt(combineContent, Environment.SECRET_KEY);
         HttpsURLConnection connection = null;
         try {
             URL url = new URL(urlConnection);

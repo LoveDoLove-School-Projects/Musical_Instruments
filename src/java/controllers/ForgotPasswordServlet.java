@@ -1,6 +1,5 @@
 package controllers;
 
-import common.Constants;
 import entities.Customers;
 import entities.Resetpassword;
 import entities.Staffs;
@@ -105,7 +104,7 @@ public class ForgotPasswordServlet extends HttpServlet {
         if (!isAdded) {
             return null;
         }
-        return InitServlet.getServerBaseURL(request) + "/pages/resetPassword?token=" + token + "&role=" + role;
+        return getServerBaseURL(request) + "/pages/resetPassword?token=" + token + "&role=" + role;
     }
 
     private boolean addNewResetPassword(Resetpassword resetPassword) {
@@ -123,5 +122,13 @@ public class ForgotPasswordServlet extends HttpServlet {
         } catch (HeuristicMixedException | HeuristicRollbackException | NotSupportedException | RollbackException | SystemException | IllegalStateException | SecurityException ex) {
             throw new DatabaseException(ex.getMessage());
         }
+    }
+
+    private String getServerBaseURL(HttpServletRequest request) {
+        String scheme = request.getScheme() + "://";
+        String serverName = request.getServerName();
+        String serverPort = (request.getServerPort() == 80) ? "" : ":" + request.getServerPort();
+        String contextPath = request.getContextPath();
+        return scheme + serverName + serverPort + contextPath;
     }
 }

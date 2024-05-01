@@ -1,6 +1,6 @@
 package entities;
 
-public class Enviroment {
+public class Environment {
 
     public static String AES_KEY = "AES_KEY";
     public static String SEND_MAIL_API = "SEND_MAIL_API";
