@@ -33,7 +33,7 @@ public class ViewProductServlet extends HttpServlet {
             request.setAttribute("productDetails", products);
             request.getRequestDispatcher(Constants.VIEW_PRODUCT_JSP_URL).forward(request, response);
         } else {
-            RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.WARNING, "You must login first !", Constants.LOGIN_JSP_URL);
+            RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.WARNING, "You must login first !", Constants.CUSTOMER_LOGIN_URL);
         }
     }
 

@@ -15,7 +15,7 @@ double subTotal=0;
     <head>
         <jsp:include page="/defaults/head.jsp" />
         <title>Cart Page</title>
-         <link rel="stylesheet" href="assets/css/cart.css" />
+        <link rel="stylesheet" href="assets/css/cart.css" />
     </head>
     <body>
         <jsp:include page="/defaults/header.jsp" />
@@ -32,7 +32,7 @@ double subTotal=0;
                             <th class="col p-3 Title">Quantity</th>
                             <th class="col p-3 Title">Price</th>
                             <th class="col p-3 Title">Total Price</th>
-                            <th class="col p-3 Title">Edit</th>
+                            <th class="col p-3 Title">Function</th>
                         </tr>
                     </thead>
 
@@ -60,7 +60,7 @@ double subTotal=0;
                                         <button type="button" class="w-50 mx-auto my-1 p-2 editBtn"><strong>Edit</strong></button>
                                     </a>
                                 </div>
-                                <form action="pages/carts/deleteCartServlet" method="POST">
+                                <form method="POST" action="pages/carts/deleteCartServlet"  class="deleteCartForm" id="deleteCartForm">
                                     <input type="hidden" name="cartId" value="<%=carts.getCartId()%>"/>
                                     <button type="submit" class="w-50 mx-auto my-1 p-2 deleteBtn"><strong>Delete</strong></button>
                                 </form>
@@ -86,5 +86,6 @@ double subTotal=0;
             </section>
         </main>
         <jsp:include page="/defaults/footer.jsp" />
+        <script type="module" src="assets/js/carts.js"></script>
     </body>
 </html>

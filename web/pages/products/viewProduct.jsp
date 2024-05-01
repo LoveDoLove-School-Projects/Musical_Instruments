@@ -81,7 +81,7 @@ String IMAGE_DEFAULT_PATH = "assets/database/productImage/";
                                     <h3 class="my-4"><strong>Color:</strong> <%=product.getColor()%></h3>
                                     <hr>
                                     <h5 class="my-2"><strong>Quantity</strong></h5>
-                                    <form method="POST" action="pages/products/addProductToCart" class="qty-container">
+                                    <form method="POST" action="pages/products/addProductToCart" class="qty-container" id="addToCartForm">
                                         <button class="qty-btn-minus" type="button"><i class="fa fa-minus"></i></button>
                                         <input type="number" name="productQuantity" value="1" class="input-qty w-50 text-center p-2" min="1" max="<%=product.getQuantity()%>"/>
                                         <input type="hidden" name="productId" value="<%=productId%>"/>

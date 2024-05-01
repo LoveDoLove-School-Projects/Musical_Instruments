@@ -28,9 +28,11 @@ public class ManageProductServlet extends HttpServlet {
         }
         HttpSession session = request.getSession();
         response.setContentType("text/html;charset=UTF-8");
+
         Products product = (Products) session.getAttribute("productDetails");
         product = entityManager.find(Products.class, product.getProductId());
         session.setAttribute("productDetails", product);
         request.getRequestDispatcher("/pages/staffs/manageProduct.jsp").forward(request, response);
+
     }
 }

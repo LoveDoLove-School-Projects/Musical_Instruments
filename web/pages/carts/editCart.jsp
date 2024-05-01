@@ -78,7 +78,7 @@
                                     <h3 class="my-4"><strong>Color:</strong> <%=carts.getProductColor()%></h3>
                                     <hr>
                                     <h5 class="my-2"><strong>Quantity</strong></h5>
-                                    <form method="POST" action="pages/carts/editCart" class="qty-container" id="updateCartForm">
+                                    <form method="POST" action="pages/carts/editCart" class="qty-container" id="editCartForm">
                                         <button class="qty-btn-minus" type="button"><i class="fa fa-minus"></i></button>
                                         <input type="number" name="productQuantity" value="<%=carts.getProductQuantity()%>" class="input-qty w-50 text-center p-2" min="1" max="<%=products.getQuantity()%>"/>
                                         <input type="hidden" name="cartId" value="<%=carts.getCartId()%>"/>
@@ -94,6 +94,6 @@
         </main>
 
         <jsp:include page="/defaults/footer.jsp" />
-        <script type="module" src="assets/js/carts.js"></script>
+         <script type="module" src="assets/js/carts.js"></script>
     </body>
 </html>
