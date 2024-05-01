@@ -60,7 +60,7 @@ response.setHeader("Cache-Control", "no-store");
                             }
                         %>
                     </tbody>
-                    
+
                     <div class="row justify-content-center align-items-center">
                         <tfoot class="col-12 text-center" style="float:right;">
                             <tr class="row">

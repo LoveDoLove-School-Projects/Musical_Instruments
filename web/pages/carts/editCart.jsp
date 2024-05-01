@@ -94,6 +94,6 @@
         </main>
 
         <jsp:include page="/defaults/footer.jsp" />
-         <script type="module" src="assets/js/carts.js"></script>
+        <script type="module" src="assets/js/carts.js"></script>
     </body>
 </html>

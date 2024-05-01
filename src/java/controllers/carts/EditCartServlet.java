@@ -29,6 +29,7 @@ public class EditCartServlet extends HttpServlet {
     EntityManager entityManager;
     @Resource
     UserTransaction userTransaction;
+    public static final String EDITCART_JSP_URL = "/pages/carts/editCart.jsp";
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -49,7 +50,7 @@ public class EditCartServlet extends HttpServlet {
             Products products = productsList.get(0);
             request.setAttribute("editCartDetails", carts);
             request.setAttribute("productDetails", products);
-            request.getRequestDispatcher(Constants.EDITCART_JSP_URL).forward(request, response);
+            request.getRequestDispatcher(EDITCART_JSP_URL).forward(request, response);
         }
     }
 

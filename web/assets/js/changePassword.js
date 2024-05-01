@@ -4,7 +4,7 @@ import { anyStringNullOrEmpty, checkEmail, checkPassword } from "./validate.js";
 let emailElement;
 let newPassowrdElement;
 let confirmNewPassowrdElement;
-let resetPasswordForm;
+let changePasswordForm;
 
 function checkAllFields() {
     const email = emailElement.value;
@@ -29,15 +29,15 @@ function checkAllFields() {
     return true;
 }
 
-function setResetPasswordForm() {
-    if (resetPasswordForm === null) {
+function setChangePasswordForm() {
+    if (changePasswordForm === null) {
         return;
     }
-    resetPasswordForm.onsubmit = function (event) {
+    changePasswordForm.onsubmit = function (event) {
         event.preventDefault();
         if (checkAllFields()) {
             showProgressDialog("Please Wait...");
-            resetPasswordForm.submit();
+            changePasswordForm.submit();
         }
     };
 }
@@ -46,8 +46,8 @@ function init() {
     emailElement = document.getElementById("email");
     newPassowrdElement = document.getElementById("newPassword");
     confirmNewPassowrdElement = document.getElementById("confirmNewPassword");
-    resetPasswordForm = document.getElementById("resetPasswordForm");
-    setResetPasswordForm();
+    changePasswordForm = document.getElementById("changePasswordForm");
+    setChangePasswordForm();
 }
 
 window.onload = init;

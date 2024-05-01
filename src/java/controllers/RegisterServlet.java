@@ -21,10 +21,11 @@ import utilities.ValidationUtilities;
 
 public class RegisterServlet extends HttpServlet {
 
-    private static final String REGISTER_2FA_URL = "/sessions/register2fa";
-    private final OtpDao otpDao = new OtpDao();
     @PersistenceContext
     EntityManager entityManager;
+    public static final String REGISTER_JSP_URL = "/pages/register.jsp";
+    private static final String REGISTER_2FA_URL = "/sessions/register2fa";
+    private final OtpDao otpDao = new OtpDao();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -54,7 +55,7 @@ public class RegisterServlet extends HttpServlet {
     }
 
     private void setRegisterPage(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.getRequestDispatcher(Constants.REGISTER_JSP_URL).forward(request, response);
+        request.getRequestDispatcher(REGISTER_JSP_URL).forward(request, response);
     }
 
     private Customers addNewCustomer(HttpServletRequest request) throws ServletException, IOException {

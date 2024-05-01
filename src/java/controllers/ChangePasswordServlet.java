@@ -2,8 +2,10 @@ package controllers;
 
 import entities.Customers;
 import entities.Resetpassword;
+import entities.Session;
 import entities.Staffs;
 import features.AesProtector;
+import features.SessionChecker;
 import jakarta.annotation.Resource;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -24,36 +26,23 @@ import utilities.RedirectUtilities.RedirectType;
 import utilities.StringUtilities;
 import utilities.ValidationUtilities;
 
-public class ResetPasswordServlet extends HttpServlet {
+public class ChangePasswordServlet extends HttpServlet {
 
     @PersistenceContext
     EntityManager entityManager;
     @Resource
     UserTransaction userTransaction;
-    private static final String RESET_PASSWORD_JSP_URL = "/pages/resetPassword.jsp";
+    private static final String CHANGE_PASSWORD_JSP_URL = "/pages/changePassword.jsp";
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String token = request.getParameter("token");
-        String role = request.getParameter("role");
-        if (token == null || role == null) {
-            RedirectUtilities.redirectWithMessage(request, response, RedirectType.DANGER, "Invalid reset password link", "/");
+        Session session = SessionChecker.getLoginSession(request.getSession());
+        if (session == null) {
+            RedirectUtilities.redirectWithMessage(request, response, RedirectType.DANGER, "Please login to view this page.", "/");
             return;
         }
-        if (role == null || (!role.equals("customer") && !role.equals("staff"))) {
-            RedirectUtilities.redirectWithMessage(request, response, RedirectType.DANGER, "Invalid role", "/");
-            return;
-        }
-        Resetpassword resetpassword = isTokenValid(token);
-        if (resetpassword == null) {
-            RedirectUtilities.redirectWithMessage(request, response, RedirectType.DANGER, "Invalid reset password link", "/");
-            return;
-        }
-        request.setAttribute("token", token);
-        request.setAttribute("email", resetpassword.getEmail());
-        request.setAttribute("role", role);
-        request.getRequestDispatcher(RESET_PASSWORD_JSP_URL).forward(request, response);
+        request.getRequestDispatcher(CHANGE_PASSWORD_JSP_URL).forward(request, response);
     }
 
     @Override

@@ -23,10 +23,11 @@ import utilities.StringUtilities;
 
 public class LoginStaffServlet extends HttpServlet {
 
-    private static final String LOGIN_2FA_URL = "/sessions/login2fa";
-    private final OtpDao otpDao = new OtpDao();
     @PersistenceContext
     EntityManager entityManager;
+    public static final String STAFF_LOGIN_JSP_URL = "/pages/staffLogin.jsp";
+    private static final String LOGIN_2FA_URL = "/sessions/login2fa";
+    private final OtpDao otpDao = new OtpDao();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -77,7 +78,7 @@ public class LoginStaffServlet extends HttpServlet {
     }
 
     private void setLoginPage(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.getRequestDispatcher(Constants.STAFF_LOGIN_JSP_URL).forward(request, response);
+        request.getRequestDispatcher(STAFF_LOGIN_JSP_URL).forward(request, response);
     }
 
     private Staffs tryStaffLogin(Staffs staff) throws DatabaseException {

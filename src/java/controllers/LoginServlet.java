@@ -23,10 +23,11 @@ import utilities.StringUtilities;
 
 public class LoginServlet extends HttpServlet {
 
-    private static final String LOGIN_2FA_URL = "/sessions/login2fa";
-    private final OtpDao otpDao = new OtpDao();
     @PersistenceContext
     EntityManager entityManager;
+    private static final String LOGIN_JSP_URL = "/pages/login.jsp";
+    private static final String LOGIN_2FA_URL = "/sessions/login2fa";
+    private final OtpDao otpDao = new OtpDao();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -77,7 +78,7 @@ public class LoginServlet extends HttpServlet {
     }
 
     private void setLoginPage(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.getRequestDispatcher(Constants.LOGIN_JSP_URL).forward(request, response);
+        request.getRequestDispatcher(LOGIN_JSP_URL).forward(request, response);
     }
 
     private Customers tryCustomerLogin(Customers customer) throws DatabaseException {

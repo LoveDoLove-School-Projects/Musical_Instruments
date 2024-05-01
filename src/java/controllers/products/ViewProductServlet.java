@@ -18,6 +18,7 @@ public class ViewProductServlet extends HttpServlet {
 
     @PersistenceContext
     EntityManager entityManager;
+    public static final String VIEW_PRODUCT_JSP_URL = "/pages/products/viewProduct.jsp";
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -31,7 +32,7 @@ public class ViewProductServlet extends HttpServlet {
             }
             Products products = productList.get(0);
             request.setAttribute("productDetails", products);
-            request.getRequestDispatcher(Constants.VIEW_PRODUCT_JSP_URL).forward(request, response);
+            request.getRequestDispatcher(VIEW_PRODUCT_JSP_URL).forward(request, response);
         } else {
             RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.WARNING, "You must login first !", Constants.CUSTOMER_LOGIN_URL);
         }

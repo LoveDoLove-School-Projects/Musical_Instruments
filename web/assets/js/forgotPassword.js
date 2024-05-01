@@ -5,35 +5,35 @@ let emailElement;
 let forgotPasswordForm;
 
 function checkAllFields() {
-  const email = emailElement.value;
-  if (anyStringNullOrEmpty([email])) {
-    showErrorDialog("Email are required");
-    return false;
-  }
-  if (!checkEmail(email)) {
-    showErrorDialog("Invalid email!");
-    return false;
-  }
-  return true;
+    const email = emailElement.value;
+    if (anyStringNullOrEmpty([email])) {
+        showErrorDialog("Email are required");
+        return false;
+    }
+    if (!checkEmail(email)) {
+        showErrorDialog("Invalid email!");
+        return false;
+    }
+    return true;
 }
 
 function setForgotPasswordForm() {
-  if (forgotPasswordForm === null) {
-    return;
-  }
-  forgotPasswordForm.onsubmit = function (event) {
-    event.preventDefault();
-    if (checkAllFields()) {
-      showProgressDialog("Please Wait...");
-      forgotPasswordForm.submit();
+    if (forgotPasswordForm === null) {
+        return;
     }
-  };
+    forgotPasswordForm.onsubmit = function (event) {
+        event.preventDefault();
+        if (checkAllFields()) {
+            showProgressDialog("Please Wait...");
+            forgotPasswordForm.submit();
+        }
+    };
 }
 
 function init() {
-  emailElement = document.getElementById("email");
-  forgotPasswordForm = document.getElementById("forgotPasswordForm");
-  setForgotPasswordForm();
+    emailElement = document.getElementById("email");
+    forgotPasswordForm = document.getElementById("forgotPasswordForm");
+    setForgotPasswordForm();
 }
 
 window.onload = init;

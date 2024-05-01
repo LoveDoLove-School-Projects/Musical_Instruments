@@ -3,35 +3,18 @@ package common;
 public final class Constants {
 
     /* ********************************* */
-    //    REGISTER JSP URL
-    public static final String REGISTER_JSP_URL = "/pages/register.jsp";
-    //    REGISTER URL
-    public static final String REGISTER_URL = "/pages/register";
-    /* ********************************* */
- /* ********************************* */
-    //    LOGIN JSP URL
-    public static final String LOGIN_JSP_URL = "/pages/login.jsp";
-    public static final String STAFF_LOGIN_JSP_URL = "/pages/staffLogin.jsp";
     //    Login URL
     public static final String CUSTOMER_LOGIN_URL = "/pages/login";
-    public static final String STAFF_LOGIN_URL = "/pages/staffLogin";
     /* ********************************* */
  /* ********************************* */
-    //    Profile JSP URL
-    public static final String PROFILE_JSP_URL = "/pages/profile.jsp";
     //    Profile URL
     public static final String PROFILE_URL = "/pages/profile";
-    public static final String PROFILE_UPLOAD_PICTURE_URL = "/pages/profile/uploadPicture";
-    public static final String PROFILE_REMOVE_PICTURE_URL = "/pages/profile/removePicture";
-    public static final String PROFILE_UPDATE_URL = "/pages/profile/updateProfile";
     /* ********************************* */
  /* ********************************* */
     //    Products JSP URL
     public static final String PRODUCT_JSP_URL = "/pages/products/product.jsp";
-    public static final String VIEW_PRODUCT_JSP_URL = "/pages/products/viewProduct.jsp";
     public static final String SEARCH_PRODUCT_JSP_URL = "/pages/products/searchProduct.jsp";
     public static final String CART_JSP_URL = "/pages/carts/cart.jsp";
-    public static final String EDITCART_JSP_URL = "/pages/carts/editCart.jsp";
     //    Products URL
     public static final String PRODUCT_URL = "/pages/products";
     public static final String VIEW_PRODUCT_URL = "/pages/products/viewProducts";
@@ -59,25 +42,5 @@ public final class Constants {
     public static final String ADMIN_VIEW_TRANSACTION_URL = "/pages/admins/viewTransaction";
     public static final String ADMIN_MAIN_DASHBOARD_URL = "/pages/admins/mainDashboard";
     public static final String ADMIN_MODIFY_CUSTOMER_URL = "/pages/staffs/modifyCustomer";
-    /* ********************************* */
- /* ********************************* */
-    //   Forgot Password JSP URL
-    public static final String FORGOT_PASSWORD_JSP_URL = "/pages/forgotPassword.jsp";
-    //   Forgot Password URL
-    public static final String FORGOT_PASSWORD_URL = "/pages/forgotPassword";
-    /* ********************************* */
- /* ********************************* */
-    //   Reset Password JSP URL
-    public static final String RESET_PASSWORD_JSP_URL = "/pages/resetPassword.jsp";
-    //   Reset Password URL
-    public static final String RESET_PASSWORD_URL = "/pages/resetPassword";
-    /* ********************************* */
- /* ********************************* */
-    //    Transaction JSP URL
-    public static final String TRANSACTION_JSP_URL = "/payments/transaction.jsp";
-    //    Transaction URL
-    public static final String TRANSACTION_URL = "/payments/transaction";
-    public static final String PAYPAL_TRANSACTION_URL = "/payments/paypal";
-
     /* ********************************* */
 }
