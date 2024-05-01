@@ -31,7 +31,7 @@ public class SessionChecker {
         return null;
     }
 
-    private static boolean getIsAdminOrNot(HttpServletRequest request) {
+    public static boolean getIsAdminOrNot(HttpServletRequest request) {
         Principal principal = request.getUserPrincipal();
         if (principal == null) {
             return false;

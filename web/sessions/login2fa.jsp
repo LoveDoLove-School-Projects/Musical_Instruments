@@ -16,18 +16,18 @@ response.setHeader("Cache-Control", "no-store");
     <body>
         <jsp:include page="/defaults/message.jsp" />
         <section class="vh-100" style="background-color: #eee;">
-            <form method="POST" action="sessions/login2fa" id="otpForm">
-                <center>
-                    <div class="container py-5 h-100">
-                        <div class="row justify-content-center align-items-center h-100">
-                            <div class="col-12 col-lg-9 col-xl-7">
-                                <div class="card shadow-2-strong card-registration" style="border-radius: 15px">
-                                    <div class="card-body p-4 p-md-5">
-                                        <h3 class="mb-4 pb-2 pb-md-0 mb-md-5">Two Step Verification</h3>
-                                        <h6 class="mb-4 pb-2 pb-md-0 mb-md-5">Enter the verification code we sent to</h6>
-                                        <h6 class="mb-4 pb-2 pb-md-0 mb-md-5">${email}</h6>
-                                        <h6 class="mb-4 pb-2 pb-md-0 mb-md-5">Enter your 6 digit security code</h6>
+            <center>
+                <div class="container py-5 h-100">
+                    <div class="row justify-content-center align-items-center h-100">
+                        <div class="col-12 col-lg-9 col-xl-7">
+                            <div class="card shadow-2-strong card-registration" style="border-radius: 15px">
+                                <div class="card-body p-4 p-md-5">
+                                    <h3 class="mb-4 pb-2 pb-md-0 mb-md-5">Two Step Verification</h3>
+                                    <h6 class="mb-4 pb-2 pb-md-0 mb-md-5">Enter the verification code we sent to</h6>
+                                    <h6 class="mb-4 pb-2 pb-md-0 mb-md-5">${email}</h6>
+                                    <h6 class="mb-4 pb-2 pb-md-0 mb-md-5">Enter your 6 digit security code</h6>
 
+                                    <form method="POST" action="sessions/login2fa" id="otpForm">
                                         <div class="row d-flex justify-content-center">
                                             <div class="col-md-6 mb-4 d-flex align-items-center">
                                                 <div class="form-outline datepicker w-100">
@@ -39,17 +39,19 @@ response.setHeader("Cache-Control", "no-store");
                                         <div class="mt-4 pt-2">
                                             <button type="button" class="btn btn-primary btn-lg" id="submitButton">Verify</button>
                                         </div>
+                                    </form>
 
+                                    <form method="POST" action="sessions/loginResendOtp">
                                         <div class="mt-4 pt-2">
                                             Didn’t get the code ? <a href="#" class="text-primary fw-bold text-decoration-none">Resend</a>
                                         </div>
-                                    </div>
+                                    </form>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </center>
-            </form>
+                </div>
+            </center>
         </section>
         <script type="module" src="assets/js/form2fa.js"></script>
     </body>

@@ -7,6 +7,7 @@ import entities.Session;
 import entities.Staffs;
 import exceptions.DatabaseException;
 import features.AesProtector;
+import features.SecurityLog;
 import features.SessionChecker;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -99,6 +100,7 @@ public class LoginStaffServlet extends HttpServlet {
         if (!staff.getTwoFactorAuth()) {
             Session session = new Session(staff.getUserId(), staff.getUsername(), staff.getEmail(), Role.STAFF);
             SessionChecker.setLoginSession(httpSession, session);
+            SecurityLog.addSecurityLog(request, "login successful.");
             RedirectUtilities.sendRedirect(request, response, Constants.PROFILE_URL);
             return;
         }

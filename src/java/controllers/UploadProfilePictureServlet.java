@@ -61,12 +61,13 @@ public class UploadProfilePictureServlet extends HttpServlet {
                 isUploaded = false;
                 break;
         }
-        if (!isUploaded) {
+        if (isUploaded) {
+            SecurityLog.addSecurityLog(request, "update profile picture successful.");
+            RedirectUtilities.setMessage(request, RedirectType.SUCCESS, "Picture uploaded successfully.");
+        } else {
             RedirectUtilities.setMessage(request, RedirectType.DANGER, "Error uploading picture.");
-            return;
         }
-        SecurityLog.addSecurityLog(request, "Uploaded picture.");
-        RedirectUtilities.redirectWithMessage(request, response, RedirectType.SUCCESS, "Picture uploaded successfully.", Constants.PROFILE_URL);
+        RedirectUtilities.sendRedirect(request, response, Constants.PROFILE_URL);
     }
 
     private boolean uploadPicture(Customers customer) {

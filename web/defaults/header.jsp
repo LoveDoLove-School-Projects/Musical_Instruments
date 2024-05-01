@@ -69,18 +69,30 @@ Session user_session = (Session) session.getAttribute("user_session");
                 </button>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                     <%
-                    if (user_session != null || isAdmin) {
+                    if (user_session != null) {
+                        if (!isAdmin) { // If the user is not an admin, they can see the Profile link
                     %>
                     <li><a class="dropdown-item" href="pages/profile">Profile</a></li>
+                    <% 
+                        }
+                        if (user_session.getRole() != Role.STAFF && !isAdmin) { // If the user is not a staff member or an admin, they can see the Carts link
+                    %>
                     <li><a class="dropdown-item" href="pages/cart">Carts</a></li>
+                    <% 
+                        }
+                    %>
                     <li><a class="dropdown-item" href="pages/securityLog">View Log</a></li>
                     <li><a class="dropdown-item" id="logoutBtn">Logout</a></li>
-                        <% } else { %>
+                    <% 
+                    } else { 
+                    %>
                     <li><a class="dropdown-item" href="pages/login">Login</a></li>
                     <li><a class="dropdown-item" href="pages/register">Register</a></li>
                     <li><a class="dropdown-item" href="pages/staffLogin">Staff Login</a></li>
                     <li><a class="dropdown-item" href="pages/adminLogin">Admin Login</a></li>
-                        <% } %>
+                    <% 
+                    } 
+                    %>
                 </ul>
             </div>
         </div>
