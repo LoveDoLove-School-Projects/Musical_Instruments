@@ -24,6 +24,8 @@ import java.util.Date;
     @NamedQuery(name = "Securitylog.findAll", query = "SELECT s FROM Securitylog s"),
     @NamedQuery(name = "Securitylog.findByPkid", query = "SELECT s FROM Securitylog s WHERE s.pkid = :pkid"),
     @NamedQuery(name = "Securitylog.findByUserId", query = "SELECT s FROM Securitylog s WHERE s.userId = :userId"),
+    @NamedQuery(name = "Securitylog.findByUsername", query = "SELECT s FROM Securitylog s WHERE s.username = :username"),
+    @NamedQuery(name = "Securitylog.findByEmail", query = "SELECT s FROM Securitylog s WHERE s.email = :email"),
     @NamedQuery(name = "Securitylog.findByAction", query = "SELECT s FROM Securitylog s WHERE s.action = :action"),
     @NamedQuery(name = "Securitylog.findByActionDate", query = "SELECT s FROM Securitylog s WHERE s.actionDate = :actionDate"),
     @NamedQuery(name = "Securitylog.findByIpAddress", query = "SELECT s FROM Securitylog s WHERE s.ipAddress = :ipAddress"),
@@ -36,10 +38,17 @@ public class Securitylog implements Serializable {
     @Basic(optional = false)
     @Column(name = "PKID")
     private Integer pkid;
+    @Column(name = "USER_ID")
+    private Integer userId;
     @Basic(optional = false)
     @NotNull
-    @Column(name = "USER_ID")
-    private int userId;
+    @Size(min = 1, max = 255)
+    @Column(name = "USERNAME")
+    private String username;
+    // @Pattern(regexp="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message="Invalid email")//if the field contains email address consider using this annotation to enforce field validation
+    @Size(max = 255)
+    @Column(name = "EMAIL")
+    private String email;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 255)
@@ -58,18 +67,22 @@ public class Securitylog implements Serializable {
     public Securitylog() {
     }
 
-    public Securitylog(Integer pkid) {
-        this.pkid = pkid;
-    }
-
-    public Securitylog(Integer pkid, int userId, String action) {
-        this.pkid = pkid;
-        this.userId = userId;
+    public Securitylog(String username, String action) {
+        this.username = username;
         this.action = action;
     }
 
-    public Securitylog(int userId, String action, String ipAddress, String userAgent) {
+    public Securitylog(Integer userId, String username, String email, String action) {
         this.userId = userId;
+        this.username = username;
+        this.email = email;
+        this.action = action;
+    }
+
+    public Securitylog(Integer userId, String username, String email, String action, String ipAddress, String userAgent) {
+        this.userId = userId;
+        this.username = username;
+        this.email = email;
         this.action = action;
         this.ipAddress = ipAddress;
         this.userAgent = userAgent;
@@ -83,12 +96,28 @@ public class Securitylog implements Serializable {
         this.pkid = pkid;
     }
 
-    public int getUserId() {
+    public Integer getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(Integer userId) {
         this.userId = userId;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getAction() {

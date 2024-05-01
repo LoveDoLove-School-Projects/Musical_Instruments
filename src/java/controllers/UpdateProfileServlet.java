@@ -62,7 +62,7 @@ public class UpdateProfileServlet extends HttpServlet {
                 break;
         }
         if (isUpdated) {
-            SecurityLog.addSecurityLog(request, session, "Updated profile.");
+            SecurityLog.addSecurityLog(request, "Updated profile.");
             RedirectUtilities.setMessage(request, RedirectType.SUCCESS, "Profile updated successfully.");
         } else {
             RedirectUtilities.setMessage(request, RedirectType.DANGER, "Error updating profile.");

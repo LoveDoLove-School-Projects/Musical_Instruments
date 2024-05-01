@@ -94,13 +94,14 @@ public class LoginServlet extends HttpServlet {
     }
 
     private void checkNeedTwoFactorAuthOrNot(HttpServletRequest request, HttpServletResponse response, Customers customer) throws ServletException, IOException {
-        HttpSession session = request.getSession(true);
+        HttpSession httpSession = request.getSession(true);
         if (!customer.getTwoFactorAuth()) {
-            SessionChecker.setLoginSession(session, customer.getUserId(), customer.getUsername(), Role.CUSTOMER);
+            Session session = new Session(customer.getUserId(), customer.getUsername(), customer.getEmail(), Role.CUSTOMER);
+            SessionChecker.setLoginSession(httpSession, session);
             RedirectUtilities.sendRedirect(request, response, Constants.PROFILE_URL);
             return;
         }
-        requiredTwoFactorAuth(request, response, customer, session);
+        requiredTwoFactorAuth(request, response, customer, httpSession);
     }
 
     private void requiredTwoFactorAuth(HttpServletRequest request, HttpServletResponse response, Customers customer, HttpSession session) throws ServletException, IOException {

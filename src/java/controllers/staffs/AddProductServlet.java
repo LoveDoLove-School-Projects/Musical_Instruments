@@ -70,7 +70,7 @@ public class AddProductServlet extends HttpServlet {
             product.setImage(pictureBytes);
             entityManager.persist(product);
             userTransaction.commit();
-            SecurityLog.addInternalSecurityLog(request, " added new product " + product.toString());
+            SecurityLog.addSecurityLog(request, " added new product " + product.toString());
         } catch (NotSupportedException | SystemException | RollbackException | HeuristicMixedException | HeuristicRollbackException | SecurityException | IllegalStateException ex) {
             throw new DatabaseException(ex.getMessage());
         }

@@ -94,13 +94,14 @@ public class LoginStaffServlet extends HttpServlet {
     }
 
     private void checkNeedTwoFactorAuthOrNot(HttpServletRequest request, HttpServletResponse response, Staffs staff) throws ServletException, IOException {
-        HttpSession session = request.getSession(true);
+        HttpSession httpSession = request.getSession(true);
         if (!staff.getTwoFactorAuth()) {
-            SessionChecker.setLoginSession(session, staff.getUserId(), staff.getUsername(), Role.STAFF);
+            Session session = new Session(staff.getUserId(), staff.getUsername(), staff.getEmail(), Role.STAFF);
+            SessionChecker.setLoginSession(httpSession, session);
             RedirectUtilities.sendRedirect(request, response, Constants.PROFILE_URL);
             return;
         }
-        requiredTwoFactorAuth(request, response, staff, session);
+        requiredTwoFactorAuth(request, response, staff, httpSession);
     }
 
     private void requiredTwoFactorAuth(HttpServletRequest request, HttpServletResponse response, Staffs staff, HttpSession session) throws ServletException, IOException {
