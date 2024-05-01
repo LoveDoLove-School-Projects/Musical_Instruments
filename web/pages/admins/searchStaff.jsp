@@ -14,7 +14,7 @@
         <div class="container">
             <h1>Manage Staff</h1><br>
             <!-- Search form -->
-            <form class="form-inline mb-3" action="pages/admins/StaffServlet" method="post">
+            <form class="form-inline mb-3" action="pages/admins/searchStaff" method="post">
                 <input class="col-12 form-control mr-2" type="text" name="searchQuery" placeholder="Enter staff email: "><br>
                 <button type="submit" class="btn btn-primary">Search</button>
                 <a href="pages/admins/addStaff" class="btn btn-success">Register new Staff</a>

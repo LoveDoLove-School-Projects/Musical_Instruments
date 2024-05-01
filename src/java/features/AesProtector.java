@@ -1,6 +1,6 @@
 package features;
 
-import entities.Enviroment;
+import entities.Environment;
 import utilities.AesUtilities;
 
 public final class AesProtector {
@@ -12,7 +12,7 @@ public final class AesProtector {
      * @return The encrypted text.
      */
     public static String aes256EcbEncrypt(String text) {
-        return AesUtilities.aes256EcbEncrypt(text, Enviroment.AES_KEY);
+        return AesUtilities.aes256EcbEncrypt(text, Environment.AES_KEY);
     }
 
     /**
@@ -22,6 +22,6 @@ public final class AesProtector {
      * @return The decrypted text.
      */
     public static String aes256EcbDecrypt(String text) {
-        return AesUtilities.aes256EcbDecrypt(text, Enviroment.AES_KEY);
+        return AesUtilities.aes256EcbDecrypt(text, Environment.AES_KEY);
     }
 }

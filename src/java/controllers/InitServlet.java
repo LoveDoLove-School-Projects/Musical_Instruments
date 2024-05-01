@@ -1,6 +1,6 @@
 package controllers;
 
-import entities.Enviroment;
+import entities.Environment;
 import entities.TrustAllCertificates;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletContextEvent;
@@ -26,13 +26,13 @@ public class InitServlet implements ServletContextListener {
         try {
             Context context = new InitialContext();
             Context env = (Context) context.lookup("java:comp/env");
-            Enviroment.AES_KEY = (String) env.lookup(Enviroment.AES_KEY);
-            Enviroment.SEND_MAIL_API = (String) env.lookup(Enviroment.SEND_MAIL_API);
-            Enviroment.SECRET_KEY = (String) env.lookup(Enviroment.SECRET_KEY);
-            Enviroment.ACCESS_TOKEN_API = (String) env.lookup(Enviroment.ACCESS_TOKEN_API);
-            Enviroment.CREATE_PAYMENT_API = (String) env.lookup(Enviroment.CREATE_PAYMENT_API);
-            Enviroment.GET_PAYMENT_API = (String) env.lookup(Enviroment.GET_PAYMENT_API);
-            Enviroment.EXECUTE_PAYMENT_API = (String) env.lookup(Enviroment.EXECUTE_PAYMENT_API);
+            Environment.AES_KEY = (String) env.lookup(Environment.AES_KEY);
+            Environment.SEND_MAIL_API = (String) env.lookup(Environment.SEND_MAIL_API);
+            Environment.SECRET_KEY = (String) env.lookup(Environment.SECRET_KEY);
+            Environment.ACCESS_TOKEN_API = (String) env.lookup(Environment.ACCESS_TOKEN_API);
+            Environment.CREATE_PAYMENT_API = (String) env.lookup(Environment.CREATE_PAYMENT_API);
+            Environment.GET_PAYMENT_API = (String) env.lookup(Environment.GET_PAYMENT_API);
+            Environment.EXECUTE_PAYMENT_API = (String) env.lookup(Environment.EXECUTE_PAYMENT_API);
             TrustAllCertificates.trustAllCertificates();
             servletContext = servletContextEvent.getServletContext();
         } catch (NamingException ex) {

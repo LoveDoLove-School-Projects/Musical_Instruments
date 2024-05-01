@@ -1,5 +1,6 @@
 package controllers.admins;
 
+import common.Constants;
 import entities.Staffs;
 import exceptions.DatabaseException;
 import features.AesProtector;
@@ -68,7 +69,7 @@ public class AddStaffServlet extends HttpServlet {
             LOG.severe(ex.getMessage());
             throw new DatabaseException(ex.getMessage());
         }
-        RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.SUCCESS, "Staff Added successful!", "/pages/admins/searchStaff.jsp");
+        RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.SUCCESS, "Staff Added successful!", Constants.ADMIN_SEARCH_STAFF_URL);
     }
 
     private boolean validateStaffDetails(Staffs staff) {

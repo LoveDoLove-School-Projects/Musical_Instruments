@@ -59,24 +59,25 @@
                         <div class="col-lg-4 col-md-6 mb-4">
                             <a href="pages/admins/mainDashboard" class="btn btn-primary btn-lg btn-block">Main dashboard</a>
                         </div>
+                        <div class="col-lg-4 col-md-6 mb-4">
+                            <a href="pages/staffs/viewTransaction" class="btn btn-primary btn-lg btn-block">View Transaction</a>
+                        </div>
                         <%
-                                      boolean isAdmin = request.isUserInRole("Admin");
-                                      if (isAdmin) { %>
+                            boolean isAdmin = request.isUserInRole("Admin");
+                            if (isAdmin) { %>
+                        <div class="col-lg-4 col-md-6 mb-4">
+                            <a href="pages/admins/sales" class="btn btn-primary btn-lg btn-block">View Sales</a>
+                        </div>
                         <div class="col-lg-4 col-md-6 mb-4">
                             <a href="pages/admins/searchStaff" class="btn btn-primary btn-lg btn-block">Manage Staff</a>
                         </div>
-                        <div class="col-lg-4 col-md-6 mb-4">
-                            <a href="pages/admins/sales" class="btn btn-primary btn-lg btn-block">Sales</a>
-                        </div>
+
                         <% } %>
                         <div class="col-lg-4 col-md-6 mb-4">
                             <a href="pages/staffs/searchCustomer" class="btn btn-primary btn-lg btn-block">Manage Customer</a>
                         </div>
                         <div class="col-lg-4 col-md-6 mb-4">
                             <a href="pages/staffs/manageProduct" class="btn btn-primary btn-lg btn-block">Manage Product</a>
-                        </div>
-                        <div class="col-lg-4 col-md-6 mb-4">
-                            <a href="pages/admins/viewTransaction" class="btn btn-primary btn-lg btn-block">View Transaction</a>
                         </div>
                         <div class="col-lg-4 col-md-6 mb-4">
                             <a href="pages/staffs/viewLog" class="btn btn-primary btn-lg btn-block">View Log</a>
