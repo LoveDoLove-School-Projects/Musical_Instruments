@@ -126,6 +126,14 @@ public class Staffs implements Serializable {
         this.twoFactorAuth = twoFactorAuth;
     }
 
+    public Staffs(Integer userId, String username, String address, String phoneNumber, String gender) {
+        this.userId = userId;
+        this.username = username;
+        this.address = address;
+        this.phoneNumber = phoneNumber;
+        this.gender = gender;
+    }
+
     public Integer getUserId() {
         return userId;
     }

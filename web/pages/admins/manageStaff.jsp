@@ -4,6 +4,7 @@
 <c:set var="basePath" value="${pageContext.request.scheme}://${pageContext.request.serverName}:${pageContext.request.serverPort}${path}/" />
 <%@ page import="java.util.List" %>
 <%@ page import="entities.Staffs" %>
+<%@ page import="java.util.Base64"%>
 <!DOCTYPE html>
 <html>
     <head>
@@ -24,23 +25,32 @@
     </head>
     <body>
         <jsp:include page="/defaults/header.jsp" />
-
         <div class="container">
             <div class="row">
                 <div class="col-md-10 offset-md-1">
                     <h1 class="text-center mb-4">Staff Details</h1>
                     <% Staffs staff = (Staffs) session.getAttribute("staffDetails"); %>
                     <div class="card">
+                        <%
+                             String imageSrc = null;
+                             if (staff.getPicture() != null) {
+                                  String pictureBase64 = Base64.getEncoder().encodeToString(staff.getPicture());
+                                  imageSrc = "data:image/png;base64," + pictureBase64;
+                            }
+                        %>
                         <div class="card-body">
-                            <h5 class="card-title"><strong><%=staffDetails.getUsername() %></strong></h5>
+                            <div class="col-3 p-1 d-flex justify-content-center align-content-centers productImage">
+                                <img src="<%if(imageSrc!=null) { %><%=imageSrc%> <%}%>" class="img-fluid w-100 m-5" alt="<%=staff.getUsername() %>">
+                            </div>
+                            <h5 class="card-title"><strong><%= staff.getUsername() %></strong></h5>
                             <ul class="list-group list-group-flush">
-                                <li class="list-group-item"><strong>ID:</strong> <%=staffDetails.getUserId() %></li>
-                                <li class="list-group-item"><strong>Gender:</strong> <%=staffDetails.getGender() %></li>
-                                <li class="list-group-item"><strong>Email:</strong> <%=staffDetails.getEmail() %></li>
-                                <li class="list-group-item"><strong>Address:</strong> <%=staffDetails.getAddress() %></li>
-                                <li class="list-group-item"><strong>Phone Number:</strong> <%=staffDetails.getPhoneNumber() %></li>
-                                <li class="list-group-item"><strong>Two Factor Authentication:</strong> <%=staffDetails.getTwoFactorAuth() ? "Activated" : "Deactivated" %></li>
-                                <li class="list-group-item"><strong>Account Creation Date:</strong> <%=staffDetails.getAccountCreationDate() %></li>
+                                <li class="list-group-item"><strong>ID:</strong> <%= staff.getUserId() %></li>
+                                <li class="list-group-item"><strong>Gender:</strong> <%= staff.getGender() %></li>
+                                <li class="list-group-item"><strong>Email:</strong> <%= staff.getEmail() %></li>
+                                <li class="list-group-item"><strong>Address:</strong> <%= staff.getAddress() %></li>
+                                <li class="list-group-item"><strong>Phone Number:</strong> <%= staff.getPhoneNumber() %></li>
+                                <li class="list-group-item"><strong>Two Factor Authentication:</strong> <%= staff.getTwoFactorAuth() ? "Activated" : "Deactivated" %></li>
+                                <li class="list-group-item"><strong>Account Creation Date:</strong> <%= staff.getAccountCreationDate() %></li>
                             </ul>
                             <div class="row">
                                 <div class="col-md-2">
@@ -52,7 +62,7 @@
                                 <div class="col-md-1">
 
                                     <form action="pages/admins/deleteStaff" method="post" id="deleteStaffForm">
-                                        <input type="hidden" name="userId" value="<%=staffDetails.getUserId() %>"/>
+                                        <input type="hidden" name="userId" value="<%=staff.getUserId() %>"/>
                                         <button class="btn btn-danger">Delete</button>
                                     </form>
                                 </div>
@@ -71,30 +81,27 @@
                 if (deleteStaffFormElement === null) {
                     showErrorDialog("Delete button not found");
                     return;
-
-                    deleteStaffFormElement.onsubmit = function (event) {
-                        event.preventDefault();
-                        Swal.fire({
-                            title: "Are you sure?",
-                            text: "You won't be able to revert this!",
-                            icon: "warning",
-                            showCancelButton: true,
-                            confirmButtonColor: "#3085d6",
-                            cancelButtonColor: "#d33",
-                            confirmButtonText: "Yes, delete it!",
-                        }).then((result) => {
-                            if (!result.isConfirmed) {
-                                event.preventDefault();
-                                return
-                            }
-                            deleteStaffFormElement.submit();
-                        });
-                    }
                 }
-                setDeleteStaffForm();
-        </script>
-        <%
+                deleteStaffFormElement.onsubmit = function (event) {
+                    event.preventDefault();
+                    Swal.fire({
+                        title: "Are you sure?",
+                        text: "You won't be able to revert this!",
+                        icon: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#3085d6",
+                        cancelButtonColor: "#d33",
+                        confirmButtonText: "Yes, delete it!",
+                    }).then((result) => {
+                        if (!result.isConfirmed) {
+                            event.preventDefault();
+                            return;
+                        }
+                        deleteStaffFormElement.submit();
+                    });
+                }
             }
-        %>
+            setDeleteStaffForm();
+        </script>
     </body>
 </html>
