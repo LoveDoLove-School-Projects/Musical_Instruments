@@ -56,25 +56,25 @@ public class ForgotPasswordServlet extends HttpServlet {
         request.setAttribute("email", email);
         request.setAttribute("role", role);
         if (StringUtilities.anyNullOrBlank(email)) {
-            RedirectUtilities.redirectWithMessage(request, response, RedirectType.DANGER, email, FORGOT_PASSWORD_URL);
+            redirectError(request, response, "Email is required", role);
             return;
         }
         if (!ValidationUtilities.isEmailValid(email)) {
-            RedirectUtilities.redirectWithMessage(request, response, RedirectType.DANGER, "Invalid email", FORGOT_PASSWORD_URL);
+            redirectError(request, response, "Invalid email", role);
             return;
         }
         switch (role) {
             case "customer":
                 List<Customers> customers = entityManager.createNamedQuery("Customers.findByEmail", Customers.class).setParameter("email", email).getResultList();
                 if (customers == null || customers.isEmpty()) {
-                    RedirectUtilities.redirectWithMessage(request, response, RedirectType.DANGER, "Email not found", FORGOT_PASSWORD_URL);
+                    redirectError(request, response, "Invalid email", role);
                     return;
                 }
                 break;
             case "staff":
                 List<Staffs> staffs = entityManager.createNamedQuery("Staffs.findByEmail", Staffs.class).setParameter("email", email).getResultList();
                 if (staffs == null || staffs.isEmpty()) {
-                    RedirectUtilities.redirectWithMessage(request, response, RedirectType.DANGER, "Email not found", FORGOT_PASSWORD_URL);
+                    redirectError(request, response, "Invalid email", role);
                     return;
                 }
                 break;
@@ -84,14 +84,14 @@ public class ForgotPasswordServlet extends HttpServlet {
         }
         String resetPasswordURL = generateResetPasswordURL(request, email, role);
         if (resetPasswordURL == null) {
-            RedirectUtilities.redirectWithMessage(request, response, RedirectType.DANGER, "Error generating reset password URL", FORGOT_PASSWORD_URL);
+            redirectError(request, response, "Error generating reset password URL", role);
             return;
         }
         boolean status = MailSender.sendEmail(email, SUBJECT, CONTENT.replace("${resetPasswordLink}", resetPasswordURL));
         if (status) {
             RedirectUtilities.redirectWithMessage(request, response, RedirectType.SUCCESS, "Email sent successfully", FORGOT_PASSWORD_URL);
         } else {
-            RedirectUtilities.redirectWithMessage(request, response, RedirectType.DANGER, "Email not sent", FORGOT_PASSWORD_URL);
+            redirectError(request, response, "Email not sent", role);
         }
     }
 
@@ -122,6 +122,10 @@ public class ForgotPasswordServlet extends HttpServlet {
         } catch (HeuristicMixedException | HeuristicRollbackException | NotSupportedException | RollbackException | SystemException | IllegalStateException | SecurityException ex) {
             throw new DatabaseException(ex.getMessage());
         }
+    }
+
+    private void redirectError(HttpServletRequest request, HttpServletResponse response, String message, String role) throws IOException {
+        RedirectUtilities.redirectWithMessage(request, response, RedirectType.DANGER, message, FORGOT_PASSWORD_URL + "?role=" + role);
     }
 
     private String getServerBaseURL(HttpServletRequest request) {

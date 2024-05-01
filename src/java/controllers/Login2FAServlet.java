@@ -5,6 +5,7 @@ import dao.OtpDao;
 import entities.OtpsType;
 import entities.Role;
 import entities.Session;
+import features.SecurityLog;
 import features.SessionChecker;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
@@ -14,12 +15,14 @@ import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.EnumMap;
 import java.util.Map;
+import java.util.logging.Logger;
 import utilities.RedirectUtilities;
 import utilities.RedirectUtilities.RedirectType;
 import utilities.StringUtilities;
 
 public class Login2FAServlet extends HttpServlet {
 
+    private static final Logger LOG = Logger.getLogger(Login2FAServlet.class.getName());
     private static final String LOGIN_2FA_JSP_URL = "/sessions/login2fa.jsp";
     private static final Map<OtpsType, String> STATUS_MESSAGES;
 
@@ -88,6 +91,7 @@ public class Login2FAServlet extends HttpServlet {
             session.invalidate();
             session = request.getSession(true);
             SessionChecker.setLoginSession(session, attributes);
+            SecurityLog.addSecurityLog(request, "login successful with 2fa.");
             RedirectUtilities.sendRedirect(request, response, Constants.PROFILE_URL);
         } else {
             String message = STATUS_MESSAGES.getOrDefault(otpStatus, "Failed to verify OTP!");

@@ -6,10 +6,12 @@ import entities.Securitylog;
 import exceptions.DatabaseException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.util.logging.Logger;
 
 public class SecurityLogDao {
 
-    private static final String ADD_SECURITY_LOG_SQL = "INSERT INTO SECURITYLOG (USER_ID, USERNAME, EMAIL, ACTION, IP_ADDRESS, USER_AGENT) VALUES (?, ?, ?, ?, ?, ?)";
+    private static final Logger LOG = Logger.getLogger(SecurityLogDao.class.getName());
+    private static final String ADD_SECURITY_LOG_SQL = "INSERT INTO SECURITYLOG (USER_ID, USERNAME, EMAIL, ROLE, ACTION, IP_ADDRESS, USER_AGENT) VALUES (?, ?, ?, ?, ?, ?, ?)";
     private static final String ADD_INTERNAL_SECURITY_LOG_SQL = "INSERT INTO INTERNALSECURITYLOG (USER_ID, USERNAME, EMAIL, ACTION, IP_ADDRESS, USER_AGENT) VALUES (?, ?, ?, ?, ?, ?)";
 
     public void addSecurityLog(Securitylog securitylog) {
@@ -17,9 +19,10 @@ public class SecurityLogDao {
             preparedStatement.setInt(1, securitylog.getUserId());
             preparedStatement.setString(2, securitylog.getUsername());
             preparedStatement.setString(3, securitylog.getEmail());
-            preparedStatement.setString(4, securitylog.getAction());
-            preparedStatement.setString(5, securitylog.getIpAddress());
-            preparedStatement.setString(6, securitylog.getUserAgent());
+            preparedStatement.setString(4, securitylog.getRole());
+            preparedStatement.setString(5, securitylog.getAction());
+            preparedStatement.setString(6, securitylog.getIpAddress());
+            preparedStatement.setString(7, securitylog.getUserAgent());
             preparedStatement.executeUpdate();
         } catch (Exception ex) {
             throw new DatabaseException(ex.getMessage());

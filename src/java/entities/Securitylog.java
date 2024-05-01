@@ -26,10 +26,12 @@ import java.util.Date;
     @NamedQuery(name = "Securitylog.findByUserId", query = "SELECT s FROM Securitylog s WHERE s.userId = :userId"),
     @NamedQuery(name = "Securitylog.findByUsername", query = "SELECT s FROM Securitylog s WHERE s.username = :username"),
     @NamedQuery(name = "Securitylog.findByEmail", query = "SELECT s FROM Securitylog s WHERE s.email = :email"),
+    @NamedQuery(name = "Securitylog.findByRole", query = "SELECT s FROM Securitylog s WHERE s.role = :role"),
     @NamedQuery(name = "Securitylog.findByAction", query = "SELECT s FROM Securitylog s WHERE s.action = :action"),
     @NamedQuery(name = "Securitylog.findByActionDate", query = "SELECT s FROM Securitylog s WHERE s.actionDate = :actionDate"),
     @NamedQuery(name = "Securitylog.findByIpAddress", query = "SELECT s FROM Securitylog s WHERE s.ipAddress = :ipAddress"),
-    @NamedQuery(name = "Securitylog.findByUserAgent", query = "SELECT s FROM Securitylog s WHERE s.userAgent = :userAgent")})
+    @NamedQuery(name = "Securitylog.findByUserAgent", query = "SELECT s FROM Securitylog s WHERE s.userAgent = :userAgent"),
+    @NamedQuery(name = "Securitylog.findByUserIdAndRole", query = "SELECT s FROM Securitylog s WHERE s.userId = :userId AND s.role = :role")})
 public class Securitylog implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -49,6 +51,9 @@ public class Securitylog implements Serializable {
     @Size(max = 255)
     @Column(name = "EMAIL")
     private String email;
+    @Size(max = 50)
+    @Column(name = "ROLE")
+    private String role;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 255)
@@ -67,22 +72,21 @@ public class Securitylog implements Serializable {
     public Securitylog() {
     }
 
-    public Securitylog(String username, String action) {
+    public Securitylog(Integer pkid) {
+        this.pkid = pkid;
+    }
+
+    public Securitylog(Integer pkid, String username, String action) {
+        this.pkid = pkid;
         this.username = username;
         this.action = action;
     }
 
-    public Securitylog(Integer userId, String username, String email, String action) {
+    public Securitylog(Integer userId, String username, String email, String role, String action, String ipAddress, String userAgent) {
         this.userId = userId;
         this.username = username;
         this.email = email;
-        this.action = action;
-    }
-
-    public Securitylog(Integer userId, String username, String email, String action, String ipAddress, String userAgent) {
-        this.userId = userId;
-        this.username = username;
-        this.email = email;
+        this.role = role;
         this.action = action;
         this.ipAddress = ipAddress;
         this.userAgent = userAgent;
@@ -118,6 +122,14 @@ public class Securitylog implements Serializable {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 
     public String getAction() {

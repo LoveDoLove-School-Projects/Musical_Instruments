@@ -4,6 +4,7 @@ import entities.Customers;
 import entities.Resetpassword;
 import entities.Staffs;
 import features.AesProtector;
+import features.SecurityLog;
 import jakarta.annotation.Resource;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -19,6 +20,7 @@ import jakarta.transaction.SystemException;
 import jakarta.transaction.UserTransaction;
 import java.io.IOException;
 import java.util.List;
+import java.util.logging.Logger;
 import utilities.RedirectUtilities;
 import utilities.RedirectUtilities.RedirectType;
 import utilities.StringUtilities;
@@ -30,6 +32,7 @@ public class ResetPasswordServlet extends HttpServlet {
     EntityManager entityManager;
     @Resource
     UserTransaction userTransaction;
+    private static final Logger LOG = Logger.getLogger(ResetPasswordServlet.class.getName());
     private static final String RESET_PASSWORD_JSP_URL = "/pages/resetPassword.jsp";
 
     @Override
@@ -72,7 +75,6 @@ public class ResetPasswordServlet extends HttpServlet {
         }
         Resetpassword resetPassword = isTokenValid(token);
         try {
-            // Update password
             userTransaction.begin();
             switch (role) {
                 case "customer":
@@ -101,16 +103,14 @@ public class ResetPasswordServlet extends HttpServlet {
                     RedirectUtilities.redirectWithMessage(request, response, RedirectType.DANGER, "Invalid role", "/");
                     return;
             }
-            // Delete reset password token
             userTransaction.begin();
             Resetpassword managedResetPassword = entityManager.merge(resetPassword);
             entityManager.remove(managedResetPassword);
             userTransaction.commit();
+            RedirectUtilities.redirectWithMessage(request, response, RedirectType.SUCCESS, "Password reset successfully", "/");
         } catch (HeuristicMixedException | HeuristicRollbackException | NotSupportedException | RollbackException | SystemException | IllegalStateException | SecurityException ex) {
             RedirectUtilities.redirectWithMessage(request, response, RedirectType.DANGER, "An error occurred while resetting password", "/");
-            return;
         }
-        RedirectUtilities.redirectWithMessage(request, response, RedirectType.SUCCESS, "Password reset successfully", "/");
     }
 
     private boolean validateResetPasswordRequest(String token, String role, String newPassword, String confirmNewPassword) {
