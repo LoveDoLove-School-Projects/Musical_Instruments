@@ -4,7 +4,6 @@
 <c:set var="basePath" value="${pageContext.request.scheme}://${pageContext.request.serverName}:${pageContext.request.serverPort}${path}/" />
 <%@ page import="java.util.List"%>
 <%@ page import="java.util.Base64"%>
-<%@ page import="utilities.FileUtilities"%>
 <%@ page import="entities.Products" %>
 <!DOCTYPE html>
 <html>

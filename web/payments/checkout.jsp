@@ -6,7 +6,6 @@
 <%@ page import="java.util.List" %>
 <%@ page import="entities.Carts" %>
 <%@ page import="java.util.Base64"%>
-<%@ page import="utilities.FileUtilities"%>
 <%
 response.setHeader("Cache-Control", "no-store");
 %>

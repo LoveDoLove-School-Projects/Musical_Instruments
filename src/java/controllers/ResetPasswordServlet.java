@@ -41,7 +41,7 @@ public class ResetPasswordServlet extends HttpServlet {
             RedirectUtilities.redirectWithMessage(request, response, RedirectType.DANGER, "Invalid reset password link", "/");
             return;
         }
-        if (role == null || (!role.equals("customer") && !role.equals("staff"))) {
+        if ((!role.equals("customer") && !role.equals("staff"))) {
             RedirectUtilities.redirectWithMessage(request, response, RedirectType.DANGER, "Invalid role", "/");
             return;
         }
