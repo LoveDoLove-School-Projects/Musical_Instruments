@@ -93,6 +93,6 @@ public class ModifyProductServlet extends HttpServlet {
 
     private void showError(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Invalid details, please re-enter it.", "/pages/staffs/modifyProduct.jsp");
+        RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Invalid details, please re-enter it.", "/pages/staffs/modifyProduct");
     }
 }

@@ -1,5 +1,6 @@
 package controllers.staffs;
 
+import common.Constants;
 import entities.Products;
 import entities.Role;
 import entities.Session;
@@ -42,13 +43,13 @@ public class StaffSearchProductServlet extends HttpServlet {
             throws ServletException, IOException {
         String searchQuery = request.getParameter("searchQuery");
         if (searchQuery.isBlank() || searchQuery.trim().isEmpty()) {
-            RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Please fill in the product ID!", "/pages/staffs/searchProduct.jsp");
+            RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Please fill in the product ID!", Constants.ADMIN_STAFF_SEARCH_PRODUCT_URL);
             return;
         }
         try {
             List<Products> productList = entityManager.createNamedQuery("Products.findByProductId", Products.class).setParameter("productId", Integer.valueOf(searchQuery)).getResultList();
             if (productList == null || productList.isEmpty()) {
-                RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Product not existed!", "/pages/staffs/searchProduct.jsp");
+                RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Product not existed!", Constants.ADMIN_STAFF_SEARCH_PRODUCT_URL);
                 return;
             }
             Products product = productList.get(0);
@@ -56,7 +57,7 @@ public class StaffSearchProductServlet extends HttpServlet {
             session.setAttribute("productDetails", product);
             RedirectUtilities.sendRedirect(request, response, "/pages/staffs/manageProduct.jsp");
         } catch (IOException | NumberFormatException ex) {
-            RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Please a valid product ID!", "/pages/staffs/searchProduct.jsp");
+            RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Please a valid product ID!", Constants.ADMIN_STAFF_SEARCH_PRODUCT_URL);
         }
     }
 }

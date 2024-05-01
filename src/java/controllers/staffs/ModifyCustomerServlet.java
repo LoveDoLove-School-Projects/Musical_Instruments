@@ -1,5 +1,6 @@
 package controllers.staffs;
 
+import common.Constants;
 import entities.Customers;
 import entities.Role;
 import entities.Session;
@@ -23,7 +24,6 @@ import utilities.RedirectUtilities;
 
 public class ModifyCustomerServlet extends HttpServlet {
 
-    private static final String SHOW_CUSTOMER_DETAILS_URL = "/pages/staffs/manageCustomer";
     @PersistenceContext
     EntityManager entityManager;
     @Resource
@@ -63,7 +63,7 @@ public class ModifyCustomerServlet extends HttpServlet {
             showError(request, response);
             return;
         }
-        RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.SUCCESS, "Update Successful!", SHOW_CUSTOMER_DETAILS_URL);
+        RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.SUCCESS, "Update Successful!", Constants.ADMIN_MANAGE_CUSTOMER_URL);
     }
 
     private boolean updateCustomerDetails(Customers customer) {

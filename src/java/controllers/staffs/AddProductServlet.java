@@ -58,7 +58,7 @@ public class AddProductServlet extends HttpServlet {
         String category = request.getParameter("category");
         InputStream pictureStream = request.getPart("image").getInputStream();
         if (pictureStream == null) {
-            RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Error uploading picture.", "/pages/staffs/AddProduct.jsp");
+            RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Error uploading picture.", "/pages/staffs/addProduct");
             return;
         }
         byte[] pictureBytes = pictureStream.readAllBytes();
@@ -76,6 +76,6 @@ public class AddProductServlet extends HttpServlet {
         } catch (NotSupportedException | SystemException | RollbackException | HeuristicMixedException | HeuristicRollbackException | SecurityException | IllegalStateException ex) {
             throw new DatabaseException(ex.getMessage());
         }
-        RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.SUCCESS, "Product Added successful!", "/pages/staffs/searchProduct.jsp");
+        RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.SUCCESS, "Product Added successful!", "/pages/staffs/searchProduct");
     }
 }

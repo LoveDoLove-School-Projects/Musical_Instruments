@@ -34,8 +34,11 @@
                     <div class="card">
                         <div class="card-body">
                             <%
-                                String pictureBase64 = Base64.getEncoder().encodeToString(customerDetails.getPicture());
-                                String imageSrc = "data:image/png;base64," + pictureBase64;
+                                String imageSrc = null;
+                                if (customerDetails.getPicture() != null) {
+                                    String pictureBase64 = Base64.getEncoder().encodeToString(customerDetails.getPicture());
+                                    imageSrc = "data:image/png;base64," + pictureBase64;
+                                }
                             %>
                             <div class="col-3 p-1 d-flex justify-content-center align-content-centers productImage">
                                 <img src="<%if(imageSrc!=null) { %><%=imageSrc%> <%}%>" class="img-fluid w-100 m-5" alt="<%=customerDetails.getUsername() %>">
