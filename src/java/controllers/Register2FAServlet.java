@@ -30,6 +30,7 @@ import utilities.StringUtilities;
 public class Register2FAServlet extends HttpServlet {
 
     private static final String REGISTER_2FA_JSP_URL = "/sessions/register2fa.jsp";
+    public static final String REGISTER_URL = "/pages/register";
     private static final Map<OtpsType, String> STATUS_MESSAGES;
 
     static {
@@ -96,7 +97,7 @@ public class Register2FAServlet extends HttpServlet {
             if (isRegistered) {
                 RedirectUtilities.redirectWithMessage(request, response, RedirectType.SUCCESS, "Registered Successfully!", Constants.CUSTOMER_LOGIN_URL);
             } else {
-                RedirectUtilities.redirectWithMessage(request, response, RedirectType.DANGER, "Failed to register! Please try again.", Constants.REGISTER_URL);
+                RedirectUtilities.redirectWithMessage(request, response, RedirectType.DANGER, "Failed to register! Please try again.", REGISTER_URL);
             }
         } else {
             String message = STATUS_MESSAGES.getOrDefault(otpStatus, "Failed to verify OTP!");

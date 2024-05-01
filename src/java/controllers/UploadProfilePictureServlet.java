@@ -80,9 +80,7 @@ public class UploadProfilePictureServlet extends HttpServlet {
             entityManager.merge(existingCustomer);
             userTransaction.commit();
             return true;
-        } catch (RollbackException ex) {
-            return false;
-        } catch (HeuristicMixedException | HeuristicRollbackException | NotSupportedException | SystemException | IllegalStateException | SecurityException ex) {
+        } catch (HeuristicMixedException | HeuristicRollbackException | NotSupportedException | RollbackException | SystemException | IllegalStateException | SecurityException ex) {
             throw new DatabaseException(ex.getMessage());
         }
     }
@@ -98,9 +96,7 @@ public class UploadProfilePictureServlet extends HttpServlet {
             entityManager.merge(existingStaff);
             userTransaction.commit();
             return true;
-        } catch (RollbackException ex) {
-            return false;
-        } catch (HeuristicMixedException | HeuristicRollbackException | NotSupportedException | SystemException | IllegalStateException | SecurityException ex) {
+        } catch (HeuristicMixedException | HeuristicRollbackException | NotSupportedException | RollbackException | SystemException | IllegalStateException | SecurityException ex) {
             throw new DatabaseException(ex.getMessage());
         }
     }

@@ -22,6 +22,7 @@ public class ProfileServlet extends HttpServlet {
 
     @PersistenceContext
     EntityManager entityManager;
+    private static final String PROFILE_JSP_URL = "/pages/profile.jsp";
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -46,7 +47,7 @@ public class ProfileServlet extends HttpServlet {
             RedirectUtilities.redirectWithMessage(request, response, RedirectType.DANGER, "Error fetching profile details.", "/");
             return;
         }
-        request.getRequestDispatcher(Constants.PROFILE_JSP_URL).forward(request, response);
+        request.getRequestDispatcher(PROFILE_JSP_URL).forward(request, response);
     }
 
     private boolean initCustomerProfile(HttpServletRequest request, Session session) {

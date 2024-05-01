@@ -1,18 +1,18 @@
 
-  .nav-item {
+.nav-item {
     padding: 1px;
     border-radius: 8px;
-  
-  }
-  
-  .nav-item.active,
-  .nav-item:hover {
+
+}
+
+.nav-item.active,
+.nav-item:hover {
     background-color: rgb(141, 135, 135);
     transition: all 1s;
-  }
-  
-  .nav-item:hover a.nav-link {
+}
+
+.nav-item:hover a.nav-link {
     color: white;
     text-shadow: white 1px 1px;
     transition: all 0.5s;
-  }
+}

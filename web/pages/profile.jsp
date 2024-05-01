@@ -145,6 +145,9 @@
                                         <div class="col-sm-9">
                                             <input type="submit"  class="btn btn-primary" value="Update Profile" />
                                         </div>
+                                        <div class="col-sm-3">
+                                            <a href="pages/changePassword" class="btn btn-primary">Change Password</a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

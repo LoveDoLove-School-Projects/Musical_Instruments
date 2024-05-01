@@ -14,11 +14,13 @@ import utilities.RedirectUtilities;
 @WebServlet(name = "TransactionServlet", urlPatterns = {"/payments/processTransaction", "/payments/transaction"})
 public class TransactionServlet extends HttpServlet {
 
+    private static final String TRANSACTION_JSP_URL = "/payments/transaction.jsp";
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         // RedirectUtilities.redirectWithMessage(request, response, RedirectType.DANGER,
         // "Invalid request", Constants.MAIN_URL);
-        request.getRequestDispatcher(Constants.TRANSACTION_JSP_URL).forward(request, response);
+        request.getRequestDispatcher(TRANSACTION_JSP_URL).forward(request, response);
     }
 
     @Override
