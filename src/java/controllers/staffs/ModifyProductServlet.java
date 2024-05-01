@@ -27,7 +27,6 @@ public class ModifyProductServlet extends HttpServlet {
     EntityManager entityManager;
     @Resource
     UserTransaction userTransaction;
-    private final SessionChecker sessionChecker = new SessionChecker();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)

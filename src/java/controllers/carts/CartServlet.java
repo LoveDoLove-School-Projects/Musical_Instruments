@@ -16,14 +16,13 @@ import utilities.RedirectUtilities;
 
 public class CartServlet extends HttpServlet {
 
-    private static final SessionChecker sessionHandler = new SessionChecker();
     @PersistenceContext
     EntityManager entityManager;
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        Session session = sessionHandler.getLoginSession(request.getSession());
-        if (!session.isResult()) {
+        Session session = SessionChecker.getLoginSession(request.getSession());
+        if (session == null) {
             RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Please login to view this page.", Constants.CUSTOMER_LOGIN_URL);
             return;
         }

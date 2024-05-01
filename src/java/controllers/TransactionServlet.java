@@ -14,8 +14,6 @@ import utilities.RedirectUtilities;
 @WebServlet(name = "TransactionServlet", urlPatterns = {"/payments/processTransaction", "/payments/transaction"})
 public class TransactionServlet extends HttpServlet {
 
-    private final SessionChecker sessionChecker = new SessionChecker();
-
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         // RedirectUtilities.redirectWithMessage(request, response, RedirectType.DANGER,
@@ -25,8 +23,8 @@ public class TransactionServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        Session session = sessionChecker.getLoginSession(request.getSession());
-        if (!session.isResult()) {
+        Session session = SessionChecker.getLoginSession(request.getSession());
+        if (session == null) {
             RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Please login to view this page.", Constants.CUSTOMER_LOGIN_URL);
             return;
         }

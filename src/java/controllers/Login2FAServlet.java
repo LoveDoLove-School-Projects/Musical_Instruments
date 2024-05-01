@@ -31,7 +31,6 @@ public class Login2FAServlet extends HttpServlet {
         STATUS_MESSAGES.put(OtpsType.FAILED, "Failed to verify OTP! Please try again.");
         STATUS_MESSAGES.put(OtpsType.INVALID, "Invalid OTP!");
     }
-    private final SessionChecker sessionChecker = new SessionChecker();
     private final OtpDao otpDao = new OtpDao();
 
     @Override
@@ -75,19 +74,20 @@ public class Login2FAServlet extends HttpServlet {
             return null;
         }
         Integer loginId = (Integer) session.getAttribute("login_id_2fa");
+        String username = (String) session.getAttribute("username");
         String email = (String) session.getAttribute("email");
         Role role = (Role) session.getAttribute("role");
         if (loginId == null || loginId == 0 || StringUtilities.anyNullOrBlank(email) || role == null) {
             return null;
         }
-        return new Session(loginId, email, role);
+        return new Session(loginId, username, email, role);
     }
 
     private void handleOtpStatus(OtpsType otpStatus, HttpServletRequest request, HttpServletResponse response, HttpSession session, Session attributes) throws IOException, ServletException {
         if (otpStatus == OtpsType.OK) {
             session.invalidate();
             session = request.getSession(true);
-            sessionChecker.setLoginSession(session, attributes.getUserId(), attributes.getRole());
+            SessionChecker.setLoginSession(session, attributes.getUserId(), attributes.getUsername(), attributes.getRole());
             RedirectUtilities.sendRedirect(request, response, Constants.PROFILE_URL);
         } else {
             String message = STATUS_MESSAGES.getOrDefault(otpStatus, "Failed to verify OTP!");

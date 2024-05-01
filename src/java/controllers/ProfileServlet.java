@@ -20,14 +20,13 @@ import utilities.RedirectUtilities.RedirectType;
 @MultipartConfig
 public class ProfileServlet extends HttpServlet {
 
-    private final SessionChecker sessionChecker = new SessionChecker();
     @PersistenceContext
     EntityManager entityManager;
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        Session session = sessionChecker.getLoginSession(request.getSession());
-        if (!session.isResult()) {
+        Session session = SessionChecker.getLoginSession(request.getSession());
+        if (session == null) {
             RedirectUtilities.redirectWithMessage(request, response, RedirectType.DANGER, "Please login to view this page.", "/");
             return;
         }

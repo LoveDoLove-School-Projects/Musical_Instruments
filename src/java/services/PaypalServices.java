@@ -1,7 +1,6 @@
 package services;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import com.paypal.api.payments.Amount;
 import com.paypal.api.payments.Details;
@@ -12,29 +11,36 @@ import com.paypal.api.payments.PayerInfo;
 import com.paypal.api.payments.Payment;
 import com.paypal.api.payments.RedirectUrls;
 import com.paypal.api.payments.Transaction;
+import entities.AccessToken;
 import entities.Carts;
 import entities.Enviroment;
 import entities.OrderDetails;
 import entities.PaypalPayment;
 import exceptions.PaymentException;
 import features.AesProtector;
+import entities.MemoryCache;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+import java.util.logging.Logger;
 import utilities.HttpUtilities;
 
 public class PaypalServices {
 
+    private static final Logger LOG = Logger.getLogger(PaypalServices.class.getName());
     private final TransactionServices transactionServices = new TransactionServices();
     private static final String CLIENT_ID = "AZrjdHeC-KD9nsZVH8HR54O-3ZgvAshjqYq4hiPgXGL7ZKcps159a3mTW-YqLlvLQzBNveUjdpSELOuX";
     private static final String CLIENT_SECRET = "EGwkzMhtunT9dpkeIGuanST6nkKzdwRVFWHofvCYv8HFHy-RMk_A65bfFVw_p08ZCQaIMEtZKXVOswOY";
     private static final String RETURN_URL = "http://localhost:8080/Musical_Instruments/payments/paypal/review";
-    private static final String CANCEL_URL = "http://localhost:8080/Musical_Instruments/payments/cancel.html";
+    private static final String CANCEL_URL = "http://localhost:8080/Musical_Instruments/payments/cancel";
     private static final String ACCESS_TOKEN_API = AesProtector.aes256EcbDecrypt(Enviroment.ACCESS_TOKEN_API);
     private static final String CREATE_PAYMENT_API = AesProtector.aes256EcbDecrypt(Enviroment.CREATE_PAYMENT_API);
     private static final String GET_PAYMENT_API = AesProtector.aes256EcbDecrypt(Enviroment.GET_PAYMENT_API);
     private static final String EXECUTE_PAYMENT_API = AesProtector.aes256EcbDecrypt(Enviroment.EXECUTE_PAYMENT_API);
     private static final String CURRENCY = "MYR";
+    private static final MemoryCache<String, String> MEMORY_CACHE = new MemoryCache<>(3);
+    private static final MemoryCache<String, Long> TIME_CACHE = new MemoryCache<>(3);
 
     public String createPayment(List<Carts> cartList) {
         try {
@@ -59,8 +65,8 @@ public class PaypalServices {
         Payer payer = new Payer();
         payer.setPaymentMethod("paypal");
         PayerInfo payerInfo = new PayerInfo();
-        payerInfo.setFirstName("John")
-                .setLastName("Doe")
+        payerInfo.setFirstName("Musical")
+                .setLastName("Instruments")
                 .setEmail("sb-kfbrj14644364@business.example.com");
         payer.setPayerInfo(payerInfo);
         return payer;
@@ -123,10 +129,29 @@ public class PaypalServices {
     }
 
     private String getAccessToken() throws IOException {
+        String accessToken = MEMORY_CACHE.get("access_token");
+        Long tokenIssueTimeMillis = TIME_CACHE.get("token_issue_time");
+        Long expiresIn = TIME_CACHE.get("expires_in");
+        if (accessToken == null || expiresIn == null || tokenIssueTimeMillis == null || isTokenExpired(tokenIssueTimeMillis, expiresIn)) {
+            AccessToken accessTokenObj = requestAccessToken();
+            accessToken = accessTokenObj.getAccess_token();
+            expiresIn = TimeUnit.SECONDS.toMillis(accessTokenObj.getExpires_in());
+            MEMORY_CACHE.put("access_token", accessToken);
+            TIME_CACHE.put("token_issue_time", System.currentTimeMillis());
+            TIME_CACHE.put("expires_in", expiresIn);
+        }
+        return accessToken;
+    }
+
+    private boolean isTokenExpired(Long tokenIssueTimeMillis, Long expiresIn) {
+        return (tokenIssueTimeMillis + expiresIn) < System.currentTimeMillis();
+    }
+
+    private AccessToken requestAccessToken() throws IOException {
         String jsonPayload = "{\"client_id\":\"" + CLIENT_ID + "\",\"client_secret\":\"" + CLIENT_SECRET + "\"}";
         String response = HttpUtilities.sendHttpJsonRequest(ACCESS_TOKEN_API, jsonPayload);
-        JsonObject jsonObject = new Gson().fromJson(response, JsonObject.class);
-        return jsonObject.get("access_token").getAsString();
+        AccessToken accessTokenObj = new Gson().fromJson(response, AccessToken.class);
+        return accessTokenObj;
     }
 
     private String createPayment(String accessToken, String paymentJsonPayload) {

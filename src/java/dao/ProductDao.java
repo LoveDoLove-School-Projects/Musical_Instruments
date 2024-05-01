@@ -14,7 +14,6 @@ import java.util.logging.Logger;
 public class ProductDao {
 
     private static final Logger LOG = Logger.getLogger(ProductDao.class.getName());
-
     private static final String SEARCH_PRODUCT_SQL = "SELECT * FROM PRODUCTS WHERE UPPER(name) LIKE ? OR UPPER(category) LIKE ?";
 
     public List<Products> searchProduct(String searchQuery) {
@@ -42,5 +41,4 @@ public class ProductDao {
             throw new DatabaseException(ex.getMessage());
         }
     }
-
 }

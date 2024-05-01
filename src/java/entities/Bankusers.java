@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package entities;
 
 import jakarta.persistence.Basic;
@@ -21,10 +17,6 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
-/**
- *
- * @author LoveDoLove
- */
 @Entity
 @Table(name = "BANKUSERS")
 @XmlRootElement
@@ -38,6 +30,7 @@ import java.util.Date;
     @NamedQuery(name = "Bankusers.findByCardHolderName", query = "SELECT b FROM Bankusers b WHERE b.cardHolderName = :cardHolderName"),
     @NamedQuery(name = "Bankusers.findByCardNumber", query = "SELECT b FROM Bankusers b WHERE b.cardNumber = :cardNumber"),
     @NamedQuery(name = "Bankusers.findByExpiryDate", query = "SELECT b FROM Bankusers b WHERE b.expiryDate = :expiryDate"),
+    @NamedQuery(name = "Bankusers.findByCvv", query = "SELECT b FROM Bankusers b WHERE b.cvv = :cvv"),
     @NamedQuery(name = "Bankusers.findByBalance", query = "SELECT b FROM Bankusers b WHERE b.balance = :balance"),
     @NamedQuery(name = "Bankusers.findByCurrency", query = "SELECT b FROM Bankusers b WHERE b.currency = :currency")})
 public class Bankusers implements Serializable {
@@ -70,6 +63,9 @@ public class Bankusers implements Serializable {
     @Column(name = "EXPIRY_DATE")
     @Temporal(TemporalType.DATE)
     private Date expiryDate;
+    @Size(max = 3)
+    @Column(name = "CVV")
+    private String cvv;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "BALANCE")
     private BigDecimal balance;
@@ -148,6 +144,14 @@ public class Bankusers implements Serializable {
         this.expiryDate = expiryDate;
     }
 
+    public String getCvv() {
+        return cvv;
+    }
+
+    public void setCvv(String cvv) {
+        this.cvv = cvv;
+    }
+
     public BigDecimal getBalance() {
         return balance;
     }
@@ -186,6 +190,6 @@ public class Bankusers implements Serializable {
 
     @Override
     public String toString() {
-        return "ms.paymentgateway.entities.Bankusers[ userid=" + userid + " ]";
+        return "entities.Bankusers[ userid=" + userid + " ]";
     }
 }

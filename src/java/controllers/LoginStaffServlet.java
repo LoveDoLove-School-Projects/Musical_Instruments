@@ -24,7 +24,6 @@ import utilities.StringUtilities;
 public class LoginStaffServlet extends HttpServlet {
 
     private static final String LOGIN_2FA_URL = "/sessions/login2fa";
-    private final SessionChecker sessionChecker = new SessionChecker();
     private final OtpDao otpDao = new OtpDao();
     @PersistenceContext
     EntityManager entityManager;
@@ -40,8 +39,8 @@ public class LoginStaffServlet extends HttpServlet {
     }
 
     private void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        Session session = sessionChecker.getLoginSession(request.getSession());
-        if (session.isResult()) {
+        Session session = SessionChecker.getLoginSession(request.getSession());
+        if (session != null) {
             RedirectUtilities.sendRedirect(request, response, Constants.PROFILE_URL);
             return;
         }
@@ -97,7 +96,7 @@ public class LoginStaffServlet extends HttpServlet {
     private void checkNeedTwoFactorAuthOrNot(HttpServletRequest request, HttpServletResponse response, Staffs staff) throws ServletException, IOException {
         HttpSession session = request.getSession(true);
         if (!staff.getTwoFactorAuth()) {
-            sessionChecker.setLoginSession(session, staff.getUserId(), Role.STAFF);
+            SessionChecker.setLoginSession(session, staff.getUserId(), staff.getUsername(), Role.STAFF);
             RedirectUtilities.sendRedirect(request, response, Constants.PROFILE_URL);
             return;
         }
@@ -110,6 +109,7 @@ public class LoginStaffServlet extends HttpServlet {
             return;
         }
         session.setAttribute("login_id_2fa", staff.getUserId());
+        session.setAttribute("username", staff.getUsername());
         session.setAttribute("email", staff.getEmail());
         session.setAttribute("role", Role.STAFF);
         RedirectUtilities.sendRedirect(request, response, LOGIN_2FA_URL);
