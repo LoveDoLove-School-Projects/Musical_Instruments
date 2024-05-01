@@ -73,7 +73,7 @@ Session user_session = (Session) session.getAttribute("user_session");
                     %>
                     <li><a class="dropdown-item" href="pages/profile">Profile</a></li>
                     <li><a class="dropdown-item" href="pages/cart">Carts</a></li>
-                    <li><a class="dropdown-item" href="pages/settings">Settings</a></li>
+                    <li><a class="dropdown-item" href="pages/securityLog">View Log</a></li>
                     <li><a class="dropdown-item" id="logoutBtn">Logout</a></li>
                         <% } else { %>
                     <li><a class="dropdown-item" href="pages/login">Login</a></li>

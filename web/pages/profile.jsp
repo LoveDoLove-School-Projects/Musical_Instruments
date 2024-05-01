@@ -4,9 +4,6 @@
 <c:set var="basePath" value="${pageContext.request.scheme}://${pageContext.request.serverName}:${pageContext.request.serverPort}${path}/" />
 <%@ page import="java.security.Principal" %>
 <%@ page import="entities.Session" %>
-<%
-Session user_session = (Session) session.getAttribute("user_session");
-%>
 <!DOCTYPE html>
 <html>
 
