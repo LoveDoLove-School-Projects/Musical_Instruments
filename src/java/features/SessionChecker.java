@@ -10,9 +10,9 @@ public class SessionChecker {
 
     private static final String USER_SESSION = "user_session";
 
-    public static void setLoginSession(HttpSession session, Integer loginId, String username, Role role) {
+    public static void setLoginSession(HttpSession session, Session userSession) {
         if (session != null) {
-            session.setAttribute(USER_SESSION, new Session(loginId, username, role));
+            session.setAttribute(USER_SESSION, userSession);
         }
     }
 
@@ -51,7 +51,6 @@ public class SessionChecker {
         HttpSession httpSession = request.getSession();
         boolean isAdmin = getIsAdminOrNot(request);
         Session session = getLoginSession(httpSession);
-        boolean isLoggedIn = session != null;
-        return isAdmin || (isLoggedIn && session.getRole() == Role.STAFF);
+        return isAdmin || session != null && session.getRole() == Role.STAFF;
     }
 }
