@@ -2,6 +2,8 @@
 <%@ page contentType="text/html" pageEncoding="UTF-8" %>
 <c:set var="path" value="${pageContext.request.contextPath}" />
 <c:set var="basePath" value="${pageContext.request.scheme}://${pageContext.request.serverName}:${pageContext.request.serverPort}${path}/" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-... (integrity hash)" crossorigin="anonymous" />
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -57,31 +59,40 @@
                 <div class="container">
                     <div class="row">
                         <div class="col-lg-4 col-md-6 mb-4">
-                            <a href="pages/admins/mainDashboard" class="btn btn-primary btn-lg btn-block">Main dashboard</a>
+                            <a href="pages/staffs/internalSecurityLog" class="btn btn-primary btn-lg btn-block">
+                                <i class="fas fa-book"></i> View Internal Log
+                            </a>
                         </div>
                         <div class="col-lg-4 col-md-6 mb-4">
-                            <a href="pages/staffs/viewTransaction" class="btn btn-primary btn-lg btn-block">View Transaction</a>
+                            <a href="pages/staffs/viewTransaction" class="btn btn-primary btn-lg btn-block">
+                                <i class="fas fa-file-invoice"></i> View Transaction
+                            </a>
                         </div>
                         <%
                             boolean isAdmin = request.isUserInRole("Admin");
                             if (isAdmin) { %>
                         <div class="col-lg-4 col-md-6 mb-4">
-                            <a href="pages/admins/sales" class="btn btn-primary btn-lg btn-block">View Sales</a>
+                            <a href="pages/admins/sales" class="btn btn-primary btn-lg btn-block">
+                                <i class="fas fa-chart-line"></i> View Sales
+                            </a>
                         </div>
                         <div class="col-lg-4 col-md-6 mb-4">
-                            <a href="pages/admins/searchStaff" class="btn btn-primary btn-lg btn-block">Manage Staff</a>
+                            <a href="pages/admins/searchStaff" class="btn btn-primary btn-lg btn-block">
+                                <i class="fas fa-user"></i> Manage Staff
+                            </a>
                         </div>
-
                         <% } %>
                         <div class="col-lg-4 col-md-6 mb-4">
-                            <a href="pages/staffs/searchCustomer" class="btn btn-primary btn-lg btn-block">Manage Customer</a>
+                            <a href="pages/staffs/searchCustomer" class="btn btn-primary btn-lg btn-block">
+                                <i class="fas fa-users"></i> Manage Customer
+                            </a>
                         </div>
                         <div class="col-lg-4 col-md-6 mb-4">
-                            <a href="pages/staffs/staffSearchProduct" class="btn btn-primary btn-lg btn-block">Manage Product</a>
+                            <a href="pages/staffs/staffSearchProduct" class="btn btn-primary btn-lg btn-block">
+                                <i class="fas fa-box"></i> Manage Product
+                            </a>
                         </div>
-                        <div class="col-lg-4 col-md-6 mb-4">
-                            <a href="pages/staffs/viewLog" class="btn btn-primary btn-lg btn-block">View Log</a>
-                        </div>
+
                     </div>
                 </div>
             </div>

@@ -140,6 +140,10 @@
         <servlet-name>ChangePasswordServlet</servlet-name>
         <servlet-class>controllers.ChangePasswordServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>InternalSecurityLogServlet</servlet-name>
+        <servlet-class>controllers.staffs.InternalSecurityLogServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>LoginServlet</servlet-name>
         <url-pattern>/pages/login</url-pattern>
@@ -297,6 +301,10 @@
         <servlet-name>Register2FAServlet</servlet-name>
         <url-pattern>/sessions/resendRegisterOtp</url-pattern>
         <url-pattern>/sessions/register2fa</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>InternalSecurityLogServlet</servlet-name>
+        <url-pattern>/pages/staffs/internalSecurityLog</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>30</session-timeout>

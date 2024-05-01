@@ -26,9 +26,8 @@ public final class Constants {
     public static final String ADMIN_URL = "/pages/admins";
     public static final String ADMIN_MANAGE_STAFF_URL = "/pages/admins/manageStaff";
     public static final String ADMIN_MANAGE_CUSTOMER_URL = "/pages/staffs/manageCustomer";
-    public static final String ADMIN_SALES_URL = "/pages/admins/sales";
+    public static final String ADMIN_VIEW_SALES_URL = "/pages/admins/viewSales";
     public static final String ADMIN_VIEW_TRANSACTION_URL = "/pages/admins/viewTransaction";
-    public static final String ADMIN_MAIN_DASHBOARD_URL = "/pages/admins/mainDashboard";
     public static final String ADMIN_MODIFY_STAFF_URL = "/pages/admins/modifyStaff";
     public static final String ADMIN_SEARCH_STAFF_URL = "/pages/admins/searchStaff";
 
