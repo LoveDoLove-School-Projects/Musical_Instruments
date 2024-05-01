@@ -34,8 +34,8 @@ public final class Constants {
 
     // Staff URL
     public static final String ADMIN_VIEW_LOG_URL = "/pages/staffs/viewLog";
-    public static final String ADMIN_STAFF_SEARCH_PRODUCT_URL = "/pages/staffs/searchProduct";
-    public static final String ADMIN_MANAGE_STOCK_URL = "/pages/staffs/manageStock";
+    public static final String ADMIN_STAFF_SEARCH_PRODUCT_URL = "/pages/staffs/staffSearchProduct";
+    public static final String ADMIN_MANAGE_PRODUCT_URL = "/pages/staffs/manageProduct";
     public static final String ADMIN_MODIFY_CUSTOMER_URL = "/pages/staffs/modifyCustomer";
     public static final String ADMIN_SEARCH_CUSTOMER_URL = "/pages/staffs/searchCustomer";
 }

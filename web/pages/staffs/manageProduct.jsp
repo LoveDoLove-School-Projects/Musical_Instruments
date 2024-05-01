@@ -56,7 +56,7 @@
                             <br>
                             <div class="row">
                                 <div class="col-md-2">
-                                    <a href="pages/staffs/searchProduct" class="btn btn-primary mr-2">Go back</a>
+                                    <a href="pages/staffs/staffSearchProduct" class="btn btn-primary mr-2">Go back</a>
                                 </div>
                                 <div class="col-md-2">
                                     <a href="pages/staffs/modifyProduct" class="btn btn-success mr-2">Modify</a>

@@ -2,7 +2,6 @@ package controllers.staffs;
 
 import entities.Products;
 import exceptions.DatabaseException;
-import features.SecurityLog;
 import features.SessionChecker;
 import jakarta.annotation.Resource;
 import jakarta.persistence.EntityManager;
@@ -70,10 +69,10 @@ public class AddProductServlet extends HttpServlet {
             product.setImage(pictureBytes);
             entityManager.persist(product);
             userTransaction.commit();
-            SecurityLog.addSecurityLog(request, " added new product " + product.toString());
+//            SecurityLog.addInternalSecurityLog(request, " added new product " + product.toString());
         } catch (NotSupportedException | SystemException | RollbackException | HeuristicMixedException | HeuristicRollbackException | SecurityException | IllegalStateException ex) {
             throw new DatabaseException(ex.getMessage());
         }
-        RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.SUCCESS, "Product Added successful!", "/pages/staffs/searchProduct");
+        RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.SUCCESS, "Product Added successful!", "/pages/staffs/staffSearchProduct");
     }
 }

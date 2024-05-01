@@ -77,7 +77,7 @@
                             <a href="pages/staffs/searchCustomer" class="btn btn-primary btn-lg btn-block">Manage Customer</a>
                         </div>
                         <div class="col-lg-4 col-md-6 mb-4">
-                            <a href="pages/staffs/manageProduct" class="btn btn-primary btn-lg btn-block">Manage Product</a>
+                            <a href="pages/staffs/staffSearchProduct" class="btn btn-primary btn-lg btn-block">Manage Product</a>
                         </div>
                         <div class="col-lg-4 col-md-6 mb-4">
                             <a href="pages/staffs/viewLog" class="btn btn-primary btn-lg btn-block">View Log</a>

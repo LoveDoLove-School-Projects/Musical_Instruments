@@ -28,7 +28,7 @@ public class StaffSearchProductServlet extends HttpServlet {
             RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Please login as staff to view this page!", "/");
             return;
         }
-        request.getRequestDispatcher(Constants.SEARCH_PRODUCT_JSP_URL).forward(request, response);
+        request.getRequestDispatcher("/pages/staffs/searchProduct.jsp").forward(request, response);
     }
 
     @Override
@@ -50,7 +50,7 @@ public class StaffSearchProductServlet extends HttpServlet {
             session.setAttribute("productDetails", product);
             RedirectUtilities.sendRedirect(request, response, "/pages/staffs/manageProduct");
         } catch (IOException | NumberFormatException ex) {
-            RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Please a valid product ID!", Constants.ADMIN_STAFF_SEARCH_PRODUCT_URL);
+            RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Please enter a valid product ID!", Constants.ADMIN_STAFF_SEARCH_PRODUCT_URL);
         }
     }
 }
