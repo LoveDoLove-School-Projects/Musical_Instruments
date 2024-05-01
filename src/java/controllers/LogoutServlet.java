@@ -20,6 +20,7 @@ public class LogoutServlet extends HttpServlet {
     private void handleLogout(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
         SecurityLog.addSecurityLog(request, "logout successful.");
+        SecurityLog.addInternalSecurityLog(request, "logout successful.");
         session.invalidate();
         RedirectUtilities.sendRedirect(request, response, "/");
     }
