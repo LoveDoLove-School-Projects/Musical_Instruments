@@ -2,8 +2,6 @@ package controllers.staffs;
 
 import common.Constants;
 import entities.Customers;
-import entities.Role;
-import entities.Session;
 import features.SessionChecker;
 import jakarta.annotation.Resource;
 import jakarta.persistence.EntityManager;
@@ -12,7 +10,6 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 import jakarta.transaction.HeuristicMixedException;
 import jakarta.transaction.HeuristicRollbackException;
 import jakarta.transaction.NotSupportedException;
@@ -28,16 +25,11 @@ public class ModifyCustomerServlet extends HttpServlet {
     EntityManager entityManager;
     @Resource
     UserTransaction userTransaction;
-    private final SessionChecker sessionChecker = new SessionChecker();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        HttpSession httpSession = request.getSession();
-        boolean isAdmin = sessionChecker.getIsAdminOrNot(request);
-        Session session = sessionChecker.getLoginSession(httpSession);
-        boolean isLoggedIn = session.isResult();
-        if (!isAdmin && (!isLoggedIn || session.getRole() != Role.STAFF)) {
+        if (!SessionChecker.checkIsStaffOrAdmin(request)) {
             RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Please login as staff to view this page!", "/");
             return;
         }

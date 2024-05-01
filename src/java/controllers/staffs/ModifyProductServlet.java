@@ -1,8 +1,6 @@
 package controllers.staffs;
 
 import entities.Products;
-import entities.Role;
-import entities.Session;
 import features.SessionChecker;
 import jakarta.annotation.Resource;
 import jakarta.persistence.EntityManager;
@@ -12,7 +10,6 @@ import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 import jakarta.transaction.HeuristicMixedException;
 import jakarta.transaction.HeuristicRollbackException;
 import jakarta.transaction.NotSupportedException;
@@ -35,11 +32,7 @@ public class ModifyProductServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        HttpSession httpSession = request.getSession();
-        boolean isAdmin = sessionChecker.getIsAdminOrNot(request);
-        Session session = sessionChecker.getLoginSession(httpSession);
-        boolean isLoggedIn = session.isResult();
-        if (!isAdmin && (!isLoggedIn || session.getRole() != Role.STAFF)) {
+        if (!SessionChecker.checkIsStaffOrAdmin(request)) {
             RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Please login as staff to view this page!", "/");
             return;
         }
@@ -49,6 +42,10 @@ public class ModifyProductServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        if (!SessionChecker.checkIsStaffOrAdmin(request)) {
+            RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Please login as staff to view this page!", "/");
+            return;
+        }
         int productId = Integer.parseInt(request.getParameter("productId"));
         String productName = request.getParameter("productName");
         double price = Double.parseDouble(request.getParameter("price"));

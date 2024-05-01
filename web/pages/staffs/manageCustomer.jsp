@@ -57,12 +57,13 @@
                                 <div class="col-md-2">
                                     <a href="pages/staffs/searchCustomer" class="btn btn-primary mr-2">Go back</a>
                                 </div>
+                                <%
+                                    boolean isAdmin = request.isUserInRole("Admin");
+                                    if (isAdmin) { %>
                                 <div class="col-md-2">
                                     <a href="pages/staffs/modifyCustomer" class="btn btn-success mr-2">Modify</a>
                                 </div>
-                                <%
-                                     boolean isAdmin = request.isUserInRole("Admin");
-                                         if (isAdmin) { %>
+
                                 <div class="col-md-1">
                                     <form action="pages/admins/deleteCustomer" method="post" id="deleteCustomerForm">
                                         <input type="hidden" name="userId" value="<%=customerDetails.getUserId() %>"/>

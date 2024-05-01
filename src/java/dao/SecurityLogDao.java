@@ -10,7 +10,7 @@ import java.sql.PreparedStatement;
 public class SecurityLogDao {
 
     private static final String ADD_SECURITY_LOG_SQL = "INSERT INTO SECURITYLOG (USER_ID, ACTION, IP_ADDRESS, USER_AGENT) VALUES (?, ?, ?, ?)";
-    private static final String ADD_INTERNAL_SECURITY_LOG_SQL = "INSERT INTO INTERNALSECURITYLOG (USERNAME, ACTION, IP_ADDRESS, USER_AGENT) VALUES (0, ?, ?, ?)";
+    private static final String ADD_INTERNAL_SECURITY_LOG_SQL = "INSERT INTO INTERNALSECURITYLOG (USERNAME, ACTION, IP_ADDRESS, USER_AGENT) VALUES (?, ?, ?, ?)";
 
     /**
      * Adds a security log to the database.

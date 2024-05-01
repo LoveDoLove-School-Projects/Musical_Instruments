@@ -1,8 +1,6 @@
 package controllers.staffs;
 
 import entities.Products;
-import entities.Role;
-import entities.Session;
 import features.SessionChecker;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -20,23 +18,19 @@ public class ManageProductServlet extends HttpServlet {
     private static final Logger LOG = Logger.getLogger(ManageProductServlet.class.getName());
     @PersistenceContext
     EntityManager entityManager;
-    private final SessionChecker sessionChecker = new SessionChecker();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        HttpSession httpSession = request.getSession();
-        boolean isAdmin = sessionChecker.getIsAdminOrNot(request);
-        Session session = sessionChecker.getLoginSession(httpSession);
-        boolean isLoggedIn = session.isResult();
-        if (!isAdmin && (!isLoggedIn || session.getRole() != Role.STAFF)) {
+        if (!SessionChecker.checkIsStaffOrAdmin(request)) {
             RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Please login as staff to view this page!", "/");
             return;
         }
+        HttpSession session = request.getSession();
         response.setContentType("text/html;charset=UTF-8");
-        Products product = (Products) httpSession.getAttribute("productDetails");
+        Products product = (Products) session.getAttribute("productDetails");
         product = entityManager.find(Products.class, product.getProductId());
-        httpSession.setAttribute("productDetails", product);
+        session.setAttribute("productDetails", product);
         request.getRequestDispatcher("/pages/staffs/manageProduct.jsp").forward(request, response);
     }
 }
