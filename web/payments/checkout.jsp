@@ -18,71 +18,69 @@ response.setHeader("Cache-Control", "no-store");
     </head>
 
     <body>
-        <main>
-            <h2 class="text-center">Checkout</h2>
-            <section class="section">
-                <table class="table">
-                    <thead class="text-center TitleBar">
-                        <tr class="row justify-content-center align-content-center">
-                            <th class="col p-3 Title">No.</th>
-                            <th class="col p-3 Title">Image</th>
-                            <th class="col p-3 Title">Product Name</th>
-                            <th class="col p-3 Title">Product Color</th>
-                            <th class="col p-3 Title">Quantity</th>
-                            <th class="col p-3 Title">Price</th>
-                            <th class="col p-3 Title">Total Price</th>
+        <h2 class="text-center">Checkout</h2>
+        <section class="section">
+            <table class="table">
+                <thead class="text-center TitleBar">
+                    <tr class="row justify-content-center align-content-center">
+                        <th class="col p-3 Title">No.</th>
+                        <th class="col p-3 Title">Image</th>
+                        <th class="col p-3 Title">Product Name</th>
+                        <th class="col p-3 Title">Product Color</th>
+                        <th class="col p-3 Title">Quantity</th>
+                        <th class="col p-3 Title">Price</th>
+                        <th class="col p-3 Title">Total Price</th>
+                    </tr>
+                </thead>
+
+                <tbody class="text-center">
+                    <%
+                        int numberCart=0;
+                        double subTotal=0;
+                        List<Carts> cartsDetails = (List<Carts>) request.getAttribute("cartList");
+                        for (Carts carts : cartsDetails) {
+                        numberCart++;
+                        subTotal+=carts.getProductTotalprice();
+                        String pictureBase64 = Base64.getEncoder().encodeToString(carts.getProductImage());
+                        String imageSrc = "data:image/png;base64," + pictureBase64; // Change "image/png" based on the actual image type
+                    %>
+                    <tr class="row justify-content-center">
+
+                        <th class="col"><%=numberCart%></th>
+                        <th class="col"><img src="<%=imageSrc%>" class="img-fluid w-50 mx-auto"></th>
+                        <th class="col "><%=carts.getProductName()%></th>
+                        <th class="col"><%=carts.getProductColor()%></th>
+                        <th class="col"><%=carts.getProductQuantity()%></th>
+                        <th class="col">RM<%=carts.getProductPrice()%></th>
+                        <th class="col">RM<%=carts.getProductTotalprice()%></th>
+                    </tr>
+                    <%
+                        }
+                    %>
+                </tbody>
+
+                <div class="row justify-content-center align-items-center">
+                    <tfoot class="col-12 text-center" style="float:right;">
+                        <tr class="row">
+                            <th class="col-10 d-flex justify-content-end">Subtotal :</th>
+                            <th class="col-2">RM ${subtotal}</th>
                         </tr>
-                    </thead>
-
-                    <tbody class="text-center">
-                        <%
-                            int numberCart=0;
-                            double subTotal=0;
-                            List<Carts> cartsDetails = (List<Carts>) request.getAttribute("cartList");
-                            for (Carts carts : cartsDetails) {
-                            numberCart++;
-                            subTotal+=carts.getProductTotalprice();
-                            String pictureBase64 = Base64.getEncoder().encodeToString(carts.getProductImage());
-                            String imageSrc = "data:image/png;base64," + pictureBase64; // Change "image/png" based on the actual image type
-                        %>
-                        <tr class="row justify-content-center">
-
-                            <th class="col"><%=numberCart%></th>
-                            <th class="col"><img src="<%=imageSrc%>" class="img-fluid w-50 mx-auto"></th>
-                            <th class="col "><%=carts.getProductName()%></th>
-                            <th class="col"><%=carts.getProductColor()%></th>
-                            <th class="col"><%=carts.getProductQuantity()%></th>
-                            <th class="col">RM<%=carts.getProductPrice()%></th>
-                            <th class="col">RM<%=carts.getProductTotalprice()%></th>
+                        <tr class="row">
+                            <th class="col-10 d-flex justify-content-end">Shipping fee :</th>
+                            <th class="col-2">RM ${shipping}</th>
                         </tr>
-                        <%
-                            }
-                        %>
-                    </tbody>
-
-                    <div class="row justify-content-center align-items-center">
-                        <tfoot class="col-12 text-center" style="float:right;">
-                            <tr class="row">
-                                <th class="col-10 d-flex justify-content-end">Subtotal :</th>
-                                <th class="col-2">RM ${subtotal}</th>
-                            </tr>
-                            <tr class="row">
-                                <th class="col-10 d-flex justify-content-end">Shipping fee :</th>
-                                <th class="col-2">RM ${shipping}</th>
-                            </tr>
-                            <tr class="row">
-                                <th class="col-10 d-flex justify-content-end">Tax 10% :</th>
-                                <th class="col-2">RM ${tax}</th>
-                            </tr>
-                            <tr class="row">
-                                <th class="col-10 d-flex justify-content-end">Total :</th>
-                                <th class="col-2 ">RM ${total}</th>
-                            </tr>
-                        </tfoot>
-                    </div>
-                </table>
-            </section>
-        </main>
+                        <tr class="row">
+                            <th class="col-10 d-flex justify-content-end">Tax 10% :</th>
+                            <th class="col-2">RM ${tax}</th>
+                        </tr>
+                        <tr class="row">
+                            <th class="col-10 d-flex justify-content-end">Total :</th>
+                            <th class="col-2 ">RM ${total}</th>
+                        </tr>
+                    </tfoot>
+                </div>
+            </table>
+        </section>
 
         <section class="py-5">
             <div class="container justify-content-center align-items-center">

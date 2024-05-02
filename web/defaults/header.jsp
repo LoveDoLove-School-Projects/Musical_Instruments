@@ -6,7 +6,9 @@
 <%@ page import="entities.Session" %>
 <%@ page import="entities.Role" %>
 <%
-boolean isAdmin = request.isUserInRole("Admin");
+Principal principal = request.getUserPrincipal();
+String j_username = principal == null ? null : principal.getName();
+boolean isAdmin = j_username != null ? true : false;
 Session user_session = (Session) session.getAttribute("user_session");
 %>
 <!DOCTYPE html>
@@ -54,6 +56,15 @@ Session user_session = (Session) session.getAttribute("user_session");
                 <li class="nav-item mx-4 my-2 p-2">
                     <a class="nav-link" href="pages/productsearch"><strong>Search Products</strong></a>
                 </li>
+                <%
+                    if (isAdmin || user_session != null && user_session.getRole() == Role.STAFF) {
+                %>
+                <li class="nav-item mx-4 my-2 p-2">
+                    <a class="nav-link" href="pages/staffs">Admin Panel</a>
+                </li>
+                <% 
+                } 
+                %>
             </ul>
 
 
@@ -63,27 +74,24 @@ Session user_session = (Session) session.getAttribute("user_session");
                 </button>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                     <%
-                    if (isAdmin || user_session != null && user_session.getRole() == Role.STAFF) {
-                    %>
-                    <li class="nav-item mx-4 my-2 p-2">
-                        <a class="nav-link" href="pages/staffs">Admin Panel</a>
-                    </li>
-                    <% } %>
-                    <%
-                    if (user_session != null) {
+                    if (user_session != null || isAdmin) {
                         if (!isAdmin) { // If the user is not an admin, they can see the Profile link
                     %>
                     <li><a class="dropdown-item" href="pages/profile">Profile</a></li>
                         <%
                             }
-                            if (user_session.getRole() != Role.STAFF && !isAdmin) { // If the user is not a staff member or an admin, they can see the Carts link
+                            if ((user_session != null && user_session.getRole() != Role.STAFF) && !isAdmin) { // If the user is not a staff member or an admin, they can see the Carts link
                         %>
                     <li><a class="dropdown-item" href="pages/cart">Carts</a></li>
                     <li><a class="dropdown-item" href="pages/transactionHistory">Transaction History</a></li>
                         <%
                             }
+                            if (!isAdmin) {
                         %>
                     <li><a class="dropdown-item" href="pages/securityLog">View Log</a></li>
+                        <%
+                            }
+                        %>
                     <li><a class="dropdown-item" id="logoutBtn">Logout</a></li>
                         <%
                         } else {

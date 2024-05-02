@@ -1,0 +1,11 @@
+DROP TABLE ArchiveCustomers;
+DROP TABLE Carts;
+DROP TABLE Customers;
+DROP TABLE Otps;
+DROP TABLE Products;
+DROP TABLE ResetPassword;
+DROP TABLE SecurityLog;
+DROP TABLE InternalSecurityLog;
+DROP TABLE Staffs;
+DROP TABLE BankUsers;
+DROP TABLE Transactions;
