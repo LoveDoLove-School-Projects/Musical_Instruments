@@ -48,6 +48,7 @@
                                 <option value="White">White</option>
                                 <option value="Brown">Brown</option>
                                 <option value="Grey">Grey</option>
+                                <option value="Silver">Silver</option>
                             </select>
                         </div>
 

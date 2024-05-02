@@ -19,7 +19,7 @@ var incrementMinus = buttonMinus.click(function () {
 
 
 let addToCartForm = document.getElementById("addToCartForm");
-let deleteCartForm = document.getElementById("deleteCartForm");
+
 let editCartForm = document.getElementById("editCartForm");
 function addToCartProductForm() {
     if (addToCartForm !== null) {
@@ -71,28 +71,4 @@ function editCartProductForm() {
 }
 editCartProductForm();
 
-function setDeleteProductForm() {
-    if (deleteCartForm !== null) {
-        deleteCartForm.onsubmit = function (event) {
-            event.preventDefault();
-            Swal.fire({
-                title: "Are you sure delete it?",
-                text: "You won't be able to revert this!",
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#3085d6",
-                cancelButtonColor: "#d33",
-                confirmButtonText: "Yes",
-            }).then((result) => {
-                if (!result.isConfirmed) {
-                    event.preventDefault();
-                    return
-                }
-                deleteCartForm.submit();
-            });
-        }
-    }
-
-}
-setDeleteProductForm();
 

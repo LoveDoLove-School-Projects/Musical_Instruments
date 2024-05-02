@@ -59,18 +59,43 @@ double subTotal=0;
                                         <button type="button" class="w-50 mx-auto my-1 p-2 editBtn"><strong>Edit</strong></button>
                                     </a>
                                 </div>
-                                <form method="POST" action="pages/carts/deleteCartServlet"  class="deleteCartForm" id="deleteCartForm">
+                                <form method="POST" action="pages/carts/deleteCartServlet" class="deleteCartForm">
                                     <input type="hidden" name="cartId" value="<%=carts.getCartId()%>"/>
-                                    <button type="submit" class="w-50 mx-auto my-1 p-2 deleteBtn"><strong>Delete</strong></button>
+                                    <button type="submit" class="w-50 mx-auto my-1 p-2 deleteBtn" id="deleteCartForm"><strong>Delete</strong></button>
                                 </form>
                             </th>
 
 
                         </tr>
-
-                        <%
+                    <script>
+                        let deleteCartForm = document.getElementById("deleteCartForm");
+                        function setDeleteProductForm() {
+                            if (deleteCartForm !== null) {
+                                deleteCartForm.onclick = function (event) {
+                                    event.preventDefault();
+                                    Swal.fire({
+                                        title: "Are you sure you want to delete it?",
+                                        text: "You won't be able to revert this!",
+                                        icon: "warning",
+                                        showCancelButton: true,
+                                        confirmButtonColor: "#3085d6",
+                                        cancelButtonColor: "#d33",
+                                        confirmButtonText: "Yes",
+                                    }).then((result) => {
+                                        if (result.isConfirmed) {
+                                            deleteCartForm.closest("form").submit();
+                                        }
+                                    });
+                                }
                             }
-                        %>
+                        }
+
+                        setDeleteProductForm();
+                    </script>
+
+                    <%
+                        }
+                    %>
                     </tbody>
                 </table>
 
@@ -85,6 +110,6 @@ double subTotal=0;
             </section>
         </main>
         <jsp:include page="/defaults/footer.jsp" />
-        <script type="module" src="assets/js/carts.js"></script>
+
     </body>
 </html>

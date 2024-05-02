@@ -18,11 +18,12 @@
             <section class="section1">
                 <div class="container">
                     <div class="row justify-content-center align-items-center">
-                        <div class="d-block my-auto p-5 col-12 col-xl-5" style="animation:swing 1s">
+                        <div class="d-block my-auto p-5 col-12 col-xl-5 sec1Content" style="animation:swing 1s">
                             <h1>Welcome to music instruments</h1>
                             <p>Enjoy the music, Malaysia top 1 music website</p>
+                            <a href="pages/products">
                             <button class="m-2 px-4 py-2 button"><strong>Shop now</strong></button>
-                            <button class="m-2 px-4 py-2 button"><a href="#section3"><strong>Explore</strong></a></button>
+                            </a>
                         </div>
 
                         <div class="col-12 col-xl-7">
@@ -52,8 +53,8 @@
                                     <li>Free some piano</li>
                                     <li>online community</li>
                                 </ul>
-                                <a href="#"><button class="m-2 px-4 py-2 PremiumBoxBtn"><strong>Login</strong></button></a>
-                                <a href="#"><button class="m-2 px-4 py-2 PremiumBoxBtn"><strong>Sign up</strong></button></a>
+                                <a href="pages/login"><button class="m-2 px-4 py-2 PremiumBoxBtn"><strong>Login</strong></button></a>
+                                <a href="pages/register"><button class="m-2 px-4 py-2 PremiumBoxBtn"><strong>Sign up</strong></button></a>
                             </div>
                         </div>
                     </div>
