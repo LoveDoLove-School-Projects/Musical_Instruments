@@ -1,5 +1,6 @@
 package controllers;
 
+import features.SecurityLog;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -18,6 +19,8 @@ public class LogoutServlet extends HttpServlet {
 
     private void handleLogout(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
+        SecurityLog.addSecurityLog(request, "logout successful.");
+        SecurityLog.addInternalSecurityLog(request, "logout successful.");
         session.invalidate();
         RedirectUtilities.sendRedirect(request, response, "/");
     }

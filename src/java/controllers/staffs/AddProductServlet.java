@@ -2,6 +2,7 @@ package controllers.staffs;
 
 import entities.Products;
 import exceptions.DatabaseException;
+import features.SecurityLog;
 import features.SessionChecker;
 import jakarta.annotation.Resource;
 import jakarta.persistence.EntityManager;
@@ -69,7 +70,7 @@ public class AddProductServlet extends HttpServlet {
             product.setImage(pictureBytes);
             entityManager.persist(product);
             userTransaction.commit();
-//            SecurityLog.addInternalSecurityLog(request, " added new product " + product.toString());
+            SecurityLog.addInternalSecurityLog(request, " added new product " + product.toString());
         } catch (NotSupportedException | SystemException | RollbackException | HeuristicMixedException | HeuristicRollbackException | SecurityException | IllegalStateException ex) {
             throw new DatabaseException(ex.getMessage());
         }

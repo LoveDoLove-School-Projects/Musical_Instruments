@@ -158,7 +158,7 @@ response.setHeader("Cache-Control", "no-store");
                             <input type="hidden" name="parent_order_id" value="${parent_order_id}" />
                             <input type="hidden" name="total_amount" value="${total_amount}" />
                             <input type="hidden" name="date_created_gmt" value="${date_created_gmt}" />
-                            <button type="submit" class="btn btn-primary mt-3" id="paymentButton">Pay Now</button>
+                            <button type="submit" class="btn btn-primary mt-3" id="paymentButton">Checkout</button>
                         </form>
                         <form action="payments/paypal" method="post" id="paypal-button-form">
                             <input type="image" src="https://www.paypal.com/en_US/i/btn/btn_xpressCheckout.gif" alt="Paypal Button" class="mt-3" />

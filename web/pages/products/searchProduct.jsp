@@ -63,7 +63,7 @@ List<Products> productDetails = (List<Products>) request.getAttribute("products"
                                 <div class="pt-4 d-flex justify-content-center">
                                     <img src="<%=imageSrc%>" class="img-fluid w-50 d-flex text-center justify-self-center align-self-center">
                                 </div>
-                                <p class="text-center"><strong><%=product.getName()%></br>RM<%=product.getQuantity()%></strong></p>
+                                <p class="text-center"><strong><%=product.getName()%></br>RM<%=product.getPrice()%></strong></p>
                             </a>
                         </div>
                         <%

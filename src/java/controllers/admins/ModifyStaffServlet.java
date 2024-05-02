@@ -55,7 +55,7 @@ public class ModifyStaffServlet extends HttpServlet {
             showError(request, response);
             return;
         }
-        RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.SUCCESS, "Update Successful!", Constants.ADMIN_MODIFY_STAFF_URL);
+        RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.SUCCESS, "Update Successful!", Constants.ADMIN_MANAGE_STAFF_URL);
     }
 
     private boolean updateStaffDetails(Staffs staff) {

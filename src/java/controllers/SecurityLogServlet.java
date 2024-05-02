@@ -29,7 +29,10 @@ public class SecurityLogServlet extends HttpServlet {
             RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Please login to view this page.", Constants.CUSTOMER_LOGIN_URL);
             return;
         }
-        List<Securitylog> securitylogs = entityManager.createNamedQuery("Securitylog.findByUserId", Securitylog.class).setParameter("userId", session.getUserId()).getResultList();
+        List<Securitylog> securitylogs = entityManager.createNamedQuery("Securitylog.findByUserIdAndRole", Securitylog.class)
+                .setParameter("userId", session.getUserId())
+                .setParameter("role", session.getRole().getRole())
+                .getResultList();
         Collections.reverse(securitylogs);
         request.setAttribute("securitylogs", securitylogs);
         request.getRequestDispatcher(SECURITY_LOG_JSP_URL).forward(request, response);

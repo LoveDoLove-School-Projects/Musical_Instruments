@@ -1,10 +1,10 @@
 package controllers;
 
 import entities.Customers;
-import entities.Resetpassword;
 import entities.Session;
 import entities.Staffs;
 import features.AesProtector;
+import features.SecurityLog;
 import features.SessionChecker;
 import jakarta.annotation.Resource;
 import jakarta.persistence.EntityManager;
@@ -21,6 +21,7 @@ import jakarta.transaction.SystemException;
 import jakarta.transaction.UserTransaction;
 import java.io.IOException;
 import java.util.List;
+import java.util.logging.Logger;
 import utilities.RedirectUtilities;
 import utilities.RedirectUtilities.RedirectType;
 import utilities.StringUtilities;
@@ -32,6 +33,7 @@ public class ChangePasswordServlet extends HttpServlet {
     EntityManager entityManager;
     @Resource
     UserTransaction userTransaction;
+    private static final Logger LOG = Logger.getLogger(ChangePasswordServlet.class.getName());
     private static final String CHANGE_PASSWORD_JSP_URL = "/pages/changePassword.jsp";
 
     @Override
@@ -51,75 +53,100 @@ public class ChangePasswordServlet extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         response.setContentType("text/plain;charset=UTF-8");
         response.setHeader("Cache-Control", "no-store");
-        String token = request.getParameter("token");
-        String role = request.getParameter("role");
-        String newPassword = request.getParameter("newPassword");
-        String confirmNewPassword = request.getParameter("confirmNewPassword");
-        if (!validateResetPasswordRequest(token, role, newPassword, confirmNewPassword)) {
-            RedirectUtilities.redirectWithMessage(request, response, RedirectType.DANGER, "Invalid reset password request", "/");
+        Session session = SessionChecker.getLoginSession(request.getSession());
+        if (session == null) {
+            RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Please login to view this page.", "/");
             return;
         }
-        Resetpassword resetPassword = isTokenValid(token);
+        String curentPassword = request.getParameter("currentPassword");
+        String newPassword = request.getParameter("newPassword");
+        String confirmNewPassword = request.getParameter("confirmNewPassword");
+        if (!validateChangePasswordRequest(curentPassword, newPassword, confirmNewPassword)) {
+            RedirectUtilities.redirectWithMessage(request, response, RedirectType.DANGER, "Invalid input", "/");
+            return;
+        }
+        if (!checkCurrentPassword(session, curentPassword)) {
+            RedirectUtilities.redirectWithMessage(request, response, RedirectType.DANGER, "Password incorrect", "/");
+            return;
+        }
         try {
-            // Update password
             userTransaction.begin();
-            switch (role) {
-                case "customer":
-                    List<Customers> customers = (List<Customers>) entityManager.createNamedQuery("Customers.findByEmail").setParameter("email", resetPassword.getEmail()).getResultList();
+            if (!updateNewPassword(session, newPassword)) {
+                RedirectUtilities.redirectWithMessage(request, response, RedirectType.DANGER, "An error occurred while resetting password", "/");
+                return;
+            }
+            userTransaction.commit();
+            SecurityLog.addSecurityLog(request, "Password changed successfully");
+            RedirectUtilities.redirectWithMessage(request, response, RedirectType.SUCCESS, "Password reset successfully", "/");
+        } catch (HeuristicMixedException | HeuristicRollbackException | NotSupportedException | RollbackException | SystemException | IOException | IllegalStateException | SecurityException ex) {
+            LOG.severe(ex.getMessage());
+            RedirectUtilities.redirectWithMessage(request, response, RedirectType.DANGER, "An error occurred while resetting password", "/");
+        }
+    }
+
+    private boolean updateNewPassword(Session session, String newPassword) {
+        try {
+            switch (session.getRole()) {
+                case CUSTOMER:
+                    List<Customers> customers = (List<Customers>) entityManager.createNamedQuery("Customers.findByUserId", Customers.class).setParameter("userId", session.getUserId()).getResultList();
                     if (customers == null || customers.isEmpty()) {
-                        RedirectUtilities.redirectWithMessage(request, response, RedirectType.DANGER, "Email not found", "/");
-                        return;
+                        return false;
                     }
                     Customers customer = customers.get(0);
                     customer.setPassword(AesProtector.aes256EcbEncrypt(newPassword));
                     entityManager.merge(customer);
-                    userTransaction.commit();
-                    break;
-                case "staff":
-                    List<Staffs> staffs = (List<Staffs>) entityManager.createNamedQuery("Staffs.findByEmail").setParameter("email", resetPassword.getEmail()).getResultList();
+                    return true;
+                case STAFF:
+                    List<Staffs> staffs = (List<Staffs>) entityManager.createNamedQuery("Staffs.findByUserId", Staffs.class).setParameter("userId", session.getUserId()).getResultList();
                     if (staffs == null || staffs.isEmpty()) {
-                        RedirectUtilities.redirectWithMessage(request, response, RedirectType.DANGER, "Email not found", "/");
-                        return;
+                        return false;
                     }
                     Staffs staff = staffs.get(0);
                     staff.setPassword(AesProtector.aes256EcbEncrypt(newPassword));
                     entityManager.merge(staff);
-                    userTransaction.commit();
-                    break;
+                    return true;
                 default:
-                    RedirectUtilities.redirectWithMessage(request, response, RedirectType.DANGER, "Invalid role", "/");
-                    return;
+                    return false;
             }
-            // Delete reset password token
-            userTransaction.begin();
-            Resetpassword managedResetPassword = entityManager.merge(resetPassword);
-            entityManager.remove(managedResetPassword);
-            userTransaction.commit();
-        } catch (HeuristicMixedException | HeuristicRollbackException | NotSupportedException | RollbackException | SystemException | IllegalStateException | SecurityException ex) {
-            RedirectUtilities.redirectWithMessage(request, response, RedirectType.DANGER, "An error occurred while resetting password", "/");
-            return;
+        } catch (Exception ex) {
+            LOG.severe(ex.getMessage());
+            return false;
         }
-        RedirectUtilities.redirectWithMessage(request, response, RedirectType.SUCCESS, "Password reset successfully", "/");
     }
 
-    private boolean validateResetPasswordRequest(String token, String role, String newPassword, String confirmNewPassword) {
-        if (StringUtilities.anyNullOrBlank(token, newPassword, confirmNewPassword)) {
+    private boolean checkCurrentPassword(Session session, String currentPassword) {
+        try {
+            switch (session.getRole()) {
+                case CUSTOMER:
+                    List<Customers> customers = (List<Customers>) entityManager.createNamedQuery("Customers.findByUserId", Customers.class).setParameter("userId", session.getUserId()).getResultList();
+                    if (customers == null || customers.isEmpty()) {
+                        return false;
+                    }
+                    Customers customer = customers.get(0);
+                    return AesProtector.aes256EcbDecrypt(customer.getPassword()).equals(currentPassword);
+                case STAFF:
+                    List<Staffs> staffs = (List<Staffs>) entityManager.createNamedQuery("Staffs.findByUserId", Staffs.class).setParameter("userId", session.getUserId()).getResultList();
+                    if (staffs == null || staffs.isEmpty()) {
+                        return false;
+                    }
+                    Staffs staff = staffs.get(0);
+                    return AesProtector.aes256EcbDecrypt(staff.getPassword()).equals(currentPassword);
+                default:
+                    return false;
+            }
+        } catch (Exception ex) {
+            LOG.severe(ex.getMessage());
+            return false;
+        }
+    }
+
+    private boolean validateChangePasswordRequest(String currentPassword, String newPassword, String confirmNewPassword) {
+        if (StringUtilities.anyNullOrBlank(currentPassword, newPassword, confirmNewPassword)) {
             return false;
         }
         if (!ValidationUtilities.comparePasswords(newPassword, confirmNewPassword)) {
             return false;
         }
-        if (role == null || (!role.equals("customer") && !role.equals("staff"))) {
-            return false;
-        }
         return newPassword.length() >= 8;
-    }
-
-    private Resetpassword isTokenValid(String token) {
-        List<Resetpassword> resetpasswords = entityManager.createNamedQuery("Resetpassword.findByToken").setParameter("token", token).getResultList();
-        if (resetpasswords == null || resetpasswords.isEmpty()) {
-            return null;
-        }
-        return resetpasswords.get(0);
     }
 }
