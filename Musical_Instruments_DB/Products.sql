@@ -1,4 +1,4 @@
-CREATE TABLE products (
+CREATE TABLE Products (
     product_id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     name VARCHAR(255) NOT NULL,
     price DOUBLE NOT NULL,
@@ -8,5 +8,4 @@ CREATE TABLE products (
     image BLOB NOT NULL
 );
 
-
-DROP TABLE products;
+DROP TABLE Products;
