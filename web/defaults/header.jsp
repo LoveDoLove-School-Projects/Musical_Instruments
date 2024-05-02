@@ -27,42 +27,42 @@ Session user_session = (Session) session.getAttribute("user_session");
         cursor: pointer;
     }
 </style>
-    <nav class="fixed-top navbar navbar-expand-lg navbar-light bg-body-tertiary" style="background-color:black; ">
-        <div class="container">
-            <a class="navbar-brand me-2" href="#">
-                <img src="assets/image/logo.png" width="60" height="60" alt="Musical Instruments Logo"
-                     loading="lazy" style="margin-top: -1px;" />
-            </a>
+<nav class="fixed-top navbar navbar-expand-lg navbar-light bg-body-tertiary" style="background-color:black; ">
+    <div class="container">
+        <a class="navbar-brand me-2" href="#">
+            <img src="assets/image/logo.png" width="60" height="60" alt="Musical Instruments Logo"
+                 loading="lazy" style="margin-top: -1px;" />
+        </a>
 
-            <button class="navbar-toggler" type="button" aria-controls="navbarButtonsExample"
-                    aria-expanded="false" aria-label="Toggle navigation" data-bs-toggle="collapse" data-bs-target="#navbarButtonsExample">
-                <svg  width="16" height="16" fill="currentColor"
-                      class="bi bi-three-dots-vertical" viewBox="0 0 16 16">
-                <path
-                    d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0" />
-                </svg>
-            </button>
+        <button class="navbar-toggler" type="button" aria-controls="navbarButtonsExample"
+                aria-expanded="false" aria-label="Toggle navigation" data-bs-toggle="collapse" data-bs-target="#navbarButtonsExample">
+            <svg  width="16" height="16" fill="currentColor"
+                  class="bi bi-three-dots-vertical" viewBox="0 0 16 16">
+            <path
+                d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0" />
+            </svg>
+        </button>
 
-            <div class="collapse navbar-collapse" id="navbarButtonsExample">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item mx-4 my-2 p-2">
-                        <a class="nav-link" href="#"><strong>Home</strong></a>
-                    </li>
-                    <li class="nav-item mx-4 my-2 p-2">
-                        <a class="nav-link" href="pages/products"><strong>Products</strong></a>
-                    </li>
-                    <li class="nav-item mx-4 my-2 p-2">
-                        <a class="nav-link" href="pages/productsearch"><strong>Search Products</strong></a>
-                    </li> 
-                </ul>
-                
+        <div class="collapse navbar-collapse" id="navbarButtonsExample">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item mx-4 my-2 p-2">
+                    <a class="nav-link" href="#"><strong>Home</strong></a>
+                </li>
+                <li class="nav-item mx-4 my-2 p-2">
+                    <a class="nav-link" href="pages/products"><strong>Products</strong></a>
+                </li>
+                <li class="nav-item mx-4 my-2 p-2">
+                    <a class="nav-link" href="pages/productsearch"><strong>Search Products</strong></a>
+                </li>
+            </ul>
 
-                <div class="dropdown">
-                    <button class="btn btn-secondary dropdown-toggle circle-btn" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="fas fa-bars"></i>
-                    </button>
-                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                          <%
+
+            <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle circle-btn" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <%
                     if (isAdmin || user_session != null && user_session.getRole() == Role.STAFF) {
                     %>
                     <li class="nav-item mx-4 my-2 p-2">
@@ -74,31 +74,32 @@ Session user_session = (Session) session.getAttribute("user_session");
                         if (!isAdmin) { // If the user is not an admin, they can see the Profile link
                     %>
                     <li><a class="dropdown-item" href="pages/profile">Profile</a></li>
-                    <% 
-                        }
-                        if (user_session.getRole() != Role.STAFF && !isAdmin) { // If the user is not a staff member or an admin, they can see the Carts link
-                    %>
+                        <%
+                            }
+                            if (user_session.getRole() != Role.STAFF && !isAdmin) { // If the user is not a staff member or an admin, they can see the Carts link
+                        %>
                     <li><a class="dropdown-item" href="pages/cart">Carts</a></li>
-                    <% 
-                        }
-                    %>
+                    <li><a class="dropdown-item" href="pages/transactionHistory">Transaction History</a></li>
+                        <%
+                            }
+                        %>
                     <li><a class="dropdown-item" href="pages/securityLog">View Log</a></li>
                     <li><a class="dropdown-item" id="logoutBtn">Logout</a></li>
-                    <% 
-                    } else {
-                    %>
+                        <%
+                        } else {
+                        %>
                     <li><a class="dropdown-item" href="pages/login">Login</a></li>
                     <li><a class="dropdown-item" href="pages/register">Register</a></li>
                     <li><a class="dropdown-item" href="pages/staffLogin">Staff Login</a></li>
                     <li><a class="dropdown-item" href="pages/adminLogin">Admin Login</a></li>
-                    <% 
-                    } 
-                    %>
-                    </ul>
-                </div>
+                        <%
+                        }
+                        %>
+                </ul>
             </div>
         </div>
-    </nav>
+    </div>
+</nav>
 
 <jsp:include page="message.jsp" />
 <script type="module" src="assets/js/header.js"></script>

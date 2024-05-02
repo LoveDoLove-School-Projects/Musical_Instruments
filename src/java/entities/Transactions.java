@@ -47,12 +47,12 @@ public class Transactions implements Serializable {
     private int userId;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 50)
+    @Size(min = 1, max = 255)
     @Column(name = "TRANSACTION_NUMBER")
     private String transactionNumber;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 50)
+    @Size(min = 1, max = 255)
     @Column(name = "ORDER_NUMBER")
     private String orderNumber;
     @Basic(optional = false)
@@ -62,12 +62,12 @@ public class Transactions implements Serializable {
     private String transactionStatus;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 50)
+    @Size(min = 1, max = 255)
     @Column(name = "PAYMENT_METHOD")
     private String paymentMethod;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 10)
+    @Size(min = 1, max = 50)
     @Column(name = "CURRENCY")
     private String currency;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation

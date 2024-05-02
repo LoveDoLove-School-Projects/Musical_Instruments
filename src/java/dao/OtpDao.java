@@ -10,11 +10,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import utilities.RandomUtilities;
+import java.util.logging.Logger;
 import utilities.StringUtilities;
 
 public class OtpDao {
 
+    private static final Logger LOG = Logger.getLogger(OtpDao.class.getName());
     private static final String SUBJECT = "OTP";
     private static final String CONTENT = "<!DOCTYPE html><html lang='en'><head><meta charset='UTF-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Email OTP Design</title><style>body{font-family:Arial,sans-serif}.container{width:100%;max-width:600px;margin:0 auto}.card{border:1px solid #ddd;border-radius:5px;margin-top:50px;padding:20px;text-align:center}.card-title{font-size:24px;margin-bottom:20px}.card-text{font-size:18px;margin-bottom:20px}.otp{font-size:24px;font-weight:700}</style></head><body><div class='container'><div class='card'><h5 class='card-title'>OTP Verification</h5><p class='card-text'>Your One-Time Password (OTP) is:<br><span class='otp'>${otpvalue}</span></p></div></div></body></html>";
     private static final String GET_OTP_SQL = "SELECT * FROM otps WHERE email = ?";
@@ -28,7 +29,7 @@ public class OtpDao {
         if (StringUtilities.anyNullOrBlank(email)) {
             return false;
         }
-        String otp = RandomUtilities.generateOtp();
+        String otp = generateOtp();
         boolean mailStatus = MailSender.sendEmail(email, SUBJECT, CONTENT.replace("${otpvalue}", otp));
         if (!mailStatus) {
             return false;
@@ -171,8 +172,17 @@ public class OtpDao {
                 }
             }
             return null;
-        } catch (SQLException ex) {
+        } catch (Exception ex) {
             throw new DatabaseException(ex.getMessage());
         }
+    }
+
+    /**
+     * Generates a random OTP (One-Time Password) as a string.
+     *
+     * @return the generated OTP as a string
+     */
+    public static String generateOtp() {
+        return String.valueOf((int) (Math.random() * 900000 + 100000));
     }
 }

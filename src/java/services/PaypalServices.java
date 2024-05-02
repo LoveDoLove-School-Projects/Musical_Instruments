@@ -158,8 +158,9 @@ public class PaypalServices {
         try {
             String jsonPayload = "{\"access_token\":\"" + accessToken + "\",\"payment_body\":" + paymentJsonPayload + "}";
             return HttpUtilities.sendHttpJsonRequest(CREATE_PAYMENT_API, jsonPayload);
-        } catch (JsonSyntaxException ex) {
-            throw new PaymentException(ex.getMessage());
+        } catch (Exception ex) {
+            LOG.severe(ex.getMessage());
+            return null;
         }
     }
 
