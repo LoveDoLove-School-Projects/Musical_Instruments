@@ -28,7 +28,6 @@ public class LoginServlet extends HttpServlet {
     EntityManager entityManager;
     private static final String LOGIN_JSP_URL = "/pages/login.jsp";
     private static final String LOGIN_2FA_URL = "/sessions/login2fa";
-
     private final OtpDao otpDao = new OtpDao();
 
     @Override
@@ -80,13 +79,7 @@ public class LoginServlet extends HttpServlet {
     }
 
     private void setLoginPage(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        Session session = SessionChecker.getLoginSession(request.getSession());
-        if (session != null) {
-            RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.WARNING, "You already login !", "/");
-        } else {
-
-            request.getRequestDispatcher(LOGIN_JSP_URL).forward(request, response);
-        }
+        request.getRequestDispatcher(LOGIN_JSP_URL).forward(request, response);
     }
 
     private Customers tryCustomerLogin(Customers customer) throws DatabaseException {

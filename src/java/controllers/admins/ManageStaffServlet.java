@@ -23,11 +23,9 @@ public class ManageStaffServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
         HttpSession session = request.getSession();
         response.setContentType("text/html;charset=UTF-8");
         Staffs staff = (Staffs) session.getAttribute("staffDetails");
-
         List<Staffs> staffList = entityManager.createNamedQuery("Staffs.findByEmail", Staffs.class).setParameter("email", staff.getEmail()).getResultList();
         if (staffList == null || staffList.isEmpty()) {
             RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Email address does not exist!", Constants.ADMIN_SEARCH_STAFF_URL);

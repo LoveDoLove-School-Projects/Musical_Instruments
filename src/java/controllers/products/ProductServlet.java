@@ -1,8 +1,8 @@
 package controllers.products;
 
 import common.Constants;
-import entities.Products;
 import entities.ProductCategory;
+import entities.Products;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.servlet.ServletException;
@@ -16,23 +16,21 @@ import java.util.Map;
 
 public class ProductServlet extends HttpServlet {
 
-    private static final Map<ProductCategory.PRODUCT_CATEGORIES, String> PRODUCT_DETAILS;
+    private static final Map<ProductCategory, String> PRODUCT_DETAILS;
     @PersistenceContext
     EntityManager entityManager;
 
     static {
-        PRODUCT_DETAILS = new EnumMap<>(ProductCategory.PRODUCT_CATEGORIES.class);
-        PRODUCT_DETAILS.put(ProductCategory.PRODUCT_CATEGORIES.PIANO, "pianoProductDetails");
-        PRODUCT_DETAILS.put(ProductCategory.PRODUCT_CATEGORIES.GUITAR, "guitarProductDetails");
-        PRODUCT_DETAILS.put(ProductCategory.PRODUCT_CATEGORIES.DRUM, "drumProductDetails");
-        PRODUCT_DETAILS.put(ProductCategory.PRODUCT_CATEGORIES.VIOLIN, "violinProductDetails");
+        PRODUCT_DETAILS = new EnumMap<>(ProductCategory.class);
+        PRODUCT_DETAILS.put(ProductCategory.PIANO, "pianoProductDetails");
+        PRODUCT_DETAILS.put(ProductCategory.GUITAR, "guitarProductDetails");
+        PRODUCT_DETAILS.put(ProductCategory.DRUM, "drumProductDetails");
+        PRODUCT_DETAILS.put(ProductCategory.VIOLIN, "violinProductDetails");
     }
-
-
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        for (ProductCategory.PRODUCT_CATEGORIES category : PRODUCT_DETAILS.keySet()) {
+        for (ProductCategory category : PRODUCT_DETAILS.keySet()) {
             List<Products> products = entityManager.createNamedQuery("Products.findByCategory").setParameter("category", category.getCategory()).getResultList();
 //            if (products.isEmpty()) {
 //                RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "product not found", "/");

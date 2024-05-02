@@ -18,12 +18,10 @@ public class SearchStaffServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
         List<Staffs> staffList = entityManager.createNamedQuery("Staffs.findAll", Staffs.class).getResultList();
         request.setAttribute("staffCount", staffList.size());
         request.getRequestDispatcher("/pages/admins/searchStaff.jsp").forward(request, response);
     }
-
     @PersistenceContext
     EntityManager entityManager;
 
