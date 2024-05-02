@@ -55,7 +55,7 @@ public class PaypalServlet extends HttpServlet {
         }
     }
 
-//    private boolean insertNewTransactionToDb(PaypalPayment paypalPayment) {
-//        
-//    }
+    private boolean insertNewTransactionToDb(PaypalPayment paypalPayment) {
+        return true;
+    }
 }

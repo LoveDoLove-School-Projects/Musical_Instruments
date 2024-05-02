@@ -1,8 +1,8 @@
 package controllers.products;
 
 import common.Constants;
+import entities.ProductCategoryss;
 import entities.Products;
-import entities.ProductCategory;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.servlet.ServletException;
@@ -16,23 +16,21 @@ import java.util.Map;
 
 public class ProductServlet extends HttpServlet {
 
-    private static final Map<ProductCategory.PRODUCT_CATEGORIES, String> PRODUCT_DETAILS;
+    private static final Map<ProductCategoryss, String> PRODUCT_DETAILS;
     @PersistenceContext
     EntityManager entityManager;
 
     static {
-        PRODUCT_DETAILS = new EnumMap<>(ProductCategory.PRODUCT_CATEGORIES.class);
-        PRODUCT_DETAILS.put(ProductCategory.PRODUCT_CATEGORIES.PIANO, "pianoProductDetails");
-        PRODUCT_DETAILS.put(ProductCategory.PRODUCT_CATEGORIES.GUITAR, "guitarProductDetails");
-        PRODUCT_DETAILS.put(ProductCategory.PRODUCT_CATEGORIES.DRUM, "drumProductDetails");
-        PRODUCT_DETAILS.put(ProductCategory.PRODUCT_CATEGORIES.VIOLIN, "violinProductDetails");
+        PRODUCT_DETAILS = new EnumMap<>(ProductCategoryss.class);
+        PRODUCT_DETAILS.put(ProductCategoryss.PIANO, "pianoProductDetails");
+        PRODUCT_DETAILS.put(ProductCategoryss.GUITAR, "guitarProductDetails");
+        PRODUCT_DETAILS.put(ProductCategoryss.DRUM, "drumProductDetails");
+        PRODUCT_DETAILS.put(ProductCategoryss.VIOLIN, "violinProductDetails");
     }
-
-
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        for (ProductCategory.PRODUCT_CATEGORIES category : PRODUCT_DETAILS.keySet()) {
+        for (ProductCategoryss category : PRODUCT_DETAILS.keySet()) {
             List<Products> products = entityManager.createNamedQuery("Products.findByCategory").setParameter("category", category.getCategory()).getResultList();
 //            if (products.isEmpty()) {
 //                RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "product not found", "/");
