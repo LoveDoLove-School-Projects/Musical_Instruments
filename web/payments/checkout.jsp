@@ -16,19 +16,20 @@ response.setHeader("Cache-Control", "no-store");
         <jsp:include page="/defaults/head.jsp" />
         <title>Checkout</title>
     </head>
+
     <body>
+        <h2 class="text-center">Checkout</h2>
         <section class="section">
-            <h2 class="text-center">Checkout</h2>
             <table class="table">
                 <thead class="text-center TitleBar">
                     <tr class="row justify-content-center align-content-center">
-                        <th class="col p-3 Title" style="background-color:rgb(230, 85, 85); color:white; text-shadow: black 3px 3px 3px;">No.</th>
-                        <th class="col p-3 Title" style="background-color:rgb(230, 85, 85); color:white; text-shadow: black 3px 3px 3px;">Image</th>
-                        <th class="col p-3 Title" style="background-color:rgb(230, 85, 85); color:white; text-shadow: black 3px 3px 3px;">Product Name</th>
-                        <th class="col p-3 Title" style="background-color:rgb(230, 85, 85); color:white; text-shadow: black 3px 3px 3px;">Product Color</th>
-                        <th class="col p-3 Title" style="background-color:rgb(230, 85, 85); color:white; text-shadow: black 3px 3px 3px;">Quantity</th>
-                        <th class="col p-3 Title" style="background-color:rgb(230, 85, 85); color:white; text-shadow: black 3px 3px 3px;">Price</th>
-                        <th class="col p-3 Title" style="background-color:rgb(230, 85, 85); color:white; text-shadow: black 3px 3px 3px;">Total Price</th>
+                        <th class="col p-3 Title">No.</th>
+                        <th class="col p-3 Title">Image</th>
+                        <th class="col p-3 Title">Product Name</th>
+                        <th class="col p-3 Title">Product Color</th>
+                        <th class="col p-3 Title">Quantity</th>
+                        <th class="col p-3 Title">Price</th>
+                        <th class="col p-3 Title">Total Price</th>
                     </tr>
                 </thead>
 

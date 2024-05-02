@@ -1,5 +1,9 @@
 .Title {
-    background-color: rgb(238, 59, 59);
+    border-bottom: solid black 3px;
+}
+
+.TitleBar {
+    background-color: aliceblue;
 }
 
 .CheckoutBar {
@@ -7,7 +11,6 @@
     border-top: solid black 1px;
     background-color: white;
 }
-
 
 .chkOutPrice {
     color: rgb(238, 59, 59);
@@ -30,6 +33,7 @@
 
 .editBtn:hover {
     color: white;
+
     transition: all 0.5s ease;
 }
 

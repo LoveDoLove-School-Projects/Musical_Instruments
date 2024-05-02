@@ -22,16 +22,16 @@ double subTotal=0;
         <main>
             <section class="section">
                 <table class="table">
-                    <thead class="text-center">
+                    <thead class="text-center TitleBar">
                         <tr class="row justify-content-center align-content-center">
-                            <th class="col p-3 Title" style="background-color:rgb(230, 85, 85); color:white; text-shadow: black 3px 3px 3px;">No.</th>
-                            <th class="col p-3 Title" style="background-color:rgb(230, 85, 85); color:white; text-shadow: black 3px 3px 3px;">Image</th>
-                            <th class="col p-3 Title" style="background-color:rgb(230, 85, 85); color:white; text-shadow: black 3px 3px 3px;">Product Name</th>
-                            <th class="col p-3 Title" style="background-color:rgb(230, 85, 85); color:white; text-shadow: black 3px 3px 3px;">Product Color</th>
-                            <th class="col p-3 Title" style="background-color:rgb(230, 85, 85); color:white; text-shadow: black 3px 3px 3px;">Quantity</th>
-                            <th class="col p-3 Title" style="background-color:rgb(230, 85, 85); color:white; text-shadow: black 3px 3px 3px;">Price</th>
-                            <th class="col p-3 Title" style="background-color:rgb(230, 85, 85); color:white; text-shadow: black 3px 3px 3px;">Total Price</th>
-                            <th class="col p-3 Title" style="background-color:rgb(230, 85, 85); color:white; text-shadow: black 3px 3px 3px;">Function</th>
+                            <th class="col p-3 Title">No.</th>
+                            <th class="col p-3 Title">Image</th>
+                            <th class="col p-3 Title">Product Name</th>
+                            <th class="col p-3 Title">Product Color</th>
+                            <th class="col p-3 Title">Quantity</th>
+                            <th class="col p-3 Title">Price</th>
+                            <th class="col p-3 Title">Total Price</th>
+                            <th class="col p-3 Title">Function</th>
                         </tr>
                     </thead>
 
@@ -104,7 +104,7 @@ double subTotal=0;
                     <div class="row align-items-center justify-content-center">
                         <h4 class="col-10 d-flex justify-content-end">Total : <strong class="chkOutPrice">  RM<%=String.format("%.2f",subTotal)%></strong></h4>
                         <form action="payments/checkout" method="post" class="col-2 text-center">
-                            <input type="submit" class="w-100 p-4 text-center ChkoutBtn" name="chekout" value="Check Out">
+                            <input type="submit" class=" p-4 text-center ChkoutBtn" name="chekout" value="Check Out">
                         </form>
                     </div>
                 </div>
