@@ -53,11 +53,7 @@ Session user_session = (Session) session.getAttribute("user_session");
                     </li>
                     <li class="nav-item mx-4 my-2 p-2">
                         <a class="nav-link" href="pages/productsearch"><strong>Search Products</strong></a>
-                    </li>
-                    
-                    
-                    
-                 
+                    </li> 
                 </ul>
                 
 
@@ -89,7 +85,7 @@ Session user_session = (Session) session.getAttribute("user_session");
                     <li><a class="dropdown-item" href="pages/securityLog">View Log</a></li>
                     <li><a class="dropdown-item" id="logoutBtn">Logout</a></li>
                     <% 
-                    } else { 
+                    } else {
                     %>
                     <li><a class="dropdown-item" href="pages/login">Login</a></li>
                     <li><a class="dropdown-item" href="pages/register">Register</a></li>
