@@ -12,34 +12,16 @@ boolean isAdmin = j_username != null ? true : false;
 Session user_session = (Session) session.getAttribute("user_session");
 %>
 <!DOCTYPE html>
-<style>
-    .navbar{
-        z-index:2;
-        position: sticky;
-    }
-    .circle-btn {
-        border-radius: 50%;
-        width: 50px;
-        height: 50px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-    .dropdown-menu > li {
-        cursor: pointer;
-    }
-</style>
-<nav class="fixed-top navbar navbar-expand-lg navbar-light bg-body-tertiary" style="background-color:black; ">
+<nav class="fixed-top navbar navbar-expand-lg navbar-light bg-body-tertiary">
     <div class="container">
         <a class="navbar-brand me-2" href="#">
-            <img src="assets/image/logo.png" width="60" height="60" alt="Musical Instruments Logo"
+            <img src="assets/image/logo.png" width="50" height="50" alt="Musical Instruments Logo"
                  loading="lazy" style="margin-top: -1px;" />
         </a>
 
         <button class="navbar-toggler" type="button" aria-controls="navbarButtonsExample"
                 aria-expanded="false" aria-label="Toggle navigation" data-bs-toggle="collapse" data-bs-target="#navbarButtonsExample">
-            <svg  width="16" height="16" fill="currentColor"
-                  class="bi bi-three-dots-vertical" viewBox="0 0 16 16">
+            <svg  width="16" height="16" fill="currentColor" class="bi bi-three-dots-vertical" viewBox="0 0 16 16">
             <path
                 d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0" />
             </svg>
@@ -47,19 +29,36 @@ Session user_session = (Session) session.getAttribute("user_session");
 
         <div class="collapse navbar-collapse" id="navbarButtonsExample">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item mx-4 my-2 p-2">
+                <li class="nav-item mx-4">
                     <a class="nav-link" href="#"><strong>Home</strong></a>
                 </li>
-                <li class="nav-item mx-4 my-2 p-2">
+                <li class="nav-item mx-4">
                     <a class="nav-link" href="pages/products"><strong>Products</strong></a>
                 </li>
-                <li class="nav-item mx-4 my-2 p-2">
-                    <a class="nav-link" href="pages/productsearch"><strong>Search Products</strong></a>
+                <%
+              if ((user_session != null && user_session.getRole() != Role.STAFF) && !isAdmin) { // If the user is not a staff member or an admin, they can see the Carts link
+                %>
+
+                <li class="nav-item mx-4">
+                    <a class="nav-link" href="pages/cart"><strong>Carts</strong></a>
                 </li>
+                <li class="nav-item mx-4">
+                    <a class="nav-link" href="pages/transactionHistory"><strong>Transaction History</strong></a>
+                </li>
+                <% 
+                } 
+                %>
+                <li class="search-item mx-4">
+                    <a class="nav-link" href="pages/productsearch"><svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                        <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+                        </svg><i class="bi bi-search"></i></a>
+                </li>
+
+
                 <%
                     if (isAdmin || user_session != null && user_session.getRole() == Role.STAFF) {
                 %>
-                <li class="nav-item mx-4 my-2 p-2">
+                <li class="nav-item mx-4">
                     <a class="nav-link" href="pages/staffs">Admin Panel</a>
                 </li>
                 <% 
@@ -80,14 +79,13 @@ Session user_session = (Session) session.getAttribute("user_session");
                     <li><a class="dropdown-item" href="pages/profile">Profile</a></li>
                         <%
                             }
-                            if ((user_session != null && user_session.getRole() != Role.STAFF) && !isAdmin) { // If the user is not a staff member or an admin, they can see the Carts link
+                           
                         %>
-                    <li><a class="dropdown-item" href="pages/cart">Carts</a></li>
-                    <li><a class="dropdown-item" href="pages/transactionHistory">Transaction History</a></li>
-                        <%
-                            }
-                            if (!isAdmin) {
-                        %>
+
+                    <%
+                            
+                        if (!isAdmin) {
+                    %>
                     <li><a class="dropdown-item" href="pages/securityLog">View Log</a></li>
                         <%
                             }
