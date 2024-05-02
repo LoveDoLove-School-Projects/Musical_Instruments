@@ -1,8 +1,8 @@
-package controllers.carts;
+package controllers;
 
 import common.Constants;
-import entities.Carts;
 import entities.Session;
+import entities.Transactions;
 import features.SessionChecker;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -11,16 +11,19 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 import utilities.RedirectUtilities;
 
-public class CartServlet extends HttpServlet {
+public class TransactionHistoryServlet extends HttpServlet {
 
     @PersistenceContext
     EntityManager entityManager;
+    private static final String TRANSACTION_HISTORY_JSP_URL = "/pages/transactionHistory.jsp";
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
         Session session = SessionChecker.getLoginSession(request.getSession());
         if (session == null) {
             RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Please login to view this page.", Constants.CUSTOMER_LOGIN_URL);
@@ -30,17 +33,11 @@ public class CartServlet extends HttpServlet {
             RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Admin or staff are not allowed to view this page because it only for customer.", "/");
             return;
         }
-        List<Carts> carts = entityManager.createNamedQuery("Carts.findByCustomerId").setParameter("customerId", session.getUserId()).getResultList();
-        if (carts == null || carts.isEmpty()) {
-            RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Your card is empty !", Constants.PRODUCT_URL);
-        } else {
-            request.setAttribute("cartDetails", carts);
-            request.getRequestDispatcher(Constants.CART_JSP_URL).forward(request, response);
-        }
-    }
-
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+        List<Transactions> transactionList = entityManager.createNamedQuery("Transactions.findByUserId", Transactions.class)
+                .setParameter("userId", session.getUserId())
+                .getResultList();
+        Collections.reverse(transactionList);
+        request.setAttribute("transactionList", transactionList);
+        request.getRequestDispatcher(TRANSACTION_HISTORY_JSP_URL).forward(request, response);
     }
 }

@@ -144,6 +144,10 @@
         <servlet-name>InternalSecurityLogServlet</servlet-name>
         <servlet-class>controllers.staffs.InternalSecurityLogServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>TransactionHistoryServlet</servlet-name>
+        <servlet-class>controllers.TransactionHistoryServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>LoginServlet</servlet-name>
         <url-pattern>/pages/login</url-pattern>
@@ -305,6 +309,10 @@
     <servlet-mapping>
         <servlet-name>InternalSecurityLogServlet</servlet-name>
         <url-pattern>/pages/staffs/internalSecurityLog</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>TransactionHistoryServlet</servlet-name>
+        <url-pattern>/pages/transactionHistory</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>30</session-timeout>

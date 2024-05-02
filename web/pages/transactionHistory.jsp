@@ -3,46 +3,52 @@
 <c:set var="path" value="${pageContext.request.contextPath}" />
 <c:set var="basePath" value="${pageContext.request.scheme}://${pageContext.request.serverName}:${pageContext.request.serverPort}${path}/" />
 <%@ page import="java.util.List"%>
-<%@ page import="entities.Securitylog"%>
+<%@ page import="entities.Transactions"%>
 <!DOCTYPE html>
 <html>
     <head>
         <jsp:include page="/defaults/head.jsp" />
-        <title>Security Log</title>
+        <title>Transaction History</title>
     </head>
     <body>
         <jsp:include page="/defaults/header.jsp" />
         <%
-        List<Securitylog> securitylogs = (List<Securitylog>) request.getAttribute("securitylogs");
+        List<Transactions> transactionList = (List<Transactions>) request.getAttribute("transactionList");
         %>
         <div class="container">
             <div class="row">
                 <div class="col-md-12">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            <h3 class="panel-title">Recent events</h3>
+                            <h3 class="panel-title">Transaction History</h3>
                         </div>
                         <div class="panel-body table-responsive">
                             <table class="table table-striped table-bordered table-hover">
                                 <thead>
                                     <tr>
-                                        <th>Date/Time</th>
-                                        <th>Username</th>
-                                        <th>Action</th>
-                                        <th>Ip Address</th>
-                                        <th>User Agent</th>
+                                        <th>Txn Number</th>
+                                        <th>Order Number</th>
+                                        <th>Payment Method</th>
+                                        <th>Currency</th>
+                                        <th>Total Amount</th>
+                                        <th>Txn Status</th>
+                                        <th>Txn Created</th>
+                                        <th>Txn Updated</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <% if (securitylogs != null) {
-                                        for (Securitylog securitylog : securitylogs) {
+                                    <% if (transactionList != null) {
+                                        for (Transactions transaction : transactionList) {
                                     %>
                                     <tr>
-                                        <td><%=securitylog.getActionDate()%></td>
-                                        <td><%=securitylog.getUsername()%></td>
-                                        <td><%=securitylog.getAction()%></td>
-                                        <td><%=securitylog.getIpAddress()%></td>
-                                        <td><%=securitylog.getUserAgent()%></td>
+                                        <td><%=transaction.getTransactionNumber()%></td>
+                                        <td><%=transaction.getOrderNumber()%></td>
+                                        <td><%=transaction.getPaymentMethod()%></td>
+                                        <td><%=transaction.getCurrency()%></td>
+                                        <td><%=transaction.getTotalAmount()%></td>
+                                        <td><%=transaction.getTransactionStatus()%></td>
+                                        <td><%=transaction.getDateCreatedGmt()%></td>
+                                        <td><%=transaction.getDateUpdatedGmt()%></td>
                                     </tr>
                                     <% }
                                     } %>

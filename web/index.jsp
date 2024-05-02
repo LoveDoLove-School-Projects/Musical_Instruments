@@ -8,7 +8,7 @@
     <head>
         <jsp:include page="/defaults/head.jsp" />
         <title>Musical Instruments</title>
-        <link rel="stylesheet" href="assets/css/main.css"/> 
+        <link rel="stylesheet" href="assets/css/main.css"/>
     </head>
 
     <body>
@@ -22,7 +22,7 @@
                             <h1>Welcome to music instruments</h1>
                             <p>Enjoy the music, Malaysia top 1 music website</p>
                             <a href="pages/products">
-                            <button class="m-2 px-4 py-2 button"><strong>Shop now</strong></button>
+                                <button class="m-2 px-4 py-2 button"><strong>Shop now</strong></button>
                             </a>
                         </div>
 
