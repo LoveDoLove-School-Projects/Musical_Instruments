@@ -60,10 +60,10 @@ Session user_session = (Session) session.getAttribute("user_session");
                     if (isAdmin || user_session != null && user_session.getRole() == Role.STAFF) {
                 %>
                 <li class="nav-item mx-4 my-2 p-2">
-                    <a class="nav-link" href="pages/staffs">Admin Panel</a>
+                    <a class="nav-link" href="pages/staffs"><strong>Admin Panel</strong></a>
                 </li>
-                <% 
-                } 
+                <%
+                }
                 %>
             </ul>
 

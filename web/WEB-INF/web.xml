@@ -148,6 +148,14 @@
         <servlet-name>TransactionHistoryServlet</servlet-name>
         <servlet-class>controllers.TransactionHistoryServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ViewTransactionServlet</servlet-name>
+        <servlet-class>controllers.staffs.ViewTransactionServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>SalesServlet</servlet-name>
+        <servlet-class>controllers.admins.SalesServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>LoginServlet</servlet-name>
         <url-pattern>/pages/login</url-pattern>
@@ -313,6 +321,14 @@
     <servlet-mapping>
         <servlet-name>TransactionHistoryServlet</servlet-name>
         <url-pattern>/pages/transactionHistory</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ViewTransactionServlet</servlet-name>
+        <url-pattern>/pages/staffs/viewTransaction</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SalesServlet</servlet-name>
+        <url-pattern>/pages/admins/viewSales</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>30</session-timeout>

@@ -72,7 +72,7 @@
                             boolean isAdmin = request.isUserInRole("Admin");
                             if (isAdmin) { %>
                         <div class="col-lg-4 col-md-6 mb-4">
-                            <a href="pages/admins/sales" class="btn btn-primary btn-lg btn-block">
+                            <a href="pages/admins/viewSales" class="btn btn-primary btn-lg btn-block">
                                 <i class="fas fa-chart-line"></i> View Sales
                             </a>
                         </div>

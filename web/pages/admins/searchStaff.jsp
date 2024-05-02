@@ -34,14 +34,17 @@
                 font-size: 22px;
                 font-weight: bold;
                 text-decoration: none;
+                justify-content: center;
+                align-content: center;
             }
             .btn:hover {
                 background-color: lightslategray;
             }
 
             .staff-count-box {
-                background-color: #007bff;
+                background-color: #6666ff;
                 color: #fff;
+                border: 10px double lightcyan;
                 border-radius: 10px;
                 padding: 20px;
                 text-align: center;
@@ -51,20 +54,22 @@
                 font-size: 36px;
                 margin-bottom: 10px;
             }
+            h3 > strong {
+                font-size: 37px;
+            }
+
         </style>
     </head>
     <body>
         <jsp:include page="/defaults/header.jsp" />
         <div class="container">
-            <h1>Manage Staff</h1><br>
-            <!-- Staff count box with icon -->
+            <h1>[Staff Management]</h1><br>
             <div class="staff-count-box">
-                <i class="fas fa-users"></i>
-                <h3>Total Number of Staffs: <c:out value="${staffCount}" /></h3>
+                <i class="fas fa-user"></i>
+                <h3>Number of Staffs: <strong>(<c:out value="${staffCount}"/>) </strong></h3>
             </div>
-            <!-- Search form -->
             <form class="form-inline mb-3" action="pages/admins/searchStaff" method="post">
-                <input class="col-10 form-control mr-2" type="text" name="searchQuery" placeholder="Enter staff email: "><br>
+                <input class="col-5 form-control mr-2" type="text" name="searchQuery" placeholder="Enter staff email: "><br>
                 <button type="submit" class="btn btn-primary">Search</button>
                 <a href="pages/admins/addStaff" class="btn btn-success"><i class="fas fa-user-plus"></i> Register new Staff</a>
             </form>
