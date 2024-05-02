@@ -156,6 +156,14 @@
         <servlet-name>SalesServlet</servlet-name>
         <servlet-class>controllers.admins.SalesServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>updateOrderServlet</servlet-name>
+        <servlet-class>controllers.orders.updateOrder</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>orderHistoryServlet</servlet-name>
+        <servlet-class>controllers.orders.orderHistoryServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>LoginServlet</servlet-name>
         <url-pattern>/pages/login</url-pattern>
@@ -329,6 +337,14 @@
     <servlet-mapping>
         <servlet-name>SalesServlet</servlet-name>
         <url-pattern>/pages/admins/viewSales</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>updateOrderServlet</servlet-name>
+        <url-pattern>/pages/orders/updateOrderServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>orderHistoryServlet</servlet-name>
+        <url-pattern>/pages/orders/orderHistoryServlet</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>30</session-timeout>
