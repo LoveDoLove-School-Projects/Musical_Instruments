@@ -30,7 +30,6 @@ public final class Constants {
     public static final String ADMIN_VIEW_TRANSACTION_URL = "/pages/admins/viewTransaction";
     public static final String ADMIN_MODIFY_STAFF_URL = "/pages/admins/modifyStaff";
     public static final String ADMIN_SEARCH_STAFF_URL = "/pages/admins/searchStaff";
-
     // Staff URL
     public static final String ADMIN_VIEW_LOG_URL = "/pages/staffs/viewLog";
     public static final String ADMIN_STAFF_SEARCH_PRODUCT_URL = "/pages/staffs/staffSearchProduct";

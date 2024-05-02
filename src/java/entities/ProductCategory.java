@@ -1,13 +1,13 @@
 package entities;
 
-public enum ProductCategoryss {
+public enum ProductCategory {
     PIANO("PIANO"),
     GUITAR("GUITAR"),
     DRUM("DRUM"),
     VIOLIN("VIOLIN");
     private final String category;
 
-    ProductCategoryss(String category) {
+    ProductCategory(String category) {
         this.category = category;
     }
 
