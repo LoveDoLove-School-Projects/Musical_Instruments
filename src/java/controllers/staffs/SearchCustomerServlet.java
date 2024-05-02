@@ -26,6 +26,8 @@ public class SearchCustomerServlet extends HttpServlet {
             RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Please login as staff to view this page!", "/");
             return;
         }
+        List<Customers> customerList = entityManager.createNamedQuery("Customers.findAll", Customers.class).getResultList();
+        request.setAttribute("customerCount", customerList.size());
         request.getRequestDispatcher("/pages/staffs/searchCustomer.jsp").forward(request, response);
     }
 
