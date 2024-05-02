@@ -1,7 +1,7 @@
 
 package entities;
 
-public class productCategory {
+public class ProductCategory {
      public enum PRODUCT_CATEGORIES {
         PIANO("PIANO"),
         GUITAR("GUITAR"),

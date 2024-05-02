@@ -68,10 +68,10 @@ double subTotal=0;
 
                         </tr>
                     <script>
-                        let deleteCartForm = document.getElementById("deleteCartForm");
-                        function setDeleteProductForm() {
-                            if (deleteCartForm !== null) {
-                                deleteCartForm.onclick = function (event) {
+                        function setDeleteProductForms() {
+                            let deleteCartForms = document.querySelectorAll(".deleteCartForm");
+                            deleteCartForms.forEach(function (form) {
+                                form.addEventListener("submit", function (event) {
                                     event.preventDefault();
                                     Swal.fire({
                                         title: "Are you sure you want to delete it?",
@@ -83,15 +83,16 @@ double subTotal=0;
                                         confirmButtonText: "Yes",
                                     }).then((result) => {
                                         if (result.isConfirmed) {
-                                            deleteCartForm.closest("form").submit();
+                                            form.submit();
                                         }
                                     });
-                                }
-                            }
+                                });
+                            });
                         }
 
-                        setDeleteProductForm();
+                        setDeleteProductForms();
                     </script>
+
 
                     <%
                         }
