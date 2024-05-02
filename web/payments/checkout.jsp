@@ -240,7 +240,6 @@ response.setHeader("Cache-Control", "no-store");
                         return 0;
                     });
                     data.forEach(function (country) {
-                        console.log(JSON.stringify(country.name.common));
                         $('#countries').append('<option value="' + country.name.common + '">' + country.name.common + '</option>');
                     });
                 }
