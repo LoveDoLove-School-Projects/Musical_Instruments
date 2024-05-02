@@ -11,7 +11,6 @@ public class SalesServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
         request.getRequestDispatcher("/pages/admins/viewSales.jsp").forward(request, response);
     }
 }

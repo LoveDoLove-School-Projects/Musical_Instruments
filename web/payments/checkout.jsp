@@ -82,21 +82,76 @@ response.setHeader("Cache-Control", "no-store");
             </table>
         </section>
 
-        <section class="py-5">
-            <div class="container justify-content-center align-items-center">
-                <div class="row">
-                    <div class="col-md-6">
-                        <form action="payments/processTransaction" method="post">
+        <form action="payments/transaction" method="post">
+            <section class="py-5">
+                <div class="container justify-content-center align-items-center">
+                    <div class="row">
+                        <div class="col-md-6">
 
+                            <h2>Billing Details</h2>
+                            <div class="form-group">
+                                <div class="form-group row">
+                                    <div class="col">
+                                        <label for="firstName">First Name</label><span style="color: red !important; display: inline; float: none;">*</span>
+                                        <input type="text" class="form-control" value="${firstName}" />
+                                    </div>
+                                    <div class="col">
+                                        <label for="lastName">Last Name</label><span style="color: red !important; display: inline; float: none;">*</span>
+                                        <input type="text" class="form-control" value="${lastName}" />
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label for="country">Country / Region</label><span style="color: red !important; display: inline; float: none;">*</span>
+                                    <select id="countries" name="countries" class="form-control"></select>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label for="streetAddress">Street Address</label><span style="color: red !important; display: inline; float: none;">*</span>
+                                    <input type="text" name="streetAddress" class="form-control" value="${streetAddress}" />
+                                </div>
+
+                                <div class="form-group row">
+                                    <label for="townCity">Town / City</label><span style="color: red !important; display: inline; float: none;">*</span>
+                                    <input type="text" name="townCity" class="form-control" value="${townCity}" />
+                                </div>
+
+                                <div class="form-group row">
+                                    <label for="state">State</label><span style="color: red !important; display: inline; float: none;">*</span>
+                                    <select id="state" name="state" class="form-control"></select>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label for="zipCode">Zip Code</label><span style="color: red !important; display: inline; float: none;">*</span>
+                                    <input type="text" name="zipCode" class="form-control" value="${zipCode}" />
+                                </div>
+
+                                <div class="form-group row">
+                                    <label for="phone_number">Phone</label><span style="color: red !important; display: inline; float: none;">*</span>
+                                    <input type="text" name="phone_number" class="form-control" value="${phone_number}" />
+                                </div>
+
+                                <div class="form-group row">
+                                    <label for="email">Email</label><span style="color: red !important; display: inline; float: none;">*</span>
+                                    <input type="email" name="email" class="form-control" value="${email}" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="py-5">
+                <div class="container justify-content-center align-items-center">
+                    <div class="row">
+                        <div class="col-md-6">
                             <h2>Select Payment Method</h2>
                             <div class="form-group">
-                                <label for="payment_method">Payment Method</label>
-                                <select class="form-control" id="payment_method">
-                                    <option value="" selected>Select Payment Method</option>
+                                <label for="paymentMethod">Payment Method</label>
+                                <select class="form-control" id="paymentMethod">
+                                    <option value="Paypal" selected>PayPal</option>
                                     <option value="CreditOrDebitCard">Credit / Debit Card</option>
-                                    <option value="Paypal">PayPal</option>
                                     <option value="CashOnDelivery">Cash On Delivery</option>
-                                    <!-- Add more options as needed -->
                                 </select>
                             </div>
                             <div id="cardDetails" style="display: none;">
@@ -152,38 +207,42 @@ response.setHeader("Cache-Control", "no-store");
                                     </div>
                                 </div>
                             </div>
-                            <input type="hidden" name="transaction_id" value="${transaction_id}" />
-                            <input type="hidden" name="parent_order_id" value="${parent_order_id}" />
-                            <input type="hidden" name="total_amount" value="${total_amount}" />
-                            <input type="hidden" name="date_created_gmt" value="${date_created_gmt}" />
-                            <button type="submit" class="btn btn-primary mt-3" id="paymentButton">Checkout</button>
-                        </form>
-                        <form action="payments/paypal" method="post" id="paypal-button-form">
-                            <input type="image" src="https://www.paypal.com/en_US/i/btn/btn_xpressCheckout.gif" alt="Paypal Button" class="mt-3" />
-                        </form>
+                            <button type="submit" class="btn btn-primary mt-3" id="paymentButton">Proceed To Checkout</button>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </section>
+            </section>
+        </form>
         <script>
-            const payment_method = ['CreditOrDebitCard', 'Paypal', 'CashOnDelivery'];
+            const paymentMethod = ['CreditOrDebitCard', 'Paypal', 'CashOnDelivery'];
             $(document).ready(function () {
-                $('#paypal-button-form').hide();
-                $('#payment_method').change(function () {
-                    if ($(this).val() === payment_method[0]) {
+                $('#paymentMethod').change(function () {
+                    if ($(this).val() === paymentMethod[0]) {
                         $('#cardDetails').show();
                     } else {
                         $('#cardDetails').hide();
                     }
-
-                    if ($(this).val() === payment_method[1]) {
-                        $('#paymentButton').hide();
-                        $('#paypal-button-form').show();
-                    } else {
-                        $('#paypal-button-form').hide();
-                        $('#paymentButton').show();
-                    }
                 });
+            });
+            $.ajax({
+                url: 'https://lovedolove-restcountries-api.vercel.app/all',
+                type: 'GET',
+                success: function (data) {
+                    data.sort(function (a, b) {
+                        var countryA = a.name.common.toUpperCase();
+                        var countryB = b.name.common.toUpperCase();
+                        if (countryA < countryB) {
+                            return -1;
+                        }
+                        if (countryA > countryB) {
+                            return 1;
+                        }
+                        return 0;
+                    });
+                    data.forEach(function (country) {
+                        $('#countries').append('<option value="' + country.name.common + '">' + country.name.common + '</option>');
+                    });
+                }
             });
         </script>
     </body>
