@@ -54,13 +54,26 @@ Session user_session = (Session) session.getAttribute("user_session");
                     <li class="nav-item mx-4 my-2 p-2">
                         <a class="nav-link" href="pages/productsearch"><strong>Search Products</strong></a>
                     </li>
-                    <%
+                    
+                    
+                    
+                 
+                </ul>
+                
+
+                <div class="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle circle-btn" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                          <%
                     if (isAdmin || user_session != null && user_session.getRole() == Role.STAFF) {
                     %>
                     <li class="nav-item mx-4 my-2 p-2">
                         <a class="nav-link" href="pages/staffs">Admin Panel</a>
                     </li>
                     <% } %>
+                    <%
                     if (user_session != null) {
                         if (!isAdmin) { // If the user is not an admin, they can see the Profile link
                     %>
@@ -85,26 +98,6 @@ Session user_session = (Session) session.getAttribute("user_session");
                     <% 
                     } 
                     %>
-                </ul>
-
-                <div class="dropdown">
-                    <button class="btn btn-secondary dropdown-toggle circle-btn" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="fas fa-bars"></i>
-                    </button>
-                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        <%
-                        if (user_session != null || isAdmin) {
-                        %>
-                        <li><a class="dropdown-item" href="pages/profile">Profile</a></li>
-                        <li><a class="dropdown-item" href="pages/cart">Carts</a></li>
-                        <li><a class="dropdown-item" href="pages/securityLog">View Log</a></li>
-                        <li><a class="dropdown-item" id="logoutBtn">Logout</a></li>
-                            <% } else { %>
-                        <li><a class="dropdown-item" href="pages/login">Login</a></li>
-                        <li><a class="dropdown-item" href="pages/register">Register</a></li>
-                        <li><a class="dropdown-item" href="pages/staffLogin">Staff Login</a></li>
-                        <li><a class="dropdown-item" href="pages/adminLogin">Admin Login</a></li>
-                            <% } %>
                     </ul>
                 </div>
             </div>
