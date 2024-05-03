@@ -161,12 +161,12 @@
         <servlet-class>controllers.TransactionServlet</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>updateOrderServlet</servlet-name>
-        <servlet-class>controllers.orders.updateOrder</servlet-class>
+        <servlet-name>UpdateOrderServlet</servlet-name>
+        <servlet-class>controllers.orders.UpdateOrderServlet</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>orderHistoryServlet</servlet-name>
-        <servlet-class>controllers.orders.orderHistoryServlet</servlet-class>
+        <servlet-name>OrderHistoryServlet</servlet-name>
+        <servlet-class>controllers.orders.OrderHistoryServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>LoginServlet</servlet-name>
@@ -347,12 +347,12 @@
         <url-pattern>/payments/transaction</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>updateOrderServlet</servlet-name>
-        <url-pattern>/pages/orders/updateOrderServlet</url-pattern>
+        <servlet-name>UpdateOrderServlet</servlet-name>
+        <url-pattern>/pages/orders/updateOrder</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>orderHistoryServlet</servlet-name>
-        <url-pattern>/pages/orders/orderHistoryServlet</url-pattern>
+        <servlet-name>OrderHistoryServlet</servlet-name>
+        <url-pattern>/pages/orders/orderHistory</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>30</session-timeout>
