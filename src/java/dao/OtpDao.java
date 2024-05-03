@@ -4,13 +4,13 @@ import controllers.ConnectionController;
 import entities.Otps;
 import entities.OtpsType;
 import exceptions.DatabaseException;
-import features.MailSender;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.logging.Logger;
+import utilities.MailSender;
 import utilities.StringUtilities;
 
 public class OtpDao {

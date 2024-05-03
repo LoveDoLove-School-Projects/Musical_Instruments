@@ -1,7 +1,7 @@
 package controllers.staffs;
 
 import entities.Products;
-import features.SessionChecker;
+import utilities.SessionUtilities;
 import jakarta.annotation.Resource;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -31,7 +31,7 @@ public class ModifyProductServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        if (!SessionChecker.checkIsStaffOrAdmin(request)) {
+        if (!SessionUtilities.checkIsStaffOrAdmin(request)) {
             RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Please login as staff to view this page!", "/");
             return;
         }
@@ -41,7 +41,7 @@ public class ModifyProductServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        if (!SessionChecker.checkIsStaffOrAdmin(request)) {
+        if (!SessionUtilities.checkIsStaffOrAdmin(request)) {
             RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Please login as staff to view this page!", "/");
             return;
         }

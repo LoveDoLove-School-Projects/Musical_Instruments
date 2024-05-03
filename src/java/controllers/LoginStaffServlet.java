@@ -6,9 +6,9 @@ import entities.Role;
 import entities.Session;
 import entities.Staffs;
 import exceptions.DatabaseException;
-import features.AesProtector;
-import features.SecurityLog;
-import features.SessionChecker;
+import utilities.AesUtilities;
+import utilities.SecurityLog;
+import utilities.SessionUtilities;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.servlet.ServletException;
@@ -41,7 +41,7 @@ public class LoginStaffServlet extends HttpServlet {
     }
 
     private void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        Session session = SessionChecker.getLoginSession(request.getSession());
+        Session session = SessionUtilities.getLoginSession(request.getSession());
         if (session != null) {
             RedirectUtilities.sendRedirect(request, response, Constants.PROFILE_URL);
             return;
@@ -84,7 +84,7 @@ public class LoginStaffServlet extends HttpServlet {
 
     private Staffs tryStaffLogin(Staffs staff) throws DatabaseException {
         try {
-            String encryptedPassword = AesProtector.aes256EcbEncrypt(staff.getPassword());
+            String encryptedPassword = AesUtilities.aes256EcbEncrypt(staff.getPassword());
             List<Staffs> staffList = entityManager.createNamedQuery("Staffs.findByEmailAndPassword", Staffs.class)
                     .setParameter("email", staff.getEmail())
                     .setParameter("password", encryptedPassword)
@@ -99,7 +99,7 @@ public class LoginStaffServlet extends HttpServlet {
         HttpSession httpSession = request.getSession(true);
         if (!staff.getTwoFactorAuth()) {
             Session session = new Session(staff.getUserId(), staff.getUsername(), staff.getEmail(), Role.STAFF);
-            SessionChecker.setLoginSession(httpSession, session);
+            SessionUtilities.setLoginSession(httpSession, session);
             SecurityLog.addSecurityLog(request, "login successful.");
             RedirectUtilities.sendRedirect(request, response, Constants.PROFILE_URL);
             return;

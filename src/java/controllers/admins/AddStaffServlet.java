@@ -3,7 +3,7 @@ package controllers.admins;
 import common.Constants;
 import entities.Staffs;
 import exceptions.DatabaseException;
-import features.AesProtector;
+import utilities.AesUtilities;
 import jakarta.annotation.Resource;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -55,7 +55,7 @@ public class AddStaffServlet extends HttpServlet {
         try {
             userTransaction.begin();
             staff.setUsername(username);
-            staff.setPassword(AesProtector.aes256EcbEncrypt(email));
+            staff.setPassword(AesUtilities.aes256EcbEncrypt(email));
             staff.setEmail(email);
             staff.setGender(gender);
             staff.setAddress(address);

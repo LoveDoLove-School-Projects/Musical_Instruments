@@ -3,9 +3,9 @@ package controllers;
 import entities.Customers;
 import entities.Session;
 import entities.Staffs;
-import features.AesProtector;
-import features.SecurityLog;
-import features.SessionChecker;
+import utilities.AesUtilities;
+import utilities.SecurityLog;
+import utilities.SessionUtilities;
 import jakarta.annotation.Resource;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -39,7 +39,7 @@ public class ChangePasswordServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        Session session = SessionChecker.getLoginSession(request.getSession());
+        Session session = SessionUtilities.getLoginSession(request.getSession());
         if (session == null) {
             RedirectUtilities.redirectWithMessage(request, response, RedirectType.DANGER, "Please login to view this page.", "/");
             return;
@@ -53,7 +53,7 @@ public class ChangePasswordServlet extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         response.setContentType("text/plain;charset=UTF-8");
         response.setHeader("Cache-Control", "no-store");
-        Session session = SessionChecker.getLoginSession(request.getSession());
+        Session session = SessionUtilities.getLoginSession(request.getSession());
         if (session == null) {
             RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Please login to view this page.", "/");
             return;
@@ -93,7 +93,7 @@ public class ChangePasswordServlet extends HttpServlet {
                         return false;
                     }
                     Customers customer = customers.get(0);
-                    customer.setPassword(AesProtector.aes256EcbEncrypt(newPassword));
+                    customer.setPassword(AesUtilities.aes256EcbEncrypt(newPassword));
                     entityManager.merge(customer);
                     return true;
                 case STAFF:
@@ -102,7 +102,7 @@ public class ChangePasswordServlet extends HttpServlet {
                         return false;
                     }
                     Staffs staff = staffs.get(0);
-                    staff.setPassword(AesProtector.aes256EcbEncrypt(newPassword));
+                    staff.setPassword(AesUtilities.aes256EcbEncrypt(newPassword));
                     entityManager.merge(staff);
                     return true;
                 default:
@@ -123,14 +123,14 @@ public class ChangePasswordServlet extends HttpServlet {
                         return false;
                     }
                     Customers customer = customers.get(0);
-                    return AesProtector.aes256EcbDecrypt(customer.getPassword()).equals(currentPassword);
+                    return AesUtilities.aes256EcbDecrypt(customer.getPassword()).equals(currentPassword);
                 case STAFF:
                     List<Staffs> staffs = (List<Staffs>) entityManager.createNamedQuery("Staffs.findByUserId", Staffs.class).setParameter("userId", session.getUserId()).getResultList();
                     if (staffs == null || staffs.isEmpty()) {
                         return false;
                     }
                     Staffs staff = staffs.get(0);
-                    return AesProtector.aes256EcbDecrypt(staff.getPassword()).equals(currentPassword);
+                    return AesUtilities.aes256EcbDecrypt(staff.getPassword()).equals(currentPassword);
                 default:
                     return false;
             }

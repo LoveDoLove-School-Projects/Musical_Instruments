@@ -1,4 +1,4 @@
-package features;
+package utilities;
 
 import dao.SecurityLogDao;
 import entities.Internalsecuritylog;
@@ -9,7 +9,7 @@ import jakarta.servlet.http.HttpServletRequest;
 public class SecurityLog {
 
     public static void addSecurityLog(HttpServletRequest request, String action) {
-        Session session = SessionChecker.getLoginSession(request);
+        Session session = SessionUtilities.getLoginSession(request);
         if (session == null) {
             return;
         }
@@ -23,11 +23,11 @@ public class SecurityLog {
     }
 
     public static void addInternalSecurityLog(HttpServletRequest request, String action) {
-        Session session = SessionChecker.getLoginSession(request);
+        Session session = SessionUtilities.getLoginSession(request);
         String username = getUsername(request, session);
         String ipAddress = request.getRemoteAddr();
         String userAgent = request.getHeader("User-Agent");
-        if (SessionChecker.getIsAdminOrNot(request)) {
+        if (SessionUtilities.getIsAdminOrNot(request)) {
             new SecurityLogDao().addInternalSecurityLog(new Internalsecuritylog(0, username, null, action, ipAddress, userAgent));
             return;
         }
@@ -40,7 +40,7 @@ public class SecurityLog {
 
     private static String getUsername(HttpServletRequest request, Session session) {
         if (session == null) {
-            return SessionChecker.getPrincipalName(request);
+            return SessionUtilities.getPrincipalName(request);
         }
         return session.getUsername();
     }

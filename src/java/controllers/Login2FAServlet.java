@@ -5,8 +5,8 @@ import dao.OtpDao;
 import entities.OtpsType;
 import entities.Role;
 import entities.Session;
-import features.SecurityLog;
-import features.SessionChecker;
+import utilities.SecurityLog;
+import utilities.SessionUtilities;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -113,7 +113,7 @@ public class Login2FAServlet extends HttpServlet {
         if (otpStatus == OtpsType.OK) {
             session.invalidate();
             session = request.getSession(true);
-            SessionChecker.setLoginSession(session, attributes);
+            SessionUtilities.setLoginSession(session, attributes);
             SecurityLog.addSecurityLog(request, "login successful with 2fa.");
             RedirectUtilities.sendRedirect(request, response, Constants.PROFILE_URL);
         } else {

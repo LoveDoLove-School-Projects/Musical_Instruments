@@ -4,7 +4,7 @@ import common.Constants;
 import entities.PaypalPayment;
 import entities.Session;
 import entities.Transactions;
-import features.SessionChecker;
+import utilities.SessionUtilities;
 import jakarta.annotation.Resource;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -42,7 +42,7 @@ public class PaypalExecuteServlet extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         response.setContentType("text/plain;charset=UTF-8");
         response.setHeader("Cache-Control", "no-store");
-        Session session = SessionChecker.getLoginSession(request.getSession());
+        Session session = SessionUtilities.getLoginSession(request.getSession());
         if (session == null) {
             RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Please login to view this page.", Constants.CUSTOMER_LOGIN_URL);
             return;

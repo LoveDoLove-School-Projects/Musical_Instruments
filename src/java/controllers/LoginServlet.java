@@ -6,9 +6,9 @@ import entities.Customers;
 import entities.Role;
 import entities.Session;
 import exceptions.DatabaseException;
-import features.AesProtector;
-import features.SecurityLog;
-import features.SessionChecker;
+import utilities.AesUtilities;
+import utilities.SecurityLog;
+import utilities.SessionUtilities;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.servlet.ServletException;
@@ -41,7 +41,7 @@ public class LoginServlet extends HttpServlet {
     }
 
     private void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        Session session = SessionChecker.getLoginSession(request.getSession());
+        Session session = SessionUtilities.getLoginSession(request.getSession());
         if (session != null) {
             RedirectUtilities.sendRedirect(request, response, Constants.PROFILE_URL);
             return;
@@ -84,7 +84,7 @@ public class LoginServlet extends HttpServlet {
 
     private Customers tryCustomerLogin(Customers customer) throws DatabaseException {
         try {
-            String encryptedPassword = AesProtector.aes256EcbEncrypt(customer.getPassword());
+            String encryptedPassword = AesUtilities.aes256EcbEncrypt(customer.getPassword());
             List<Customers> customerList = entityManager.createNamedQuery("Customers.findByEmailAndPassword", Customers.class)
                     .setParameter("email", customer.getEmail())
                     .setParameter("password", encryptedPassword)
@@ -99,7 +99,7 @@ public class LoginServlet extends HttpServlet {
         HttpSession httpSession = request.getSession(true);
         if (!customer.getTwoFactorAuth()) {
             Session session = new Session(customer.getUserId(), customer.getUsername(), customer.getEmail(), Role.CUSTOMER);
-            SessionChecker.setLoginSession(httpSession, session);
+            SessionUtilities.setLoginSession(httpSession, session);
             SecurityLog.addSecurityLog(request, "login successful.");
             RedirectUtilities.sendRedirect(request, response, Constants.PROFILE_URL);
             return;

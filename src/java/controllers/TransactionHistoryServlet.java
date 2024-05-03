@@ -3,7 +3,7 @@ package controllers;
 import common.Constants;
 import entities.Session;
 import entities.Transactions;
-import features.SessionChecker;
+import utilities.SessionUtilities;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.servlet.ServletException;
@@ -24,12 +24,12 @@ public class TransactionHistoryServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        Session session = SessionChecker.getLoginSession(request.getSession());
+        Session session = SessionUtilities.getLoginSession(request.getSession());
         if (session == null) {
             RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Please login to view this page.", Constants.CUSTOMER_LOGIN_URL);
             return;
         }
-        if (SessionChecker.checkIsStaffOrAdmin(request)) {
+        if (SessionUtilities.checkIsStaffOrAdmin(request)) {
             RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Admin or staff are not allowed to view this page because it only for customer.", "/");
             return;
         }
