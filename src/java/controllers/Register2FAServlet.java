@@ -4,7 +4,7 @@ import common.Constants;
 import dao.OtpDao;
 import entities.Customers;
 import entities.OtpsType;
-import features.AesProtector;
+import utilities.AesUtilities;
 import jakarta.annotation.Resource;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -131,7 +131,7 @@ public class Register2FAServlet extends HttpServlet {
 
     private boolean registerNewCustomer(Customers customer) {
         customer.setUsername(customer.getUsername());
-        customer.setPassword(AesProtector.aes256EcbEncrypt(customer.getPassword()));
+        customer.setPassword(AesUtilities.aes256EcbEncrypt(customer.getPassword()));
         customer.setEmail(customer.getEmail());
         customer.setAddress(customer.getAddress());
         customer.setPhoneNumber(customer.getPhoneNumber());

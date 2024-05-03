@@ -18,29 +18,29 @@ import entities.MemoryCache;
 import entities.OrderDetails;
 import entities.PaypalPayment;
 import exceptions.PaymentException;
-import features.AesProtector;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
+import utilities.AesUtilities;
 import utilities.HttpUtilities;
 
 public class PaypalServices {
 
     private static final Logger LOG = Logger.getLogger(PaypalServices.class.getName());
-    private final TransactionServices transactionServices = new TransactionServices();
     private static final String CLIENT_ID = "AZrjdHeC-KD9nsZVH8HR54O-3ZgvAshjqYq4hiPgXGL7ZKcps159a3mTW-YqLlvLQzBNveUjdpSELOuX";
     private static final String CLIENT_SECRET = "EGwkzMhtunT9dpkeIGuanST6nkKzdwRVFWHofvCYv8HFHy-RMk_A65bfFVw_p08ZCQaIMEtZKXVOswOY";
     private static final String RETURN_URL = "http://localhost:8080/Musical_Instruments/payments/paypal/review";
     private static final String CANCEL_URL = "http://localhost:8080/Musical_Instruments/payments/cancel";
-    private static final String ACCESS_TOKEN_API = AesProtector.aes256EcbDecrypt(Environment.ACCESS_TOKEN_API);
-    private static final String CREATE_PAYMENT_API = AesProtector.aes256EcbDecrypt(Environment.CREATE_PAYMENT_API);
-    private static final String GET_PAYMENT_API = AesProtector.aes256EcbDecrypt(Environment.GET_PAYMENT_API);
-    private static final String EXECUTE_PAYMENT_API = AesProtector.aes256EcbDecrypt(Environment.EXECUTE_PAYMENT_API);
+    private static final String ACCESS_TOKEN_API = AesUtilities.aes256EcbDecrypt(Environment.ACCESS_TOKEN_API);
+    private static final String CREATE_PAYMENT_API = AesUtilities.aes256EcbDecrypt(Environment.CREATE_PAYMENT_API);
+    private static final String GET_PAYMENT_API = AesUtilities.aes256EcbDecrypt(Environment.GET_PAYMENT_API);
+    private static final String EXECUTE_PAYMENT_API = AesUtilities.aes256EcbDecrypt(Environment.EXECUTE_PAYMENT_API);
     private static final String CURRENCY = "MYR";
     private static final MemoryCache<String, String> MEMORY_CACHE = new MemoryCache<>(3);
     private static final MemoryCache<String, Long> TIME_CACHE = new MemoryCache<>(3);
+    private final TransactionServices transactionServices = new TransactionServices();
 
     public String createPayment(List<Carts> cartList) {
         try {

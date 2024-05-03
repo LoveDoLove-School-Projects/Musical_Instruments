@@ -1,4 +1,4 @@
-package features;
+package utilities;
 
 import entities.Role;
 import entities.Session;
@@ -6,7 +6,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import java.security.Principal;
 
-public class SessionChecker {
+public class SessionUtilities {
 
     private static final String USER_SESSION = "user_session";
 

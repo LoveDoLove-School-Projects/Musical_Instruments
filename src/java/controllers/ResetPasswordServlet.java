@@ -3,8 +3,8 @@ package controllers;
 import entities.Customers;
 import entities.Resetpassword;
 import entities.Staffs;
-import features.AesProtector;
-import features.SecurityLog;
+import utilities.AesUtilities;
+import utilities.SecurityLog;
 import jakarta.annotation.Resource;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -84,7 +84,7 @@ public class ResetPasswordServlet extends HttpServlet {
                         return;
                     }
                     Customers customer = customers.get(0);
-                    customer.setPassword(AesProtector.aes256EcbEncrypt(newPassword));
+                    customer.setPassword(AesUtilities.aes256EcbEncrypt(newPassword));
                     entityManager.merge(customer);
                     userTransaction.commit();
                     break;
@@ -95,7 +95,7 @@ public class ResetPasswordServlet extends HttpServlet {
                         return;
                     }
                     Staffs staff = staffs.get(0);
-                    staff.setPassword(AesProtector.aes256EcbEncrypt(newPassword));
+                    staff.setPassword(AesUtilities.aes256EcbEncrypt(newPassword));
                     entityManager.merge(staff);
                     userTransaction.commit();
                     break;

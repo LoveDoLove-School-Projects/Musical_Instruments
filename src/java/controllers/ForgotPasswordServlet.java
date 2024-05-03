@@ -4,8 +4,8 @@ import entities.Customers;
 import entities.Resetpassword;
 import entities.Staffs;
 import exceptions.DatabaseException;
-import features.AesProtector;
-import features.MailSender;
+import utilities.AesUtilities;
+import utilities.MailSender;
 import jakarta.annotation.Resource;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -98,7 +98,7 @@ public class ForgotPasswordServlet extends HttpServlet {
     private String generateResetPasswordURL(HttpServletRequest request, String email, String role) {
         String timestamp = String.valueOf(System.currentTimeMillis());
         String makeToken = email + timestamp;
-        String token = AesProtector.aes256EcbEncrypt(makeToken).replace("/", "").replace("+", "").replace("=", "");
+        String token = AesUtilities.aes256EcbEncrypt(makeToken).replace("/", "").replace("+", "").replace("=", "");
         Resetpassword resetPassword = new Resetpassword(email, token);
         boolean isAdded = addNewResetPassword(resetPassword);
         if (!isAdded) {
