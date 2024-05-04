@@ -431,7 +431,7 @@
         <description>For send email, otp and more</description>
         <env-entry-name>SEND_MAIL_API</env-entry-name>
         <env-entry-type>java.lang.String</env-entry-type>
-        <env-entry-value>Li3v31mJXIweF14+ZWfZkQicrWDGNIXuPwe1FfeAqpWHMKSkoZaHLvfgu+K7mIgm/0w9jIEfwWsTv/+Hyj6FRg==</env-entry-value>
+        <env-entry-value>Li3v31mJXIweF14+ZWfZkTcxSQJb7TMmAwEZ+6M7i729RgOydNNTIQCAV/i66gsEf5XJhOHNLAdxkws+cnpaxg==</env-entry-value>
     </env-entry>
     <env-entry>
         <description>For authorize all the api link</description>
@@ -443,13 +443,13 @@
         <description>For getting payapl access token</description>
         <env-entry-name>ACCESS_TOKEN_API</env-entry-name>
         <env-entry-type>java.lang.String</env-entry-type>
-        <env-entry-value>Li3v31mJXIweF14+ZWfZkWdUCRU/VklPZKstrAiP9OfEUe9KQMcQA157kh184TjOAZHeLgB3Y2qrrcf9PEDAZw==</env-entry-value>
+        <env-entry-value>Li3v31mJXIweF14+ZWfZkTcxSQJb7TMmAwEZ+6M7i73lUuzolLrt4Pi4IbMh+ignWOBsqdGCgb389RMdQT3/Dw==</env-entry-value>
     </env-entry>
     <env-entry>
         <description>For creating paypal payment link</description>
         <env-entry-name>CREATE_PAYMENT_API</env-entry-name>
         <env-entry-type>java.lang.String</env-entry-type>
-        <env-entry-value>Li3v31mJXIweF14+ZWfZkWdUCRU/VklPZKstrAiP9Ocrj3fJ77ve8hk7qA5WtfPN7ZCQZCJ5EPcNAuMM55rBVQ==</env-entry-value>
+        <env-entry-value>Li3v31mJXIweF14+ZWfZkTcxSQJb7TMmAwEZ+6M7i71A4Ej0DbLukgHEN9QwXTZc+coqOjd/KoFSZYG5zWVZkg==</env-entry-value>
     </env-entry>
     <servlet>
         <servlet-name>RegisterServlet</servlet-name>
@@ -483,12 +483,12 @@
         <description>For executing the paypal payment approved by user</description>
         <env-entry-name>EXECUTE_PAYMENT_API</env-entry-name>
         <env-entry-type>java.lang.String</env-entry-type>
-        <env-entry-value>Li3v31mJXIweF14+ZWfZkWdUCRU/VklPZKstrAiP9Of5vEZbXb+IZXuJuOB2vZBwbgwbu8PZaWN5DwW96T9wyw==</env-entry-value>
+        <env-entry-value>Li3v31mJXIweF14+ZWfZkTcxSQJb7TMmAwEZ+6M7i70MYhKggxAVnHs7kkW1N8MniQpbQbdxSf1XMd1h35clvw==</env-entry-value>
     </env-entry>
     <env-entry>
         <description>For get paypal payment details</description>
         <env-entry-name>GET_PAYMENT_API</env-entry-name>
         <env-entry-type>java.lang.String</env-entry-type>
-        <env-entry-value>Li3v31mJXIweF14+ZWfZkWdUCRU/VklPZKstrAiP9Of98Z0xXAq2av1j0LUgcF2Qr1haCB+lVgT2zHB7zmpWGg==</env-entry-value>
+        <env-entry-value>Li3v31mJXIweF14+ZWfZkTcxSQJb7TMmAwEZ+6M7i73lUuzolLrt4Pi4IbMh+ignSTXamrwoAimHR7P5LhF4rg==</env-entry-value>
     </env-entry>
 </web-app>
