@@ -1,7 +1,6 @@
 package controllers;
 
 import common.Constants;
-import dao.OtpDao;
 import entities.Customers;
 import entities.Session;
 import jakarta.persistence.EntityManager;
@@ -13,6 +12,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
+import services.OtpServices;
 import utilities.RedirectUtilities;
 import utilities.RedirectUtilities.RedirectType;
 import utilities.SessionUtilities;
@@ -25,7 +25,7 @@ public class RegisterServlet extends HttpServlet {
     EntityManager entityManager;
     public static final String REGISTER_JSP_URL = "/pages/register.jsp";
     private static final String REGISTER_2FA_URL = "/sessions/register2fa";
-    private final OtpDao otpDao = new OtpDao();
+    private final OtpServices otpServices = new OtpServices();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -44,7 +44,7 @@ public class RegisterServlet extends HttpServlet {
             setRegisterPage(request, response);
             return;
         }
-        if (!otpDao.sendOtp(customer.getEmail())) {
+        if (!otpServices.sendOtp(customer.getEmail())) {
             RedirectUtilities.setMessage(request, RedirectType.DANGER, "There was an error from the server! Please try again later.");
             return;
         }

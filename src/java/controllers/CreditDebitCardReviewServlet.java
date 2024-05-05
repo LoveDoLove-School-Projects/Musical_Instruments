@@ -4,6 +4,7 @@ import common.Constants;
 import entities.PaypalPayment;
 import entities.Session;
 import entities.Transactions;
+import utilities.SessionUtilities;
 import jakarta.annotation.Resource;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -19,20 +20,17 @@ import jakarta.transaction.UserTransaction;
 import java.io.IOException;
 import java.util.Date;
 import java.util.logging.Logger;
-import services.PaypalServices;
 import utilities.RedirectUtilities;
-import utilities.SessionUtilities;
 
-@WebServlet(name = "PaypalReviewServlet", urlPatterns = {"/payments/paypal/review"})
-public class PaypalReviewServlet extends HttpServlet {
+@WebServlet(name = "CreditDebitCardReviewServlet", urlPatterns = {"/payments/ccdc/review"})
+public class CreditDebitCardReviewServlet extends HttpServlet {
 
     @PersistenceContext
     EntityManager entityManager;
     @Resource
     UserTransaction userTransaction;
-    private static final Logger LOG = Logger.getLogger(PaypalReviewServlet.class.getName());
-    private static final String PAYPAL_REVIEW_JSP_URL = "/payments/paypalReview.jsp";
-    private final PaypalServices paypalServices = new PaypalServices();
+    private static final Logger LOG = Logger.getLogger(CreditDebitCardReviewServlet.class.getName());
+    private static final String CCDC_REVIEW_JSP_URL = "/payments/ccdcReview.jsp";
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -49,22 +47,22 @@ public class PaypalReviewServlet extends HttpServlet {
             RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Payment ID is required.", Constants.CART_URL);
             return;
         }
-        PaypalPayment paypalPayment = paypalServices.getPaymentDetails(paymentId);
-        if (paypalPayment == null) {
-            RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Payment not found.", Constants.CART_URL);
-            return;
-        }
-        if (!updateTransactionToDB(paypalPayment)) {
-            RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Failed to update transaction.", Constants.CART_URL);
-            return;
-        }
-        PaypalPayment.PayerInfo payerInfo = paypalPayment.getPayer().getPayer_info();
-        PaypalPayment.Transaction transaction = paypalPayment.getTransactions().get(0);
-        PaypalPayment.ShippingAddress shippingAddress = transaction.getItem_list().getShipping_address();
-        request.setAttribute("payer", payerInfo);
-        request.setAttribute("transaction", transaction);
-        request.setAttribute("shippingAddress", shippingAddress);
-        request.getRequestDispatcher(PAYPAL_REVIEW_JSP_URL).forward(request, response);
+//        PaypalPayment paypalPayment = paypalServices.getPaymentDetails(paymentId);
+//        if (paypalPayment == null) {
+//            RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Payment not found.", Constants.CART_URL);
+//            return;
+//        }
+//        if (!updateTransactionToDB(paypalPayment)) {
+//            RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Failed to update transaction.", Constants.CART_URL);
+//            return;
+//        }
+//        PaypalPayment.PayerInfo payerInfo = paypalPayment.getPayer().getPayer_info();
+//        PaypalPayment.Transaction transaction = paypalPayment.getTransactions().get(0);
+//        PaypalPayment.ShippingAddress shippingAddress = transaction.getItem_list().getShipping_address();
+//        request.setAttribute("payer", payerInfo);
+//        request.setAttribute("transaction", transaction);
+//        request.setAttribute("shippingAddress", shippingAddress);
+        request.getRequestDispatcher(CCDC_REVIEW_JSP_URL).forward(request, response);
     }
 
     private boolean updateTransactionToDB(PaypalPayment paypalPayment) {

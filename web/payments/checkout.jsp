@@ -161,7 +161,7 @@ response.setHeader("Cache-Control", "no-store");
                             <h2>Select Payment Method</h2>
                             <div class="form-group">
                                 <label for="paymentMethod">Payment Method</label>
-                                <select class="form-control" id="paymentMethod">
+                                <select class="form-control" id="paymentMethod" name="paymentMethod" required>
                                     <option value="Paypal" selected>PayPal</option>
                                     <option value="CreditOrDebitCard">Credit / Debit Card</option>
                                     <option value="CashOnDelivery">Cash On Delivery</option>
@@ -170,7 +170,7 @@ response.setHeader("Cache-Control", "no-store");
                             <div id="cardDetails" style="display: none;">
                                 <div class="form-group">
                                     <label for="cardHolderName">Card Holder Name</label>
-                                    <input type="text" class="form-control" id="cardHolderName" />
+                                    <input type="text" class="form-control" id="cardHolderName" name="cardHolderName" />
                                 </div>
                                 <div class="form-group row">
                                     <label for="cardNumber" class="col-form-label">Card Number</label>
@@ -198,12 +198,12 @@ response.setHeader("Cache-Control", "no-store");
                                 </div>
                                 <div class="form-group">
                                     <label for="cvv">CVV</label>
-                                    <input type="text" name="CVV" class="form-control" id="CVV" />
+                                    <input type="text" name="cvv" class="form-control" id="cvv" maxlength="3" pattern="[0-9]{3}" title="3 digits" size="3" />
                                 </div>
                                 <div class="form-group row">
                                     <label for="expDate" class="col-form-label">Expiration Date</label>
                                     <div class="col">
-                                        <select class="form-control" id="expYear">
+                                        <select class="form-control" id="expYear" name="expYear">
                                             <option value="">Year</option>
                                             <c:forEach var="year" begin="<%= Calendar.getInstance().get(Calendar.YEAR) %>" end="<%= Calendar.getInstance().get(Calendar.YEAR) + 30 %>">
                                                 <option value="${year}">${year}</option>
@@ -211,7 +211,7 @@ response.setHeader("Cache-Control", "no-store");
                                         </select>
                                     </div>
                                     <div class="col">
-                                        <select class="form-control" id="expMonth">
+                                        <select class="form-control" id="expMonth" name="expMonth">
                                             <option value="">Month</option>
                                             <c:forEach var="month" begin="1" end="12">
                                                 <option value="${month}">${month}</option>

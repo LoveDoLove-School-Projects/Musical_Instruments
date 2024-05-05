@@ -3,11 +3,12 @@ package controllers;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import common.Constants;
+import entities.Cards;
 import entities.Carts;
+import entities.Customers;
 import entities.PaypalPayment;
 import entities.Session;
 import entities.Transactions;
-import utilities.SessionUtilities;
 import jakarta.annotation.Resource;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -26,6 +27,8 @@ import java.util.List;
 import java.util.logging.Logger;
 import services.PaypalServices;
 import utilities.RedirectUtilities;
+import utilities.SessionUtilities;
+import utilities.StringUtilities;
 
 public class TransactionServlet extends HttpServlet {
 
@@ -33,8 +36,12 @@ public class TransactionServlet extends HttpServlet {
     EntityManager entityManager;
     @Resource
     UserTransaction userTransaction;
-    private static final Logger LOG = Logger.getLogger(PaypalServlet.class.getName());
+    private static final Logger LOG = Logger.getLogger(TransactionServlet.class.getName());
     private final PaypalServices paypalServices = new PaypalServices();
+    private static final String PAYPAL = "Paypal";
+    private static final String CREDIT_OR_DEBIT_CARD = "CreditOrDebitCard";
+    private static final String CASH_ON_DELIVERY = "CashOnDelivery";
+    private static final String CCDC_VERIFY_URL = "/payments/ccdc/verify";
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -51,14 +58,40 @@ public class TransactionServlet extends HttpServlet {
             RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Cart is empty.", Constants.CART_URL);
             return;
         }
+        String paymentMethod = request.getParameter("paymentMethod");
+        if (StringUtilities.anyNullOrBlank(paymentMethod)) {
+            RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Invalid payment method.", Constants.CART_URL);
+            return;
+        }
+        Customers customer = entityManager.find(Customers.class, session.getUserId());
+        if (customer == null) {
+            RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Invalid customer.", Constants.CART_URL);
+            return;
+        }
+        switch (paymentMethod) {
+            case PAYPAL:
+                processPaypalPayment(request, response, session, cartList, customer);
+                break;
+            case CREDIT_OR_DEBIT_CARD:
+                processCreditOrDebitCardPayment(request, response, session, cartList, customer);
+                break;
+            case CASH_ON_DELIVERY:
+                processCashOnDeliveryPayment(request, response, session, cartList, customer);
+                break;
+            default:
+                RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Invalid payment method.", Constants.CART_URL);
+        }
+    }
+
+    private void processPaypalPayment(HttpServletRequest request, HttpServletResponse response, Session session, List<Carts> cartList, Customers customer) throws IOException {
         try {
-            String paymentResponse = paypalServices.createPayment(cartList);
+            String paymentResponse = paypalServices.createPayment(cartList, customer);
             if (paymentResponse == null) {
                 RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Failed to create payment.", Constants.CART_URL);
                 return;
             }
             PaypalPayment payment = new Gson().fromJson(paymentResponse, PaypalPayment.class);
-            if (saveTransactionToDB(session, payment)) {
+            if (savePaypalTransactionToDB(session, payment)) {
                 String approval_url = null;
                 for (PaypalPayment.Link link : payment.getLinks()) {
                     if (link.getRel().equals("approval_url")) {
@@ -75,7 +108,114 @@ public class TransactionServlet extends HttpServlet {
         }
     }
 
-    private boolean saveTransactionToDB(Session session, PaypalPayment paypalPayment) {
+    private void processCreditOrDebitCardPayment(HttpServletRequest request, HttpServletResponse response, Session session, List<Carts> cartList, Customers customer) throws IOException {
+        String paymentMethod = request.getParameter("paymentMethod");
+        String cardHolderName = request.getParameter("cardHolderName");
+        String card1 = request.getParameter("card1");
+        String card2 = request.getParameter("card2");
+        String card3 = request.getParameter("card3");
+        String card4 = request.getParameter("card4");
+        String cvv = request.getParameter("cvv");
+        String expYear = request.getParameter("expYear");
+        String expMonth = request.getParameter("expMonth");
+        if (!validateCardDetails(cardHolderName, card1, card2, card3, card4, cvv, expYear, expMonth)) {
+            RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Invalid card details.", Constants.CART_URL);
+            return;
+        }
+        String cardNumber = card1 + card2 + card3 + card4;
+        Cards card = new Cards(cardHolderName, cardNumber, expYear, expMonth, cvv);
+        if (!checkCardDetails(card)) {
+            LOG.info("Card details do not match.");
+            RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Invalid card details.", Constants.CART_URL);
+            return;
+        }
+        Transactions transaction = saveCCDCTransactionToDB(session, card, paymentMethod);
+        if (transaction == null) {
+            RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Failed to create transaction.", Constants.CART_URL);
+            return;
+        }
+        HttpSession httpSession = request.getSession();
+        httpSession.setAttribute("transaction", transaction);
+        httpSession.setAttribute("cartList", cartList);
+        RedirectUtilities.sendRedirect(request, response, CCDC_VERIFY_URL);
+    }
+
+    private void processCashOnDeliveryPayment(HttpServletRequest request, HttpServletResponse response, Session session, List<Carts> cartList, Customers customer) throws IOException {
+    }
+
+    private boolean validateCardDetails(String cardHolderName, String card1, String card2, String card3, String card4, String cvv, String expYear, String expMonth) {
+        if (StringUtilities.anyNullOrBlank(cardHolderName, card1, card2, card3, card4, cvv, expYear, expMonth)) {
+            return false;
+        }
+        if (expYear.length() != 4 || expMonth.length() != 2) {
+            return false;
+        }
+        if (cvv.length() != 3) {
+            return false;
+        }
+        if (!StringUtilities.isNumeric(card1) || !StringUtilities.isNumeric(card2) || !StringUtilities.isNumeric(card3) || !StringUtilities.isNumeric(card4) || !StringUtilities.isNumeric(cvv) || !StringUtilities.isNumeric(expYear) || !StringUtilities.isNumeric(expMonth)) {
+            return false;
+        }
+        if (Integer.parseInt(expYear) < new Date().getYear() + 1900) {
+            return false;
+        }
+        String cardNumber = card1 + card2 + card3 + card4;
+        if (cardNumber.length() != 16) {
+            return false;
+        }
+        String cardExpiry = expYear + "-" + expMonth;
+        return cardExpiry.length() == 7;
+    }
+
+    private boolean checkCardDetails(Cards card) {
+        try {
+            List<Cards> cardList = entityManager.createNamedQuery("Cards.findByCardNumber", Cards.class).setParameter("cardNumber", card.getCardNumber()).getResultList();
+            if (cardList == null || cardList.isEmpty()) {
+                return false;
+            }
+            Cards dbCard = cardList.get(0);
+            if (!dbCard.getCardHolderName().equals(card.getCardHolderName())) {
+                return false;
+            }
+            if (!dbCard.getCardNumber().equals(card.getCardNumber())) {
+                return false;
+            }
+            if (!dbCard.getExpYear().equals(card.getExpYear()) || !dbCard.getExpMonth().equals(card.getExpMonth())) {
+                return false;
+            }
+            return dbCard.getCvv().equals(card.getCvv());
+        } catch (Exception ex) {
+            LOG.severe(ex.getMessage());
+            return false;
+        }
+    }
+
+    private Transactions saveCCDCTransactionToDB(Session session, Cards card, String paymentMethod) {
+        try {
+            String transactionNumber = "TXN" + System.currentTimeMillis() + session.getUserId();
+            String orderNumber = "ORD" + System.currentTimeMillis() + session.getUserId();
+            Date date = new Date();
+            Transactions transaction = new Transactions();
+            transaction.setUserId(session.getUserId());
+            transaction.setTransactionNumber(transactionNumber);
+            transaction.setOrderNumber(orderNumber);
+            transaction.setTransactionStatus("created");
+            transaction.setPaymentMethod(paymentMethod);
+            transaction.setCurrency("MYR");
+            transaction.setTotalAmount(BigDecimal.valueOf(0));
+            transaction.setDateCreatedGmt(date);
+            transaction.setDateUpdatedGmt(date);
+            userTransaction.begin();
+            entityManager.persist(transaction);
+            userTransaction.commit();
+            return transaction;
+        } catch (HeuristicMixedException | HeuristicRollbackException | NotSupportedException | RollbackException | SystemException | IllegalStateException | NumberFormatException | SecurityException ex) {
+            LOG.severe(ex.getMessage());
+            return null;
+        }
+    }
+
+    private boolean savePaypalTransactionToDB(Session session, PaypalPayment paypalPayment) {
         try {
             String orderNumber = "ORD" + System.currentTimeMillis() + session.getUserId();
             Date date = new Date();
