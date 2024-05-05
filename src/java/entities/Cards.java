@@ -59,6 +59,13 @@ public class Cards implements Serializable {
         this.pkid = pkid;
     }
 
+    public Cards(String cardHolderName, String cardNumber, Date expiryDate, String cvv) {
+        this.cardHolderName = cardHolderName;
+        this.cardNumber = cardNumber;
+        this.expiryDate = expiryDate;
+        this.cvv = cvv;
+    }
+
     public Integer getPkid() {
         return pkid;
     }

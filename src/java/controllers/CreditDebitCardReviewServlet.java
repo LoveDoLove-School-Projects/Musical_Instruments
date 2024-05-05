@@ -23,16 +23,15 @@ import java.util.logging.Logger;
 import services.PaypalServices;
 import utilities.RedirectUtilities;
 
-@WebServlet(name = "PaypalReviewServlet", urlPatterns = {"/payments/paypal/review"})
-public class PaypalReviewServlet extends HttpServlet {
+@WebServlet(name = "CreditDebitCardReviewServlet", urlPatterns = {"/payments/ccdc/review"})
+public class CreditDebitCardReviewServlet extends HttpServlet {
 
     @PersistenceContext
     EntityManager entityManager;
     @Resource
     UserTransaction userTransaction;
-    private static final Logger LOG = Logger.getLogger(PaypalReviewServlet.class.getName());
-    private static final String PAYPAL_REVIEW_JSP_URL = "/payments/paypalReview.jsp";
-    private final PaypalServices paypalServices = new PaypalServices();
+    private static final Logger LOG = Logger.getLogger(CreditDebitCardReviewServlet.class.getName());
+    private static final String CCDC_REVIEW_JSP_URL = "/payments/ccdcReview.jsp";
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -64,7 +63,7 @@ public class PaypalReviewServlet extends HttpServlet {
         request.setAttribute("payer", payerInfo);
         request.setAttribute("transaction", transaction);
         request.setAttribute("shippingAddress", shippingAddress);
-        request.getRequestDispatcher(PAYPAL_REVIEW_JSP_URL).forward(request, response);
+        request.getRequestDispatcher(CCDC_REVIEW_JSP_URL).forward(request, response);
     }
 
     private boolean updateTransactionToDB(PaypalPayment paypalPayment) {

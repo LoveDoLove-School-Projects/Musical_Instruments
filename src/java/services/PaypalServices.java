@@ -13,6 +13,7 @@ import com.paypal.api.payments.RedirectUrls;
 import com.paypal.api.payments.Transaction;
 import entities.AccessToken;
 import entities.Carts;
+import entities.Customers;
 import entities.Environment;
 import entities.MemoryCache;
 import entities.OrderDetails;
@@ -42,32 +43,32 @@ public class PaypalServices {
     private static final MemoryCache<String, Long> TIME_CACHE = new MemoryCache<>(3);
     private final TransactionServices transactionServices = new TransactionServices();
 
-    public String createPayment(List<Carts> cartList) {
+    public String createPayment(List<Carts> cartList, Customers customer) {
         try {
             String accessToken = getAccessToken();
-            String paymentJsonPayload = constructPayload(cartList);
+            String paymentJsonPayload = constructPayload(cartList, customer);
             return createPayment(accessToken, paymentJsonPayload);
         } catch (IOException ex) {
             throw new PaymentException(ex.getMessage());
         }
     }
 
-    private String constructPayload(List<Carts> cartList) {
+    private String constructPayload(List<Carts> cartList, Customers customer) {
         List<Transaction> transactions = getTransactionInformation(cartList);
-        Payer payer = getPayerInformation();
+        Payer payer = getPayerInformation(customer);
         Payment payment = getPaymentInformation(payer, transactions);
         RedirectUrls redirectUrls = getRedirectURLs();
         payment.setRedirectUrls(redirectUrls);
         return payment.toJSON();
     }
 
-    private Payer getPayerInformation() {
+    private Payer getPayerInformation(Customers customer) {
         Payer payer = new Payer();
         payer.setPaymentMethod("paypal");
         PayerInfo payerInfo = new PayerInfo();
-        payerInfo.setFirstName("Musical")
-                .setLastName("Instruments")
-                .setEmail("sb-kfbrj14644364@business.example.com");
+        payerInfo.setFirstName(customer.getFirstName())
+                .setLastName(customer.getLastName())
+                .setEmail(customer.getEmail());
         payer.setPayerInfo(payerInfo);
         return payer;
     }

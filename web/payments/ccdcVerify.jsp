@@ -9,19 +9,21 @@ response.setHeader("Cache-Control", "no-store");
 <html>
     <head>
         <jsp:include page="/defaults/head.jsp" />
-        <title>Review</title>
+        <title>Verify</title>
     </head>
     <body>
         <div class="container">
             <div class="py-5 text-center">
-                <h1>Please Review Before Paying</h1>
+                <h1>Please Verify Before Paying</h1>
             </div>
             <div class="row">
                 <div class="col-md-12 order-md-1">
                     <h4 class="mb-3">Transaction Details</h4>
-                    <form action="payments/ccdc/execute" method="post">
+                    <form action="payments/ccdc/verify" method="post">
+                        <!-- Create a simple credit / debit card otp verify form -->
                         <input type="hidden" name="paymentId" value="${param.paymentId}" />
                         <input type="hidden" name="PayerID" value="${param.PayerID}" />
+                        <!-- show txn number and some basic txn details -->
                         <table class="table">
                             <tbody>
                                 <tr>
@@ -61,38 +63,20 @@ response.setHeader("Cache-Control", "no-store");
                                     <th scope="row">Email:</th>
                                     <td>${payer.email}</td>
                                 </tr>
-                            </tbody>
-                        </table>
-                        <h4 class="mb-3">Shipping Address</h4>
-                        <table class="table">
-                            <tbody>
                                 <tr>
-                                    <th scope="row">Recipient Name:</th>
-                                    <td>${shippingAddress.recipient_name}</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">Line 1:</th>
-                                    <td>${shippingAddress.line1}</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">City:</th>
-                                    <td>${shippingAddress.city}</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">State:</th>
-                                    <td>${shippingAddress.state}</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">Country Code:</th>
-                                    <td>${shippingAddress.country_code}</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">Postal Code:</th>
-                                    <td>${shippingAddress.postal_code}</td>
+                                    <th scope="row">Phone:</th>
+                                    <td>${payer.phone}</td>
                                 </tr>
                             </tbody>
                         </table>
-                        <button class="btn btn-primary btn-lg btn-block" type="submit">Pay Now</button>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="otp">OTP</label>
+                                <input type="text" class="form-control" id="otp" name="otp" placeholder="OTP" required>
+                            </div>
+                        </div>
+                        <hr class="mb-4">
+                        <button class="btn btn-primary btn-lg btn-block" type="submit">Verify</button>
                     </form>
                 </div>
             </div>

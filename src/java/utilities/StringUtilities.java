@@ -26,4 +26,14 @@ public final class StringUtilities {
         }
         return false;
     }
+
+    /**
+     * Checks if a given string is numeric.
+     *
+     * @param string the string to be checked
+     * @return true if the string is numeric, false otherwise
+     */
+    public static boolean isNumeric(String string) {
+        return string.matches("\\d+");
+    }
 }
