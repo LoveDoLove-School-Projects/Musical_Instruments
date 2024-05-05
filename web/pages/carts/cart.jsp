@@ -52,7 +52,7 @@ double subTotal=0;
                             <th class="col"><%=carts.getProductColor()%></th>
                             <th class="col"><%=carts.getProductQuantity()%></th>
                             <th class="col">RM<%=carts.getProductPrice()%></th>
-                            <th class="col">RM<%=carts.getProductTotalprice()%></th>
+                            <th class="col">RM<%=String.format("%.2f",carts.getProductTotalprice())%></th>
                             <th class="col">
                                 <div class="row align-content-center justify-content-center">
                                     <a href="pages/carts/editCart?cart_id=<%=carts.getCartId()%>" class="MusicInstruments row1-MusicInstruments1">
