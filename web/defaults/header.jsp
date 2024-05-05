@@ -12,6 +12,46 @@ boolean isAdmin = j_username != null ? true : false;
 Session user_session = (Session) session.getAttribute("user_session");
 %>
 <!DOCTYPE html>
+<style>
+    body{
+        padding-top: 70px;
+    }
+    .nav-item {
+        padding: 1px;
+        border: black 2px groove;
+        border-radius: 8px;
+
+    }
+
+    .nav-item.active,
+    .nav-item:hover {
+        background: linear-gradient(to bottom, rgb(56, 52, 52), #FFFFFF); /* Silver to white */
+        transition: all 0.5s;
+    }
+
+    .nav-item:hover a.nav-link {
+        color: white;
+        text-shadow: black 3px 3px 3px;
+        transition: all 0.5s;
+    }
+
+    .navbar{
+        width: 100%;
+        background:linear-gradient(to bottom, #C0C0C0, #FFFFFF);
+        box-shadow: 6px 6px 10px rgb(112, 105, 105);
+    }
+    .circle-btn {
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .dropdown-menu > li {
+        cursor: pointer;
+    }
+</style>
 <nav class="fixed-top navbar navbar-expand-lg navbar-light bg-body-tertiary">
     <div class="container">
         <a class="navbar-brand me-2" href="#">
@@ -48,11 +88,11 @@ Session user_session = (Session) session.getAttribute("user_session");
                 <li class="nav-item mx-4">
                     <a class="nav-link" href="pages/orders/orderHistory"><strong>Order History</strong></a>
                 </li>
-                <% 
-                } 
+                <%
+                }
                 %>
-                  <%
-                    if (isAdmin || user_session != null && user_session.getRole() == Role.STAFF) {
+                <%
+                  if (isAdmin || user_session != null && user_session.getRole() == Role.STAFF) {
                 %>
                 <li class="nav-item mx-4">
                     <a class="nav-link" href="pages/staffs"><strong>Admin Panel</strong></a>
@@ -80,11 +120,11 @@ Session user_session = (Session) session.getAttribute("user_session");
                     <li><a class="dropdown-item" href="pages/profile">Profile</a></li>
                         <%
                             }
-                           
+
                         %>
 
                     <%
-                            
+
                         if (!isAdmin) {
                     %>
                     <li><a class="dropdown-item" href="pages/securityLog">View Log</a></li>

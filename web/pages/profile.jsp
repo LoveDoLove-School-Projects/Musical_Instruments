@@ -4,6 +4,13 @@
 <c:set var="basePath" value="${pageContext.request.scheme}://${pageContext.request.serverName}:${pageContext.request.serverPort}${path}/" />
 <%@ page import="java.security.Principal" %>
 <%@ page import="entities.Session" %>
+<%@ page import="entities.Role" %>
+<%
+Principal principal = request.getUserPrincipal();
+String j_username = principal == null ? null : principal.getName();
+boolean isAdmin = j_username != null ? true : false;
+Session user_session = (Session) session.getAttribute("user_session");
+%>
 <!DOCTYPE html>
 <html>
 
@@ -142,10 +149,17 @@
                                     </div>
                                     <hr>
                                     <div class="row">
-                                        <div class="col-sm-9">
-                                            <input type="submit"  class="btn btn-primary" value="Update Profile" />
+                                        <div class="col-md-4 text-left">
+                                            <input type="submit" class="btn btn-primary" value="Update Profile" />
                                         </div>
-                                        <div class="col-sm-3">
+                                        <div class="col-md-8 text-right">
+                                            <%
+                                            if ((user_session != null && user_session.getRole() != Role.STAFF) && !isAdmin) {
+                                            %>
+                                            <a href="pages/billingDetails" class="btn btn-primary">Update Billing Details</a>
+                                            <%
+                                            }
+                                            %>
                                             <a href="pages/changePassword" class="btn btn-primary">Change Password</a>
                                         </div>
                                     </div>

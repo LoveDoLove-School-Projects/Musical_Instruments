@@ -1,7 +1,7 @@
-CREATE TABLE resetpassword (
+CREATE TABLE ResetPassword (
     email VARCHAR(255) NOT NULL PRIMARY KEY,
     token VARCHAR(525) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-DROP TABLE resetpassword;
+DROP TABLE ResetPassword;

@@ -1,4 +1,4 @@
-CREATE TABLE carts (
+CREATE TABLE Carts (
     cart_id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     customer_id INT NOT NULL,
     product_id INT NOT NULL,
@@ -10,4 +10,4 @@ CREATE TABLE carts (
     product_totalprice DOUBLE NOT NULL
 );
 
-DROP TABLE carts;
+DROP TABLE Carts;

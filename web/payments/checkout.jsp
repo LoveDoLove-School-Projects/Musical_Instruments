@@ -81,69 +81,83 @@ response.setHeader("Cache-Control", "no-store");
             </table>
         </section>
 
-        <form action="payments/transaction" method="post">
-            <section class="py-5">
-                <div class="container justify-content-center align-items-center">
-                    <div class="row">
-                        <div class="col-md-6">
-
-                            <h2>Billing Details</h2>
+        <section class="py-5">
+            <div class="container justify-content-center align-items-center">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h2>Billing Details</h2>
+                        <form action="pages/billingDetails" method="post" id="updateBillingDetailsForm">
                             <div class="form-group">
-                                <div class="form-group row">
+
+                                <div class="form-group row mb-3">
+                                    <label for="email">Email: ${email}</label>
+                                </div>
+
+                                <div class="form-group row mb-3">
                                     <div class="col">
-                                        <label for="firstName">First Name</label><span style="color: red !important; display: inline; float: none;">*</span>
-                                        <input type="text" class="form-control" value="${firstName}" />
+                                        <label for="country">Country: ${country}</label>
                                     </div>
+                                </div>
+
+                                <div class="form-group row mb-3">
                                     <div class="col">
-                                        <label for="lastName">Last Name</label><span style="color: red !important; display: inline; float: none;">*</span>
-                                        <input type="text" class="form-control" value="${lastName}" />
+                                        <label for="firstName">First Name: ${firstName}</label>
                                     </div>
                                 </div>
 
-                                <div class="form-group row">
-                                    <label for="country">Country / Region</label><span style="color: red !important; display: inline; float: none;">*</span>
-                                    <select id="countries" name="countries" class="form-control"></select>
+                                <div class="form-group row mb-3">
+                                    <div class="col">
+                                        <label for="lastName">Last Name: ${lastName}</label>
+                                    </div>
                                 </div>
 
-                                <div class="form-group row">
-                                    <label for="streetAddress">Street Address</label><span style="color: red !important; display: inline; float: none;">*</span>
-                                    <input type="text" name="streetAddress" class="form-control" value="${streetAddress}" />
+                                <div class="form-group row mb-3">
+                                    <div class="col">
+                                        <label for="address">Address: ${address}</label>
+                                    </div>
                                 </div>
 
-                                <div class="form-group row">
-                                    <label for="townCity">Town / City</label><span style="color: red !important; display: inline; float: none;">*</span>
-                                    <input type="text" name="townCity" class="form-control" value="${townCity}" />
+                                <div class="form-group row mb-3">
+                                    <div class="col">
+                                        <label for="city">City: ${city}</label>
+                                    </div>
                                 </div>
 
-                                <div class="form-group row">
-                                    <label for="state">State</label><span style="color: red !important; display: inline; float: none;">*</span>
-                                    <select id="state" name="state" class="form-control"></select>
+                                <div class="form-group row mb-3">
+                                    <div class="col">
+                                        <label for="state">State: ${state}</label>
+                                    </div>
                                 </div>
 
-                                <div class="form-group row">
-                                    <label for="zipCode">Zip Code</label><span style="color: red !important; display: inline; float: none;">*</span>
-                                    <input type="text" name="zipCode" class="form-control" value="${zipCode}" />
+                                <div class="form-group row mb-3">
+                                    <div class="col">
+                                        <label for="zipCode">Zip Code: ${zipCode}</label>
+                                    </div>
                                 </div>
 
-                                <div class="form-group row">
-                                    <label for="phone_number">Phone</label><span style="color: red !important; display: inline; float: none;">*</span>
-                                    <input type="text" name="phone_number" class="form-control" value="${phone_number}" />
+                                <div class="form-group row mb-3">
+                                    <div class="col">
+                                        <label for="phone_number">Phone: ${phone_number}</label>
+                                    </div>
                                 </div>
 
-                                <div class="form-group row">
-                                    <label for="email">Email</label><span style="color: red !important; display: inline; float: none;">*</span>
-                                    <input type="email" name="email" class="form-control" value="${email}" />
+                                <div class="form-group row mb-3">
+                                    <div class="col">
+                                        <a href="pages/billingDetails" class="btn btn-primary">Update Billing Details</a>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        </form>
                     </div>
                 </div>
-            </section>
+            </div>
+        </section>
 
-            <section class="py-5">
-                <div class="container justify-content-center align-items-center">
-                    <div class="row">
-                        <div class="col-md-6">
+        <section class="py-5">
+            <div class="container justify-content-center align-items-center">
+                <div class="row">
+                    <div class="col-md-6">
+                        <form action="payments/transaction" method="post">
                             <h2>Select Payment Method</h2>
                             <div class="form-group">
                                 <label for="paymentMethod">Payment Method</label>
@@ -207,11 +221,11 @@ response.setHeader("Cache-Control", "no-store");
                                 </div>
                             </div>
                             <button type="submit" class="btn btn-primary mt-3" id="paymentButton">Proceed To Checkout</button>
-                        </div>
+                        </form>
                     </div>
                 </div>
-            </section>
-        </form>
+            </div>
+        </section>
         <script>
             const paymentMethod = ['CreditOrDebitCard', 'Paypal', 'CashOnDelivery'];
             $(document).ready(function () {
@@ -222,26 +236,6 @@ response.setHeader("Cache-Control", "no-store");
                         $('#cardDetails').hide();
                     }
                 });
-            });
-            $.ajax({
-                url: 'https://lovedolove-restcountries-api.vercel.app/all',
-                type: 'GET',
-                success: function (data) {
-                    data.sort(function (a, b) {
-                        var countryA = a.name.common.toUpperCase();
-                        var countryB = b.name.common.toUpperCase();
-                        if (countryA < countryB) {
-                            return -1;
-                        }
-                        if (countryA > countryB) {
-                            return 1;
-                        }
-                        return 0;
-                    });
-                    data.forEach(function (country) {
-                        $('#countries').append('<option value="' + country.name.common + '">' + country.name.common + '</option>');
-                    });
-                }
             });
         </script>
     </body>

@@ -31,6 +31,12 @@ import java.util.Date;
     @NamedQuery(name = "Customers.findByPhoneNumber", query = "SELECT c FROM Customers c WHERE c.phoneNumber = :phoneNumber"),
     @NamedQuery(name = "Customers.findByGender", query = "SELECT c FROM Customers c WHERE c.gender = :gender"),
     @NamedQuery(name = "Customers.findByTwoFactorAuth", query = "SELECT c FROM Customers c WHERE c.twoFactorAuth = :twoFactorAuth"),
+    @NamedQuery(name = "Customers.findByFirstName", query = "SELECT c FROM Customers c WHERE c.firstName = :firstName"),
+    @NamedQuery(name = "Customers.findByLastName", query = "SELECT c FROM Customers c WHERE c.lastName = :lastName"),
+    @NamedQuery(name = "Customers.findByCountry", query = "SELECT c FROM Customers c WHERE c.country = :country"),
+    @NamedQuery(name = "Customers.findByCity", query = "SELECT c FROM Customers c WHERE c.city = :city"),
+    @NamedQuery(name = "Customers.findByState", query = "SELECT c FROM Customers c WHERE c.state = :state"),
+    @NamedQuery(name = "Customers.findByZipCode", query = "SELECT c FROM Customers c WHERE c.zipCode = :zipCode"),
     @NamedQuery(name = "Customers.findByAccountCreationDate", query = "SELECT c FROM Customers c WHERE c.accountCreationDate = :accountCreationDate"),
     @NamedQuery(name = "Customers.findByEmailAndPassword", query = "SELECT c FROM Customers c WHERE c.email = :email AND c.password = :password")})
 public class Customers implements Serializable {
@@ -77,6 +83,24 @@ public class Customers implements Serializable {
     private byte[] picture;
     @Column(name = "TWO_FACTOR_AUTH")
     private Boolean twoFactorAuth;
+    @Size(max = 100)
+    @Column(name = "FIRST_NAME")
+    private String firstName;
+    @Size(max = 100)
+    @Column(name = "LAST_NAME")
+    private String lastName;
+    @Size(max = 100)
+    @Column(name = "COUNTRY")
+    private String country;
+    @Size(max = 100)
+    @Column(name = "CITY")
+    private String city;
+    @Size(max = 100)
+    @Column(name = "STATE")
+    private String state;
+    @Size(max = 10)
+    @Column(name = "ZIP_CODE")
+    private String zipCode;
     @Column(name = "ACCOUNT_CREATION_DATE")
     @Temporal(TemporalType.TIMESTAMP)
     private Date accountCreationDate;
@@ -143,6 +167,18 @@ public class Customers implements Serializable {
         this.gender = gender;
         this.twoFactorAuth = twoFactorAuth;
         this.accountCreationDate = accountCreationDate;
+    }
+
+    public Customers(Integer userId, String address, String phoneNumber, String firstName, String lastName, String country, String city, String state, String zipCode) {
+        this.userId = userId;
+        this.address = address;
+        this.phoneNumber = phoneNumber;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.country = country;
+        this.city = city;
+        this.state = state;
+        this.zipCode = zipCode;
     }
 
     public Integer getUserId() {
@@ -217,6 +253,54 @@ public class Customers implements Serializable {
         this.twoFactorAuth = twoFactorAuth;
     }
 
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
+
+    public String getZipCode() {
+        return zipCode;
+    }
+
+    public void setZipCode(String zipCode) {
+        this.zipCode = zipCode;
+    }
+
     public Date getAccountCreationDate() {
         return accountCreationDate;
     }
@@ -247,19 +331,6 @@ public class Customers implements Serializable {
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Customers{");
-        sb.append("userId=").append(userId);
-        sb.append(", username=").append(username);
-        sb.append(", password=").append(password);
-        sb.append(", email=").append(email);
-        sb.append(", address=").append(address);
-        sb.append(", phoneNumber=").append(phoneNumber);
-        sb.append(", gender=").append(gender);
-        sb.append(", picture=").append(picture);
-        sb.append(", twoFactorAuth=").append(twoFactorAuth);
-        sb.append(", accountCreationDate=").append(accountCreationDate);
-        sb.append('}');
-        return sb.toString();
+        return "entities.Customers[ userId=" + userId + " ]";
     }
 }

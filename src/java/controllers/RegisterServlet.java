@@ -4,7 +4,6 @@ import common.Constants;
 import dao.OtpDao;
 import entities.Customers;
 import entities.Session;
-import utilities.SessionUtilities;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.servlet.ServletException;
@@ -16,6 +15,7 @@ import java.io.IOException;
 import java.util.List;
 import utilities.RedirectUtilities;
 import utilities.RedirectUtilities.RedirectType;
+import utilities.SessionUtilities;
 import utilities.StringUtilities;
 import utilities.ValidationUtilities;
 
@@ -70,7 +70,7 @@ public class RegisterServlet extends HttpServlet {
             return null;
         }
         if (doesEmailExist(customer.getEmail())) {
-            RedirectUtilities.setMessage(request, RedirectType.DANGER, "Email Already Exists!");
+            RedirectUtilities.setMessage(request, RedirectType.DANGER, "Account Already Exists!");
             return null;
         }
         return customer;
