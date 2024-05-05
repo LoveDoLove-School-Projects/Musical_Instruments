@@ -19,8 +19,8 @@
                 <div class="container">
                     <div class="row justify-content-center align-items-center">
                         <div class="d-block my-auto p-5 col-12 col-xl-5 sec1Content" style="animation:swing 1s">
-                            <h1>Welcome to <strong>TAR</strong> music instruments</h1>
-                            <p>Enjoy the music, Malaysia top 1 music website</p>
+                            <h1>Welcome to <strong><%=application.getInitParameter("companyName")%></strong> Official Website</h1>
+                            <p>Enjoy the music, Malaysia Top 1 Music Website</p>
                             <a href="pages/products">
                                 <button class="m-2 px-4 py-2 button"><strong>Shop now</strong></button>
                             </a>
