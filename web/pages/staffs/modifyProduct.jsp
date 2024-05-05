@@ -28,7 +28,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-6 offset-md-3">
-                    <h1 class="text-center mb-4">Modify Product Information</h1>
+                    <h1 class="text-center mb-4">Product Modification</h1>
                     <form id="modifyForm" action="pages/staffs/modifyProduct" enctype="multipart/form-data" method="POST" onsubmit="return confirmUpdate()">
                         <% Products productDetails = (Products) session.getAttribute("productDetails"); %>
                         <div class="form-group">
@@ -48,17 +48,9 @@
                         <div class="form-group">
                             <label for="color">Please select a color: </label>
                             <select class="form-control" id="color" name="color">
-                                <option value="Red">Red</option>
-                                <option value="Orange">Orange</option>
-                                <option value="Yellow">Yellow</option>
-                                <option value="Green">Green</option>
-                                <option value="Blue">Blue</option>
-                                <option value="Indigo">Indigo</option>
-                                <option value="Violet">Violet</option>
-                                <option value="Black">Black</option>
-                                <option value="White">White</option>
-                                <option value="Brown">Brown</option>
-                                <option value="Grey">Grey</option>
+                                <c:forEach var="colorOption" items="${['Red', 'Orange', 'Yellow', 'Green', 'Blue', 'Indigo', 'Violet', 'Black', 'White', 'Brown', 'Grey']}">
+                                    <option value="${colorOption}" <c:if test="${colorOption eq productDetails.color}">selected</c:if>>${colorOption}</option>
+                                </c:forEach>
                             </select>
                         </div>
 
@@ -69,10 +61,9 @@
                         <div class="form-group">
                             <label for="category">Please select a category: </label>
                             <select class="form-control" id="category" name="category" required>
-                                <option value="Piano" >Piano</option>
-                                <option value="Drum">Drum</option>
-                                <option value="Guitar">Guitar</option>
-                                <option value="Violin">Violin</option>
+                                <c:forEach var="categoryOption" items="${['Piano', 'Drum', 'Guitar', 'Violin']}">
+                                    <option value="${categoryOption}" <c:if test="${categoryOption eq productDetails.category}">selected</c:if>>${categoryOption}</option>
+                                </c:forEach>
                             </select>
                         </div>
                         <div class="form-group">

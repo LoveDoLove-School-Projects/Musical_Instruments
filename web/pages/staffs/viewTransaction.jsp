@@ -20,7 +20,7 @@
                 <div class="col-md-12">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            <h3 class="panel-title"><i class="fas fa-file-invoice">Transaction  History</i></h3>
+                            <br><h3 class="panel-title"><i class="fas fa-file-invoice">  Transaction  History</i></h3>
                         </div>
                         <div class="panel-body table-responsive">
                             <table class="table table-striped table-bordered table-hover">

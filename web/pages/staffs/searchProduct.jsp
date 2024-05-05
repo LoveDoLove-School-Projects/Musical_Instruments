@@ -59,13 +59,14 @@
     <body>
         <jsp:include page="/defaults/header.jsp" />
         <div class="container">
-            <h1>[Product Management]</h1><br>
+            <br><h1><i class="fas fa-box">  Product Management</i></h1><br>
             <div class="product-search-box">
                 <i class="fas fa-box"></i>
             </div>
             <form class="form-inline mb-3" action="pages/staffs/staffSearchProduct" method="POST">
                 <input class="col-5 form-control mr-2" type="text" name="searchQuery" placeholder="Enter product ID: "><br>
                 <button type="submit" class="btn btn-primary">Search</button>
+                <a href="pages/staffs/addProduct" class="btn btn-success">+ <i class="fas fa-box"></i>  Add New Product</a>
             </form>
         </div>
         <jsp:include page="/defaults/footer.jsp" />
