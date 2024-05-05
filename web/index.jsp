@@ -7,7 +7,7 @@
 
     <head>
         <jsp:include page="/defaults/head.jsp" />
-        <title><%=application.getC
+        <title><%=application.getInitParameter("companyName")%></title>
         <link rel="stylesheet" href="assets/css/main.css"/>
     </head>
 
