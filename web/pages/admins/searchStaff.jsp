@@ -20,9 +20,7 @@
                 background-color: #fbfbfb;
                 font-family: 'Roboto', sans-serif;
             }
-            .container {
-                margin-top: 20px;
-            }
+
             .btn {
                 width: 100%;
                 padding: 15px;

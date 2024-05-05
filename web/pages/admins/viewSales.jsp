@@ -12,15 +12,12 @@
     </head>
     <body>
         <jsp:include page="/defaults/header.jsp" />
-        <%
-        List<Transactions> transactionList = (List<Transactions>) request.getAttribute("transactionList");
-        %>
         <div class="container">
-
             <div class="panel-heading">
                 <br><h1><i class="fas fa-chart-line">  View Sales</i></h1>
             </div>
             <div class="container mt-4">
+                <!-- Sales Records Form -->
                 <div class="row">
                     <div class="col-md-6">
                         <div class="card">
@@ -28,7 +25,8 @@
                                 View Sales Records
                             </div>
                             <div class="card-body">
-                                <form action="fetchSales" method="post">
+                                <form action="viewSales" method="post">
+                                    <input type="hidden" name="action" value="fetchSales">
                                     <div class="form-group">
                                         <label for="date">Select Date:</label>
                                         <input type="date" id="date" name="date" class="form-control">
@@ -40,13 +38,15 @@
                             </div>
                         </div>
                     </div>
+                    <!-- Sales Report Form -->
                     <div class="col-md-6">
                         <div class="card">
                             <div class="card-header">
                                 Generate Sales Report
                             </div>
                             <div class="card-body">
-                                <form action="generateReport" method="post">
+                                <form action="viewSales" method="post">
+                                    <input type="hidden" name="action" value="generateReport">
                                     <div class="form-group">
                                         <label for="reportType">Report Type:</label>
                                         <select name="reportType" id="reportType" class="form-control">
@@ -63,6 +63,7 @@
                         </div>
                     </div>
                 </div>
+                <!-- Top 10 Sold Products Section -->
                 <div class="row mt-4">
                     <div class="col-md-12">
                         <div class="card">
@@ -70,13 +71,29 @@
                                 Top 10 Sold Products
                             </div>
                             <div class="card-body">
-                                <!-- Display top 10 sold products here -->
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Product Name</th>
+                                            <th>Total Sales</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- Iterate over the top 10 products and display them -->
+                                        <c:forEach var="product" items="${top10Products}">
+                                            <tr>
+                                                <td>${product.productName}</td>
+                                                <td>${product.totalSales}</td>
+                                            </tr>
+                                        </c:forEach>
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <jsp:include page="/defaults/footer.jsp" />
+        </div>
+        <jsp:include page="/defaults/footer.jsp" />
     </body>
 </html>
-

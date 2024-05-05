@@ -365,6 +365,10 @@
     <session-config>
         <session-timeout>30</session-timeout>
     </session-config>
+    <context-param>
+        <param-name>companyName</param-name>
+        <param-value>TAR Music</param-value>
+    </context-param>
     <filter>
         <description>JSP Filter Servlet</description>
         <filter-name>InitFilter</filter-name>
