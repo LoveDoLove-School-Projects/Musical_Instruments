@@ -31,7 +31,7 @@ public class PaypalReviewServlet extends HttpServlet {
     @Resource
     UserTransaction userTransaction;
     private static final Logger LOG = Logger.getLogger(PaypalReviewServlet.class.getName());
-    private static final String PAYPAL_REVIEW_JSP_URL = "/payments/paypalReview.jsp";
+    private static final String PAYPAL_REVIEW_JSP_URL = "/payments/review.jsp";
     private final PaypalServices paypalServices = new PaypalServices();
 
     @Override
@@ -59,10 +59,10 @@ public class PaypalReviewServlet extends HttpServlet {
             return;
         }
         PaypalPayment.PayerInfo payerInfo = paypalPayment.getPayer().getPayer_info();
-        PaypalPayment.Transaction transaction = paypalPayment.getTransactions().get(0);
-        PaypalPayment.ShippingAddress shippingAddress = transaction.getItem_list().getShipping_address();
+        PaypalPayment.Transaction paypalTransaction = paypalPayment.getTransactions().get(0);
+        PaypalPayment.ShippingAddress shippingAddress = paypalTransaction.getItem_list().getShipping_address();
         request.setAttribute("payer", payerInfo);
-        request.setAttribute("transaction", transaction);
+        request.setAttribute("transaction", paypalTransaction);
         request.setAttribute("shippingAddress", shippingAddress);
         request.getRequestDispatcher(PAYPAL_REVIEW_JSP_URL).forward(request, response);
     }

@@ -25,7 +25,7 @@ response.setHeader("Cache-Control", "no-store");
                         <tbody>
                             <tr>
                                 <th scope="row">Merchant:</th>
-                                <td>Musical Instruments</td>
+                                <td>TAR Music</td>
                             </tr>
                             <tr>
                                 <th scope="row">Payer:</th>

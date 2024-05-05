@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <footer class="footer mt-auto py-3 bg-light">
     <div class="container text-center">
-        <span class="text-muted">© 2024 Musical Instruments. All rights reserved.</span>
+        <span class="text-muted">© 2024 TAR Music. All rights reserved.</span>
         <br />
         <span class="text-muted">Phone: +1 234 567 890</span>
         <br />

@@ -55,7 +55,7 @@ Session user_session = (Session) session.getAttribute("user_session");
 <nav class="fixed-top navbar navbar-expand-lg navbar-light bg-body-tertiary">
     <div class="container">
         <a class="navbar-brand me-2" href="#">
-            <img src="assets/image/logo.png" width="50" height="50" alt="Musical Instruments Logo"
+            <img src="assets/image/logo.png" width="50" height="50" alt="TAR Music Logo"
                  loading="lazy" style="margin-top: -1px;" />
         </a>
 

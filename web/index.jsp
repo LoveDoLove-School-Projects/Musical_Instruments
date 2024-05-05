@@ -7,7 +7,7 @@
 
     <head>
         <jsp:include page="/defaults/head.jsp" />
-        <title>Musical Instruments</title>
+        <title><%=application.getC
         <link rel="stylesheet" href="assets/css/main.css"/>
     </head>
 

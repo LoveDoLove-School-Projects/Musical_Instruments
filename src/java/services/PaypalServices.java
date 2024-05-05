@@ -92,7 +92,7 @@ public class PaypalServices {
         Amount amount = getAmountDetails(cartList);
         Transaction transaction = new Transaction();
         transaction.setAmount(amount);
-        transaction.setDescription("Sandbox Transaction");
+        transaction.setDescription("Pay To TAR Music");
         ItemList itemList = getItemList(cartList);
         transaction.setItemList(itemList);
         List<Transaction> listTransaction = new ArrayList<>();

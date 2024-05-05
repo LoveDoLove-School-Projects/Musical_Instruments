@@ -19,7 +19,7 @@ response.setHeader("Cache-Control", "no-store");
             <div class="row">
                 <div class="col-md-12 order-md-1">
                     <h4 class="mb-3">Transaction Details</h4>
-                    <form action="payments/ccdc/verify" method="post">
+                    <form action="payments/ccdc/verify" method="post" id="verifyForm">
                         <table class="table">
                             <tbody>
                                 <tr>
@@ -68,14 +68,14 @@ response.setHeader("Cache-Control", "no-store");
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label for="otp">OTP</label>
-                                <input type="text" class="form-control" id="otp" name="otp" placeholder="OTP" required>
+                                <input type="text" name="otp" id="otp" class="form-control form-control-lg" maxlength="6" placeholder="XXXXXX" required />
                             </div>
                         </div>
-                        <hr class="mb-4">
-                        <button class="btn btn-primary btn-lg btn-block" type="submit">Verify</button>
+                        <button class="btn btn-primary btn-lg btn-block md-3" type="submit" id="submitButton">Verify</button>
                     </form>
                 </div>
             </div>
         </div>
+        <script src="assets/js/ccdc.js"></script>
     </body>
 </html>

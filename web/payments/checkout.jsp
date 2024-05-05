@@ -164,7 +164,6 @@ response.setHeader("Cache-Control", "no-store");
                                 <select class="form-control" id="paymentMethod" name="paymentMethod" required>
                                     <option value="Paypal" selected>PayPal</option>
                                     <option value="CreditOrDebitCard">Credit / Debit Card</option>
-                                    <option value="CashOnDelivery">Cash On Delivery</option>
                                 </select>
                             </div>
                             <div id="cardDetails" style="display: none;">
@@ -227,13 +226,25 @@ response.setHeader("Cache-Control", "no-store");
             </div>
         </section>
         <script>
-            const paymentMethod = ['CreditOrDebitCard', 'Paypal', 'CashOnDelivery'];
+            const paymentMethod = ['CreditOrDebitCard', 'Paypal'];
             $(document).ready(function () {
                 $('#paymentMethod').change(function () {
                     if ($(this).val() === paymentMethod[0]) {
                         $('#cardDetails').show();
                     } else {
                         $('#cardDetails').hide();
+                    }
+                });
+                $('#paymentButton').click(function () {
+                    if ($('#paymentMethod').val() !== paymentMethod[0]) {
+                        $('#cardHolderName').val('');
+                        $('#card1').val('');
+                        $('#card2').val('');
+                        $('#card3').val('');
+                        $('#card4').val('');
+                        $('#cvv').val('');
+                        $('#expYear').val('');
+                        $('#expMonth').val('');
                     }
                 });
             });

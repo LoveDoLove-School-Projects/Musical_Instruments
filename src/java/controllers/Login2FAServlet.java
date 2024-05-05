@@ -1,7 +1,6 @@
 package controllers;
 
 import common.Constants;
-import dao.OtpDao;
 import entities.OtpsType;
 import entities.Role;
 import entities.Session;
@@ -28,7 +27,6 @@ public class Login2FAServlet extends HttpServlet {
     private static final String LOGIN_2FA_URL = "/sessions/login2fa";
     private static final String RESEND_LOGIN_OTP_URL = "/sessions/resendLoginOtp";
     private static final Map<OtpsType, String> STATUS_MESSAGES;
-    private final OtpServices otpServices = new OtpServices();
 
     static {
         STATUS_MESSAGES = new EnumMap<>(OtpsType.class);
@@ -38,7 +36,7 @@ public class Login2FAServlet extends HttpServlet {
         STATUS_MESSAGES.put(OtpsType.FAILED, "Failed to verify OTP! Please try again.");
         STATUS_MESSAGES.put(OtpsType.INVALID, "Invalid OTP!");
     }
-    private final OtpDao otpDao = new OtpDao();
+    private final OtpServices otpServices = new OtpServices();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -67,7 +65,7 @@ public class Login2FAServlet extends HttpServlet {
                 resendLoginOtp(request, response, attributes);
                 break;
             default:
-                verifyLoginOtp(request, response, session, attributes);
+                verifyOtp(request, response, attributes);
                 break;
         }
     }
@@ -82,7 +80,7 @@ public class Login2FAServlet extends HttpServlet {
         RedirectUtilities.sendRedirect(request, response, LOGIN_2FA_URL);
     }
 
-    private void verifyLoginOtp(HttpServletRequest request, HttpServletResponse response, HttpSession session, Session attributes) throws IOException, ServletException {
+    private void verifyOtp(HttpServletRequest request, HttpServletResponse response, Session attributes) throws IOException, ServletException {
         String otp = request.getParameter("otp");
         if (StringUtilities.anyNullOrBlank(otp)) {
             RedirectUtilities.setMessage(request, RedirectType.DANGER, "Please fill in OTP!");
@@ -90,7 +88,7 @@ public class Login2FAServlet extends HttpServlet {
             return;
         }
         OtpsType otpStatus = otpServices.verifyOtp(attributes.getEmail(), otp);
-        handleOtpStatus(otpStatus, request, response, session, attributes);
+        handleOtpStatus(request, response, otpStatus, attributes);
     }
 
     private void setLogin2FAPage(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -111,11 +109,11 @@ public class Login2FAServlet extends HttpServlet {
         return new Session(loginId, username, email, role);
     }
 
-    private void handleOtpStatus(OtpsType otpStatus, HttpServletRequest request, HttpServletResponse response, HttpSession session, Session attributes) throws IOException, ServletException {
+    private void handleOtpStatus(HttpServletRequest request, HttpServletResponse response, OtpsType otpStatus, Session session) throws IOException, ServletException {
         if (otpStatus == OtpsType.OK) {
-            session.invalidate();
-            session = request.getSession(true);
-            SessionUtilities.setLoginSession(session, attributes);
+            HttpSession httpSession = request.getSession();
+            httpSession.invalidate();
+            SessionUtilities.setLoginSession(httpSession, session);
             SecurityLog.addSecurityLog(request, "login successful with 2fa.");
             RedirectUtilities.sendRedirect(request, response, Constants.PROFILE_URL);
         } else {

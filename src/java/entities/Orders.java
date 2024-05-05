@@ -214,5 +214,4 @@ public class Orders {
     public String toString() {
         return "entities.Orders[ id=" + id + " ]";
     }
-    
 }

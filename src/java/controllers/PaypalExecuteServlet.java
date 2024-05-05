@@ -4,7 +4,6 @@ import common.Constants;
 import entities.PaypalPayment;
 import entities.Session;
 import entities.Transactions;
-import utilities.SessionUtilities;
 import jakarta.annotation.Resource;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -25,6 +24,7 @@ import java.util.Date;
 import java.util.logging.Logger;
 import services.PaypalServices;
 import utilities.RedirectUtilities;
+import utilities.SessionUtilities;
 
 @WebServlet(name = "PaypalExecuteServlet", urlPatterns = {"/payments/paypal/execute"})
 public class PaypalExecuteServlet extends HttpServlet {
@@ -35,6 +35,7 @@ public class PaypalExecuteServlet extends HttpServlet {
     UserTransaction userTransaction;
     private static final Logger LOG = Logger.getLogger(PaypalExecuteServlet.class.getName());
     private static final String RECEIPT_URL = "/payments/receipt";
+    private static final String UPDATE_ORDER_URL = "/pages/orders/updateOrder";
     private final PaypalServices paypalServices = new PaypalServices();
 
     @Override
@@ -58,10 +59,13 @@ public class PaypalExecuteServlet extends HttpServlet {
             RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Failed to update transaction.", Constants.CART_URL);
             return;
         }
+        Transactions transaction = entityManager.createNamedQuery("Transactions.findByTransactionNumber", Transactions.class).setParameter("transactionNumber", paypalPayment.getId()).getSingleResult();
         if ("approved".equals(paypalPayment.getState())) {
             HttpSession httpSession = request.getSession();
             httpSession.setAttribute("paypalPayment", paypalPayment);
-            RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.SUCCESS, "Payment successful.", RECEIPT_URL);
+//            RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.SUCCESS, "Payment successful.", RECEIPT_URL);
+            String url = UPDATE_ORDER_URL + "?paymentId=" + transaction.getTransactionNumber() + "&order_number=" + transaction.getOrderNumber() + "&txnStatus=" + transaction.getTransactionStatus();
+            RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.SUCCESS, "Payment successful.", url);
         } else {
             RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Payment failed.", "/");
         }
