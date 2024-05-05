@@ -23,7 +23,7 @@ import java.util.Date;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Transactions.findAll", query = "SELECT t FROM Transactions t"),
-    @NamedQuery(name = "Transactions.findById", query = "SELECT t FROM Transactions t WHERE t.id = :id"),
+    @NamedQuery(name = "Transactions.findByPkid", query = "SELECT t FROM Transactions t WHERE t.pkid = :pkid"),
     @NamedQuery(name = "Transactions.findByUserId", query = "SELECT t FROM Transactions t WHERE t.userId = :userId"),
     @NamedQuery(name = "Transactions.findByTransactionNumber", query = "SELECT t FROM Transactions t WHERE t.transactionNumber = :transactionNumber"),
     @NamedQuery(name = "Transactions.findByOrderNumber", query = "SELECT t FROM Transactions t WHERE t.orderNumber = :orderNumber"),
@@ -39,8 +39,8 @@ public class Transactions implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
-    @Column(name = "ID")
-    private Integer id;
+    @Column(name = "PKID")
+    private Integer pkid;
     @Basic(optional = false)
     @NotNull
     @Column(name = "USER_ID")
@@ -89,12 +89,12 @@ public class Transactions implements Serializable {
     public Transactions() {
     }
 
-    public Transactions(Integer id) {
-        this.id = id;
+    public Transactions(Integer pkid) {
+        this.pkid = pkid;
     }
 
-    public Transactions(Integer id, int userId, String transactionNumber, String orderNumber, String transactionStatus, String paymentMethod, String currency, BigDecimal totalAmount, Date dateCreatedGmt, Date dateUpdatedGmt) {
-        this.id = id;
+    public Transactions(Integer pkid, int userId, String transactionNumber, String orderNumber, String transactionStatus, String paymentMethod, String currency, BigDecimal totalAmount, Date dateCreatedGmt, Date dateUpdatedGmt) {
+        this.pkid = pkid;
         this.userId = userId;
         this.transactionNumber = transactionNumber;
         this.orderNumber = orderNumber;
@@ -106,12 +106,12 @@ public class Transactions implements Serializable {
         this.dateUpdatedGmt = dateUpdatedGmt;
     }
 
-    public Integer getId() {
-        return id;
+    public Integer getPkid() {
+        return pkid;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setPkid(Integer pkid) {
+        this.pkid = pkid;
     }
 
     public int getUserId() {
@@ -189,7 +189,7 @@ public class Transactions implements Serializable {
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (id != null ? id.hashCode() : 0);
+        hash += (pkid != null ? pkid.hashCode() : 0);
         return hash;
     }
 
@@ -200,7 +200,7 @@ public class Transactions implements Serializable {
             return false;
         }
         Transactions other = (Transactions) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+        if ((this.pkid == null && other.pkid != null) || (this.pkid != null && !this.pkid.equals(other.pkid))) {
             return false;
         }
         return true;
@@ -208,6 +208,6 @@ public class Transactions implements Serializable {
 
     @Override
     public String toString() {
-        return "entities.Transactions[ id=" + id + " ]";
+        return "entities.Transactions[ pkid=" + pkid + " ]";
     }
 }

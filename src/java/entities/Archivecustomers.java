@@ -31,6 +31,12 @@ import java.util.Date;
     @NamedQuery(name = "Archivecustomers.findByPhoneNumber", query = "SELECT a FROM Archivecustomers a WHERE a.phoneNumber = :phoneNumber"),
     @NamedQuery(name = "Archivecustomers.findByGender", query = "SELECT a FROM Archivecustomers a WHERE a.gender = :gender"),
     @NamedQuery(name = "Archivecustomers.findByTwoFactorAuth", query = "SELECT a FROM Archivecustomers a WHERE a.twoFactorAuth = :twoFactorAuth"),
+    @NamedQuery(name = "Archivecustomers.findByFirstName", query = "SELECT a FROM Archivecustomers a WHERE a.firstName = :firstName"),
+    @NamedQuery(name = "Archivecustomers.findByLastName", query = "SELECT a FROM Archivecustomers a WHERE a.lastName = :lastName"),
+    @NamedQuery(name = "Archivecustomers.findByCountry", query = "SELECT a FROM Archivecustomers a WHERE a.country = :country"),
+    @NamedQuery(name = "Archivecustomers.findByCity", query = "SELECT a FROM Archivecustomers a WHERE a.city = :city"),
+    @NamedQuery(name = "Archivecustomers.findByState", query = "SELECT a FROM Archivecustomers a WHERE a.state = :state"),
+    @NamedQuery(name = "Archivecustomers.findByZipCode", query = "SELECT a FROM Archivecustomers a WHERE a.zipCode = :zipCode"),
     @NamedQuery(name = "Archivecustomers.findByAccountCreationDate", query = "SELECT a FROM Archivecustomers a WHERE a.accountCreationDate = :accountCreationDate")})
 public class Archivecustomers implements Serializable {
 
@@ -76,6 +82,24 @@ public class Archivecustomers implements Serializable {
     private Serializable picture;
     @Column(name = "TWO_FACTOR_AUTH")
     private Boolean twoFactorAuth;
+    @Size(max = 100)
+    @Column(name = "FIRST_NAME")
+    private String firstName;
+    @Size(max = 100)
+    @Column(name = "LAST_NAME")
+    private String lastName;
+    @Size(max = 100)
+    @Column(name = "COUNTRY")
+    private String country;
+    @Size(max = 100)
+    @Column(name = "CITY")
+    private String city;
+    @Size(max = 100)
+    @Column(name = "STATE")
+    private String state;
+    @Size(max = 10)
+    @Column(name = "ZIP_CODE")
+    private String zipCode;
     @Column(name = "ACCOUNT_CREATION_DATE")
     @Temporal(TemporalType.TIMESTAMP)
     private Date accountCreationDate;
@@ -108,6 +132,12 @@ public class Archivecustomers implements Serializable {
         this.picture = customer.getPicture();
         this.twoFactorAuth = customer.getTwoFactorAuth();
         this.accountCreationDate = customer.getAccountCreationDate();
+        this.firstName = customer.getFirstName();
+        this.lastName = customer.getLastName();
+        this.country = customer.getCountry();
+        this.city = customer.getCity();
+        this.state = customer.getState();
+        this.zipCode = customer.getZipCode();
     }
 
     public Integer getUserId() {
@@ -180,6 +210,54 @@ public class Archivecustomers implements Serializable {
 
     public void setTwoFactorAuth(Boolean twoFactorAuth) {
         this.twoFactorAuth = twoFactorAuth;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
+
+    public String getZipCode() {
+        return zipCode;
+    }
+
+    public void setZipCode(String zipCode) {
+        this.zipCode = zipCode;
     }
 
     public Date getAccountCreationDate() {

@@ -11,7 +11,4 @@ CREATE TABLE Staffs (
     account_creation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-INSERT INTO Staffs (username, password, email, address, phone_number, gender)
-VALUES ('Chong Jun Xiang', 'qqWWEDYgqA7UkvID9vyLSQ==', 'chongjx-wm22@student.tarc.edu.my', 'test', '0123456789', 'Male');
-
 DROP TABLE Staffs;

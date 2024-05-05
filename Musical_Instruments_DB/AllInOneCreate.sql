@@ -8,6 +8,13 @@ CREATE TABLE ArchiveCustomers (
     gender VARCHAR(10) NOT NULL,
     picture BLOB,
     two_factor_auth BOOLEAN DEFAULT FALSE,
+    -- Billing details
+    first_name VARCHAR(100),
+    last_name VARCHAR(100),
+    country VARCHAR(100),
+    city VARCHAR(100),
+    state VARCHAR(100),
+    zip_code VARCHAR(10),
     account_creation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -21,6 +28,13 @@ CREATE TABLE Customers (
     gender VARCHAR(10) NOT NULL,
     picture BLOB,
     two_factor_auth BOOLEAN DEFAULT FALSE,
+    -- Billing details
+    first_name VARCHAR(100),
+    last_name VARCHAR(100),
+    country VARCHAR(100),
+    city VARCHAR(100),
+    state VARCHAR(100),
+    zip_code VARCHAR(10),
     account_creation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -95,22 +109,8 @@ CREATE TABLE Staffs (
     account_creation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE BankUsers (
-    UserID INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-    FirstName VARCHAR(100),
-    LastName VARCHAR(100),
-    Email VARCHAR(255),
-    Password VARCHAR(255),
-    Card_Holder_Name VARCHAR(100),
-    Card_Number VARCHAR(16),
-    Expiry_Date DATE,
-    CVV VARCHAR(3),
-    Balance DECIMAL(10, 2),
-    Currency VARCHAR(3)
-);
-
 CREATE TABLE Transactions (
-    id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    pkid INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     user_id INT NOT NULL,
     transaction_number VARCHAR(255) UNIQUE NOT NULL,
     order_number VARCHAR(255) UNIQUE NOT NULL,
@@ -120,4 +120,13 @@ CREATE TABLE Transactions (
     total_amount DECIMAL(10, 2) NOT NULL,
     date_created_gmt TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     date_updated_gmt TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
+);
+
+CREATE TABLE Cards (
+    pkid INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    card_holder_name VARCHAR(100),
+    card_number VARCHAR(16),
+    expiry_date DATE,
+    cvv VARCHAR(3),
+    balance DECIMAL(10, 2)
 );

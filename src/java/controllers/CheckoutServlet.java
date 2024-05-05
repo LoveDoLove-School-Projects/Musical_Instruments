@@ -2,9 +2,9 @@ package controllers;
 
 import common.Constants;
 import entities.Carts;
+import entities.Customers;
 import entities.OrderDetails;
 import entities.Session;
-import utilities.SessionUtilities;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.servlet.ServletException;
@@ -16,6 +16,7 @@ import java.util.List;
 import services.TransactionServices;
 import utilities.RedirectUtilities;
 import utilities.RedirectUtilities.RedirectType;
+import utilities.SessionUtilities;
 
 public class CheckoutServlet extends HttpServlet {
 
@@ -43,6 +44,24 @@ public class CheckoutServlet extends HttpServlet {
         request.setAttribute("shipping", orderDetails.getShipping());
         request.setAttribute("tax", orderDetails.getTax());
         request.setAttribute("total", orderDetails.getTotal());
+        initBillingDetails(request, session);
         request.getRequestDispatcher(CHECKOUT_JSP_URL).forward(request, response);
+    }
+
+    private boolean initBillingDetails(HttpServletRequest request, Session session) {
+        Customers existingCustomer = entityManager.find(Customers.class, session.getUserId());
+        if (existingCustomer == null) {
+            return false;
+        }
+        request.setAttribute("firstName", existingCustomer.getFirstName());
+        request.setAttribute("lastName", existingCustomer.getLastName());
+        request.setAttribute("country", existingCustomer.getCountry());
+        request.setAttribute("address", existingCustomer.getAddress());
+        request.setAttribute("city", existingCustomer.getCity());
+        request.setAttribute("state", existingCustomer.getState());
+        request.setAttribute("zipCode", existingCustomer.getZipCode());
+        request.setAttribute("phone_number", existingCustomer.getPhoneNumber());
+        request.setAttribute("email", existingCustomer.getEmail());
+        return true;
     }
 }

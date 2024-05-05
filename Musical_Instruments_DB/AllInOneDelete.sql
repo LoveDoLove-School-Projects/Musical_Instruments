@@ -7,5 +7,5 @@ DROP TABLE ResetPassword;
 DROP TABLE SecurityLog;
 DROP TABLE InternalSecurityLog;
 DROP TABLE Staffs;
-DROP TABLE BankUsers;
+DROP TABLE Cards;
 DROP TABLE Transactions;
