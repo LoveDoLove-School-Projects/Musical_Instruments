@@ -40,7 +40,7 @@
                                     <% if (transactionList != null) {
                                         for (Transactions transaction : transactionList) {
                                     %>
-                                    <tr>
+                                    <tr class="clickable-row" data-href="payments/receipt?transactionNumber=<%=transaction.getTransactionNumber()%>">
                                         <td><%=transaction.getTransactionNumber()%></td>
                                         <td><%=transaction.getOrderNumber()%></td>
                                         <td><%=transaction.getPaymentMethod()%></td>
@@ -60,5 +60,12 @@
             </div>
         </div>
         <jsp:include page="/defaults/footer.jsp" />
+        <script>
+            $(document).ready(function () {
+                $('.clickable-row').click(function () {
+                    window.open($(this).data('href'), '_blank');
+                });
+            });
+        </script>
     </body>
 </html>

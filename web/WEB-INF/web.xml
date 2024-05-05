@@ -126,11 +126,11 @@
     </servlet>
     <servlet>
         <servlet-name>PaymentReceiptServlet</servlet-name>
-        <servlet-class>controllers.PaymentReceiptServlet</servlet-class>
+        <servlet-class>controllers.TransactionReceiptServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>PaymentCancelServlet</servlet-name>
-        <servlet-class>controllers.PaymentCancelServlet</servlet-class>
+        <servlet-class>controllers.TransactionCancelServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>SecurityLogServlet</servlet-name>

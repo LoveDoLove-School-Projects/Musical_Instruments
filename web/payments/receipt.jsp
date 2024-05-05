@@ -10,46 +10,44 @@ response.setHeader("Cache-Control", "no-store");
 
     <head>
         <jsp:include page="/defaults/head.jsp" />
-        <title>Payment Receipt</title>
+        <title>Transaction Details</title>
     </head>
     <body>
         <div class="container">
             <div class="py-5 text-center">
-                <h2>Payment Done. Thank you for purchasing our products</h2>
-                <p class="lead">Receipt Details:</p>
+                <h2>Transaction Details</h2>
             </div>
             <div class="row">
                 <div class="col-md-12 order-md-1">
-                    <h4 class="mb-3">Billing address</h4>
                     <table class="table">
                         <tbody>
+                            <tr>
+                                <th scope="row">Transaction Created Date:</th>
+                                <td>${transaction.getDateCreatedGmt()}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Transaction Updated Date:</th>
+                                <td>${transaction.getDateUpdatedGmt()}</td>
+                            </tr>
                             <tr>
                                 <th scope="row">Merchant:</th>
                                 <td><%=application.getInitParameter("companyName")%></td>
                             </tr>
                             <tr>
-                                <th scope="row">Payer:</th>
-                                <td>${payer.first_name} ${payer.last_name}</td>
+                                <th scope="row">Transaction Number:</th>
+                                <td>${transaction.getTransactionNumber()}</td>
                             </tr>
                             <tr>
-                                <th scope="row">Description:</th>
-                                <td>${transaction.description}</td>
+                                <th scope="row">Order Number:</th>
+                                <td>${transaction.getOrderNumber()}</td>
                             </tr>
                             <tr>
-                                <th scope="row">Subtotal:</th>
-                                <td>MYR ${transaction.amount.details.subtotal}</td>
+                                <th scope="row">Payment Method:</th>
+                                <td>${transaction.getPaymentMethod()}</td>
                             </tr>
                             <tr>
-                                <th scope="row">Shipping:</th>
-                                <td>MYR ${transaction.amount.details.shipping}</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">Tax:</th>
-                                <td>MYR ${transaction.amount.details.tax}</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">Total:</th>
-                                <td>MYR ${transaction.amount.total}</td>
+                                <th scope="row">Amount:</th>
+                                <td>MYR ${transaction.totalAmount}</td>
                             </tr>
                         </tbody>
                     </table>

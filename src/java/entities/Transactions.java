@@ -32,7 +32,8 @@ import java.util.Date;
     @NamedQuery(name = "Transactions.findByCurrency", query = "SELECT t FROM Transactions t WHERE t.currency = :currency"),
     @NamedQuery(name = "Transactions.findByTotalAmount", query = "SELECT t FROM Transactions t WHERE t.totalAmount = :totalAmount"),
     @NamedQuery(name = "Transactions.findByDateCreatedGmt", query = "SELECT t FROM Transactions t WHERE t.dateCreatedGmt = :dateCreatedGmt"),
-    @NamedQuery(name = "Transactions.findByDateUpdatedGmt", query = "SELECT t FROM Transactions t WHERE t.dateUpdatedGmt = :dateUpdatedGmt")})
+    @NamedQuery(name = "Transactions.findByDateUpdatedGmt", query = "SELECT t FROM Transactions t WHERE t.dateUpdatedGmt = :dateUpdatedGmt"),
+    @NamedQuery(name = "Transactions.findByTransactionNumberAndUserId", query = "SELECT t FROM Transactions t WHERE t.transactionNumber = :transactionNumber AND t.userId = :userId"),})
 public class Transactions implements Serializable {
 
     private static final long serialVersionUID = 1L;

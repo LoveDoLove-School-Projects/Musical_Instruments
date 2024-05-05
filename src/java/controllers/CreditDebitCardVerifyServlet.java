@@ -118,7 +118,7 @@ public class CreditDebitCardVerifyServlet extends HttpServlet {
     private OtpsType validateOtp(HttpServletRequest request, HttpServletResponse response, Session session) throws IOException, ServletException {
         String otp = request.getParameter("otp");
         if (otp == null || otp.isEmpty()) {
-            RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Invalid OTP", CCDC_VERIFY_URL);
+            RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Payment failed!", "/");
             return null;
         }
         return otpServices.verifyOtp(session.getEmail(), otp);
