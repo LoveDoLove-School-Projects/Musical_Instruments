@@ -8,7 +8,7 @@ import jakarta.servlet.http.*;
 import java.io.IOException;
 import utilities.RedirectUtilities;
 
-public class PaymentCancelServlet extends HttpServlet {
+public class TransactionCancelServlet extends HttpServlet {
 
     private static final String CANCEL_JSP_URL = "/payments/cancel.jsp";
 

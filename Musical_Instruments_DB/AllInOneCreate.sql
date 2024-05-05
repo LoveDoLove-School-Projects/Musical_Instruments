@@ -57,15 +57,15 @@ CREATE TABLE Otps (
     try_count INT DEFAULT 0
 );
 
--- CREATE TABLE Products (
---     product_id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
---     name VARCHAR(255) NOT NULL,
---     price DOUBLE NOT NULL,
---     color VARCHAR(255) NOT NULL,
---     quantity INT NOT NULL,
---     category VARCHAR(255) NOT NULL,
---     image BLOB NOT NULL
--- );
+CREATE TABLE Products (
+    product_id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    name VARCHAR(255) NOT NULL,
+    price DOUBLE NOT NULL,
+    color VARCHAR(255) NOT NULL,
+    quantity INT NOT NULL,
+    category VARCHAR(255) NOT NULL,
+    image BLOB NOT NULL
+);
 
 CREATE TABLE ResetPassword (
     email VARCHAR(255) NOT NULL PRIMARY KEY,
@@ -122,11 +122,12 @@ CREATE TABLE Transactions (
     date_updated_gmt TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
 
--- CREATE TABLE Cards (
---     pkid INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
---     card_holder_name VARCHAR(100),
---     card_number VARCHAR(16),
---     expiry_date DATE,
---     cvv VARCHAR(3),
---     balance DECIMAL(10, 2)
--- );
+CREATE TABLE Cards (
+    pkid INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    card_holder_name VARCHAR(100),
+    card_number VARCHAR(16),
+    exp_year VARCHAR(4),
+    exp_month VARCHAR(2),
+    cvv VARCHAR(3),
+    balance DECIMAL(10, 2)
+);
