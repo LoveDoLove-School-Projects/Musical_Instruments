@@ -63,7 +63,7 @@
     <body>
         <jsp:include page="/defaults/header.jsp" />
         <div class="container">
-            <h1>[Staff Management]</h1><br>
+            <br><h1><i class="fas fa-user">  Staff Management</i></h1><br>
             <div class="staff-count-box">
                 <i class="fas fa-user"></i>
                 <h3>Number of Staffs: <strong>(<c:out value="${staffCount}"/>) </strong></h3>

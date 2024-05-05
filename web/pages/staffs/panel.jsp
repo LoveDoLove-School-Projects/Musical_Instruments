@@ -34,16 +34,20 @@
             }
 
             .btn {
-                width: 100%;
-                padding: 15px;
-                border: groove 10px black;
+                width: 300px;
+                height: 150px;
+                padding: 20px;
+                border: groove 20px black;
                 background-color: grey;
                 color: #fff;
                 border-radius: 5px;
                 transition: all 0.3s ease;
-                font-size: 22px;
+                font-size: 24px;
                 font-weight: bold;
                 text-decoration: none;
+                display: flex;
+                align-items: center;
+                justify-content: center;
             }
 
             .btn:hover {
@@ -60,12 +64,12 @@
                     <div class="row">
                         <div class="col-lg-4 col-md-6 mb-4">
                             <a href="pages/staffs/internalSecurityLog" class="btn btn-primary btn-lg btn-block">
-                                <i class="fas fa-book"></i> View Internal Log
+                                <i class="fas fa-book">  View Internal Log</i>
                             </a>
                         </div>
                         <div class="col-lg-4 col-md-6 mb-4">
                             <a href="pages/staffs/viewTransaction" class="btn btn-primary btn-lg btn-block">
-                                <i class="fas fa-file-invoice"></i> View Transaction
+                                <i class="fas fa-file-invoice"> View Transaction</i>
                             </a>
                         </div>
                         <%
@@ -73,23 +77,23 @@
                             if (isAdmin) { %>
                         <div class="col-lg-4 col-md-6 mb-4">
                             <a href="pages/admins/viewSales" class="btn btn-primary btn-lg btn-block">
-                                <i class="fas fa-chart-line"></i> View Sales
+                                <i class="fas fa-chart-line">  View Sales</i>
                             </a>
                         </div>
                         <div class="col-lg-4 col-md-6 mb-4">
                             <a href="pages/admins/searchStaff" class="btn btn-primary btn-lg btn-block">
-                                <i class="fas fa-user"></i> Manage Staff
+                                <i class="fas fa-user">  Manage Staff</i>
                             </a>
                         </div>
                         <% } %>
                         <div class="col-lg-4 col-md-6 mb-4">
                             <a href="pages/staffs/searchCustomer" class="btn btn-primary btn-lg btn-block">
-                                <i class="fas fa-users"></i> Manage Customer
+                                <i class="fas fa-users">  Manage Customer</i>
                             </a>
                         </div>
                         <div class="col-lg-4 col-md-6 mb-4">
                             <a href="pages/staffs/staffSearchProduct" class="btn btn-primary btn-lg btn-block">
-                                <i class="fas fa-box"></i> Manage Product
+                                <i class="fas fa-box">  Manage Product</i>
                             </a>
                         </div>
 

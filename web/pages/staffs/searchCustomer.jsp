@@ -61,7 +61,7 @@
     <body>
         <jsp:include page="/defaults/header.jsp" />
         <div class="container">
-            <h1>[Customer Management]</h1><br>
+            <br><h1><i class="fas fa-users">  Customer Management</i></h1><br>
             <div class="customer-search-box">
                 <i class="fas fa-users"></i>
                 <h3>Number of Customers: <strong>(<c:out value="${customerCount}"/>) </strong></h3>
