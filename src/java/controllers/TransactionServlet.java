@@ -6,6 +6,7 @@ import common.Constants;
 import entities.Cards;
 import entities.Carts;
 import entities.Customers;
+import entities.OrderDetails;
 import entities.PaypalPayment;
 import entities.Session;
 import entities.Transactions;
@@ -26,6 +27,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 import services.PaypalServices;
+import services.TransactionServices;
 import utilities.RedirectUtilities;
 import utilities.SessionUtilities;
 import utilities.StringUtilities;
@@ -37,11 +39,11 @@ public class TransactionServlet extends HttpServlet {
     @Resource
     UserTransaction userTransaction;
     private static final Logger LOG = Logger.getLogger(TransactionServlet.class.getName());
-    private final PaypalServices paypalServices = new PaypalServices();
     private static final String PAYPAL = "Paypal";
     private static final String CREDIT_OR_DEBIT_CARD = "CreditOrDebitCard";
-    private static final String CASH_ON_DELIVERY = "CashOnDelivery";
     private static final String CCDC_VERIFY_URL = "/payments/ccdc/verify";
+    private final PaypalServices paypalServices = new PaypalServices();
+    private final TransactionServices transactionServices = new TransactionServices();
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -73,10 +75,7 @@ public class TransactionServlet extends HttpServlet {
                 processPaypalPayment(request, response, session, cartList, customer);
                 break;
             case CREDIT_OR_DEBIT_CARD:
-                processCreditOrDebitCardPayment(request, response, session, cartList, customer);
-                break;
-            case CASH_ON_DELIVERY:
-                processCashOnDeliveryPayment(request, response, session, cartList, customer);
+                processCreditOrDebitCardPayment(request, response, session, cartList);
                 break;
             default:
                 RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Invalid payment method.", Constants.CART_URL);
@@ -108,7 +107,7 @@ public class TransactionServlet extends HttpServlet {
         }
     }
 
-    private void processCreditOrDebitCardPayment(HttpServletRequest request, HttpServletResponse response, Session session, List<Carts> cartList, Customers customer) throws IOException {
+    private void processCreditOrDebitCardPayment(HttpServletRequest request, HttpServletResponse response, Session session, List<Carts> cartList) throws IOException {
         String paymentMethod = request.getParameter("paymentMethod");
         String cardHolderName = request.getParameter("cardHolderName");
         String card1 = request.getParameter("card1");
@@ -129,7 +128,8 @@ public class TransactionServlet extends HttpServlet {
             RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Invalid card details.", Constants.CART_URL);
             return;
         }
-        Transactions transaction = saveCCDCTransactionToDB(session, card, paymentMethod);
+        OrderDetails orderDetails = transactionServices.getOrderDetails(cartList);
+        Transactions transaction = saveCCDCTransactionToDB(session, orderDetails, paymentMethod);
         if (transaction == null) {
             RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Failed to create transaction.", Constants.CART_URL);
             return;
@@ -138,9 +138,6 @@ public class TransactionServlet extends HttpServlet {
         httpSession.setAttribute("transaction", transaction);
         httpSession.setAttribute("cartList", cartList);
         RedirectUtilities.sendRedirect(request, response, CCDC_VERIFY_URL);
-    }
-
-    private void processCashOnDeliveryPayment(HttpServletRequest request, HttpServletResponse response, Session session, List<Carts> cartList, Customers customer) throws IOException {
     }
 
     private boolean validateCardDetails(String cardHolderName, String card1, String card2, String card3, String card4, String cvv, String expYear, String expMonth) {
@@ -190,7 +187,7 @@ public class TransactionServlet extends HttpServlet {
         }
     }
 
-    private Transactions saveCCDCTransactionToDB(Session session, Cards card, String paymentMethod) {
+    private Transactions saveCCDCTransactionToDB(Session session, OrderDetails orderDetails, String paymentMethod) {
         try {
             String transactionNumber = "TXN" + System.currentTimeMillis() + session.getUserId();
             String orderNumber = "ORD" + System.currentTimeMillis() + session.getUserId();
@@ -202,7 +199,7 @@ public class TransactionServlet extends HttpServlet {
             transaction.setTransactionStatus("created");
             transaction.setPaymentMethod(paymentMethod);
             transaction.setCurrency("MYR");
-            transaction.setTotalAmount(BigDecimal.valueOf(0));
+            transaction.setTotalAmount(BigDecimal.valueOf(Double.parseDouble(orderDetails.getTotal())));
             transaction.setDateCreatedGmt(date);
             transaction.setDateUpdatedGmt(date);
             userTransaction.begin();

@@ -14,7 +14,6 @@ public class OrderHistoryServlet extends HttpServlet {
 
 //       @PersistenceContext
 //    EntityManager entityManager;
-       
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Session session = SessionUtilities.getLoginSession(request.getSession());
@@ -33,7 +32,7 @@ public class OrderHistoryServlet extends HttpServlet {
 //            request.setAttribute("orderHistoryDetails", orders);
 //            request.getRequestDispatcher(Constants.ORDERHISTORY_JSP_URL).forward(request, response);
 //        }
-           request.getRequestDispatcher(Constants.ORDERHISTORY_JSP_URL).forward(request, response);
+        request.getRequestDispatcher(Constants.ORDERHISTORY_JSP_URL).forward(request, response);
     }
 
     @Override

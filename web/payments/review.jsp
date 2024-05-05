@@ -19,7 +19,7 @@ response.setHeader("Cache-Control", "no-store");
             <div class="row">
                 <div class="col-md-12 order-md-1">
                     <h4 class="mb-3">Transaction Details</h4>
-                    <form action="payments/ccdc/execute" method="post">
+                    <form action="payments/paypal/execute" method="post">
                         <input type="hidden" name="paymentId" value="${param.paymentId}" />
                         <input type="hidden" name="PayerID" value="${param.PayerID}" />
                         <table class="table">
