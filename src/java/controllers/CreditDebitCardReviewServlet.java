@@ -20,7 +20,6 @@ import jakarta.transaction.UserTransaction;
 import java.io.IOException;
 import java.util.Date;
 import java.util.logging.Logger;
-import services.PaypalServices;
 import utilities.RedirectUtilities;
 
 @WebServlet(name = "CreditDebitCardReviewServlet", urlPatterns = {"/payments/ccdc/review"})
@@ -48,21 +47,21 @@ public class CreditDebitCardReviewServlet extends HttpServlet {
             RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Payment ID is required.", Constants.CART_URL);
             return;
         }
-        PaypalPayment paypalPayment = paypalServices.getPaymentDetails(paymentId);
-        if (paypalPayment == null) {
-            RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Payment not found.", Constants.CART_URL);
-            return;
-        }
-        if (!updateTransactionToDB(paypalPayment)) {
-            RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Failed to update transaction.", Constants.CART_URL);
-            return;
-        }
-        PaypalPayment.PayerInfo payerInfo = paypalPayment.getPayer().getPayer_info();
-        PaypalPayment.Transaction transaction = paypalPayment.getTransactions().get(0);
-        PaypalPayment.ShippingAddress shippingAddress = transaction.getItem_list().getShipping_address();
-        request.setAttribute("payer", payerInfo);
-        request.setAttribute("transaction", transaction);
-        request.setAttribute("shippingAddress", shippingAddress);
+//        PaypalPayment paypalPayment = paypalServices.getPaymentDetails(paymentId);
+//        if (paypalPayment == null) {
+//            RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Payment not found.", Constants.CART_URL);
+//            return;
+//        }
+//        if (!updateTransactionToDB(paypalPayment)) {
+//            RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Failed to update transaction.", Constants.CART_URL);
+//            return;
+//        }
+//        PaypalPayment.PayerInfo payerInfo = paypalPayment.getPayer().getPayer_info();
+//        PaypalPayment.Transaction transaction = paypalPayment.getTransactions().get(0);
+//        PaypalPayment.ShippingAddress shippingAddress = transaction.getItem_list().getShipping_address();
+//        request.setAttribute("payer", payerInfo);
+//        request.setAttribute("transaction", transaction);
+//        request.setAttribute("shippingAddress", shippingAddress);
         request.getRequestDispatcher(CCDC_REVIEW_JSP_URL).forward(request, response);
     }
 

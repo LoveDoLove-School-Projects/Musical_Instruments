@@ -9,13 +9,10 @@ import jakarta.persistence.Id;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
 import jakarta.validation.constraints.Size;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.Date;
 
 @Entity
 @Table(name = "CARDS")
@@ -25,7 +22,8 @@ import java.util.Date;
     @NamedQuery(name = "Cards.findByPkid", query = "SELECT c FROM Cards c WHERE c.pkid = :pkid"),
     @NamedQuery(name = "Cards.findByCardHolderName", query = "SELECT c FROM Cards c WHERE c.cardHolderName = :cardHolderName"),
     @NamedQuery(name = "Cards.findByCardNumber", query = "SELECT c FROM Cards c WHERE c.cardNumber = :cardNumber"),
-    @NamedQuery(name = "Cards.findByExpiryDate", query = "SELECT c FROM Cards c WHERE c.expiryDate = :expiryDate"),
+    @NamedQuery(name = "Cards.findByExpYear", query = "SELECT c FROM Cards c WHERE c.expYear = :expYear"),
+    @NamedQuery(name = "Cards.findByExpMonth", query = "SELECT c FROM Cards c WHERE c.expMonth = :expMonth"),
     @NamedQuery(name = "Cards.findByCvv", query = "SELECT c FROM Cards c WHERE c.cvv = :cvv"),
     @NamedQuery(name = "Cards.findByBalance", query = "SELECT c FROM Cards c WHERE c.balance = :balance")})
 public class Cards implements Serializable {
@@ -42,9 +40,12 @@ public class Cards implements Serializable {
     @Size(max = 16)
     @Column(name = "CARD_NUMBER")
     private String cardNumber;
-    @Column(name = "EXPIRY_DATE")
-    @Temporal(TemporalType.DATE)
-    private Date expiryDate;
+    @Size(max = 4)
+    @Column(name = "EXP_YEAR")
+    private String expYear;
+    @Size(max = 2)
+    @Column(name = "EXP_MONTH")
+    private String expMonth;
     @Size(max = 3)
     @Column(name = "CVV")
     private String cvv;
@@ -59,10 +60,11 @@ public class Cards implements Serializable {
         this.pkid = pkid;
     }
 
-    public Cards(String cardHolderName, String cardNumber, Date expiryDate, String cvv) {
+    public Cards(String cardHolderName, String cardNumber, String expYear, String expMonth, String cvv) {
         this.cardHolderName = cardHolderName;
         this.cardNumber = cardNumber;
-        this.expiryDate = expiryDate;
+        this.expYear = expYear;
+        this.expMonth = expMonth;
         this.cvv = cvv;
     }
 
@@ -90,12 +92,20 @@ public class Cards implements Serializable {
         this.cardNumber = cardNumber;
     }
 
-    public Date getExpiryDate() {
-        return expiryDate;
+    public String getExpYear() {
+        return expYear;
     }
 
-    public void setExpiryDate(Date expiryDate) {
-        this.expiryDate = expiryDate;
+    public void setExpYear(String expYear) {
+        this.expYear = expYear;
+    }
+
+    public String getExpMonth() {
+        return expMonth;
+    }
+
+    public void setExpMonth(String expMonth) {
+        this.expMonth = expMonth;
     }
 
     public String getCvv() {
@@ -136,6 +146,16 @@ public class Cards implements Serializable {
 
     @Override
     public String toString() {
-        return "entities.Cards[ pkid=" + pkid + " ]";
+        StringBuilder sb = new StringBuilder();
+        sb.append("Cards{");
+        sb.append("pkid=").append(pkid);
+        sb.append(", cardHolderName=").append(cardHolderName);
+        sb.append(", cardNumber=").append(cardNumber);
+        sb.append(", expYear=").append(expYear);
+        sb.append(", expMonth=").append(expMonth);
+        sb.append(", cvv=").append(cvv);
+        sb.append(", balance=").append(balance);
+        sb.append('}');
+        return sb.toString();
     }
 }

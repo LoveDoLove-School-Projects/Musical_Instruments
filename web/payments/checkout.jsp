@@ -198,7 +198,7 @@ response.setHeader("Cache-Control", "no-store");
                                 </div>
                                 <div class="form-group">
                                     <label for="cvv">CVV</label>
-                                    <input type="text" name="CVV" class="form-control" id="CVV" maxlength="3" pattern="[0-9]{3}" title="3 digits" size="3" />
+                                    <input type="text" name="cvv" class="form-control" id="cvv" maxlength="3" pattern="[0-9]{3}" title="3 digits" size="3" />
                                 </div>
                                 <div class="form-group row">
                                     <label for="expDate" class="col-form-label">Expiration Date</label>

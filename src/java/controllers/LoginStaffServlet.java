@@ -1,14 +1,10 @@
 package controllers;
 
 import common.Constants;
-import dao.OtpDao;
 import entities.Role;
 import entities.Session;
 import entities.Staffs;
 import exceptions.DatabaseException;
-import utilities.AesUtilities;
-import utilities.SecurityLog;
-import utilities.SessionUtilities;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.servlet.ServletException;
@@ -18,8 +14,12 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
+import services.OtpServices;
+import utilities.AesUtilities;
 import utilities.RedirectUtilities;
 import utilities.RedirectUtilities.RedirectType;
+import utilities.SecurityLog;
+import utilities.SessionUtilities;
 import utilities.StringUtilities;
 
 public class LoginStaffServlet extends HttpServlet {
@@ -28,7 +28,7 @@ public class LoginStaffServlet extends HttpServlet {
     EntityManager entityManager;
     public static final String STAFF_LOGIN_JSP_URL = "/pages/staffLogin.jsp";
     private static final String LOGIN_2FA_URL = "/sessions/login2fa";
-    private final OtpDao otpDao = new OtpDao();
+    private final OtpServices otpServices = new OtpServices();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -108,7 +108,7 @@ public class LoginStaffServlet extends HttpServlet {
     }
 
     private void requiredTwoFactorAuth(HttpServletRequest request, HttpServletResponse response, Staffs staff, HttpSession session) throws ServletException, IOException {
-        if (!otpDao.sendOtp(staff.getEmail())) {
+        if (!otpServices.sendOtp(staff.getEmail())) {
             RedirectUtilities.setMessage(request, RedirectType.DANGER, "There was an error from the server! Please try again later.");
             return;
         }

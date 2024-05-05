@@ -20,31 +20,31 @@ response.setHeader("Cache-Control", "no-store");
                 <div class="col-md-12 order-md-1">
                     <h4 class="mb-3">Transaction Details</h4>
                     <form action="payments/ccdc/verify" method="post">
-                        <!-- Create a simple credit / debit card otp verify form -->
-                        <input type="hidden" name="paymentId" value="${param.paymentId}" />
-                        <input type="hidden" name="PayerID" value="${param.PayerID}" />
-                        <!-- show txn number and some basic txn details -->
                         <table class="table">
                             <tbody>
                                 <tr>
-                                    <th scope="row">Description:</th>
-                                    <td>${transaction.description}</td>
+                                    <th scope="row">Transaction Number:</th>
+                                    <td>${transaction.getTransactionNumber()}</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Order Number:</th>
+                                    <td>${transaction.getOrderNumber()}</td>
                                 </tr>
                                 <tr>
                                     <th scope="row">Subtotal:</th>
-                                    <td>MYR ${transaction.amount.details.subtotal}</td>
+                                    <td>MYR ${orderDetails.getSubtotal()}</td>
                                 </tr>
                                 <tr>
                                     <th scope="row">Shipping:</th>
-                                    <td>MYR ${transaction.amount.details.shipping}</td>
+                                    <td>MYR ${orderDetails.getShipping()}</td>
                                 </tr>
                                 <tr>
                                     <th scope="row">Tax:</th>
-                                    <td>MYR ${transaction.amount.details.tax}</td>
+                                    <td>MYR ${orderDetails.getTax()}</td>
                                 </tr>
                                 <tr>
                                     <th scope="row">Total:</th>
-                                    <td>MYR ${transaction.amount.total}</td>
+                                    <td>MYR ${orderDetails.getTotal()}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -53,19 +53,15 @@ response.setHeader("Cache-Control", "no-store");
                             <tbody>
                                 <tr>
                                     <th scope="row">First Name:</th>
-                                    <td>${payer.first_name}</td>
+                                    <td>${customer.getFirstName()}</td>
                                 </tr>
                                 <tr>
                                     <th scope="row">Last Name:</th>
-                                    <td>${payer.last_name}</td>
+                                    <td>${customer.getLastName()}</td>
                                 </tr>
                                 <tr>
                                     <th scope="row">Email:</th>
-                                    <td>${payer.email}</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">Phone:</th>
-                                    <td>${payer.phone}</td>
+                                    <td>${customer.getEmail()}</td>
                                 </tr>
                             </tbody>
                         </table>

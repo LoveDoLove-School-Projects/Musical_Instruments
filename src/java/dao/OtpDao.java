@@ -2,7 +2,6 @@ package dao;
 
 import controllers.ConnectionController;
 import entities.Otps;
-import entities.OtpsType;
 import exceptions.DatabaseException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -10,59 +9,16 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.logging.Logger;
-import utilities.MailSender;
-import utilities.StringUtilities;
 
 public class OtpDao {
 
     private static final Logger LOG = Logger.getLogger(OtpDao.class.getName());
-    private static final String SUBJECT = "OTP";
-    private static final String CONTENT = "<!DOCTYPE html><html lang='en'><head><meta charset='UTF-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Email OTP Design</title><style>body{font-family:Arial,sans-serif}.container{width:100%;max-width:600px;margin:0 auto}.card{border:1px solid #ddd;border-radius:5px;margin-top:50px;padding:20px;text-align:center}.card-title{font-size:24px;margin-bottom:20px}.card-text{font-size:18px;margin-bottom:20px}.otp{font-size:24px;font-weight:700}</style></head><body><div class='container'><div class='card'><h5 class='card-title'>OTP Verification</h5><p class='card-text'>Your One-Time Password (OTP) is:<br><span class='otp'>${otpvalue}</span></p></div></div></body></html>";
     private static final String GET_OTP_SQL = "SELECT * FROM otps WHERE email = ?";
     private static final String COUNT_OTP_SQL = "SELECT COUNT(*) FROM otps WHERE email = ?";
     private static final String ADD_OTP_SQL = "INSERT INTO OTPS(email, otp) VALUES(?, ?)";
     private static final String UPDATE_OTP_SQL = "UPDATE otps SET otp = ?, try_count = ?, created_at = ? WHERE email = ?";
     private static final String DELETE_OTP_SQL = "DELETE FROM otps WHERE email = ?";
     private static final String UPDATE_TRY_COUNT_SQL = "UPDATE otps SET try_count = ? WHERE email = ?";
-
-    public boolean sendOtp(String email) {
-        if (StringUtilities.anyNullOrBlank(email)) {
-            return false;
-        }
-        String otp = generateOtp();
-        boolean mailStatus = MailSender.sendEmail(email, SUBJECT, CONTENT.replace("${otpvalue}", otp));
-        if (!mailStatus) {
-            return false;
-        }
-        boolean otpExists = isOtpExists(email);
-        return otpExists ? updateOtp(email, otp) : addOtp(email, otp);
-    }
-
-    public OtpsType verifyOtp(String email, String otp) {
-        if (StringUtilities.anyNullOrBlank(email, otp)) {
-            return OtpsType.INVALID;
-        }
-        Otps dbOtp = getOtp(email);
-        if (dbOtp == null) {
-            return OtpsType.NOT_FOUND;
-        }
-        if (dbOtp.getTryCount() >= 5) {
-            return OtpsType.UNAUTHORIZED;
-        }
-        if (dbOtp.getCreatedAt().before(new Timestamp(System.currentTimeMillis() - 300000))) {
-            return OtpsType.EXPIRED;
-        }
-        if (!dbOtp.getOtp().equals(otp)) {
-            int tryCount = dbOtp.getTryCount() + 1;
-            updateTryCount(email, tryCount);
-            return OtpsType.FAILED;
-        }
-        if (otp.equals(dbOtp.getOtp())) {
-            deleteOtp(email);
-            return OtpsType.OK;
-        }
-        return OtpsType.INVALID;
-    }
 
     /**
      * Adds an OTP (One-Time Password) to the database for the specified email.
@@ -145,7 +101,7 @@ public class OtpDao {
      * @return true if an OTP exists for the given email, false otherwise
      * @throws DatabaseException if there is an error accessing the database
      */
-    private boolean isOtpExists(String email) {
+    public boolean isOtpExists(String email) {
         try (Connection connection = ConnectionController.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(COUNT_OTP_SQL)) {
             preparedStatement.setString(1, email);
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
@@ -157,10 +113,14 @@ public class OtpDao {
     }
 
     /**
-     * Represents a single OTP (One-Time Password) entry in the database. An OTP
-     * consists of a code, associated email, creation timestamp, and try count.
+     * Retrieves the OTP (One-Time Password) details for a given email.
+     *
+     * @param email the email for which to retrieve the OTP
+     * @return the OTP details as an instance of the Otps class, or null if no
+     * OTP is found
+     * @throws DatabaseException if there is an error accessing the database
      */
-    private Otps getOtp(String email) {
+    public Otps getOtp(String email) {
         try (Connection connection = ConnectionController.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(GET_OTP_SQL)) {
             preparedStatement.setString(1, email);
             try (ResultSet resultSet = preparedStatement.executeQuery()) {

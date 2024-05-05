@@ -1,10 +1,8 @@
 package controllers;
 
 import common.Constants;
-import dao.OtpDao;
 import entities.Customers;
 import entities.OtpsType;
-import utilities.AesUtilities;
 import jakarta.annotation.Resource;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -23,12 +21,18 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.EnumMap;
 import java.util.Map;
+import services.OtpServices;
+import utilities.AesUtilities;
 import utilities.RedirectUtilities;
 import utilities.RedirectUtilities.RedirectType;
 import utilities.StringUtilities;
 
 public class Register2FAServlet extends HttpServlet {
 
+    @PersistenceContext
+    EntityManager entityManager;
+    @Resource
+    UserTransaction userTransaction;
     private static final String REGISTER_2FA_JSP_URL = "/sessions/register2fa.jsp";
     private static final String REGISTER_URL = "/pages/register";
     private static final String REGISTER_2FA_URL = "/sessions/register2fa";
@@ -43,11 +47,7 @@ public class Register2FAServlet extends HttpServlet {
         STATUS_MESSAGES.put(OtpsType.FAILED, "Failed to verify OTP! Please try again.");
         STATUS_MESSAGES.put(OtpsType.INVALID, "Invalid OTP!");
     }
-    private final OtpDao otpDao = new OtpDao();
-    @PersistenceContext
-    EntityManager entityManager;
-    @Resource
-    UserTransaction userTransaction;
+    private final OtpServices otpServices = new OtpServices();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -82,7 +82,7 @@ public class Register2FAServlet extends HttpServlet {
     }
 
     private void resendLoginOtp(HttpServletRequest request, HttpServletResponse response, Customers attributes) throws IOException, ServletException {
-        boolean otpStatus = otpDao.sendOtp(attributes.getEmail());
+        boolean otpStatus = otpServices.sendOtp(attributes.getEmail());
         if (otpStatus) {
             RedirectUtilities.setMessage(request, RedirectType.SUCCESS, "OTP sent successfully!");
         } else {
@@ -98,7 +98,7 @@ public class Register2FAServlet extends HttpServlet {
             setRegister2FAPage(request, response);
             return;
         }
-        OtpsType otpStatus = otpDao.verifyOtp(customer.getEmail(), otp);
+        OtpsType otpStatus = otpServices.verifyOtp(customer.getEmail(), otp);
         handleOtpStatus(otpStatus, request, response, session, customer);
     }
 

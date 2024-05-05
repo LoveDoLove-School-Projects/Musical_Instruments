@@ -5,8 +5,6 @@ import dao.OtpDao;
 import entities.OtpsType;
 import entities.Role;
 import entities.Session;
-import utilities.SecurityLog;
-import utilities.SessionUtilities;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -16,8 +14,11 @@ import java.io.IOException;
 import java.util.EnumMap;
 import java.util.Map;
 import java.util.logging.Logger;
+import services.OtpServices;
 import utilities.RedirectUtilities;
 import utilities.RedirectUtilities.RedirectType;
+import utilities.SecurityLog;
+import utilities.SessionUtilities;
 import utilities.StringUtilities;
 
 public class Login2FAServlet extends HttpServlet {
@@ -27,6 +28,7 @@ public class Login2FAServlet extends HttpServlet {
     private static final String LOGIN_2FA_URL = "/sessions/login2fa";
     private static final String RESEND_LOGIN_OTP_URL = "/sessions/resendLoginOtp";
     private static final Map<OtpsType, String> STATUS_MESSAGES;
+    private final OtpServices otpServices = new OtpServices();
 
     static {
         STATUS_MESSAGES = new EnumMap<>(OtpsType.class);
@@ -71,7 +73,7 @@ public class Login2FAServlet extends HttpServlet {
     }
 
     private void resendLoginOtp(HttpServletRequest request, HttpServletResponse response, Session attributes) throws IOException, ServletException {
-        boolean otpStatus = otpDao.sendOtp(attributes.getEmail());
+        boolean otpStatus = otpServices.sendOtp(attributes.getEmail());
         if (otpStatus) {
             RedirectUtilities.setMessage(request, RedirectType.SUCCESS, "OTP sent successfully!");
         } else {
@@ -87,7 +89,7 @@ public class Login2FAServlet extends HttpServlet {
             setLogin2FAPage(request, response);
             return;
         }
-        OtpsType otpStatus = otpDao.verifyOtp(attributes.getEmail(), otp);
+        OtpsType otpStatus = otpServices.verifyOtp(attributes.getEmail(), otp);
         handleOtpStatus(otpStatus, request, response, session, attributes);
     }
 

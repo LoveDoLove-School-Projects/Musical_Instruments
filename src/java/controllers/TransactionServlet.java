@@ -22,8 +22,6 @@ import jakarta.transaction.SystemException;
 import jakarta.transaction.UserTransaction;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
@@ -43,7 +41,7 @@ public class TransactionServlet extends HttpServlet {
     private static final String PAYPAL = "Paypal";
     private static final String CREDIT_OR_DEBIT_CARD = "CreditOrDebitCard";
     private static final String CASH_ON_DELIVERY = "CashOnDelivery";
-    private static final String CCDC_REVIEW_URL = "/payments/ccdc/review";
+    private static final String CCDC_VERIFY_URL = "/payments/ccdc/verify";
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -125,27 +123,21 @@ public class TransactionServlet extends HttpServlet {
             return;
         }
         String cardNumber = card1 + card2 + card3 + card4;
-        String cardExpiry = expYear + "-" + expMonth;
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM");
-        Date expiryDate = null;
-        try {
-            expiryDate = dateFormat.parse(cardExpiry);
-        } catch (ParseException ex) {
-            LOG.severe(ex.getMessage());
-            RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Invalid card expiry date.", Constants.CART_URL);
-            return;
-        }
-        Cards card = new Cards(cardHolderName, cardNumber, expiryDate, cvv);
+        Cards card = new Cards(cardHolderName, cardNumber, expYear, expMonth, cvv);
         if (!checkCardDetails(card)) {
+            LOG.info("Card details do not match.");
             RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Invalid card details.", Constants.CART_URL);
             return;
         }
-        String transactionNumber = saveCCDCTransactionToDB(session, card, paymentMethod);
-        if (transactionNumber == null) {
+        Transactions transaction = saveCCDCTransactionToDB(session, card, paymentMethod);
+        if (transaction == null) {
             RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Failed to create transaction.", Constants.CART_URL);
             return;
         }
-        RedirectUtilities.sendRedirect(request, response, CCDC_REVIEW_URL + "?paymentId=" + transactionNumber);
+        HttpSession httpSession = request.getSession();
+        httpSession.setAttribute("transaction", transaction);
+        httpSession.setAttribute("cartList", cartList);
+        RedirectUtilities.sendRedirect(request, response, CCDC_VERIFY_URL);
     }
 
     private void processCashOnDeliveryPayment(HttpServletRequest request, HttpServletResponse response, Session session, List<Carts> cartList, Customers customer) throws IOException {
@@ -185,20 +177,20 @@ public class TransactionServlet extends HttpServlet {
             if (!dbCard.getCardHolderName().equals(card.getCardHolderName())) {
                 return false;
             }
-            if (!dbCard.getExpiryDate().equals(card.getExpiryDate())) {
+            if (!dbCard.getCardNumber().equals(card.getCardNumber())) {
                 return false;
             }
-            if (!dbCard.getCvv().equals(card.getCvv())) {
+            if (!dbCard.getExpYear().equals(card.getExpYear()) || !dbCard.getExpMonth().equals(card.getExpMonth())) {
                 return false;
             }
-            return true;
+            return dbCard.getCvv().equals(card.getCvv());
         } catch (Exception ex) {
             LOG.severe(ex.getMessage());
             return false;
         }
     }
 
-    private String saveCCDCTransactionToDB(Session session, Cards card, String paymentMethod) {
+    private Transactions saveCCDCTransactionToDB(Session session, Cards card, String paymentMethod) {
         try {
             String transactionNumber = "TXN" + System.currentTimeMillis() + session.getUserId();
             String orderNumber = "ORD" + System.currentTimeMillis() + session.getUserId();
@@ -216,7 +208,7 @@ public class TransactionServlet extends HttpServlet {
             userTransaction.begin();
             entityManager.persist(transaction);
             userTransaction.commit();
-            return transactionNumber;
+            return transaction;
         } catch (HeuristicMixedException | HeuristicRollbackException | NotSupportedException | RollbackException | SystemException | IllegalStateException | NumberFormatException | SecurityException ex) {
             LOG.severe(ex.getMessage());
             return null;

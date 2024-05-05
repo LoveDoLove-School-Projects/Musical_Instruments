@@ -4,7 +4,6 @@ import common.Constants;
 import entities.PaypalPayment;
 import entities.Session;
 import entities.Transactions;
-import utilities.SessionUtilities;
 import jakarta.annotation.Resource;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -22,6 +21,7 @@ import java.util.Date;
 import java.util.logging.Logger;
 import services.PaypalServices;
 import utilities.RedirectUtilities;
+import utilities.SessionUtilities;
 
 @WebServlet(name = "PaypalReviewServlet", urlPatterns = {"/payments/paypal/review"})
 public class PaypalReviewServlet extends HttpServlet {
