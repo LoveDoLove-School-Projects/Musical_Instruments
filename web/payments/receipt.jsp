@@ -25,7 +25,7 @@ response.setHeader("Cache-Control", "no-store");
                         <tbody>
                             <tr>
                                 <th scope="row">Merchant:</th>
-                                <td>TAR Music</td>
+                                <td><%=application.getInitParameter("companyName")%></td>
                             </tr>
                             <tr>
                                 <th scope="row">Payer:</th>
