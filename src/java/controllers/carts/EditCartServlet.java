@@ -5,7 +5,6 @@ import entities.Carts;
 import entities.Products;
 import entities.Session;
 import exceptions.DatabaseException;
-import utilities.SessionUtilities;
 import jakarta.annotation.Resource;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -22,6 +21,7 @@ import jakarta.transaction.UserTransaction;
 import java.io.IOException;
 import java.util.List;
 import utilities.RedirectUtilities;
+import utilities.SessionUtilities;
 
 public class EditCartServlet extends HttpServlet {
 
@@ -40,6 +40,7 @@ public class EditCartServlet extends HttpServlet {
         } else {
             String cardId = request.getParameter("cart_id");
             List<Carts> cartsList = entityManager.createNamedQuery("Carts.findByCartId").setParameter("cartId", Integer.valueOf(cardId)).getResultList();
+           
             if (cartsList == null || cartsList.isEmpty()) {
                 RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Cart Not Found!", Constants.CART_URL);
                 return;

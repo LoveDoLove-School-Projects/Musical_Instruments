@@ -3,7 +3,6 @@ package controllers.carts;
 import common.Constants;
 import entities.Carts;
 import entities.Session;
-import utilities.SessionUtilities;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.servlet.ServletException;
@@ -13,6 +12,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 import utilities.RedirectUtilities;
+import utilities.SessionUtilities;
 
 public class CartServlet extends HttpServlet {
 
