@@ -28,7 +28,7 @@
             <div class="row">
                 <div class="col-md-6 offset-md-3">
                     <h1 class="text-center mb-4">Modify Customer Information</h1>
-                    <form id="modifyForm" action="pages/staffs/modifyCustomer" method="POST" onsubmit="return confirmUpdate()">
+                    <form id="modifyForm" action="pages/admins/modifyCustomer" method="POST" onsubmit="return confirmUpdate()">
                         <% Customers customerDetails = (Customers) session.getAttribute("customerDetails"); %>
                         <div class="form-group">
                             <label for="username">Username:</label>

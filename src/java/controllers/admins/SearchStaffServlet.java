@@ -15,6 +15,9 @@ import utilities.RedirectUtilities;
 
 public class SearchStaffServlet extends HttpServlet {
 
+    @PersistenceContext
+    EntityManager entityManager;
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -22,8 +25,6 @@ public class SearchStaffServlet extends HttpServlet {
         request.setAttribute("staffCount", staffList.size());
         request.getRequestDispatcher("/pages/admins/searchStaff.jsp").forward(request, response);
     }
-    @PersistenceContext
-    EntityManager entityManager;
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)

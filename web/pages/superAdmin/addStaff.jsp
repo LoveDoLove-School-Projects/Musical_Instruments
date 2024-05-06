@@ -22,7 +22,7 @@
             <div class="row">
                 <div class="col-md-6 offset-md-3">
                     <h1 class="text-center mb-4">New Staff Registration</h1>
-                    <form id="addForm" action="pages/admins/addStaff" method="POST" onsubmit="return confirmAdd()">
+                    <form id="addForm" action="pages/superAdmin/addStaff" method="POST" onsubmit="return confirmAdd()">
                         <div class="form-group">
                             <label for="username">Username:</label>
                             <input type="text" class="form-control" name="username" required>

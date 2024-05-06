@@ -3,7 +3,6 @@
 <c:set var="path" value="${pageContext.request.contextPath}" />
 <c:set var="basePath" value="${pageContext.request.scheme}://${pageContext.request.serverName}:${pageContext.request.serverPort}${path}/" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-... (integrity hash)" crossorigin="anonymous" />
-
 <!DOCTYPE html>
 <html>
     <head>
@@ -72,11 +71,8 @@
                                 <i class="fas fa-file-invoice"> View Transaction</i>
                             </a>
                         </div>
-                        <%
-                            boolean isAdmin = request.isUserInRole("Admin");
-                            if (isAdmin) { %>
                         <div class="col-lg-4 col-md-6 mb-4">
-                            <a href="pages/admins/viewSales" class="btn btn-primary btn-lg btn-block">
+                            <a href="pages/superAdmin/viewSales" class="btn btn-primary btn-lg btn-block">
                                 <i class="fas fa-chart-line">  View Sales</i>
                             </a>
                         </div>
@@ -85,7 +81,6 @@
                                 <i class="fas fa-user">  Manage Staff</i>
                             </a>
                         </div>
-                        <% } %>
                         <div class="col-lg-4 col-md-6 mb-4">
                             <a href="pages/staffs/searchCustomer" class="btn btn-primary btn-lg btn-block">
                                 <i class="fas fa-users">  Manage Customer</i>

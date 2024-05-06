@@ -2,7 +2,6 @@ package controllers.admins;
 
 import common.Constants;
 import entities.Staffs;
-import utilities.SessionUtilities;
 import jakarta.annotation.Resource;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -18,6 +17,7 @@ import jakarta.transaction.SystemException;
 import jakarta.transaction.UserTransaction;
 import java.io.IOException;
 import utilities.RedirectUtilities;
+import utilities.SessionUtilities;
 
 public class ModifyStaffServlet extends HttpServlet {
 
@@ -33,7 +33,7 @@ public class ModifyStaffServlet extends HttpServlet {
             RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Please login as staff to view this page!", "/");
             return;
         }
-        request.getRequestDispatcher("/pages/admins/modifyStaff.jsp").forward(request, response);
+        request.getRequestDispatcher("/pages/superAdmin/modifyStaff.jsp").forward(request, response);
     }
 
     @Override

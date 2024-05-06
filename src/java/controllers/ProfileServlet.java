@@ -1,10 +1,8 @@
 package controllers;
 
-import common.Constants;
 import entities.Customers;
 import entities.Session;
 import entities.Staffs;
-import utilities.SessionUtilities;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.servlet.ServletException;
@@ -16,6 +14,7 @@ import java.io.IOException;
 import java.util.Base64;
 import utilities.RedirectUtilities;
 import utilities.RedirectUtilities.RedirectType;
+import utilities.SessionUtilities;
 
 @MultipartConfig
 public class ProfileServlet extends HttpServlet {
@@ -29,6 +28,10 @@ public class ProfileServlet extends HttpServlet {
         Session session = SessionUtilities.getLoginSession(request.getSession());
         if (session == null) {
             RedirectUtilities.redirectWithMessage(request, response, RedirectType.DANGER, "Please login to view this page.", "/");
+            return;
+        }
+        if (SessionUtilities.getIsAdminOrNot(request)) {
+            RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Admin are not allowed to view this page because it only for customer and staff.", "/");
             return;
         }
         boolean isInit;

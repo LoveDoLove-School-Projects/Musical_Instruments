@@ -62,14 +62,10 @@
                                     <a href="pages/staffs/modifyProduct" class="btn btn-success mr-2">Modify</a>
                                 </div>
                                 <div class="col-md-1">
-                                    <%
-                                     boolean isAdmin = request.isUserInRole("Admin");
-                                     if (isAdmin) { %>
                                     <form action="pages/admins/deleteProduct" method="post" id="deleteProductForm">
                                         <input type="hidden" name="productId" value="<%=productDetails.getProductId() %>" />
                                         <button class="btn btn-danger">Delete</button>
                                     </form>
-                                    <% } %>
                                 </div>
                             </div>
                         </div>
@@ -78,9 +74,6 @@
             </div>
         </div>
         <jsp:include page="/defaults/footer.jsp" />
-        <%
-               if (isAdmin) {
-        %>
         <script type="module">
             import { showErrorDialog } from "${basePath}assets/js/dialog.js";
             let deleteProductFormElement = document.getElementById("deleteProductForm");
@@ -110,8 +103,5 @@
             }
             setDeleteProductForm();
         </script>
-        <%
-            }
-        %>
     </body>
 </html>

@@ -2,7 +2,6 @@ package controllers.staffs;
 
 import common.Constants;
 import entities.Customers;
-import utilities.SessionUtilities;
 import jakarta.annotation.Resource;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -18,6 +17,7 @@ import jakarta.transaction.SystemException;
 import jakarta.transaction.UserTransaction;
 import java.io.IOException;
 import utilities.RedirectUtilities;
+import utilities.SessionUtilities;
 
 public class ModifyCustomerServlet extends HttpServlet {
 
@@ -33,7 +33,7 @@ public class ModifyCustomerServlet extends HttpServlet {
             RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Please login as staff to view this page!", "/");
             return;
         }
-        request.getRequestDispatcher("/pages/staffs/modifyCustomer.jsp").forward(request, response);
+        request.getRequestDispatcher("/pages/admins/modifyCustomer.jsp").forward(request, response);
     }
 
     @Override
@@ -79,6 +79,6 @@ public class ModifyCustomerServlet extends HttpServlet {
 
     private void showError(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Invalid details, please re-enter it.", "/pages/staffs/modifyCustomer.jsp");
+        RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Invalid details, please re-enter it.", "/pages/admins/modifyCustomer.jsp");
     }
 }

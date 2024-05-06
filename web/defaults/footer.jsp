@@ -5,10 +5,10 @@
 <!DOCTYPE html>
 <footer class="footer mt-auto py-3 bg-light">
     <div class="container text-center">
-        <span class="text-muted">© 2024 <%=application.getInitParameter("companyName")%>. All rights reserved.</span>
+        <span class="text-muted">© 2024 <%=application.getInitParameter("companyName")%>. <%=application.getInitParameter("companyCopyright")%></span>
         <br />
-        <span class="text-muted">Phone: +1 234 567 890</span>
+        <span class="text-muted">Phone: <%=application.getInitParameter("companyHotline")%></span>
         <br />
-        <span class="text-muted">Email: musicalinstruments@gmail.com</span>
+        <span class="text-muted">Email: <%=application.getInitParameter("companyEmail")%></span>
     </div>
 </footer>

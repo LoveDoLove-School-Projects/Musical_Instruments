@@ -13,7 +13,7 @@
 
     <body>
         <jsp:include page="/defaults/header.jsp" />
-        <!-- Hero Section -->
+
         <main class="">
             <section class="section1">
                 <div class="container">

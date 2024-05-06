@@ -22,6 +22,11 @@
         <principal-name>admin</principal-name>
         <group-name>Admin</group-name>
     </security-role-mapping>
+    <security-role-mapping>
+        <role-name>SuperAdmin</role-name>
+        <principal-name>superadmin</principal-name>
+        <group-name>SuperAdmin</group-name>
+    </security-role-mapping>
     <class-loader delegate="true"/>
     <jsp-config>
         <property name="keepgenerated" value="true">

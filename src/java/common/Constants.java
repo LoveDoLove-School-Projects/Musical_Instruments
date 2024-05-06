@@ -32,14 +32,14 @@ public final class Constants {
     public static final String ADMIN_URL = "/pages/admins";
     public static final String ADMIN_MANAGE_STAFF_URL = "/pages/admins/manageStaff";
     public static final String ADMIN_MANAGE_CUSTOMER_URL = "/pages/staffs/manageCustomer";
-    public static final String ADMIN_VIEW_SALES_URL = "/pages/admins/viewSales";
+    public static final String ADMIN_VIEW_SALES_URL = "/pages/superAdmin/viewSales";
     public static final String ADMIN_VIEW_TRANSACTION_URL = "/pages/admins/viewTransaction";
-    public static final String ADMIN_MODIFY_STAFF_URL = "/pages/admins/modifyStaff";
+    public static final String ADMIN_MODIFY_STAFF_URL = "/pages/superAdmin/modifyStaff";
     public static final String ADMIN_SEARCH_STAFF_URL = "/pages/admins/searchStaff";
     // Staff URL
     public static final String ADMIN_VIEW_LOG_URL = "/pages/staffs/viewLog";
     public static final String ADMIN_STAFF_SEARCH_PRODUCT_URL = "/pages/staffs/staffSearchProduct";
     public static final String ADMIN_MANAGE_PRODUCT_URL = "/pages/staffs/manageProduct";
-    public static final String ADMIN_MODIFY_CUSTOMER_URL = "/pages/staffs/modifyCustomer";
+    public static final String ADMIN_MODIFY_CUSTOMER_URL = "/pages/admins/modifyCustomer";
     public static final String ADMIN_SEARCH_CUSTOMER_URL = "/pages/staffs/searchCustomer";
 }
