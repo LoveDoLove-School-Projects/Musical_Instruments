@@ -2,7 +2,7 @@ package controllers.staffs;
 
 import common.Constants;
 import entities.Products;
-import utilities.SessionUtilities;
+import exceptions.DatabaseException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.servlet.ServletException;
@@ -12,12 +12,11 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
-import java.util.logging.Logger;
 import utilities.RedirectUtilities;
+import utilities.SessionUtilities;
 
 public class StaffSearchProductServlet extends HttpServlet {
 
-    private static final Logger LOG = Logger.getLogger(StaffSearchProductServlet.class.getName());
     @PersistenceContext
     EntityManager entityManager;
 
@@ -50,7 +49,7 @@ public class StaffSearchProductServlet extends HttpServlet {
             session.setAttribute("productDetails", product);
             RedirectUtilities.sendRedirect(request, response, "/pages/staffs/manageProduct");
         } catch (IOException | NumberFormatException ex) {
-            RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Please enter a valid product ID!", Constants.ADMIN_STAFF_SEARCH_PRODUCT_URL);
+            throw new DatabaseException(ex.getMessage());
         }
     }
 }

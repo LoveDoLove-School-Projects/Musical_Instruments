@@ -6,12 +6,9 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
-import java.util.logging.Logger;
 import javax.net.ssl.HttpsURLConnection;
 
 public final class HttpUtilities {
-
-    private static final Logger LOG = Logger.getLogger(HttpUtilities.class.getName());
 
     public static String sendHttpJsonRequest(String urlConnection, String jsonPayload) {
         HttpsURLConnection connection = null;
@@ -38,8 +35,7 @@ public final class HttpUtilities {
             }
             return response.toString();
         } catch (IOException ex) {
-            LOG.severe(ex.getMessage());
-            return null;
+            throw new RuntimeException(ex);
         } finally {
             if (connection != null) {
                 connection.disconnect();

@@ -1,6 +1,7 @@
 package controllers.staffs;
 
 import entities.Products;
+import exceptions.DatabaseException;
 import utilities.SessionUtilities;
 import jakarta.annotation.Resource;
 import jakarta.persistence.EntityManager;
@@ -82,8 +83,8 @@ public class ModifyProductServlet extends HttpServlet {
             entityManager.merge(productFromDB);
             userTransaction.commit();
             return true;
-        } catch (HeuristicMixedException | HeuristicRollbackException | NotSupportedException | RollbackException | SystemException | IllegalStateException | SecurityException e) {
-            return false;
+        } catch (HeuristicMixedException | HeuristicRollbackException | NotSupportedException | RollbackException | SystemException | IllegalStateException | SecurityException ex) {
+            throw new DatabaseException(ex.getMessage());
         }
     }
 

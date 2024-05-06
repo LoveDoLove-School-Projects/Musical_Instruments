@@ -5,7 +5,6 @@ import entities.Carts;
 import entities.Products;
 import entities.Session;
 import exceptions.DatabaseException;
-import utilities.SessionUtilities;
 import jakarta.annotation.Resource;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -21,6 +20,7 @@ import jakarta.transaction.SystemException;
 import jakarta.transaction.UserTransaction;
 import java.io.IOException;
 import utilities.RedirectUtilities;
+import utilities.SessionUtilities;
 
 public class AddProductToCartServlet extends HttpServlet {
 
@@ -38,7 +38,7 @@ public class AddProductToCartServlet extends HttpServlet {
             return;
         }
         String productId = request.getParameter("productId");
-        int productQuantity = Integer.valueOf(request.getParameter("productQuantity"));
+        int productQuantity = Integer.parseInt(request.getParameter("productQuantity"));
         Products product = entityManager.find(Products.class, Integer.valueOf(productId));
         if (product == null) {
             RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.WARNING, "Product not found!", Constants.PRODUCT_URL);

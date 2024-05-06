@@ -6,11 +6,9 @@ import entities.Securitylog;
 import exceptions.DatabaseException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.util.logging.Logger;
 
 public class SecurityLogDao {
 
-    private static final Logger LOG = Logger.getLogger(SecurityLogDao.class.getName());
     private static final String ADD_SECURITY_LOG_SQL = "INSERT INTO SECURITYLOG (USER_ID, USERNAME, EMAIL, ROLE, ACTION, IP_ADDRESS, USER_AGENT) VALUES (?, ?, ?, ?, ?, ?, ?)";
     private static final String ADD_INTERNAL_SECURITY_LOG_SQL = "INSERT INTO INTERNALSECURITYLOG (USER_ID, USERNAME, EMAIL, ACTION, IP_ADDRESS, USER_AGENT) VALUES (?, ?, ?, ?, ?, ?)";
 

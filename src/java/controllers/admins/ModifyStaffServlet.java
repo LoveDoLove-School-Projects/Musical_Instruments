@@ -2,6 +2,7 @@ package controllers.admins;
 
 import common.Constants;
 import entities.Staffs;
+import exceptions.DatabaseException;
 import jakarta.annotation.Resource;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -72,8 +73,8 @@ public class ModifyStaffServlet extends HttpServlet {
             entityManager.merge(staffFromDB);
             userTransaction.commit();
             return true;
-        } catch (HeuristicMixedException | HeuristicRollbackException | NotSupportedException | RollbackException | SystemException | IllegalStateException | SecurityException e) {
-            return false;
+        } catch (HeuristicMixedException | HeuristicRollbackException | NotSupportedException | RollbackException | SystemException | IllegalStateException | SecurityException ex) {
+            throw new DatabaseException(ex.getMessage());
         }
     }
 

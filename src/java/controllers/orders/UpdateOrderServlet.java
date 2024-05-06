@@ -44,19 +44,15 @@ public class UpdateOrderServlet extends HttpServlet {
             RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Admin or staff are not allowed to view this page because it only for customer.", "/");
             return;
         }
-
         int userId = session.getUserId();
         String tnxStatus = request.getParameter("txnStatus");
         String transaction_number = request.getParameter("transaction_number");
         Transactions transactions = entityManager.createNamedQuery("Transactions.findByTransactionNumber", Transactions.class).setParameter("transactionNumber", transaction_number).getSingleResult();
         if (transactions.getUserId() == userId && tnxStatus.equals(transactions.getTransactionStatus())) {
-
             //update product quantity
             List<Carts> carts = entityManager.createNamedQuery("Carts.findByCustomerId").setParameter("customerId", userId).getResultList();
-
             try {
                 userTransaction.begin();
-
                 for (Carts userCart : carts) {
                     Products products = entityManager.find(Products.class, userCart.getProductId());
                     int productQuantity = products.getQuantity() - userCart.getProductQuantity();
@@ -65,7 +61,6 @@ public class UpdateOrderServlet extends HttpServlet {
                     Carts managedUserCart = entityManager.getReference(Carts.class, userCart.getCartId());
                     entityManager.remove(managedUserCart);
                 }
-
                 userTransaction.commit();
                 String url = RECEIPT_URL + "?transaction_number=" + transaction_number;
                 RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.SUCCESS, "welcome to receipt page", url);

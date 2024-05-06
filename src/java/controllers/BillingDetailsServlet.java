@@ -100,6 +100,9 @@ public class BillingDetailsServlet extends HttpServlet {
                 Customers customer = new Customers(session.getUserId(), address, phoneNumber, firstName, lastName, country, city, state, zipCode);
                 isUpdated = updateBillingDetails(customer);
                 break;
+            default:
+                RedirectUtilities.redirectWithMessage(request, response, RedirectType.DANGER, "Invalid role.", "/");
+                break;
         }
         if (isUpdated) {
             SecurityLog.addSecurityLog(request, "update billing details");

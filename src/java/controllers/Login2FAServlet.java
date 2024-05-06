@@ -12,7 +12,6 @@ import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.EnumMap;
 import java.util.Map;
-import java.util.logging.Logger;
 import services.OtpServices;
 import utilities.RedirectUtilities;
 import utilities.RedirectUtilities.RedirectType;
@@ -22,7 +21,6 @@ import utilities.StringUtilities;
 
 public class Login2FAServlet extends HttpServlet {
 
-    private static final Logger LOG = Logger.getLogger(Login2FAServlet.class.getName());
     private static final String LOGIN_2FA_JSP_URL = "/sessions/login2fa.jsp";
     private static final String LOGIN_2FA_URL = "/sessions/login2fa";
     private static final String RESEND_LOGIN_OTP_URL = "/sessions/resendLoginOtp";

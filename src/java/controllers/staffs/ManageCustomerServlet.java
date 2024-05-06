@@ -2,7 +2,6 @@ package controllers.staffs;
 
 import common.Constants;
 import entities.Customers;
-import utilities.SessionUtilities;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.servlet.ServletException;
@@ -12,12 +11,11 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
-import java.util.logging.Logger;
 import utilities.RedirectUtilities;
+import utilities.SessionUtilities;
 
 public class ManageCustomerServlet extends HttpServlet {
 
-    private static final Logger LOG = Logger.getLogger(ManageCustomerServlet.class.getName());
     @PersistenceContext
     EntityManager entityManager;
 

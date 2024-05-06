@@ -4,8 +4,6 @@ import entities.Customers;
 import entities.Resetpassword;
 import entities.Staffs;
 import exceptions.DatabaseException;
-import utilities.AesUtilities;
-import utilities.MailSender;
 import jakarta.annotation.Resource;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -21,6 +19,8 @@ import jakarta.transaction.SystemException;
 import jakarta.transaction.UserTransaction;
 import java.io.IOException;
 import java.util.List;
+import utilities.AesUtilities;
+import utilities.MailSender;
 import utilities.RedirectUtilities;
 import utilities.RedirectUtilities.RedirectType;
 import utilities.StringUtilities;
@@ -28,14 +28,14 @@ import utilities.ValidationUtilities;
 
 public class ForgotPasswordServlet extends HttpServlet {
 
-    private static final String FORGOT_PASSWORD_JSP_URL = "/pages/forgotPassword.jsp";
-    private static final String FORGOT_PASSWORD_URL = "/pages/forgotPassword";
-    private static final String SUBJECT = "Reset Password";
-    private static final String CONTENT = "<!DOCTYPE html><html lang='en'><head><meta charset='UTF-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Reset Password Design</title><style>body{font-family:Arial,sans-serif}.container{width:100%;max-width:600px;margin:0 auto}.card{border:1px solid #ddd;border-radius:5px;margin-top:50px;padding:20px;text-align:center}.card-title{font-size:24px;margin-bottom:20px}.card-text{font-size:18px;margin-bottom:20px}.btn{display:inline-block;color:#fff;background-color:#007bff;border-color:#007bff;padding:.375rem .75rem;font-size:1rem;line-height:1.5;border-radius:.25rem;text-decoration:none}.btn:hover{background-color:#0056b3}</style></head><body><div class='container'><div class='card'><h5 class='card-title'>Reset Your Password</h5><p class='card-text'>You requested to reset your password. Click the button below to continue.</p><a href='${resetPasswordLink}' class='btn'>Reset Password</a><p class='card-text'>If the button doesn't work, you can also use the following link to reset your password: <a href='${resetPasswordLink}'>${resetPasswordLink}</a></p></div></div></body></html>";
     @PersistenceContext
     EntityManager entityManager;
     @Resource
     UserTransaction userTransaction;
+    private static final String FORGOT_PASSWORD_JSP_URL = "/pages/forgotPassword.jsp";
+    private static final String FORGOT_PASSWORD_URL = "/pages/forgotPassword";
+    private static final String SUBJECT = "Reset Password";
+    private static final String CONTENT = "<!DOCTYPE html><html lang='en'><head><meta charset='UTF-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Reset Password Design</title><style>body{font-family:Arial,sans-serif}.container{width:100%;max-width:600px;margin:0 auto}.card{border:1px solid #ddd;border-radius:5px;margin-top:50px;padding:20px;text-align:center}.card-title{font-size:24px;margin-bottom:20px}.card-text{font-size:18px;margin-bottom:20px}.btn{display:inline-block;color:#fff;background-color:#007bff;border-color:#007bff;padding:.375rem .75rem;font-size:1rem;line-height:1.5;border-radius:.25rem;text-decoration:none}.btn:hover{background-color:#0056b3}</style></head><body><div class='container'><div class='card'><h5 class='card-title'>Reset Your Password</h5><p class='card-text'>You requested to reset your password. Click the button below to continue.</p><a href='${resetPasswordLink}' class='btn'>Reset Password</a><p class='card-text'>If the button doesn't work, you can also use the following link to reset your password: <a href='${resetPasswordLink}'>${resetPasswordLink}</a></p></div></div></body></html>";
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)

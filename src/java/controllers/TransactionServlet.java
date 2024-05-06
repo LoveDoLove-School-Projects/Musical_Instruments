@@ -10,6 +10,8 @@ import entities.OrderDetails;
 import entities.PaypalPayment;
 import entities.Session;
 import entities.Transactions;
+import exceptions.DatabaseException;
+import exceptions.PaymentException;
 import jakarta.annotation.Resource;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -23,9 +25,9 @@ import jakarta.transaction.SystemException;
 import jakarta.transaction.UserTransaction;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
-import java.util.logging.Logger;
 import services.PaypalServices;
 import services.TransactionServices;
 import utilities.RedirectUtilities;
@@ -38,7 +40,6 @@ public class TransactionServlet extends HttpServlet {
     EntityManager entityManager;
     @Resource
     UserTransaction userTransaction;
-    private static final Logger LOG = Logger.getLogger(TransactionServlet.class.getName());
     private static final String PAYPAL = "Paypal";
     private static final String CREDIT_OR_DEBIT_CARD = "CreditOrDebitCard";
     private static final String CCDC_VERIFY_URL = "/payments/ccdc/verify";
@@ -102,8 +103,7 @@ public class TransactionServlet extends HttpServlet {
             }
             RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Failed to save transaction.", Constants.CART_URL);
         } catch (JsonSyntaxException | IOException ex) {
-            RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Failed to create payment.", Constants.CART_URL);
-            LOG.severe(ex.getMessage());
+            throw new PaymentException(ex.getMessage());
         }
     }
 
@@ -124,7 +124,6 @@ public class TransactionServlet extends HttpServlet {
         String cardNumber = card1 + card2 + card3 + card4;
         Cards card = new Cards(cardHolderName, cardNumber, expYear, expMonth, cvv);
         if (!checkCardDetails(card)) {
-            LOG.info("Card details do not match.");
             RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Invalid card details.", Constants.CART_URL);
             return;
         }
@@ -153,7 +152,7 @@ public class TransactionServlet extends HttpServlet {
         if (!StringUtilities.isNumeric(card1) || !StringUtilities.isNumeric(card2) || !StringUtilities.isNumeric(card3) || !StringUtilities.isNumeric(card4) || !StringUtilities.isNumeric(cvv) || !StringUtilities.isNumeric(expYear) || !StringUtilities.isNumeric(expMonth)) {
             return false;
         }
-        if (Integer.parseInt(expYear) < new Date().getYear() + 1900) {
+        if (Integer.parseInt(expYear) < LocalDate.now().getYear()) {
             return false;
         }
         String cardNumber = card1 + card2 + card3 + card4;
@@ -182,8 +181,7 @@ public class TransactionServlet extends HttpServlet {
             }
             return dbCard.getCvv().equals(card.getCvv());
         } catch (Exception ex) {
-            LOG.severe(ex.getMessage());
-            return false;
+            throw new DatabaseException(ex.getMessage());
         }
     }
 
@@ -207,8 +205,7 @@ public class TransactionServlet extends HttpServlet {
             userTransaction.commit();
             return transaction;
         } catch (HeuristicMixedException | HeuristicRollbackException | NotSupportedException | RollbackException | SystemException | IllegalStateException | NumberFormatException | SecurityException ex) {
-            LOG.severe(ex.getMessage());
-            return null;
+            throw new DatabaseException(ex.getMessage());
         }
     }
 
@@ -231,8 +228,7 @@ public class TransactionServlet extends HttpServlet {
             userTransaction.commit();
             return true;
         } catch (HeuristicMixedException | HeuristicRollbackException | NotSupportedException | RollbackException | SystemException | IllegalStateException | NumberFormatException | SecurityException ex) {
-            LOG.severe(ex.getMessage());
-            return false;
+            throw new DatabaseException(ex.getMessage());
         }
     }
 }
