@@ -7,6 +7,7 @@ import entities.OrderDetails;
 import entities.OtpsType;
 import entities.Session;
 import entities.Transactions;
+import exceptions.DatabaseException;
 import jakarta.annotation.Resource;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -24,7 +25,6 @@ import java.util.Date;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Logger;
 import services.OtpServices;
 import services.TransactionServices;
 import utilities.RedirectUtilities;
@@ -37,9 +37,7 @@ public class CreditDebitCardVerifyServlet extends HttpServlet {
     EntityManager entityManager;
     @Resource
     UserTransaction userTransaction;
-    private static final Logger LOG = Logger.getLogger(CreditDebitCardVerifyServlet.class.getName());
-    private static final String CCDC_REVIEW_JSP_URL = "/payments/ccdcVerify.jsp";
-    private static final String CCDC_VERIFY_URL = "/payments/ccdc/verify";
+    private static final String CCDC_VERIFY_JSP_URL = "/payments/ccdcVerify.jsp";
     private static final Map<OtpsType, String> STATUS_MESSAGES;
     private static final String APPROVED = "approved";
     private static final String FAILED = "failed";
@@ -69,7 +67,7 @@ public class CreditDebitCardVerifyServlet extends HttpServlet {
             return;
         }
         otpServices.sendOtp(session.getEmail());
-        request.getRequestDispatcher(CCDC_REVIEW_JSP_URL).forward(request, response);
+        request.getRequestDispatcher(CCDC_VERIFY_JSP_URL).forward(request, response);
     }
 
     @Override
@@ -166,8 +164,7 @@ public class CreditDebitCardVerifyServlet extends HttpServlet {
             userTransaction.commit();
             return true;
         } catch (HeuristicMixedException | HeuristicRollbackException | NotSupportedException | RollbackException | SystemException | IllegalStateException | NumberFormatException | SecurityException ex) {
-            LOG.severe(ex.getMessage());
-            return false;
+            throw new DatabaseException(ex.getMessage());
         }
     }
 }

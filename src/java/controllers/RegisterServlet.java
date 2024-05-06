@@ -69,7 +69,8 @@ public class RegisterServlet extends HttpServlet {
             RedirectUtilities.setMessage(request, RedirectType.DANGER, "Password and Confirm Password should be same!");
             return null;
         }
-        if (doesEmailExist(customer.getEmail())) {
+        List<Customers> customers = entityManager.createNamedQuery("Customers.findByEmail", Customers.class).setParameter("email", customer.getEmail()).getResultList();
+        if (!customers.isEmpty()) {
             RedirectUtilities.setMessage(request, RedirectType.DANGER, "Account Already Exists!");
             return null;
         }
@@ -89,15 +90,6 @@ public class RegisterServlet extends HttpServlet {
         request.setAttribute("phone_number", phone_number);
         request.setAttribute("gender", gender);
         return new Customers(username, password, email, address, phone_number, gender);
-    }
-
-    private boolean doesEmailExist(String email) {
-        try {
-            List<Customers> customers = entityManager.createNamedQuery("Customers.findByEmail", Customers.class).setParameter("email", email).getResultList();
-            return !customers.isEmpty();
-        } catch (Exception ex) {
-            return false;
-        }
     }
 
     private boolean validateCustomerDetails(Customers customer) {

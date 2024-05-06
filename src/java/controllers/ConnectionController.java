@@ -11,12 +11,6 @@ public class ConnectionController {
     private static final String USER = "nbuser";
     private static final String PASSWORD = "nbuser";
 
-    /**
-     * Returns a connection to the database.
-     *
-     * @return a connection to the database
-     * @throws RuntimeException if there is an error establishing the connection
-     */
     public static Connection getConnection() {
         try {
             Class.forName("org.apache.derby.jdbc.ClientDriver");

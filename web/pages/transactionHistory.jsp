@@ -40,7 +40,7 @@
                                     <% if (transactionList != null) {
                                         for (Transactions transaction : transactionList) {
                                     %>
-                                    <tr class="clickable-row" data-href="payments/receipt?transactionNumber=<%=transaction.getTransactionNumber()%>">
+                                    <tr class="clickable-row" data-href="payments/receipt?transaction_number=<%=transaction.getTransactionNumber()%>">
                                         <td><%=transaction.getTransactionNumber()%></td>
                                         <td><%=transaction.getOrderNumber()%></td>
                                         <td><%=transaction.getPaymentMethod()%></td>

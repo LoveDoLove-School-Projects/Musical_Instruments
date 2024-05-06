@@ -9,11 +9,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
-import java.util.logging.Logger;
 
 public class SearchProductServlet extends HttpServlet {
 
-    private static final Logger LOG = Logger.getLogger(SearchProductServlet.class.getName());
     private final ProductDao productDao = new ProductDao();
 
     @Override

@@ -76,6 +76,6 @@ response.setHeader("Cache-Control", "no-store");
                 </div>
             </div>
         </div>
-        <script src="assets/js/ccdc.js"></script>
+        <script type="module" src="assets/js/ccdc.js"></script>
     </body>
 </html>

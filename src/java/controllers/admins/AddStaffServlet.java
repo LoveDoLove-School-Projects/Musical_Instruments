@@ -18,7 +18,6 @@ import jakarta.transaction.SystemException;
 import jakarta.transaction.UserTransaction;
 import java.io.IOException;
 import java.util.Date;
-import java.util.logging.Logger;
 import utilities.AesUtilities;
 import utilities.RedirectUtilities;
 import utilities.StringUtilities;
@@ -30,7 +29,6 @@ public class AddStaffServlet extends HttpServlet {
     EntityManager entityManager;
     @Resource
     UserTransaction userTransaction;
-    private static final Logger LOG = Logger.getLogger(AddStaffServlet.class.getName());
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -48,27 +46,34 @@ public class AddStaffServlet extends HttpServlet {
         String address = request.getParameter("address");
         String phoneNumber = request.getParameter("phoneNumber");
         Staffs staff = new Staffs(username, email, email, address, phoneNumber, gender); // Set default password as email
-        LOG.info(staff.toString());
         if (!validateStaffDetails(staff)) {
-            throw new IllegalArgumentException("Invalid staff details.");
+            RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Invalid staff details.", Constants.ADMIN_SEARCH_STAFF_URL);
+            return;
         }
+        if (!addStaffToDb(staff)) {
+            RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Error adding staff.", Constants.ADMIN_SEARCH_STAFF_URL);
+            return;
+        }
+        RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.SUCCESS, "Staff Added successful!", Constants.ADMIN_SEARCH_STAFF_URL);
+    }
+
+    private boolean addStaffToDb(Staffs staff) {
         try {
             userTransaction.begin();
-            staff.setUsername(username);
-            staff.setPassword(AesUtilities.aes256EcbEncrypt(email));
-            staff.setEmail(email);
-            staff.setGender(gender);
-            staff.setAddress(address);
-            staff.setPhoneNumber(phoneNumber);
+            staff.setUsername(staff.getUsername());
+            staff.setPassword(AesUtilities.aes256EcbEncrypt(staff.getEmail()));
+            staff.setEmail(staff.getEmail());
+            staff.setGender(staff.getGender());
+            staff.setAddress(staff.getAddress());
+            staff.setPhoneNumber(staff.getAddress());
             staff.setTwoFactorAuth(false);
             staff.setAccountCreationDate(new Date());
             entityManager.persist(staff);
             userTransaction.commit();
+            return true;
         } catch (NotSupportedException | RollbackException | HeuristicMixedException | HeuristicRollbackException | SecurityException | IllegalStateException | SystemException ex) {
-            LOG.severe(ex.getMessage());
             throw new DatabaseException(ex.getMessage());
         }
-        RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.SUCCESS, "Staff Added successful!", Constants.ADMIN_SEARCH_STAFF_URL);
     }
 
     private boolean validateStaffDetails(Staffs staff) {

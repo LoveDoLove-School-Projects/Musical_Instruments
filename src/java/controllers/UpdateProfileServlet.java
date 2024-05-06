@@ -7,8 +7,6 @@ import static entities.Role.STAFF;
 import entities.Session;
 import entities.Staffs;
 import exceptions.DatabaseException;
-import utilities.SecurityLog;
-import utilities.SessionUtilities;
 import jakarta.annotation.Resource;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -25,6 +23,8 @@ import jakarta.transaction.UserTransaction;
 import java.io.IOException;
 import utilities.RedirectUtilities;
 import utilities.RedirectUtilities.RedirectType;
+import utilities.SecurityLog;
+import utilities.SessionUtilities;
 import utilities.StringUtilities;
 
 public class UpdateProfileServlet extends HttpServlet {
@@ -59,6 +59,9 @@ public class UpdateProfileServlet extends HttpServlet {
             case STAFF:
                 Staffs staff = new Staffs(session.getUserId(), username, address, phoneNumber, gender, two_factor_auth);
                 isUpdated = updateProfile(staff);
+                break;
+            default:
+                RedirectUtilities.redirectWithMessage(request, response, RedirectType.DANGER, "Invalid role.", "/");
                 break;
         }
         if (isUpdated) {

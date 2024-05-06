@@ -5,8 +5,6 @@ import entities.Customers;
 import entities.Session;
 import entities.Staffs;
 import exceptions.DatabaseException;
-import utilities.SecurityLog;
-import utilities.SessionUtilities;
 import jakarta.annotation.Resource;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -25,6 +23,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import utilities.RedirectUtilities;
 import utilities.RedirectUtilities.RedirectType;
+import utilities.SecurityLog;
+import utilities.SessionUtilities;
 
 @MultipartConfig
 public class UploadProfilePictureServlet extends HttpServlet {
@@ -58,8 +58,8 @@ public class UploadProfilePictureServlet extends HttpServlet {
                 isUploaded = uploadPicture(staff);
                 break;
             default:
-                isUploaded = false;
-                break;
+                RedirectUtilities.redirectWithMessage(request, response, RedirectType.DANGER, "Invalid role.", "/");
+                return;
         }
         if (isUploaded) {
             SecurityLog.addSecurityLog(request, "update profile picture successful.");

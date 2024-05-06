@@ -3,6 +3,7 @@ package controllers;
 import common.Constants;
 import entities.Customers;
 import entities.OtpsType;
+import exceptions.DatabaseException;
 import jakarta.annotation.Resource;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -144,11 +145,7 @@ public class Register2FAServlet extends HttpServlet {
             userTransaction.commit();
             return true;
         } catch (HeuristicMixedException | HeuristicRollbackException | NotSupportedException | RollbackException | SystemException | IllegalStateException | SecurityException ex) {
-            try {
-                userTransaction.rollback();
-            } catch (SystemException | IllegalStateException | SecurityException e) {
-            }
-            return false;
+            throw new DatabaseException(ex.getMessage());
         }
     }
 }

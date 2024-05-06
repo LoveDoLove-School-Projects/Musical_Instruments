@@ -3,9 +3,7 @@ package controllers;
 import entities.Customers;
 import entities.Session;
 import entities.Staffs;
-import utilities.AesUtilities;
-import utilities.SecurityLog;
-import utilities.SessionUtilities;
+import exceptions.DatabaseException;
 import jakarta.annotation.Resource;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -21,9 +19,11 @@ import jakarta.transaction.SystemException;
 import jakarta.transaction.UserTransaction;
 import java.io.IOException;
 import java.util.List;
-import java.util.logging.Logger;
+import utilities.AesUtilities;
 import utilities.RedirectUtilities;
 import utilities.RedirectUtilities.RedirectType;
+import utilities.SecurityLog;
+import utilities.SessionUtilities;
 import utilities.StringUtilities;
 import utilities.ValidationUtilities;
 
@@ -33,7 +33,6 @@ public class ChangePasswordServlet extends HttpServlet {
     EntityManager entityManager;
     @Resource
     UserTransaction userTransaction;
-    private static final Logger LOG = Logger.getLogger(ChangePasswordServlet.class.getName());
     private static final String CHANGE_PASSWORD_JSP_URL = "/pages/changePassword.jsp";
 
     @Override
@@ -65,79 +64,92 @@ public class ChangePasswordServlet extends HttpServlet {
             RedirectUtilities.redirectWithMessage(request, response, RedirectType.DANGER, "Invalid input", "/");
             return;
         }
-        if (!checkCurrentPassword(session, curentPassword)) {
-            RedirectUtilities.redirectWithMessage(request, response, RedirectType.DANGER, "Password incorrect", "/");
+        boolean isCorrectCurrentPassword = false;
+        switch (session.getRole()) {
+            case CUSTOMER:
+                isCorrectCurrentPassword = checkCustomerCurrentPassword(session.getUserId(), curentPassword);
+                break;
+            case STAFF:
+                isCorrectCurrentPassword = checkStaffCurrentPassword(session.getUserId(), curentPassword);
+                break;
+            default:
+                RedirectUtilities.redirectWithMessage(request, response, RedirectType.DANGER, "Invalid role", "/");
+                break;
+        }
+        if (!isCorrectCurrentPassword) {
+            RedirectUtilities.redirectWithMessage(request, response, RedirectType.DANGER, "Current password is incorrect", "/");
             return;
         }
+        boolean isPasswordChanged = false;
+        switch (session.getRole()) {
+            case CUSTOMER:
+                isPasswordChanged = updateCustomerNewPassword(session, newPassword);
+                break;
+            case STAFF:
+                isPasswordChanged = updateStaffNewPassword(session, newPassword);
+                break;
+            default:
+                RedirectUtilities.redirectWithMessage(request, response, RedirectType.DANGER, "Invalid role", "/");
+                break;
+        }
+        if (!isPasswordChanged) {
+            RedirectUtilities.redirectWithMessage(request, response, RedirectType.DANGER, "An error occurred while resetting password", "/");
+            return;
+        }
+        SecurityLog.addSecurityLog(request, "Password changed successfully");
+        RedirectUtilities.redirectWithMessage(request, response, RedirectType.SUCCESS, "Password reset successfully", "/");
+    }
+
+    private boolean updateCustomerNewPassword(Session session, String newPassword) {
         try {
             userTransaction.begin();
-            if (!updateNewPassword(session, newPassword)) {
-                RedirectUtilities.redirectWithMessage(request, response, RedirectType.DANGER, "An error occurred while resetting password", "/");
-                return;
+            List<Customers> customers = (List<Customers>) entityManager.createNamedQuery("Customers.findByUserId", Customers.class).setParameter("userId", session.getUserId()).getResultList();
+            if (customers == null || customers.isEmpty()) {
+                return false;
             }
+            Customers customer = customers.get(0);
+            customer.setPassword(AesUtilities.aes256EcbEncrypt(newPassword));
+            entityManager.merge(customer);
             userTransaction.commit();
-            SecurityLog.addSecurityLog(request, "Password changed successfully");
-            RedirectUtilities.redirectWithMessage(request, response, RedirectType.SUCCESS, "Password reset successfully", "/");
-        } catch (HeuristicMixedException | HeuristicRollbackException | NotSupportedException | RollbackException | SystemException | IOException | IllegalStateException | SecurityException ex) {
-            LOG.severe(ex.getMessage());
-            RedirectUtilities.redirectWithMessage(request, response, RedirectType.DANGER, "An error occurred while resetting password", "/");
+            return true;
+        } catch (HeuristicMixedException | HeuristicRollbackException | NotSupportedException | RollbackException | SystemException | IllegalStateException | SecurityException ex) {
+            throw new DatabaseException(ex.getMessage());
         }
     }
 
-    private boolean updateNewPassword(Session session, String newPassword) {
+    private boolean updateStaffNewPassword(Session session, String newPassword) {
         try {
-            switch (session.getRole()) {
-                case CUSTOMER:
-                    List<Customers> customers = (List<Customers>) entityManager.createNamedQuery("Customers.findByUserId", Customers.class).setParameter("userId", session.getUserId()).getResultList();
-                    if (customers == null || customers.isEmpty()) {
-                        return false;
-                    }
-                    Customers customer = customers.get(0);
-                    customer.setPassword(AesUtilities.aes256EcbEncrypt(newPassword));
-                    entityManager.merge(customer);
-                    return true;
-                case STAFF:
-                    List<Staffs> staffs = (List<Staffs>) entityManager.createNamedQuery("Staffs.findByUserId", Staffs.class).setParameter("userId", session.getUserId()).getResultList();
-                    if (staffs == null || staffs.isEmpty()) {
-                        return false;
-                    }
-                    Staffs staff = staffs.get(0);
-                    staff.setPassword(AesUtilities.aes256EcbEncrypt(newPassword));
-                    entityManager.merge(staff);
-                    return true;
-                default:
-                    return false;
+            userTransaction.begin();
+            List<Staffs> staffs = (List<Staffs>) entityManager.createNamedQuery("Staffs.findByUserId", Staffs.class).setParameter("userId", session.getUserId()).getResultList();
+            if (staffs == null || staffs.isEmpty()) {
+                return false;
             }
-        } catch (Exception ex) {
-            LOG.severe(ex.getMessage());
-            return false;
+            Staffs staff = staffs.get(0);
+            staff.setPassword(AesUtilities.aes256EcbEncrypt(newPassword));
+            entityManager.merge(staff);
+            userTransaction.commit();
+            return true;
+        } catch (HeuristicMixedException | HeuristicRollbackException | NotSupportedException | RollbackException | SystemException | IllegalStateException | SecurityException ex) {
+            throw new DatabaseException(ex.getMessage());
         }
     }
 
-    private boolean checkCurrentPassword(Session session, String currentPassword) {
-        try {
-            switch (session.getRole()) {
-                case CUSTOMER:
-                    List<Customers> customers = (List<Customers>) entityManager.createNamedQuery("Customers.findByUserId", Customers.class).setParameter("userId", session.getUserId()).getResultList();
-                    if (customers == null || customers.isEmpty()) {
-                        return false;
-                    }
-                    Customers customer = customers.get(0);
-                    return AesUtilities.aes256EcbDecrypt(customer.getPassword()).equals(currentPassword);
-                case STAFF:
-                    List<Staffs> staffs = (List<Staffs>) entityManager.createNamedQuery("Staffs.findByUserId", Staffs.class).setParameter("userId", session.getUserId()).getResultList();
-                    if (staffs == null || staffs.isEmpty()) {
-                        return false;
-                    }
-                    Staffs staff = staffs.get(0);
-                    return AesUtilities.aes256EcbDecrypt(staff.getPassword()).equals(currentPassword);
-                default:
-                    return false;
-            }
-        } catch (Exception ex) {
-            LOG.severe(ex.getMessage());
+    private boolean checkCustomerCurrentPassword(int userId, String currentPassword) {
+        List<Customers> customers = (List<Customers>) entityManager.createNamedQuery("Customers.findByUserId", Customers.class).setParameter("userId", userId).getResultList();
+        if (customers == null || customers.isEmpty()) {
             return false;
         }
+        Customers customer = customers.get(0);
+        return AesUtilities.aes256EcbDecrypt(customer.getPassword()).equals(currentPassword);
+    }
+
+    private boolean checkStaffCurrentPassword(int userId, String currentPassword) {
+        List<Staffs> staffs = (List<Staffs>) entityManager.createNamedQuery("Staffs.findByUserId", Staffs.class).setParameter("userId", userId).getResultList();
+        if (staffs == null || staffs.isEmpty()) {
+            return false;
+        }
+        Staffs staff = staffs.get(0);
+        return AesUtilities.aes256EcbDecrypt(staff.getPassword()).equals(currentPassword);
     }
 
     private boolean validateChangePasswordRequest(String currentPassword, String newPassword, String confirmNewPassword) {

@@ -8,11 +8,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.util.logging.Logger;
 
 public class OtpDao {
 
-    private static final Logger LOG = Logger.getLogger(OtpDao.class.getName());
     private static final String GET_OTP_SQL = "SELECT * FROM otps WHERE email = ?";
     private static final String COUNT_OTP_SQL = "SELECT COUNT(*) FROM otps WHERE email = ?";
     private static final String ADD_OTP_SQL = "INSERT INTO OTPS(email, otp) VALUES(?, ?)";

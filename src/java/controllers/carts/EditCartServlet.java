@@ -29,7 +29,7 @@ public class EditCartServlet extends HttpServlet {
     EntityManager entityManager;
     @Resource
     UserTransaction userTransaction;
-    public static final String EDITCART_JSP_URL = "/pages/carts/editCart.jsp";
+    private static final String EDITCART_JSP_URL = "/pages/carts/editCart.jsp";
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -37,22 +37,20 @@ public class EditCartServlet extends HttpServlet {
         if (session == null) {
             RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Please login to view this page.", Constants.CUSTOMER_LOGIN_URL);
             return;
-        } else {
-            String cardId = request.getParameter("cart_id");
-            List<Carts> cartsList = entityManager.createNamedQuery("Carts.findByCartId").setParameter("cartId", Integer.valueOf(cardId)).getResultList();
-           
-            if (cartsList == null || cartsList.isEmpty()) {
-                RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Cart Not Found!", Constants.CART_URL);
-                return;
-            }
-            Carts carts = cartsList.get(0);
-            //retrive the product stock
-            List<Products> productsList = entityManager.createNamedQuery("Products.findByProductId").setParameter("productId", carts.getProductId()).getResultList();
-            Products products = productsList.get(0);
-            request.setAttribute("editCartDetails", carts);
-            request.setAttribute("productDetails", products);
-            request.getRequestDispatcher(EDITCART_JSP_URL).forward(request, response);
         }
+        String cardId = request.getParameter("cart_id");
+        List<Carts> cartsList = entityManager.createNamedQuery("Carts.findByCartId").setParameter("cartId", Integer.valueOf(cardId)).getResultList();
+        if (cartsList == null || cartsList.isEmpty()) {
+            RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Cart Not Found!", Constants.CART_URL);
+            return;
+        }
+        Carts carts = cartsList.get(0);
+        //retrive the product stock
+        List<Products> productsList = entityManager.createNamedQuery("Products.findByProductId").setParameter("productId", carts.getProductId()).getResultList();
+        Products products = productsList.get(0);
+        request.setAttribute("editCartDetails", carts);
+        request.setAttribute("productDetails", products);
+        request.getRequestDispatcher(EDITCART_JSP_URL).forward(request, response);
     }
 
     @Override
@@ -62,8 +60,8 @@ public class EditCartServlet extends HttpServlet {
             RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Please login to view this page.", Constants.CUSTOMER_LOGIN_URL);
             return;
         }
-        int cardId = Integer.valueOf(request.getParameter("cartId"));
-        int productQuantity = Integer.valueOf(request.getParameter("productQuantity"));
+        int cardId = Integer.parseInt(request.getParameter("cartId"));
+        int productQuantity = Integer.parseInt(request.getParameter("productQuantity"));
         try {
             userTransaction.begin();
             Carts carts = entityManager.find(Carts.class, cardId);

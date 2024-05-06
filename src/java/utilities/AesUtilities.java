@@ -4,7 +4,6 @@ import entities.Environment;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
-import java.util.logging.Logger;
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
@@ -14,8 +13,6 @@ import javax.crypto.spec.SecretKeySpec;
 
 public final class AesUtilities {
 
-    private static final Logger LOG = Logger.getLogger(AesUtilities.class.getName());
-
     public static String aes256EcbEncrypt(String text) {
         try {
             byte[] textBytes = text.getBytes();
@@ -23,8 +20,7 @@ public final class AesUtilities {
             byte[] encryptedBytes = cipher.doFinal(textBytes);
             return Base64.getEncoder().encodeToString(encryptedBytes);
         } catch (InvalidKeyException | NoSuchAlgorithmException | BadPaddingException | IllegalBlockSizeException | NoSuchPaddingException ex) {
-            LOG.severe(ex.getMessage());
-            return null;
+            throw new RuntimeException(ex);
         }
     }
 
@@ -35,8 +31,7 @@ public final class AesUtilities {
             byte[] decryptedBytes = cipher.doFinal(encryptedBytes);
             return new String(decryptedBytes);
         } catch (InvalidKeyException | NoSuchAlgorithmException | BadPaddingException | IllegalBlockSizeException | NoSuchPaddingException ex) {
-            LOG.severe(ex.getMessage());
-            return null;
+            throw new RuntimeException(ex);
         }
     }
 

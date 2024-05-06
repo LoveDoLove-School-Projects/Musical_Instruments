@@ -2,8 +2,6 @@ package controllers.staffs;
 
 import entities.Products;
 import exceptions.DatabaseException;
-import utilities.SecurityLog;
-import utilities.SessionUtilities;
 import jakarta.annotation.Resource;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -21,6 +19,8 @@ import jakarta.transaction.UserTransaction;
 import java.io.IOException;
 import java.io.InputStream;
 import utilities.RedirectUtilities;
+import utilities.SecurityLog;
+import utilities.SessionUtilities;
 
 @MultipartConfig
 public class AddProductServlet extends HttpServlet {
@@ -29,6 +29,9 @@ public class AddProductServlet extends HttpServlet {
     EntityManager entityManager;
     @Resource
     UserTransaction userTransaction;
+    private static final String ADD_PRODUCT_JSP_URL = "/pages/staffs/addProduct.jsp";
+    private static final String ADD_PRODUCT_URL = "/pages/staffs/addProduct";
+    private static final String STAFF_SEARCH_PRODUCT_URL = "/pages/staffs/staffSearchProduct.jsp";
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -37,7 +40,7 @@ public class AddProductServlet extends HttpServlet {
             RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Please login as staff to view this page!", "/");
             return;
         }
-        request.getRequestDispatcher("/pages/staffs/addProduct.jsp").forward(request, response);
+        request.getRequestDispatcher(ADD_PRODUCT_JSP_URL).forward(request, response);
     }
 
     @Override
@@ -55,7 +58,7 @@ public class AddProductServlet extends HttpServlet {
         String category = request.getParameter("category");
         InputStream pictureStream = request.getPart("image").getInputStream();
         if (pictureStream == null) {
-            RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Error uploading picture.", "/pages/staffs/addProduct");
+            RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Error uploading picture.", ADD_PRODUCT_URL);
             return;
         }
         byte[] pictureBytes = pictureStream.readAllBytes();
@@ -71,9 +74,9 @@ public class AddProductServlet extends HttpServlet {
             entityManager.persist(product);
             userTransaction.commit();
             SecurityLog.addInternalSecurityLog(request, " added new product " + product.toString());
+            RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.SUCCESS, "Product Added successful!", STAFF_SEARCH_PRODUCT_URL);
         } catch (NotSupportedException | SystemException | RollbackException | HeuristicMixedException | HeuristicRollbackException | SecurityException | IllegalStateException ex) {
             throw new DatabaseException(ex.getMessage());
         }
-        RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.SUCCESS, "Product Added successful!", "/pages/staffs/staffSearchProduct");
     }
 }

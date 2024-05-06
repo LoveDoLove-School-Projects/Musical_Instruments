@@ -22,8 +22,8 @@ public class CheckoutServlet extends HttpServlet {
 
     @PersistenceContext
     EntityManager entityManager;
-    private final TransactionServices transactionServices = new TransactionServices();
     private static final String CHECKOUT_JSP_URL = "/payments/checkout.jsp";
+    private final TransactionServices transactionServices = new TransactionServices();
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)

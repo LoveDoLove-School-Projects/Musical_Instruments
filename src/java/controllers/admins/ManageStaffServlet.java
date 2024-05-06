@@ -11,14 +11,12 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
-import java.util.logging.Logger;
 import utilities.RedirectUtilities;
 
 public class ManageStaffServlet extends HttpServlet {
 
     @PersistenceContext
     EntityManager entityManager;
-    private static final Logger LOG = Logger.getLogger(ManageStaffServlet.class.getName());
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)

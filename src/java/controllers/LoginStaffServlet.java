@@ -26,7 +26,7 @@ public class LoginStaffServlet extends HttpServlet {
 
     @PersistenceContext
     EntityManager entityManager;
-    public static final String STAFF_LOGIN_JSP_URL = "/pages/staffLogin.jsp";
+    private static final String STAFF_LOGIN_JSP_URL = "/pages/staffLogin.jsp";
     private static final String LOGIN_2FA_URL = "/sessions/login2fa";
     private final OtpServices otpServices = new OtpServices();
 

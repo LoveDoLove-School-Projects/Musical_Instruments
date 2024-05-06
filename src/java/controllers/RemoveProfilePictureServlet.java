@@ -6,8 +6,6 @@ import static entities.Role.CUSTOMER;
 import entities.Session;
 import entities.Staffs;
 import exceptions.DatabaseException;
-import utilities.SecurityLog;
-import utilities.SessionUtilities;
 import jakarta.annotation.Resource;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -25,6 +23,8 @@ import jakarta.transaction.UserTransaction;
 import java.io.IOException;
 import utilities.RedirectUtilities;
 import utilities.RedirectUtilities.RedirectType;
+import utilities.SecurityLog;
+import utilities.SessionUtilities;
 
 @MultipartConfig
 public class RemoveProfilePictureServlet extends HttpServlet {
@@ -51,6 +51,9 @@ public class RemoveProfilePictureServlet extends HttpServlet {
                 Staffs staff = new Staffs(session.getUserId());
                 isRemoved = removePicture(staff);
                 break;
+            default:
+                RedirectUtilities.redirectWithMessage(request, response, RedirectType.DANGER, "Invalid role.", "/");
+                break;
         }
         if (isRemoved) {
             SecurityLog.addSecurityLog(request, "remove profile picture successful.");
@@ -72,9 +75,7 @@ public class RemoveProfilePictureServlet extends HttpServlet {
             entityManager.merge(existingCustomer);
             userTransaction.commit();
             return true;
-        } catch (RollbackException ex) {
-            return false;
-        } catch (HeuristicMixedException | HeuristicRollbackException | NotSupportedException | SystemException | IllegalStateException | SecurityException ex) {
+        } catch (RollbackException | HeuristicMixedException | HeuristicRollbackException | NotSupportedException | SystemException | IllegalStateException | SecurityException ex) {
             throw new DatabaseException(ex.getMessage());
         }
     }
@@ -90,9 +91,7 @@ public class RemoveProfilePictureServlet extends HttpServlet {
             entityManager.merge(existingStaff);
             userTransaction.commit();
             return true;
-        } catch (RollbackException ex) {
-            return false;
-        } catch (HeuristicMixedException | HeuristicRollbackException | NotSupportedException | SystemException | IllegalStateException | SecurityException ex) {
+        } catch (RollbackException | HeuristicMixedException | HeuristicRollbackException | NotSupportedException | SystemException | IllegalStateException | SecurityException ex) {
             throw new DatabaseException(ex.getMessage());
         }
     }
