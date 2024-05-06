@@ -3,7 +3,6 @@ package controllers.admins;
 import common.Constants;
 import entities.Staffs;
 import exceptions.DatabaseException;
-import utilities.AesUtilities;
 import jakarta.annotation.Resource;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -20,6 +19,7 @@ import jakarta.transaction.UserTransaction;
 import java.io.IOException;
 import java.util.Date;
 import java.util.logging.Logger;
+import utilities.AesUtilities;
 import utilities.RedirectUtilities;
 import utilities.StringUtilities;
 import utilities.ValidationUtilities;
@@ -35,7 +35,7 @@ public class AddStaffServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.getRequestDispatcher("/pages/admins/addStaff.jsp").forward(request, response);
+        request.getRequestDispatcher("/pages/superAdmin/addStaff.jsp").forward(request, response);
     }
 
     @Override

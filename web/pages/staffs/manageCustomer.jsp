@@ -57,11 +57,8 @@
                                 <div class="col-md-2">
                                     <a href="pages/staffs/searchCustomer" class="btn btn-primary mr-2">Go back</a>
                                 </div>
-                                <%
-                                    boolean isAdmin = request.isUserInRole("Admin");
-                                    if (isAdmin) { %>
                                 <div class="col-md-2">
-                                    <a href="pages/staffs/modifyCustomer" class="btn btn-success mr-2">Modify</a>
+                                    <a href="pages/admins/modifyCustomer" class="btn btn-success mr-2">Modify</a>
                                 </div>
 
                                 <div class="col-md-1">
@@ -69,7 +66,6 @@
                                         <input type="hidden" name="userId" value="<%=customerDetails.getUserId() %>"/>
                                         <button class="btn btn-danger">Delete</button>
                                     </form>
-                                    <% } %>
                                 </div>
                             </div>
                         </div>
@@ -78,9 +74,6 @@
             </div>
         </div>
         <jsp:include page="/defaults/footer.jsp" />
-        <%
-               if (isAdmin) {
-        %>
         <script type="module">
             import { showErrorDialog } from "${basePath}assets/js/dialog.js";
             let deleteCustomerFormElement = document.getElementById("deleteCustomerForm");
@@ -110,8 +103,5 @@
             }
             setDeleteCustomerForm();
         </script>
-        <%
-            }
-        %>
     </body>
 </html>

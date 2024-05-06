@@ -36,7 +36,7 @@ public class SessionUtilities {
         if (principal == null) {
             return false;
         }
-        return request.isUserInRole("Admin");
+        return request.isUserInRole("Admin") || request.isUserInRole("SuperAdmin");
     }
 
     public static String getPrincipalName(HttpServletRequest request) {

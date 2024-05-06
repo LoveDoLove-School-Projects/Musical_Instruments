@@ -18,7 +18,7 @@
     </servlet>
     <servlet>
         <servlet-name>ModifyCustomerServlet</servlet-name>
-        <servlet-class>controllers.staffs.ModifyCustomerServlet</servlet-class>
+        <servlet-class>controllers.admins.ModifyCustomerServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>ForgotPasswordServlet</servlet-name>
@@ -178,7 +178,7 @@
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>ModifyStaffServlet</servlet-name>
-        <url-pattern>/pages/admins/modifyStaff</url-pattern>
+        <url-pattern>/pages/superAdmin/modifyStaff</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>ForgotPasswordServlet</servlet-name>
@@ -262,7 +262,7 @@
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>DeleteStaffServlet</servlet-name>
-        <url-pattern>/pages/admins/deleteStaff</url-pattern>
+        <url-pattern>/pages/superAdmin/deleteStaff</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>DeleteCustomerServlet</servlet-name>
@@ -270,7 +270,7 @@
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>ModifyCustomerServlet</servlet-name>
-        <url-pattern>/pages/staffs/modifyCustomer</url-pattern>
+        <url-pattern>/pages/admins/modifyCustomer</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>ManageStaffServlet</servlet-name>
@@ -294,7 +294,7 @@
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>AddStaffServlet</servlet-name>
-        <url-pattern>/pages/admins/addStaff</url-pattern>
+        <url-pattern>/pages/superAdmin/addStaff</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>DeleteCartServlet</servlet-name>
@@ -344,7 +344,7 @@
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>SalesServlet</servlet-name>
-        <url-pattern>/pages/admins/viewSales</url-pattern>
+        <url-pattern>/pages/superAdmin/viewSales</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>TransactionServlet</servlet-name>
@@ -369,6 +369,18 @@
         <param-name>companyName</param-name>
         <param-value>TAR Music</param-value>
     </context-param>
+    <context-param>
+        <param-name>companyHotline</param-name>
+        <param-value>+1800-123-4567</param-value>
+    </context-param>
+    <context-param>
+        <param-name>companyEmail</param-name>
+        <param-value>tarmusic@tar.ms.my</param-value>
+    </context-param>
+    <context-param>
+        <param-name>companyCopyright</param-name>
+        <param-value>All rights reserved.</param-value>
+    </context-param>
     <filter>
         <description>JSP Filter Servlet</description>
         <filter-name>InitFilter</filter-name>
@@ -392,7 +404,7 @@
     </error-page>
     <error-page>
         <error-code>403</error-code>
-        <location>/pages/errors/unauthorizedErrorPage.html</location>
+        <location>/pages/errors/unauthorizedErrorPage.jsp</location>
     </error-page>
     <error-page>
         <error-code>404</error-code>
@@ -420,6 +432,19 @@
         <auth-constraint>
             <description/>
             <role-name>Admin</role-name>
+            <role-name>SuperAdmin</role-name>
+        </auth-constraint>
+    </security-constraint>
+    <security-constraint>
+        <display-name>Super Admin Constraints</display-name>
+        <web-resource-collection>
+            <web-resource-name>Super Admin</web-resource-name>
+            <description/>
+            <url-pattern>/pages/superAdmin/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <description/>
+            <role-name>SuperAdmin</role-name>
         </auth-constraint>
     </security-constraint>
     <login-config>
@@ -432,6 +457,12 @@
     <security-role>
         <description>Admin Role</description>
         <role-name>Admin</role-name>
+    </security-role>
+    <security-role>
+        <description>Super Admin Role
+
+        </description>
+        <role-name>SuperAdmin</role-name>
     </security-role>
     <env-entry>
         <description>For encrypt sensitive data</description>

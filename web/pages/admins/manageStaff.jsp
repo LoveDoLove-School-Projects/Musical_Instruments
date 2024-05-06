@@ -57,11 +57,11 @@
                                     <a href="pages/admins/searchStaff" class="btn btn-primary mr-2">Go back</a>
                                 </div>
                                 <div class="col-md-2">
-                                    <a href="pages/admins/modifyStaff" class="btn btn-success mr-2">Modify</a>
+                                    <a href="pages/superAdmin/modifyStaff" class="btn btn-success mr-2">Modify</a>
                                 </div>
                                 <div class="col-md-1">
 
-                                    <form action="pages/admins/deleteStaff" method="post" id="deleteStaffForm">
+                                    <form action="pages/superAdmin/deleteStaff" method="post" id="deleteStaffForm">
                                         <input type="hidden" name="userId" value="<%=staff.getUserId() %>"/>
                                         <button class="btn btn-danger">Delete</button>
                                     </form>

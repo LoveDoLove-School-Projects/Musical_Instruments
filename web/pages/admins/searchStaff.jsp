@@ -69,7 +69,7 @@
             <form class="form-inline mb-3" action="pages/admins/searchStaff" method="post">
                 <input class="col-5 form-control mr-2" type="text" name="searchQuery" placeholder="Enter staff email: "><br>
                 <button type="submit" class="btn btn-primary">Search</button>
-                <a href="pages/admins/addStaff" class="btn btn-success"><i class="fas fa-user-plus"></i> Register new Staff</a>
+                <a href="pages/superAdmin/addStaff" class="btn btn-success"><i class="fas fa-user-plus"></i> Register new Staff</a>
             </form>
         </div>
         <jsp:include page="/defaults/footer.jsp" />
