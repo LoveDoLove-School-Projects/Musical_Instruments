@@ -1,7 +1,6 @@
-package controllers.staffs;
+package controllers.admins;
 
 import entities.Internalsecuritylog;
-import utilities.SessionUtilities;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.servlet.ServletException;
@@ -12,12 +11,13 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import utilities.RedirectUtilities;
+import utilities.SessionUtilities;
 
 public class InternalSecurityLogServlet extends HttpServlet {
 
     @PersistenceContext
     EntityManager entityManager;
-    private static final String SECURITY_LOG_JSP_URL = "/pages/staffs/internalSecurityLog.jsp";
+    private static final String SECURITY_LOG_JSP_URL = "/pages/admins/internalSecurityLog.jsp";
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
