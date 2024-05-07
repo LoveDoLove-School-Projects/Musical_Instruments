@@ -11,4 +11,6 @@
         <br />
         <span class="text-muted">Email: <%=application.getInitParameter("companyEmail")%></span>
     </div>
+
+
 </footer>
