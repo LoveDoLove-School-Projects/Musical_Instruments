@@ -1,6 +1,6 @@
 package controllers.carts;
 
-import common.Constants;
+import entities.Constants;
 import entities.Carts;
 import entities.Session;
 import exceptions.DatabaseException;
@@ -19,6 +19,7 @@ import jakarta.transaction.SystemException;
 import jakarta.transaction.UserTransaction;
 import java.io.IOException;
 import utilities.RedirectUtilities;
+import utilities.SecurityLog;
 import utilities.SessionUtilities;
 
 public class DeleteCartServlet extends HttpServlet {
@@ -46,8 +47,10 @@ public class DeleteCartServlet extends HttpServlet {
             }
             entityManager.remove(cartToDelete);
             userTransaction.commit();
+            SecurityLog.addSecurityLog(request, "Product " + cartToDelete.getProductName() + " has been delete from cart successfully.");
             RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.SUCCESS, "Your cart has been delete successfull !", Constants.CART_URL);
         } catch (HeuristicMixedException | HeuristicRollbackException | NotSupportedException | RollbackException | SystemException | IOException | IllegalStateException | NumberFormatException | SecurityException ex) {
+            SecurityLog.addSecurityLog(request, "Product " + cartId + " has been delete from cart failed.");
             throw new DatabaseException(ex.getMessage());
         }
     }

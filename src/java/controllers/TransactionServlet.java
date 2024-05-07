@@ -2,7 +2,7 @@ package controllers;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
-import common.Constants;
+import entities.Constants;
 import entities.Cards;
 import entities.Carts;
 import entities.Customers;
@@ -105,7 +105,7 @@ public class TransactionServlet extends HttpServlet {
                 return;
             }
             PaypalPayment payment = new Gson().fromJson(paymentResponse, PaypalPayment.class);
-            if (savePaypalTransactionToDB(session, payment)) {
+            if (savePaypalTransactionToDB(request, session, payment)) {
                 String approval_url = null;
                 for (PaypalPayment.Link link : payment.getLinks()) {
                     if (link.getRel().equals("approval_url")) {
@@ -114,11 +114,10 @@ public class TransactionServlet extends HttpServlet {
                 }
                 HttpSession httpSession = request.getSession();
                 httpSession.setAttribute("transaction_number", payment.getId());
-                SecurityLog.addSecurityLog(request, "create paypal payment successful.");
                 response.sendRedirect(approval_url);
                 return;
             }
-            RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Failed to save transaction.", Constants.CART_URL);
+            RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Failed to create transaction.", Constants.CART_URL);
         } catch (JsonSyntaxException | IOException ex) {
             throw new PaymentException(ex.getMessage());
         }
@@ -145,7 +144,7 @@ public class TransactionServlet extends HttpServlet {
             return;
         }
         OrderDetails orderDetails = transactionServices.getOrderDetails(cartList);
-        Transactions transaction = saveCCDCTransactionToDB(session, orderDetails, paymentMethod);
+        Transactions transaction = saveCCDCTransactionToDB(request, session, orderDetails, paymentMethod);
         if (transaction == null) {
             RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Failed to create transaction.", Constants.CART_URL);
             return;
@@ -154,7 +153,6 @@ public class TransactionServlet extends HttpServlet {
         httpSession.setAttribute("transaction", transaction);
         httpSession.setAttribute("transaction_number", transaction.getTransactionNumber());
         httpSession.setAttribute("cartList", cartList);
-        SecurityLog.addSecurityLog(request, "create credit or debit card transaction successful.");
         RedirectUtilities.sendRedirect(request, response, CCDC_VERIFY_URL);
     }
 
@@ -204,7 +202,7 @@ public class TransactionServlet extends HttpServlet {
         }
     }
 
-    private Transactions saveCCDCTransactionToDB(Session session, OrderDetails orderDetails, String paymentMethod) {
+    private Transactions saveCCDCTransactionToDB(HttpServletRequest request, Session session, OrderDetails orderDetails, String paymentMethod) {
         try {
             String transactionNumber = "TXN" + System.currentTimeMillis() + session.getUserId();
             String orderNumber = "ORD" + System.currentTimeMillis() + session.getUserId();
@@ -222,13 +220,15 @@ public class TransactionServlet extends HttpServlet {
             userTransaction.begin();
             entityManager.persist(transaction);
             userTransaction.commit();
+            SecurityLog.addSecurityLog(request, "create credit or debit card transaction successful.");
             return transaction;
         } catch (HeuristicMixedException | HeuristicRollbackException | NotSupportedException | RollbackException | SystemException | IllegalStateException | NumberFormatException | SecurityException ex) {
+            SecurityLog.addSecurityLog(request, "create credit or debit card transaction failed.");
             throw new DatabaseException(ex.getMessage());
         }
     }
 
-    private boolean savePaypalTransactionToDB(Session session, PaypalPayment paypalPayment) {
+    private boolean savePaypalTransactionToDB(HttpServletRequest request, Session session, PaypalPayment paypalPayment) {
         try {
             String orderNumber = "ORD" + System.currentTimeMillis() + session.getUserId();
             Date date = new Date();
@@ -245,8 +245,10 @@ public class TransactionServlet extends HttpServlet {
             userTransaction.begin();
             entityManager.persist(transaction);
             userTransaction.commit();
+            SecurityLog.addSecurityLog(request, "create paypal transaction successful.");
             return true;
         } catch (HeuristicMixedException | HeuristicRollbackException | NotSupportedException | RollbackException | SystemException | IllegalStateException | NumberFormatException | SecurityException ex) {
+            SecurityLog.addSecurityLog(request, "create paypal transaction failed.");
             throw new DatabaseException(ex.getMessage());
         }
     }

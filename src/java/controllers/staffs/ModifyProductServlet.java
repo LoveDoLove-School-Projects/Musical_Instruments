@@ -2,7 +2,6 @@ package controllers.staffs;
 
 import entities.Products;
 import exceptions.DatabaseException;
-import utilities.SessionUtilities;
 import jakarta.annotation.Resource;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -20,6 +19,8 @@ import jakarta.transaction.UserTransaction;
 import java.io.IOException;
 import java.io.InputStream;
 import utilities.RedirectUtilities;
+import utilities.SecurityLog;
+import utilities.SessionUtilities;
 
 @MultipartConfig
 public class ModifyProductServlet extends HttpServlet {
@@ -59,7 +60,7 @@ public class ModifyProductServlet extends HttpServlet {
         }
         byte[] pictureBytes = pictureStream.readAllBytes();
         Products product = new Products(productId, productName, price, color, quantity, category, pictureBytes);
-        boolean isUpdated = updateProductDetails(product);
+        boolean isUpdated = updateProductDetails(request, product);
         if (!isUpdated) {
             showError(request, response);
             return;
@@ -67,7 +68,7 @@ public class ModifyProductServlet extends HttpServlet {
         RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.SUCCESS, "Update Successful!", "/pages/staffs/manageProduct");
     }
 
-    private boolean updateProductDetails(Products product) {
+    private boolean updateProductDetails(HttpServletRequest request, Products product) {
         try {
             userTransaction.begin();
             Products productFromDB = entityManager.find(Products.class, product.getProductId());
@@ -82,8 +83,10 @@ public class ModifyProductServlet extends HttpServlet {
             productFromDB.setImage(product.getImage());
             entityManager.merge(productFromDB);
             userTransaction.commit();
+            SecurityLog.addInternalSecurityLog(request, "Product: " + product.getName() + " updated successfully.");
             return true;
         } catch (HeuristicMixedException | HeuristicRollbackException | NotSupportedException | RollbackException | SystemException | IllegalStateException | SecurityException ex) {
+            SecurityLog.addInternalSecurityLog(request, "Failed to update product: " + product.getProductId() + ".");
             throw new DatabaseException(ex.getMessage());
         }
     }

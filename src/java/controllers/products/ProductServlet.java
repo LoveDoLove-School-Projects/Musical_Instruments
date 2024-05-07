@@ -1,6 +1,6 @@
 package controllers.products;
 
-import common.Constants;
+import entities.Constants;
 import entities.ProductCategory;
 import entities.Products;
 import jakarta.persistence.EntityManager;

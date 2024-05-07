@@ -1,6 +1,6 @@
 package controllers.staffs;
 
-import common.Constants;
+import entities.Constants;
 import entities.Customers;
 import utilities.SessionUtilities;
 import jakarta.persistence.EntityManager;

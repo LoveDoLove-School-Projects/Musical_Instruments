@@ -1,7 +1,7 @@
 package controllers.products;
 
 import com.google.gson.Gson;
-import common.Constants;
+import entities.Constants;
 import dao.ProductDao;
 import entities.Products;
 import jakarta.servlet.ServletException;

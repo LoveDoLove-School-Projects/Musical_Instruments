@@ -1,6 +1,6 @@
 package controllers.carts;
 
-import common.Constants;
+import entities.Constants;
 import entities.Carts;
 import entities.Session;
 import jakarta.persistence.EntityManager;
@@ -37,10 +37,5 @@ public class CartServlet extends HttpServlet {
             request.setAttribute("cartDetails", carts);
             request.getRequestDispatcher(Constants.CART_JSP_URL).forward(request, response);
         }
-    }
-
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
     }
 }

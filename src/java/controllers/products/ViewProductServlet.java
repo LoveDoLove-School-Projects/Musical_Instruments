@@ -1,6 +1,6 @@
 package controllers.products;
 
-import common.Constants;
+import entities.Constants;
 import entities.Products;
 import entities.Session;
 import utilities.SessionUtilities;

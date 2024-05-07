@@ -1,6 +1,6 @@
 package controllers.admins;
 
-import common.Constants;
+import entities.Constants;
 import entities.Archivecustomers;
 import entities.Customers;
 import exceptions.DatabaseException;
@@ -19,6 +19,7 @@ import jakarta.transaction.SystemException;
 import jakarta.transaction.UserTransaction;
 import java.io.IOException;
 import utilities.RedirectUtilities;
+import utilities.SecurityLog;
 
 public class DeleteCustomerServlet extends HttpServlet {
 
@@ -37,8 +38,10 @@ public class DeleteCustomerServlet extends HttpServlet {
             entityManager.remove(customer);
             entityManager.persist(archiveCustomer);
             userTransaction.commit();
+            SecurityLog.addInternalSecurityLog(request, "Customer: " + customer.getUsername() + " deleted successfully.");
             RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.SUCCESS, customer.getUsername() + " deleted successfully.", Constants.ADMIN_SEARCH_CUSTOMER_URL);
         } catch (HeuristicMixedException | HeuristicRollbackException | NotSupportedException | RollbackException | SystemException | IllegalStateException | NumberFormatException | SecurityException ex) {
+            SecurityLog.addInternalSecurityLog(request, "Failed to delete customer: " + userID + ".");
             throw new DatabaseException(ex.getMessage());
         }
     }

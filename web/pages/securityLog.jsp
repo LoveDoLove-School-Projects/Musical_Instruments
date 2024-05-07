@@ -17,9 +17,9 @@
         %>
         <div class="container">
             <div class="row">
-                <div class="col-md-12">
+                <div class="col-md-12 m-3">
                     <div class="panel panel-default">
-                        <div class="panel-heading">
+                        <div class="panel-heading d-flex justify-content-between align-items-center">
                             <h3 class="panel-title">Recent events</h3>
                             <button id="exportButton" class="btn btn-primary md-3">Export to CSV</button>
                         </div>

@@ -1,6 +1,6 @@
 package controllers;
 
-import common.Constants;
+import entities.Constants;
 import entities.Carts;
 import entities.Customers;
 import entities.OrderDetails;
@@ -32,7 +32,7 @@ import utilities.RedirectUtilities;
 import utilities.SecurityLog;
 import utilities.SessionUtilities;
 
-@WebServlet(name = "CreditDebitCardVerifyServlet", urlPatterns = {"/payments/ccdc/verify"})
+@WebServlet(name = "CreditDebitCardVerifyServlet", urlPatterns = {"/payments/ccdc/verify", "/api/payments/ccdc/resendOtp"})
 public class CreditDebitCardVerifyServlet extends HttpServlet {
 
     @PersistenceContext
@@ -40,6 +40,8 @@ public class CreditDebitCardVerifyServlet extends HttpServlet {
     @Resource
     UserTransaction userTransaction;
     private static final String CCDC_VERIFY_JSP_URL = "/payments/ccdcVerify.jsp";
+    private static final String RECEIPT_URL = "/payments/receipt";
+    private static final String RESEND_OTP_URL = "/api/payments/ccdc/resendOtp";
     private static final Map<OtpsType, String> STATUS_MESSAGES;
     private final TransactionServices transactionServices = new TransactionServices();
     private final OtpServices otpServices = new OtpServices();
@@ -81,6 +83,11 @@ public class CreditDebitCardVerifyServlet extends HttpServlet {
             RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Please login to view this page.", Constants.CUSTOMER_LOGIN_URL);
             return;
         }
+        String path = request.getServletPath();
+        if (path.equals(RESEND_OTP_URL)) {
+            resendOtp(response, session);
+            return;
+        }
         String otp = request.getParameter("otp");
         if (otp == null || otp.isEmpty()) {
             RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Payment failed!", "/");
@@ -95,24 +102,34 @@ public class CreditDebitCardVerifyServlet extends HttpServlet {
             return;
         }
         String transactionStatus = otpStatus == OtpsType.OK ? TransactionStatus.APPROVED : TransactionStatus.FAILED;
-        transaction = updateTransactionToDB(session, transaction, transactionStatus);
+        transaction = updateTransactionToDB(request, session, transaction, transactionStatus);
         if (transaction == null) {
             RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Failed to update transaction.", "/");
             return;
         }
         switch (transactionStatus) {
             case TransactionStatus.APPROVED:
-                SecurityLog.addSecurityLog(request, "Payment successful with CCDC transaction number: " + transaction.getTransactionNumber());
                 transactionServices.sendPaymentReceipt(transaction, session.getEmail());
                 String url = Constants.UPDATE_ORDER_URL + "?transaction_number=" + transaction.getTransactionNumber() + "&order_number=" + transaction.getOrderNumber() + "&txnStatus=" + transaction.getTransactionStatus();
                 RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.SUCCESS, "Payment successful.", url);
                 break;
             case TransactionStatus.FAILED:
-                SecurityLog.addSecurityLog(request, "Payment failed with CCDC transaction number: " + transaction.getTransactionNumber());
-                RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Payment failed!", "/");
+                RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Payment failed!", RECEIPT_URL + "?transaction_number=" + transaction.getTransactionNumber());
                 break;
             default:
                 RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Invalid transaction.", "/");
+        }
+    }
+
+    private void resendOtp(HttpServletResponse response, Session session) throws ServletException, IOException {
+        // return json
+        response.setContentType("application/json;charset=UTF-8");
+        response.setHeader("Cache-Control", "no-store");
+        boolean isSent = otpServices.sendOtp(session.getEmail());
+        if (isSent) {
+            response.getWriter().write("{\"status\":\"success\",\"message\":\"OTP sent successfully!\"}");
+        } else {
+            response.getWriter().write("{\"status\":\"danger\",\"message\":\"Failed to send OTP!\"}");
         }
     }
 
@@ -143,7 +160,7 @@ public class CreditDebitCardVerifyServlet extends HttpServlet {
         return transaction;
     }
 
-    private Transactions updateTransactionToDB(Session session, Transactions transaction, String transactionStatus) {
+    private Transactions updateTransactionToDB(HttpServletRequest request, Session session, Transactions transaction, String transactionStatus) {
         try {
             userTransaction.begin();
             Transactions dbTransaction = entityManager.createNamedQuery("Transactions.findByTransactionNumberAndUserId", Transactions.class).setParameter("transactionNumber", transaction.getTransactionNumber()).setParameter("userId", session.getUserId()).getSingleResult();
@@ -151,8 +168,10 @@ public class CreditDebitCardVerifyServlet extends HttpServlet {
             dbTransaction.setDateUpdatedGmt(new Date());
             entityManager.merge(dbTransaction);
             userTransaction.commit();
+            SecurityLog.addSecurityLog(request, "Transaction updated: " + dbTransaction.getTransactionNumber());
             return dbTransaction;
         } catch (HeuristicMixedException | HeuristicRollbackException | NotSupportedException | RollbackException | SystemException | IllegalStateException | NumberFormatException | SecurityException ex) {
+            SecurityLog.addSecurityLog(request, "Failed to update transaction: " + transaction.getTransactionNumber());
             throw new DatabaseException(ex.getMessage());
         }
     }

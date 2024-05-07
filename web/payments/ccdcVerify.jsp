@@ -71,7 +71,15 @@ response.setHeader("Cache-Control", "no-store");
                                 <input type="text" name="otp" id="otp" class="form-control form-control-lg" maxlength="6" placeholder="XXXXXX" required />
                             </div>
                         </div>
-                        <button class="btn btn-primary btn-lg btn-block md-3" type="submit" id="submitButton">Verify</button>
+                        <div class="row">
+                            <div class="col">
+                                <button class="btn btn-primary btn-lg btn-block md-3" type="submit" id="submitButton">Verify</button>
+                                <button class="btn btn-success btn-lg btn-block md-3" id="resendOtp">Resend Otp</button>
+                            </div>
+                            <div class="col">
+                                <button class="btn btn-danger btn-lg btn-block" id="cancel">Cancel</button>
+                            </div>
+                        </div>
                     </form>
                 </div>
             </div>

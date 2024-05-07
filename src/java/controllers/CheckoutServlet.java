@@ -1,6 +1,6 @@
 package controllers;
 
-import common.Constants;
+import entities.Constants;
 import entities.Carts;
 import entities.Customers;
 import entities.OrderDetails;

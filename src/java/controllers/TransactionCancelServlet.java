@@ -1,6 +1,6 @@
 package controllers;
 
-import common.Constants;
+import entities.Constants;
 import entities.Session;
 import entities.TransactionStatus;
 import entities.Transactions;
@@ -46,15 +46,15 @@ public class TransactionCancelServlet extends HttpServlet {
             RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Transaction number is required.", Constants.CART_URL);
             return;
         }
-        if (!updateTransactionToDB(session, transaction_number)) {
+        if (!updateTransactionToDB(request, session, transaction_number)) {
             RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Failed to update transaction.", Constants.CART_URL);
             return;
         }
-        SecurityLog.addSecurityLog(request, "Transaction cancelled: " + transaction_number);
+        request.setAttribute("transaction_number", transaction_number);
         request.getRequestDispatcher(CANCEL_JSP_URL).forward(request, response);
     }
 
-    private boolean updateTransactionToDB(Session session, String transaction_number) throws DatabaseException {
+    private boolean updateTransactionToDB(HttpServletRequest request, Session session, String transaction_number) throws DatabaseException {
         try {
             userTransaction.begin();
             Transactions dbTransaction = entityManager.createNamedQuery("Transactions.findByTransactionNumberAndUserId", Transactions.class).setParameter("transactionNumber", transaction_number).setParameter("userId", session.getUserId()).getSingleResult();
@@ -62,8 +62,10 @@ public class TransactionCancelServlet extends HttpServlet {
             dbTransaction.setDateUpdatedGmt(new Date());
             entityManager.merge(dbTransaction);
             userTransaction.commit();
+            SecurityLog.addSecurityLog(request, "Transaction " + transaction_number + " has been cancelled successfully.");
             return true;
         } catch (HeuristicMixedException | HeuristicRollbackException | NotSupportedException | RollbackException | SystemException | IllegalStateException | NumberFormatException | SecurityException ex) {
+            SecurityLog.addSecurityLog(request, "Transaction " + transaction_number + " has been cancelled failed.");
             throw new DatabaseException(ex.getMessage());
         }
     }

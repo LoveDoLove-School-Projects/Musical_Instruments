@@ -1,6 +1,6 @@
 package controllers;
 
-import common.Constants;
+import entities.Constants;
 import entities.Securitylog;
 import entities.Session;
 import utilities.SessionUtilities;

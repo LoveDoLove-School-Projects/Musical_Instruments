@@ -1,6 +1,6 @@
 package controllers;
 
-import common.Constants;
+import entities.Constants;
 import entities.OtpsType;
 import entities.Role;
 import entities.Session;

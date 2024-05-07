@@ -1,6 +1,6 @@
 package controllers.carts;
 
-import common.Constants;
+import entities.Constants;
 import entities.Carts;
 import entities.Products;
 import entities.Session;
@@ -21,6 +21,7 @@ import jakarta.transaction.UserTransaction;
 import java.io.IOException;
 import java.util.List;
 import utilities.RedirectUtilities;
+import utilities.SecurityLog;
 import utilities.SessionUtilities;
 
 public class EditCartServlet extends HttpServlet {
@@ -69,8 +70,10 @@ public class EditCartServlet extends HttpServlet {
             carts.setProductTotalprice(productQuantity * carts.getProductPrice());
             entityManager.merge(carts);
             userTransaction.commit();
+            SecurityLog.addSecurityLog(request, "Product " + carts.getProductName() + " has been updated in cart successfully.");
             RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.SUCCESS, "Your cart has been update !", Constants.CART_URL);
         } catch (HeuristicMixedException | HeuristicRollbackException | NotSupportedException | RollbackException | SystemException | IOException | IllegalStateException | NumberFormatException | SecurityException ex) {
+            SecurityLog.addSecurityLog(request, "Product " + cardId + " has been update in cart failed.");
             throw new DatabaseException(ex.getMessage());
         }
     }

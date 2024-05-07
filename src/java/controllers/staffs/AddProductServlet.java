@@ -73,9 +73,10 @@ public class AddProductServlet extends HttpServlet {
             product.setImage(pictureBytes);
             entityManager.persist(product);
             userTransaction.commit();
-            SecurityLog.addInternalSecurityLog(request, " added new product " + product.toString());
+            SecurityLog.addInternalSecurityLog(request, "Product: " + productName + " added successfully.");
             RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.SUCCESS, "Product Added successful!", STAFF_SEARCH_PRODUCT_URL);
         } catch (NotSupportedException | SystemException | RollbackException | HeuristicMixedException | HeuristicRollbackException | SecurityException | IllegalStateException ex) {
+            SecurityLog.addInternalSecurityLog(request, "Failed to add product: " + productName + ".");
             throw new DatabaseException(ex.getMessage());
         }
     }

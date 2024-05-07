@@ -83,25 +83,23 @@ public class ChangePasswordServlet extends HttpServlet {
         boolean isPasswordChanged = false;
         switch (session.getRole()) {
             case CUSTOMER:
-                isPasswordChanged = updateCustomerNewPassword(session, newPassword);
+                isPasswordChanged = updateCustomerNewPassword(request, session, newPassword);
                 break;
             case STAFF:
-                isPasswordChanged = updateStaffNewPassword(session, newPassword);
+                isPasswordChanged = updateStaffNewPassword(request, session, newPassword);
                 break;
             default:
                 RedirectUtilities.redirectWithMessage(request, response, RedirectType.DANGER, "Invalid role", "/");
                 break;
         }
         if (!isPasswordChanged) {
-            SecurityLog.addSecurityLog(request, "An error occurred while changing password");
             RedirectUtilities.redirectWithMessage(request, response, RedirectType.DANGER, "An error occurred while resetting password", "/");
             return;
         }
-        SecurityLog.addSecurityLog(request, "Password changed successfully");
         RedirectUtilities.redirectWithMessage(request, response, RedirectType.SUCCESS, "Password reset successfully", "/");
     }
 
-    private boolean updateCustomerNewPassword(Session session, String newPassword) {
+    private boolean updateCustomerNewPassword(HttpServletRequest request, Session session, String newPassword) {
         try {
             userTransaction.begin();
             List<Customers> customers = (List<Customers>) entityManager.createNamedQuery("Customers.findByUserId", Customers.class).setParameter("userId", session.getUserId()).getResultList();
@@ -112,13 +110,15 @@ public class ChangePasswordServlet extends HttpServlet {
             customer.setPassword(AesUtilities.aes256EcbEncrypt(newPassword));
             entityManager.merge(customer);
             userTransaction.commit();
+            SecurityLog.addSecurityLog(request, "Customer: " + customer.getUsername() + " has reset password.");
             return true;
         } catch (HeuristicMixedException | HeuristicRollbackException | NotSupportedException | RollbackException | SystemException | IllegalStateException | SecurityException ex) {
+            SecurityLog.addSecurityLog(request, "Failed to change password for customer: " + session.getUserId() + ".");
             throw new DatabaseException(ex.getMessage());
         }
     }
 
-    private boolean updateStaffNewPassword(Session session, String newPassword) {
+    private boolean updateStaffNewPassword(HttpServletRequest request, Session session, String newPassword) {
         try {
             userTransaction.begin();
             List<Staffs> staffs = (List<Staffs>) entityManager.createNamedQuery("Staffs.findByUserId", Staffs.class).setParameter("userId", session.getUserId()).getResultList();
@@ -129,8 +129,10 @@ public class ChangePasswordServlet extends HttpServlet {
             staff.setPassword(AesUtilities.aes256EcbEncrypt(newPassword));
             entityManager.merge(staff);
             userTransaction.commit();
+            SecurityLog.addSecurityLog(request, "Staff: " + staff.getUsername() + " has reset password.");
             return true;
         } catch (HeuristicMixedException | HeuristicRollbackException | NotSupportedException | RollbackException | SystemException | IllegalStateException | SecurityException ex) {
+            SecurityLog.addSecurityLog(request, "Failed to change password for staff: " + session.getUserId() + ".");
             throw new DatabaseException(ex.getMessage());
         }
     }

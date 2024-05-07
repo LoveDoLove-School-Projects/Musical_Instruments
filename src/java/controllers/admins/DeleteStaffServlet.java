@@ -1,6 +1,6 @@
 package controllers.admins;
 
-import common.Constants;
+import entities.Constants;
 import entities.Staffs;
 import exceptions.DatabaseException;
 import jakarta.annotation.Resource;
@@ -18,6 +18,7 @@ import jakarta.transaction.SystemException;
 import jakarta.transaction.UserTransaction;
 import java.io.IOException;
 import utilities.RedirectUtilities;
+import utilities.SecurityLog;
 
 public class DeleteStaffServlet extends HttpServlet {
 
@@ -34,8 +35,10 @@ public class DeleteStaffServlet extends HttpServlet {
             Staffs staff = entityManager.find(Staffs.class, Integer.valueOf(userID));
             entityManager.remove(staff);
             userTransaction.commit();
+            SecurityLog.addInternalSecurityLog(request, "Staff " + staff.getUsername() + " deleted successfully.");
             RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.SUCCESS, "Staff " + staff.getUsername() + " deleted successfully.", Constants.ADMIN_SEARCH_STAFF_URL);
         } catch (HeuristicMixedException | HeuristicRollbackException | NotSupportedException | RollbackException | SystemException | IllegalStateException | NumberFormatException | SecurityException ex) {
+            SecurityLog.addInternalSecurityLog(request, "Failed to delete staff: " + userID + ".");
             throw new DatabaseException(ex.getMessage());
         }
     }

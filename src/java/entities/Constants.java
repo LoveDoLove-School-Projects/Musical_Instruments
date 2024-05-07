@@ -1,4 +1,4 @@
-package common;
+package entities;
 
 public final class Constants {
 
