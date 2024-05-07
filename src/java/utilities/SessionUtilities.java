@@ -1,5 +1,6 @@
 package utilities;
 
+import dao.SessionDao;
 import entities.Role;
 import entities.Session;
 import jakarta.servlet.http.HttpServletRequest;
@@ -9,6 +10,7 @@ import java.security.Principal;
 public class SessionUtilities {
 
     private static final String USER_SESSION = "user_session";
+    private static final SessionDao sessionDao = new SessionDao();
 
     public static void setLoginSession(HttpSession session, Session userSession) {
         if (session != null) {
@@ -26,7 +28,11 @@ public class SessionUtilities {
             if (userSession == null) {
                 return null;
             }
-            return userSession;
+            if (sessionDao.checkSessionIsExistOrNot(userSession)) {
+                return userSession;
+            }
+            session.removeAttribute(USER_SESSION);
+            return null;
         }
         return null;
     }

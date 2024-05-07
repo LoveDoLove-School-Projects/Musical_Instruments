@@ -14,7 +14,7 @@ response.setHeader("Cache-Control", "no-store");
     <body>
         <div class="container">
             <div class="py-5 text-center">
-                <h1>Please Review Before Paying</h1>
+                <h1>Paypal Payment Review Before Paying</h1>
             </div>
             <div class="row">
                 <div class="col-md-12 order-md-1">
@@ -46,7 +46,7 @@ response.setHeader("Cache-Control", "no-store");
                                 </tr>
                             </tbody>
                         </table>
-                        <h4 class="mb-3">Payer Information</h4>
+                        <h4 class="mb-3">Paypal Payer Information</h4>
                         <table class="table">
                             <tbody>
                                 <tr>
@@ -63,7 +63,7 @@ response.setHeader("Cache-Control", "no-store");
                                 </tr>
                             </tbody>
                         </table>
-                        <h4 class="mb-3">Shipping Address</h4>
+                        <h4 class="mb-3">Paypal Shipping Address</h4>
                         <table class="table">
                             <tbody>
                                 <tr>

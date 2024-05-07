@@ -53,7 +53,7 @@ public class PaypalReviewServlet extends HttpServlet {
             RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Payment not found.", Constants.CART_URL);
             return;
         }
-        if (!updateTransactionToDB(paypalPayment)) {
+        if (!updateTransactionToDB(session, paypalPayment)) {
             RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Failed to update transaction.", Constants.CART_URL);
             return;
         }
@@ -66,13 +66,13 @@ public class PaypalReviewServlet extends HttpServlet {
         request.getRequestDispatcher(PAYPAL_REVIEW_JSP_URL).forward(request, response);
     }
 
-    private boolean updateTransactionToDB(PaypalPayment paypalPayment) {
+    private boolean updateTransactionToDB(Session session, PaypalPayment paypalPayment) {
         try {
             userTransaction.begin();
-            Transactions transaction = entityManager.createNamedQuery("Transactions.findByTransactionNumber", Transactions.class).setParameter("transactionNumber", paypalPayment.getId()).getSingleResult();
-            transaction.setTransactionStatus(paypalPayment.getState());
-            transaction.setDateUpdatedGmt(new Date());
-            entityManager.merge(transaction);
+            Transactions dbTransaction = entityManager.createNamedQuery("Transactions.findByTransactionNumberAndUserId", Transactions.class).setParameter("transactionNumber", paypalPayment.getId()).setParameter("userId", session.getUserId()).getSingleResult();
+            dbTransaction.setTransactionStatus(paypalPayment.getState());
+            dbTransaction.setDateUpdatedGmt(new Date());
+            entityManager.merge(dbTransaction);
             userTransaction.commit();
             return true;
         } catch (HeuristicMixedException | HeuristicRollbackException | NotSupportedException | RollbackException | SystemException | IllegalStateException | NumberFormatException | SecurityException ex) {

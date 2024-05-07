@@ -59,6 +59,7 @@ public class RemoveProfilePictureServlet extends HttpServlet {
             SecurityLog.addSecurityLog(request, "remove profile picture successful.");
             RedirectUtilities.setMessage(request, RedirectType.SUCCESS, "Picture removed successfully.");
         } else {
+            SecurityLog.addSecurityLog(request, "remove profile picture failed.");
             RedirectUtilities.setMessage(request, RedirectType.DANGER, "Error removing picture.");
         }
         RedirectUtilities.sendRedirect(request, response, Constants.PROFILE_URL);

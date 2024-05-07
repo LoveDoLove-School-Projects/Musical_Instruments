@@ -31,6 +31,7 @@ import java.util.List;
 import services.PaypalServices;
 import services.TransactionServices;
 import utilities.RedirectUtilities;
+import utilities.SecurityLog;
 import utilities.SessionUtilities;
 import utilities.StringUtilities;
 
@@ -43,6 +44,7 @@ public class TransactionServlet extends HttpServlet {
     private static final String PAYPAL = "Paypal";
     private static final String CREDIT_OR_DEBIT_CARD = "CreditOrDebitCard";
     private static final String CCDC_VERIFY_URL = "/payments/ccdc/verify";
+    private static final String BILLING_DETAILS_URL = "/pages/billingDetails";
     private final PaypalServices paypalServices = new PaypalServices();
     private final TransactionServices transactionServices = new TransactionServices();
 
@@ -54,6 +56,10 @@ public class TransactionServlet extends HttpServlet {
         Session session = SessionUtilities.getLoginSession(request.getSession());
         if (session == null) {
             RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Please login to view this page.", Constants.CUSTOMER_LOGIN_URL);
+            return;
+        }
+        if (!validateBillingDetails(session)) {
+            RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Please complete your billing details.", BILLING_DETAILS_URL);
             return;
         }
         List<Carts> cartList = entityManager.createNamedQuery("Carts.findByCustomerId", Carts.class).setParameter("customerId", session.getUserId()).getResultList();
@@ -83,6 +89,14 @@ public class TransactionServlet extends HttpServlet {
         }
     }
 
+    private boolean validateBillingDetails(Session session) {
+        Customers customer = entityManager.find(Customers.class, session.getUserId());
+        if (customer == null) {
+            return false;
+        }
+        return !StringUtilities.anyNullOrBlank(customer.getEmail(), customer.getCountry(), customer.getFirstName(), customer.getLastName(), customer.getAddress(), customer.getCity(), customer.getState(), customer.getZipCode(), customer.getPhoneNumber());
+    }
+
     private void processPaypalPayment(HttpServletRequest request, HttpServletResponse response, Session session, List<Carts> cartList, Customers customer) throws IOException {
         try {
             String paymentResponse = paypalServices.createPayment(cartList, customer);
@@ -98,6 +112,9 @@ public class TransactionServlet extends HttpServlet {
                         approval_url = link.getHref();
                     }
                 }
+                HttpSession httpSession = request.getSession();
+                httpSession.setAttribute("transaction_number", payment.getId());
+                SecurityLog.addSecurityLog(request, "create paypal payment successful.");
                 response.sendRedirect(approval_url);
                 return;
             }
@@ -135,7 +152,9 @@ public class TransactionServlet extends HttpServlet {
         }
         HttpSession httpSession = request.getSession();
         httpSession.setAttribute("transaction", transaction);
+        httpSession.setAttribute("transaction_number", transaction.getTransactionNumber());
         httpSession.setAttribute("cartList", cartList);
+        SecurityLog.addSecurityLog(request, "create credit or debit card transaction successful.");
         RedirectUtilities.sendRedirect(request, response, CCDC_VERIFY_URL);
     }
 

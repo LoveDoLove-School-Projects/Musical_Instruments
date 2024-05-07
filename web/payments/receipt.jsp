@@ -10,12 +10,12 @@ response.setHeader("Cache-Control", "no-store");
 
     <head>
         <jsp:include page="/defaults/head.jsp" />
-        <title>Transaction Details</title>
+        <title>Receipt Details</title>
     </head>
     <body>
         <div class="container">
             <div class="py-5 text-center">
-                <h2>Transaction Details</h2>
+                <h2>Receipt Details</h2>
             </div>
             <div class="row">
                 <div class="col-md-12 order-md-1">
@@ -42,6 +42,10 @@ response.setHeader("Cache-Control", "no-store");
                                 <td>${transaction.getOrderNumber()}</td>
                             </tr>
                             <tr>
+                                <th class="row">Transaction Status:</th>
+                                <td>${transaction.getTransactionStatus()}</td>
+                            </tr>
+                            <tr>
                                 <th scope="row">Payment Method:</th>
                                 <td>${transaction.getPaymentMethod()}</td>
                             </tr>
@@ -55,6 +59,7 @@ response.setHeader("Cache-Control", "no-store");
             </div>
             <div class="row">
                 <div class="col-md-12 order-md-1">
+                    <button onclick="window.print()" class="btn btn-primary">Print Receipt</button>
                     <a href="${basePath}" class="btn btn-primary">Return to Main Page</a>
                 </div>
             </div>

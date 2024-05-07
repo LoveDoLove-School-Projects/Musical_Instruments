@@ -21,6 +21,7 @@
                     <div class="panel panel-default">
                         <div class="panel-heading">
                             <h3 class="panel-title">Transaction History</h3>
+                            <button id="exportButton" class="btn btn-primary md-3">Export to CSV</button>
                         </div>
                         <div class="panel-body table-responsive">
                             <table class="table table-striped table-bordered table-hover">
@@ -65,6 +66,20 @@
                 $('.clickable-row').click(function () {
                     window.open($(this).data('href'), '_blank');
                 });
+            });
+            document.getElementById('exportButton').addEventListener('click', function () {
+                var table = document.querySelector('table');
+                var data = [];
+                for (var row of table.rows) {
+                    var rowData = [];
+                    for (var cell of row.cells) {
+                        rowData.push('"' + cell.textContent + '"'); // wrap cell text in quotes to handle commas in cell text
+                    }
+                    data.push(rowData.join(','));
+                }
+                var csv = data.join('\n');
+                var blob = new Blob([csv], {type: 'text/csv;charset=utf-8;'});
+                saveAs(blob, 'transaction_history.csv');
             });
         </script>
     </body>

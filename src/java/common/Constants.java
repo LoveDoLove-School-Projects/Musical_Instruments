@@ -26,6 +26,8 @@ public final class Constants {
     public static final String ORDERHISTORY_JSP_URL = "/pages/orderhistory/orderHistory.jsp";
     //     Order History
     public static final String ORDERHISTORY_URL = "/pages/orders/orderHistory";
+    //     Update Order
+    public static final String UPDATE_ORDER_URL = "/pages/orders/updateOrder";
     /* ********************************* */
  /* ********************************* */
     //    Admin URL
