@@ -1,6 +1,6 @@
 package controllers.orders;
 
-import common.Constants;
+import entities.Constants;
 import entities.Session;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;

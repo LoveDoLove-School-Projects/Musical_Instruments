@@ -98,23 +98,21 @@ public class BillingDetailsServlet extends HttpServlet {
         switch (session.getRole()) {
             case CUSTOMER:
                 Customers customer = new Customers(session.getUserId(), address, phoneNumber, firstName, lastName, country, city, state, zipCode);
-                isUpdated = updateBillingDetails(customer);
+                isUpdated = updateBillingDetails(request, customer);
                 break;
             default:
                 RedirectUtilities.redirectWithMessage(request, response, RedirectType.DANGER, "Invalid role.", "/");
                 break;
         }
         if (isUpdated) {
-            SecurityLog.addSecurityLog(request, "update billing details");
             RedirectUtilities.setMessage(request, RedirectType.SUCCESS, "Billing details updated successfully.");
         } else {
-            SecurityLog.addSecurityLog(request, "error updating billing details");
             RedirectUtilities.setMessage(request, RedirectType.DANGER, "Error updating billing details.");
         }
         RedirectUtilities.sendRedirect(request, response, BILLING_DETAILS_URL);
     }
 
-    private boolean updateBillingDetails(Customers customer) {
+    private boolean updateBillingDetails(HttpServletRequest request, Customers customer) {
         try {
             userTransaction.begin();
             Customers existingCustomer = entityManager.find(Customers.class, customer.getUserId());
@@ -131,8 +129,10 @@ public class BillingDetailsServlet extends HttpServlet {
             existingCustomer.setZipCode(customer.getZipCode());
             entityManager.merge(existingCustomer);
             userTransaction.commit();
+            SecurityLog.addSecurityLog(request, "Billing details updated successfully.");
             return true;
         } catch (HeuristicMixedException | HeuristicRollbackException | NotSupportedException | RollbackException | SystemException | IllegalStateException | SecurityException ex) {
+            SecurityLog.addSecurityLog(request, "Failed to update billing details.");
             throw new DatabaseException(ex.getMessage());
         }
     }

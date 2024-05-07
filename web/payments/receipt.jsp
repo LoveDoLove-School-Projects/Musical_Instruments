@@ -60,7 +60,7 @@ response.setHeader("Cache-Control", "no-store");
             <div class="row">
                 <div class="col-md-12 order-md-1">
                     <button onclick="window.print()" class="btn btn-primary">Print Receipt</button>
-                    <a href="${basePath}" class="btn btn-primary">Return to Main Page</a>
+                    <a href="${basePath}pages/transactionHistory" class="btn btn-primary">Go back to TAR Music</a>
                 </div>
             </div>
         </div>

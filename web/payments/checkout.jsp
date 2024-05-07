@@ -220,10 +220,10 @@ response.setHeader("Cache-Control", "no-store");
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col text-left">
+                                <div class="col">
                                     <button type="submit" class="btn btn-primary mt-3" id="paymentButton">Proceed To Checkout</button>
                                 </div>
-                                <div class="col text-left">
+                                <div class="col">
                                     <a href="pages/cart" class="btn btn-primary mt-3">Go back</a>
                                 </div>
                             </div>

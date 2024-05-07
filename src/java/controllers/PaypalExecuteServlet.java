@@ -1,6 +1,6 @@
 package controllers;
 
-import common.Constants;
+import entities.Constants;
 import entities.PaypalPayment;
 import entities.Session;
 import entities.Transactions;
@@ -54,23 +54,21 @@ public class PaypalExecuteServlet extends HttpServlet {
             RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Payment not found.", Constants.CART_URL);
             return;
         }
-        Transactions transaction = updateTransactionToDB(session, paypalPayment);
+        Transactions transaction = updateTransactionToDB(request, session, paypalPayment);
         if (transaction == null) {
             RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Failed to update transaction.", Constants.CART_URL);
             return;
         }
         if ("approved".equals(paypalPayment.getState())) {
-            SecurityLog.addSecurityLog(request, "Payment successful with paypal transaction number: " + paypalPayment.getId());
             transactionServices.sendPaymentReceipt(transaction, session.getEmail());
             String url = Constants.UPDATE_ORDER_URL + "?transaction_number=" + transaction.getTransactionNumber() + "&order_number=" + transaction.getOrderNumber() + "&txnStatus=" + transaction.getTransactionStatus();
             RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.SUCCESS, "Payment successful.", url);
         } else {
-            SecurityLog.addSecurityLog(request, "Payment failed with paypal transaction number: " + paypalPayment.getId());
             RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Payment failed.", "/");
         }
     }
 
-    private Transactions updateTransactionToDB(Session session, PaypalPayment paypalPayment) {
+    private Transactions updateTransactionToDB(HttpServletRequest request, Session session, PaypalPayment paypalPayment) {
         try {
             userTransaction.begin();
             Transactions dbTransaction = entityManager.createNamedQuery("Transactions.findByTransactionNumberAndUserId", Transactions.class).setParameter("transactionNumber", paypalPayment.getId()).setParameter("userId", session.getUserId()).getSingleResult();
@@ -78,8 +76,10 @@ public class PaypalExecuteServlet extends HttpServlet {
             dbTransaction.setDateUpdatedGmt(new Date());
             entityManager.merge(dbTransaction);
             userTransaction.commit();
+            SecurityLog.addSecurityLog(request, "Transaction " + dbTransaction.getTransactionNumber() + " has been updated successfully.");
             return dbTransaction;
         } catch (HeuristicMixedException | HeuristicRollbackException | NotSupportedException | RollbackException | SystemException | IllegalStateException | NumberFormatException | SecurityException ex) {
+            SecurityLog.addSecurityLog(request, "Transaction " + paypalPayment.getId() + " has been update failed.");
             throw new DatabaseException(ex.getMessage());
         }
     }

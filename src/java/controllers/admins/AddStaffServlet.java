@@ -1,6 +1,6 @@
 package controllers.admins;
 
-import common.Constants;
+import entities.Constants;
 import entities.Staffs;
 import exceptions.DatabaseException;
 import jakarta.annotation.Resource;
@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.util.Date;
 import utilities.AesUtilities;
 import utilities.RedirectUtilities;
+import utilities.SecurityLog;
 import utilities.StringUtilities;
 import utilities.ValidationUtilities;
 
@@ -51,9 +52,11 @@ public class AddStaffServlet extends HttpServlet {
             return;
         }
         if (!addStaffToDb(staff)) {
+            SecurityLog.addInternalSecurityLog(request, "Failed to add staff: " + staff.getUsername() + ".");
             RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Error adding staff.", Constants.ADMIN_SEARCH_STAFF_URL);
             return;
         }
+        SecurityLog.addInternalSecurityLog(request, "Staff: " + staff.getUsername() + " added successfully.");
         RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.SUCCESS, "Staff Added successful!", Constants.ADMIN_SEARCH_STAFF_URL);
     }
 

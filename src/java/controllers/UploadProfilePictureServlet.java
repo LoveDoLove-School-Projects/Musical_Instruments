@@ -1,6 +1,6 @@
 package controllers;
 
-import common.Constants;
+import entities.Constants;
 import entities.Customers;
 import entities.Session;
 import entities.Staffs;
@@ -51,27 +51,25 @@ public class UploadProfilePictureServlet extends HttpServlet {
         switch (session.getRole()) {
             case CUSTOMER:
                 Customers customer = new Customers(session.getUserId(), pictureBytes);
-                isUploaded = uploadPicture(customer);
+                isUploaded = uploadPicture(request, customer);
                 break;
             case STAFF:
                 Staffs staff = new Staffs(session.getUserId(), pictureBytes);
-                isUploaded = uploadPicture(staff);
+                isUploaded = uploadPicture(request, staff);
                 break;
             default:
                 RedirectUtilities.redirectWithMessage(request, response, RedirectType.DANGER, "Invalid role.", "/");
                 return;
         }
         if (isUploaded) {
-            SecurityLog.addSecurityLog(request, "update profile picture successful.");
             RedirectUtilities.setMessage(request, RedirectType.SUCCESS, "Picture uploaded successfully.");
         } else {
-            SecurityLog.addSecurityLog(request, "update profile picture failed.");
             RedirectUtilities.setMessage(request, RedirectType.DANGER, "Error uploading picture.");
         }
         RedirectUtilities.sendRedirect(request, response, Constants.PROFILE_URL);
     }
 
-    private boolean uploadPicture(Customers customer) {
+    private boolean uploadPicture(HttpServletRequest request, Customers customer) {
         try {
             userTransaction.begin();
             Customers existingCustomer = entityManager.find(Customers.class, customer.getUserId());
@@ -81,13 +79,15 @@ public class UploadProfilePictureServlet extends HttpServlet {
             existingCustomer.setPicture(customer.getPicture());
             entityManager.merge(existingCustomer);
             userTransaction.commit();
+            SecurityLog.addSecurityLog(request, "Customer " + existingCustomer.getUsername() + " has uploaded a new profile picture.");
             return true;
         } catch (HeuristicMixedException | HeuristicRollbackException | NotSupportedException | RollbackException | SystemException | IllegalStateException | SecurityException ex) {
+            SecurityLog.addSecurityLog(request, "Error uploading profile picture for customer " + customer.getUsername() + ": " + ex.getMessage());
             throw new DatabaseException(ex.getMessage());
         }
     }
 
-    private boolean uploadPicture(Staffs staff) {
+    private boolean uploadPicture(HttpServletRequest request, Staffs staff) {
         try {
             userTransaction.begin();
             Staffs existingStaff = entityManager.find(Staffs.class, staff.getUserId());
@@ -97,8 +97,10 @@ public class UploadProfilePictureServlet extends HttpServlet {
             existingStaff.setPicture(staff.getPicture());
             entityManager.merge(existingStaff);
             userTransaction.commit();
+            SecurityLog.addSecurityLog(request, "Staff " + existingStaff.getUsername() + " has uploaded a new profile picture.");
             return true;
         } catch (HeuristicMixedException | HeuristicRollbackException | NotSupportedException | RollbackException | SystemException | IllegalStateException | SecurityException ex) {
+            SecurityLog.addSecurityLog(request, "Error uploading profile picture for staff " + staff.getUsername() + ": " + ex.getMessage());
             throw new DatabaseException(ex.getMessage());
         }
     }

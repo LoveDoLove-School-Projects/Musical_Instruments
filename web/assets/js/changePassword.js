@@ -1,4 +1,4 @@
-import { showErrorDialog, showProgressDialog } from "./dialog.js";
+import { showConfirmDialog, showErrorDialog, showProgressDialog } from "./dialog.js";
 import { anyStringNullOrEmpty, checkPassword } from "./validate.js";
 
 let currentPasswordElement;
@@ -32,8 +32,7 @@ function setChangePasswordForm() {
     changePasswordForm.onsubmit = function (event) {
         event.preventDefault();
         if (checkAllFields()) {
-            showProgressDialog("Please Wait...");
-            changePasswordForm.submit();
+            showConfirmDialog("Are you sure you want to change password?", () => changePasswordForm.submit());
         }
     };
 }

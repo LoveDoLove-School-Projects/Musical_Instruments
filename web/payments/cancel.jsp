@@ -10,7 +10,7 @@ response.setHeader("Cache-Control", "no-store");
 
     <head>
         <jsp:include page="/defaults/head.jsp" />
-        <title>Payment Cancelled</title>
+        <title>Transaction Cancelled</title>
         <style>
             body {
                 background-color: #f8f9fa;
@@ -26,9 +26,9 @@ response.setHeader("Cache-Control", "no-store");
 
     <body>
         <div class="container">
-            <h2>Payment Cancelled</h2>
-            <p>Your payment has been cancelled. If you have any questions, please contact support.</p>
-            <a href="${basePath}">Go back to homepage</a>
+            <h2>Transaction Cancelled</h2>
+            <p>Your transaction has been cancelled. If you have any questions, please contact support.</p>
+            <a href="${basePath}payments/receipt?transaction_number=${transaction_number}">Continue to Receipt</a>
         </div>
     </body>
 

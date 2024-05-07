@@ -1,6 +1,6 @@
 package controllers.orders;
 
-import common.Constants;
+import entities.Constants;
 import entities.Carts;
 import entities.Products;
 import entities.Session;

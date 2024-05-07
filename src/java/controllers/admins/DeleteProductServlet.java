@@ -1,6 +1,6 @@
 package controllers.admins;
 
-import common.Constants;
+import entities.Constants;
 import entities.Products;
 import exceptions.DatabaseException;
 import jakarta.annotation.Resource;
@@ -18,6 +18,7 @@ import jakarta.transaction.SystemException;
 import jakarta.transaction.UserTransaction;
 import java.io.IOException;
 import utilities.RedirectUtilities;
+import utilities.SecurityLog;
 
 public class DeleteProductServlet extends HttpServlet {
 
@@ -34,8 +35,10 @@ public class DeleteProductServlet extends HttpServlet {
             Products product = entityManager.find(Products.class, Integer.valueOf(productId));
             entityManager.remove(product);
             userTransaction.commit();
+            SecurityLog.addInternalSecurityLog(request, "Product: " + product.getProductId() + " deleted successfully.");
             RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.SUCCESS, "Product: " + product.getProductId() + " deleted successfully.", Constants.ADMIN_STAFF_SEARCH_PRODUCT_URL);
         } catch (HeuristicMixedException | HeuristicRollbackException | NotSupportedException | RollbackException | SystemException | IllegalStateException | NumberFormatException | SecurityException ex) {
+            SecurityLog.addInternalSecurityLog(request, "Failed to delete product: " + productId + ".");
             throw new DatabaseException(ex.getMessage());
         }
     }

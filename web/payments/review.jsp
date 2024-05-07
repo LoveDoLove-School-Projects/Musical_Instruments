@@ -63,39 +63,32 @@ response.setHeader("Cache-Control", "no-store");
                                 </tr>
                             </tbody>
                         </table>
-                        <h4 class="mb-3">Paypal Shipping Address</h4>
-                        <table class="table">
-                            <tbody>
-                                <tr>
-                                    <th scope="row">Recipient Name:</th>
-                                    <td>${shippingAddress.recipient_name}</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">Line 1:</th>
-                                    <td>${shippingAddress.line1}</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">City:</th>
-                                    <td>${shippingAddress.city}</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">State:</th>
-                                    <td>${shippingAddress.state}</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">Country Code:</th>
-                                    <td>${shippingAddress.country_code}</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">Postal Code:</th>
-                                    <td>${shippingAddress.postal_code}</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <button class="btn btn-primary btn-lg btn-block" type="submit">Pay Now</button>
+                        <div class="row">
+                            <div class="col">
+                                <button class="btn btn-primary btn-lg btn-block" type="submit" id="payNow">Pay Now</button>
+                            </div>
+                            <div class="col">
+                                <button class="btn btn-primary btn-lg btn-block" id="cancel">Cancel</button>
+                            </div>
+                        </div>
                     </form>
                 </div>
             </div>
         </div>
+        <script type="module">
+            import { showConfirmDialog } from "assets/js/dialog.js";
+            $("#cancel").click(function (event) {
+                event.preventDefault();
+                showConfirmDialog("Are you sure you want to cancel the payment?", function () {
+                    window.location.href = "${basePath}payments/cancel?transaction_number=${param.paymentId}";
+                            });
+                        });
+                        $("#payNow").click(function (event) {
+                            event.preventDefault();
+                            showConfirmDialog("Are you sure you want to proceed with the payment?", function () {
+                                $("form").submit();
+                            });
+                        });
+        </script>
     </body>
 </html>

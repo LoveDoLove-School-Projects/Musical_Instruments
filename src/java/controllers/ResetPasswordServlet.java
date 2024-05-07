@@ -86,7 +86,6 @@ public class ResetPasswordServlet extends HttpServlet {
             RedirectUtilities.redirectWithMessage(request, response, RedirectType.DANGER, "Failed to reset password", "/");
             return;
         }
-        SecurityLog.addSecurityLog(request, "password reset successfully!");
         removeResetPassword(resetPassword);
         RedirectUtilities.redirectWithMessage(request, response, RedirectType.SUCCESS, "Password reset successfully", "/");
     }

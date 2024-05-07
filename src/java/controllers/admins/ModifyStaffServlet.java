@@ -1,6 +1,6 @@
 package controllers.admins;
 
-import common.Constants;
+import entities.Constants;
 import entities.Staffs;
 import exceptions.DatabaseException;
 import jakarta.annotation.Resource;
@@ -18,6 +18,7 @@ import jakarta.transaction.SystemException;
 import jakarta.transaction.UserTransaction;
 import java.io.IOException;
 import utilities.RedirectUtilities;
+import utilities.SecurityLog;
 import utilities.SessionUtilities;
 
 public class ModifyStaffServlet extends HttpServlet {
@@ -51,7 +52,7 @@ public class ModifyStaffServlet extends HttpServlet {
         }
         int userId = Integer.parseInt(userIdString);
         Staffs staff = new Staffs(userId, username, address, phoneNumber, gender);
-        boolean isUpdated = updateStaffDetails(staff);
+        boolean isUpdated = updateStaffDetails(request, staff);
         if (!isUpdated) {
             showError(request, response);
             return;
@@ -59,7 +60,7 @@ public class ModifyStaffServlet extends HttpServlet {
         RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.SUCCESS, "Update Successful!", Constants.ADMIN_MANAGE_STAFF_URL);
     }
 
-    private boolean updateStaffDetails(Staffs staff) {
+    private boolean updateStaffDetails(HttpServletRequest request, Staffs staff) {
         try {
             userTransaction.begin();
             Staffs staffFromDB = entityManager.find(Staffs.class, staff.getUserId());
@@ -72,8 +73,10 @@ public class ModifyStaffServlet extends HttpServlet {
             staffFromDB.setUsername(staff.getUsername());
             entityManager.merge(staffFromDB);
             userTransaction.commit();
+            SecurityLog.addInternalSecurityLog(request, "Staff: " + staff.getUsername() + " updated successfully.");
             return true;
         } catch (HeuristicMixedException | HeuristicRollbackException | NotSupportedException | RollbackException | SystemException | IllegalStateException | SecurityException ex) {
+            SecurityLog.addInternalSecurityLog(request, "Failed to update staff: " + staff.getUserId() + ".");
             throw new DatabaseException(ex.getMessage());
         }
     }

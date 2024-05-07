@@ -1,6 +1,6 @@
 package controllers.admins;
 
-import common.Constants;
+import entities.Constants;
 import entities.Customers;
 import exceptions.DatabaseException;
 import jakarta.annotation.Resource;
@@ -18,6 +18,7 @@ import jakarta.transaction.SystemException;
 import jakarta.transaction.UserTransaction;
 import java.io.IOException;
 import utilities.RedirectUtilities;
+import utilities.SecurityLog;
 import utilities.SessionUtilities;
 
 public class ModifyCustomerServlet extends HttpServlet {
@@ -51,7 +52,7 @@ public class ModifyCustomerServlet extends HttpServlet {
         }
         int userId = Integer.parseInt(userIdString);
         Customers customer = new Customers(userId, username, address, phoneNumber, gender);
-        boolean isUpdated = updateCustomerDetails(customer);
+        boolean isUpdated = updateCustomerDetails(request, customer);
         if (!isUpdated) {
             showError(request, response);
             return;
@@ -59,7 +60,7 @@ public class ModifyCustomerServlet extends HttpServlet {
         RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.SUCCESS, "Update Successful!", Constants.ADMIN_MANAGE_CUSTOMER_URL);
     }
 
-    private boolean updateCustomerDetails(Customers customer) {
+    private boolean updateCustomerDetails(HttpServletRequest request, Customers customer) {
         try {
             userTransaction.begin();
             Customers customerFromDB = entityManager.find(Customers.class, customer.getUserId());
@@ -72,8 +73,10 @@ public class ModifyCustomerServlet extends HttpServlet {
             customerFromDB.setUsername(customer.getUsername());
             entityManager.merge(customerFromDB);
             userTransaction.commit();
+            SecurityLog.addInternalSecurityLog(request, "Customer: " + customer.getUsername() + " updated successfully.");
             return true;
         } catch (HeuristicMixedException | HeuristicRollbackException | NotSupportedException | RollbackException | SystemException | IllegalStateException | SecurityException ex) {
+            SecurityLog.addInternalSecurityLog(request, "Failed to update customer: " + customer.getUserId() + ".");
             throw new DatabaseException(ex.getMessage());
         }
     }
