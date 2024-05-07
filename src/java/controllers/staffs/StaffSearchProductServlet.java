@@ -2,7 +2,6 @@ package controllers.staffs;
 
 import common.Constants;
 import entities.Products;
-import exceptions.DatabaseException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.servlet.ServletException;
@@ -34,8 +33,12 @@ public class StaffSearchProductServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String searchQuery = request.getParameter("searchQuery");
-        if (searchQuery.isBlank() || searchQuery.trim().isEmpty()) {
+        if (searchQuery == null || searchQuery.isBlank() || searchQuery.trim().isEmpty()) {
             RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Please fill in the product ID!", Constants.ADMIN_STAFF_SEARCH_PRODUCT_URL);
+            return;
+        }
+        if (!isInteger(searchQuery)) {
+            RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Please enter a valid product ID!", Constants.ADMIN_STAFF_SEARCH_PRODUCT_URL);
             return;
         }
         try {
@@ -48,8 +51,17 @@ public class StaffSearchProductServlet extends HttpServlet {
             HttpSession session = request.getSession();
             session.setAttribute("productDetails", product);
             RedirectUtilities.sendRedirect(request, response, "/pages/staffs/manageProduct");
-        } catch (IOException | NumberFormatException ex) {
-            throw new DatabaseException(ex.getMessage());
+        } catch (NumberFormatException ex) {
+            RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Please enter a valid product ID!", Constants.ADMIN_STAFF_SEARCH_PRODUCT_URL);
+        }
+    }
+
+    private boolean isInteger(String str) {
+        try {
+            Integer.valueOf(str);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
         }
     }
 }
