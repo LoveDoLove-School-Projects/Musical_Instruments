@@ -29,4 +29,8 @@ a{
     opacity: 1;
 }
 
+.main{
+    background-image: linear-gradient(to bottom right, lightblue, plum);
+}
+
 

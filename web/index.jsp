@@ -17,7 +17,7 @@
         <main class="">
             <section class="section1">
                 <div class="container">
-                    <div class="row justify-content-center align-items-center">
+                    <div class="row justify-content-center align-items-center ">
                         <div class="d-block my-auto p-5 col-12 col-xl-5 sec1Content" style="animation:swing 1s">
                             <h1>Welcome to <strong><%=application.getInitParameter("companyName")%></strong> Official Website</h1>
                             <p>Enjoy the music, Malaysia Top 1 Music Website</p>
@@ -39,19 +39,20 @@
                 <div class="container-fluid">
                     <div class="row justify-content-center align-items-center">
                         <div class="m-5 col-12 col-xl-6 col-xxl-5">
-                            <div class="d-block p-5  sec2_content" style="animation:bounce 2s">
-                                <h1>Want to be member ?</h1><br>
-                                <p>With our state-of-the-art content management and delivery system placing content orders has never been faster and easier. You can order content in multiple languages in just few clicks. Furthermore, our professional content writers are ready to finalise your request as fast as possible.</p>
+                            <div class="d-block p-5  sec2_content " style="animation:bounce 2s">
+                                <h1 class="who">WHO WE ARE</h1><br>
+                                <p>In the heart of our shared passion for music, five friends joined forces to realize a dream.
+                                    From late-night jam sessions to endless discussions over coffee, we birthed our musical emporium.
+                                    Established in 2024, our shop offers a curated selection of instruments and accessories.
+                                    Come, explore our products, where every chord beckons a symphony of possibilities.</p>
                             </div>
                         </div>
                         <div class="col-12 col-xl-6 col-xxl-5 d-flex align-content-center justify-content-center">
                             <div class="m-5 p-5 d-block text-center PremiumBox">
-                                <h1>Premium</h1>
+                                <h1>Get Started!</h1><br>
                                 <ul>
-                                    <li>Offer coupons and discounts</li>
-                                    <li>Birthday reward</li>
-                                    <li>Free some piano</li>
-                                    <li>online community</li>
+                                    <li>Start shopping to access our wide range of products </li>
+                                    <li>Stay updated on the latest news and product releases</li>
                                 </ul>
                                 <a href="pages/login"><button class="m-2 px-4 py-2 PremiumBoxBtn"><strong>Login</strong></button></a>
                                 <a href="pages/register"><button class="m-2 px-4 py-2 PremiumBoxBtn"><strong>Sign up</strong></button></a>
@@ -63,37 +64,37 @@
 
 
             <div class="container mt-5">
-                <h2>Featured Products</h2>
+                <h1>OUR TOP SOLD PRODUCTS</h1>
                 <!-- ${topsales} -->
                 <div class="row">
-                    <div class="col-md-3">
+                    <div class="col">
                         <div class="card">
-                            <img src="assets/image/logo.png" class="img-fluid"  height="300" alt="...">
-                            <div class="card-body">
-                                <h5 class="card-title">Guitar</h5>
-
-                                <a href="pages/products" class="btn btn-primary">Buy Now</a>
-                            </div>
+                            <a href="pages/login">
+                                <figure>
+                                    <img src="assets/image/logo.png" alt="" class="imagetop">
+                                    <figcaption>Guitar</figcaption>
+                                </figure>
+                            </a>
                         </div>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col">
                         <div class="card">
-                            <img src="drum.jpg" class=" card-img-top " height="300" alt="...">
-                            <div class="card-body">
-                                <h5 class="card-title">Drum</h5>
-
-                                <a href="#" class="btn btn-primary">Buy Now</a>
-                            </div>
+                            <a href="">
+                                <figure>
+                                    <img src="assets/image/logo.png" alt="" class="imagetop">
+                                    <figcaption>Drum</figcaption>
+                                </figure>
+                            </a>
                         </div>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col">
                         <div class="card">
-                            <img src="piano.jpg" class="card-img-top" height="300" alt="...">
-                            <div class="card-body">
-                                <h5 class="card-title">Piano</h5>
-
-                                <a href="#" class="btn btn-primary">Buy Now</a>
-                            </div>
+                            <a href="">
+                                <figure>
+                                    <img src="assets/image/logo.png" alt="" class="imagetop">
+                                    <figcaption>Piano</figcaption>
+                                </figure>
+                            </a>
                         </div>
                     </div>
                 </div>

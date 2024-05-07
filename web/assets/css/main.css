@@ -3,6 +3,7 @@
     background-position: center;
     background-size: cover;
     background-repeat: no-repeat;
+    padding: 50px;
 }
 
 a{
@@ -59,4 +60,67 @@ a{
     color: rgb(236, 235, 235);
 }
 
+.who {
+    box-shadow: inset 0 0 0 0 indianred;
+    color: indianred;
+    margin: 0 -.25rem;
+    padding: 0 .25rem;
+    transition: color .3s ease-in-out, box-shadow .3s ease-in-out;
+    text-shadow: 3px 2px black;
+}
+.who:hover {
+    box-shadow: inset 270px 0 0 0 indianred;
+    color: white;
+}
+
+p{
+    font-family: Avenir, Montserrat, Corbel, 'URW Gothic', source-sans-pro, sans-serif;
+    font-size: 20px;
+}
+
+figure {
+    display: grid;
+    border-radius: 1rem;
+    overflow: hidden;
+    cursor: pointer;
+}
+figure > * {
+    grid-area: 1/1;
+    transition: .4s;
+}
+figure figcaption {
+    display: grid;
+    align-items: end;
+    font-family: sans-serif;
+    font-size: 2.3rem;
+    color: #0000;
+    padding: .75rem;
+    background: var(--c,#0009);
+    clip-path: inset(0 var(--_i,100%) 0 0);
+    -webkit-mask:
+        linear-gradient(#000 0 0),
+        linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    -webkit-mask-clip: text, padding-box;
+    margin: -1px;
+    font-family: Avenir, Montserrat, Corbel, 'URW Gothic', source-sans-pro, sans-serif;
+}
+figure:hover figcaption{
+    --_i: 0%;
+}
+figure:hover img {
+    transform: scale(1.2);
+}
+@supports not (-webkit-mask-clip: text) {
+    figure figcaption {
+        -webkit-mask: none;
+        color: #fff;
+    }
+}
+
+.imagetop{
+    width:400px;
+    height:400px;
+    width: 100%
+}
 

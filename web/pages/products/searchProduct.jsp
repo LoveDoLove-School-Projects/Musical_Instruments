@@ -17,10 +17,27 @@ List<Products> productDetails = (List<Products>) request.getAttribute("products"
         <jsp:include page="/defaults/head.jsp" />
         <title>Search Products Page</title>
         <link rel="stylesheet" href="assets/css/product.css" />
-
     </head>
 
     <body>
+        <style>
+            .image{
+                width: 100px;
+                height: 100px;
+            }
+            .list{
+                border-style: ridge;
+                font-family: "Lucida Console", "Courier New", monospace;
+                padding: 15px;
+                cursor: pointer;
+                background-color: azure;
+            }
+            .list:hover{
+                background-color: lightblue;
+                transition: 0.5s;
+            }
+
+        </style>
         <jsp:include page="/defaults/header.jsp" />
         <main class="main">
             <section class="section1">
@@ -39,11 +56,12 @@ List<Products> productDetails = (List<Products>) request.getAttribute("products"
                                 <div class="col-12 col-xxl-6">
                                     <form action="pages/productsearch" method="POST">
                                         <div class="input-group mb-3">
-                                            <input type="text" class="form-control" name="searchQuery" placeholder="Search...">
+                                            <input type="text" class="form-control" name="searchQuery" id="searchQuery" placeholder="Search by name or category...">
                                             <div class="input-group-append">
                                                 <button type="submit" class="btn btn-primary">Search</button>
                                             </div>
                                         </div>
+                                        <div id="liveSearchResults"></div>
                                     </form>
                                 </div>
                             </div>
@@ -70,10 +88,55 @@ List<Products> productDetails = (List<Products>) request.getAttribute("products"
                             }
                         }
                         %>
+
+
                     </div>
                 </div>
             </section>
         </main>
         <jsp:include page="/defaults/footer.jsp" />
+
+        <script>
+            document.getElementById("searchQuery").addEventListener("input", function () {
+                let searchQuery = this.value.trim();
+                let xhr = new XMLHttpRequest();
+                xhr.responseType = 'json'; // Set responseType to 'json'
+                xhr.onreadystatechange = function () {
+                    if (this.readyState == 4 && this.status == 200) {
+                        let jsonResponse = xhr.response;
+                        let result = ''; // Initialize an empty string to accumulate HTML
+                        for (let i = 0; i < jsonResponse.length; i++) {
+                            let product = jsonResponse[i];
+                            let productId = product.productId;
+                            let name = product.name;
+                            let price = product.price;
+                            let color = product.color;
+                            let quantity = product.quantity;
+                            let category = product.category;
+                            let pictureBase64 = arrayBufferToBase64(product.image);
+                            let image = 'data:image/png;base64,' + pictureBase64;
+                            result += `
+                            <div class=list><a href="pages/products/viewProduct?product_id=` + productId + `">&nbsp<img src=` + image + ` class="image">&nbsp&nbsp&nbsp<b>Name:</b>` + name + `
+                            &nbsp&nbsp&nbsp<b>Category:</b>` + category + `&nbsp&nbsp&nbsp<b>Price:</b>` + price + `</a></div>
+                `;
+                        }
+                        $("#liveSearchResults").html(result)
+                    }
+                };
+                xhr.open("POST", "api/products/productsearch?searchQuery=" + searchQuery, true);
+                xhr.send();
+            });
+
+            function arrayBufferToBase64(buffer) {
+                let binary = '';
+                let bytes = new Uint8Array(buffer);
+                let len = bytes.byteLength;
+                for (let i = 0; i < len; i++) {
+                    binary += String.fromCharCode(bytes[i]);
+                }
+                return btoa(binary);
+            }
+
+        </script>
     </body>
 </html>
