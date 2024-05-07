@@ -227,6 +227,7 @@
     <servlet-mapping>
         <servlet-name>SearchProductServlet</servlet-name>
         <url-pattern>/pages/productsearch</url-pattern>
+        <url-pattern>/api/products/productsearch</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>LoginStaffServlet</servlet-name>
