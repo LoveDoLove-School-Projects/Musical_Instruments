@@ -1,4 +1,4 @@
-package controllers.staffs;
+package controllers.admins;
 
 import common.Constants;
 import entities.Customers;
