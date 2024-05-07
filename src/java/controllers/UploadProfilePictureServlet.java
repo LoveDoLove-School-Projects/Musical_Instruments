@@ -65,6 +65,7 @@ public class UploadProfilePictureServlet extends HttpServlet {
             SecurityLog.addSecurityLog(request, "update profile picture successful.");
             RedirectUtilities.setMessage(request, RedirectType.SUCCESS, "Picture uploaded successfully.");
         } else {
+            SecurityLog.addSecurityLog(request, "update profile picture failed.");
             RedirectUtilities.setMessage(request, RedirectType.DANGER, "Error uploading picture.");
         }
         RedirectUtilities.sendRedirect(request, response, Constants.PROFILE_URL);

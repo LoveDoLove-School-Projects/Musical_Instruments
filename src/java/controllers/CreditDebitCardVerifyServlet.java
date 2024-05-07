@@ -6,6 +6,7 @@ import entities.Customers;
 import entities.OrderDetails;
 import entities.OtpsType;
 import entities.Session;
+import entities.TransactionStatus;
 import entities.Transactions;
 import exceptions.DatabaseException;
 import jakarta.annotation.Resource;
@@ -28,6 +29,7 @@ import java.util.Map;
 import services.OtpServices;
 import services.TransactionServices;
 import utilities.RedirectUtilities;
+import utilities.SecurityLog;
 import utilities.SessionUtilities;
 
 @WebServlet(name = "CreditDebitCardVerifyServlet", urlPatterns = {"/payments/ccdc/verify"})
@@ -39,8 +41,6 @@ public class CreditDebitCardVerifyServlet extends HttpServlet {
     UserTransaction userTransaction;
     private static final String CCDC_VERIFY_JSP_URL = "/payments/ccdcVerify.jsp";
     private static final Map<OtpsType, String> STATUS_MESSAGES;
-    private static final String APPROVED = "approved";
-    private static final String FAILED = "failed";
     private final TransactionServices transactionServices = new TransactionServices();
     private final OtpServices otpServices = new OtpServices();
 
@@ -63,7 +63,8 @@ public class CreditDebitCardVerifyServlet extends HttpServlet {
             RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Please login to view this page.", Constants.CUSTOMER_LOGIN_URL);
             return;
         }
-        if (!validateTransaction(request, response, session)) {
+        Transactions transaction = validateTransaction(request, response, session);
+        if (transaction == null) {
             return;
         }
         otpServices.sendOtp(session.getEmail());
@@ -80,89 +81,77 @@ public class CreditDebitCardVerifyServlet extends HttpServlet {
             RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Please login to view this page.", Constants.CUSTOMER_LOGIN_URL);
             return;
         }
-        if (!validateTransaction(request, response, session)) {
+        String otp = request.getParameter("otp");
+        if (otp == null || otp.isEmpty()) {
+            RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Payment failed!", "/");
             return;
         }
-        OtpsType otpStatus = validateOtp(request, response, session);
+        Transactions transaction = validateTransaction(request, response, session);
+        if (transaction == null) {
+            return;
+        }
+        OtpsType otpStatus = otpServices.verifyOtp(session.getEmail(), otp);
         if (otpStatus == null) {
             return;
         }
-        String status = updateTransaction(request, otpStatus);
-        switch (status) {
-            case APPROVED:
-                RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.SUCCESS, "Payment successful!", "/");
+        String transactionStatus = otpStatus == OtpsType.OK ? TransactionStatus.APPROVED : TransactionStatus.FAILED;
+        transaction = updateTransactionToDB(session, transaction, transactionStatus);
+        if (transaction == null) {
+            RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Failed to update transaction.", "/");
+            return;
+        }
+        switch (transactionStatus) {
+            case TransactionStatus.APPROVED:
+                SecurityLog.addSecurityLog(request, "Payment successful with CCDC transaction number: " + transaction.getTransactionNumber());
+                transactionServices.sendPaymentReceipt(transaction, session.getEmail());
+                String url = Constants.UPDATE_ORDER_URL + "?transaction_number=" + transaction.getTransactionNumber() + "&order_number=" + transaction.getOrderNumber() + "&txnStatus=" + transaction.getTransactionStatus();
+                RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.SUCCESS, "Payment successful.", url);
                 break;
-            case FAILED:
+            case TransactionStatus.FAILED:
+                SecurityLog.addSecurityLog(request, "Payment failed with CCDC transaction number: " + transaction.getTransactionNumber());
                 RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Payment failed!", "/");
                 break;
             default:
                 RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Invalid transaction.", "/");
-                break;
         }
     }
 
-    private String updateTransaction(HttpServletRequest request, OtpsType otpStatus) throws IOException, ServletException {
-        HttpSession httpSession = request.getSession();
-        Transactions transaction = (Transactions) httpSession.getAttribute("transaction");
-        if (transaction == null) {
-            return null;
-        }
-        if (updateTransactionToDB(transaction, otpStatus)) {
-            return otpStatus == OtpsType.OK ? "approved" : "failed";
-        }
-        return null;
-    }
-
-    private OtpsType validateOtp(HttpServletRequest request, HttpServletResponse response, Session session) throws IOException, ServletException {
-        String otp = request.getParameter("otp");
-        if (otp == null || otp.isEmpty()) {
-            RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Payment failed!", "/");
-            return null;
-        }
-        return otpServices.verifyOtp(session.getEmail(), otp);
-    }
-
-    private boolean validateTransaction(HttpServletRequest request, HttpServletResponse response, Session session) throws ServletException, IOException {
+    private Transactions validateTransaction(HttpServletRequest request, HttpServletResponse response, Session session) throws ServletException, IOException {
         HttpSession httpSession = request.getSession();
         Transactions transaction = (Transactions) httpSession.getAttribute("transaction");
         if (transaction == null) {
             RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Invalid transaction.", "/");
-            return false;
+            return null;
         }
         List<Carts> cartList = (List<Carts>) httpSession.getAttribute("cartList");
         if (cartList == null) {
             RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Please add items to cart to view this page.", "/");
-            return false;
+            return null;
         }
         Customers customer = entityManager.find(Customers.class, session.getUserId());
         if (customer == null) {
             RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Invalid customer.", "/");
-            return false;
+            return null;
         }
         OrderDetails orderDetails = transactionServices.getOrderDetails(cartList);
         if (orderDetails == null) {
             RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Invalid order details.", "/");
-            return false;
+            return null;
         }
         httpSession.setAttribute("customer", customer);
         httpSession.setAttribute("orderDetails", orderDetails);
-        return true;
+        return transaction;
     }
 
-    private boolean updateTransactionToDB(Transactions transaction, OtpsType otpStatus) {
+    private Transactions updateTransactionToDB(Session session, Transactions transaction, String transactionStatus) {
         try {
             userTransaction.begin();
-            Transactions dbTransaction = entityManager.createNamedQuery("Transactions.findByTransactionNumber", Transactions.class).setParameter("transactionNumber", transaction.getTransactionNumber()).getSingleResult();
-            if (otpStatus == OtpsType.OK) {
-                dbTransaction.setTransactionStatus(APPROVED);
-                dbTransaction.setDateUpdatedGmt(new Date());
-            } else {
-                dbTransaction.setTransactionStatus(FAILED);
-                dbTransaction.setDateUpdatedGmt(new Date());
-            }
-            entityManager.merge(transaction);
+            Transactions dbTransaction = entityManager.createNamedQuery("Transactions.findByTransactionNumberAndUserId", Transactions.class).setParameter("transactionNumber", transaction.getTransactionNumber()).setParameter("userId", session.getUserId()).getSingleResult();
+            dbTransaction.setTransactionStatus(transactionStatus);
+            dbTransaction.setDateUpdatedGmt(new Date());
+            entityManager.merge(dbTransaction);
             userTransaction.commit();
-            return true;
+            return dbTransaction;
         } catch (HeuristicMixedException | HeuristicRollbackException | NotSupportedException | RollbackException | SystemException | IllegalStateException | NumberFormatException | SecurityException ex) {
             throw new DatabaseException(ex.getMessage());
         }

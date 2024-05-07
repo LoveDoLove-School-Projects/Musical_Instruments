@@ -108,6 +108,7 @@ public class BillingDetailsServlet extends HttpServlet {
             SecurityLog.addSecurityLog(request, "update billing details");
             RedirectUtilities.setMessage(request, RedirectType.SUCCESS, "Billing details updated successfully.");
         } else {
+            SecurityLog.addSecurityLog(request, "error updating billing details");
             RedirectUtilities.setMessage(request, RedirectType.DANGER, "Error updating billing details.");
         }
         RedirectUtilities.sendRedirect(request, response, BILLING_DETAILS_URL);

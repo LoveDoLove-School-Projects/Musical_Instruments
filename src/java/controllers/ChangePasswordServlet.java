@@ -93,6 +93,7 @@ public class ChangePasswordServlet extends HttpServlet {
                 break;
         }
         if (!isPasswordChanged) {
+            SecurityLog.addSecurityLog(request, "An error occurred while changing password");
             RedirectUtilities.redirectWithMessage(request, response, RedirectType.DANGER, "An error occurred while resetting password", "/");
             return;
         }

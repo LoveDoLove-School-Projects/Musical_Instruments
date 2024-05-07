@@ -1,10 +1,8 @@
 package entities;
 
 public enum Role {
-    ADMIN("Admin"),
-    STAFF("Staff"),
-    CUSTOMER("Customer"),
-    GUEST("Guest");
+    STAFF("Staffs"),
+    CUSTOMER("Customers");
     private final String role;
 
     private Role(String role) {

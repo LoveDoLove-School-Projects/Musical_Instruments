@@ -3,6 +3,7 @@ package controllers;
 import entities.Customers;
 import entities.Resetpassword;
 import entities.Staffs;
+import exceptions.DatabaseException;
 import jakarta.annotation.Resource;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -20,6 +21,7 @@ import java.io.IOException;
 import java.util.List;
 import utilities.AesUtilities;
 import utilities.RedirectUtilities;
+import utilities.SecurityLog;
 import utilities.RedirectUtilities.RedirectType;
 import utilities.StringUtilities;
 import utilities.ValidationUtilities;
@@ -71,42 +73,66 @@ public class ResetPasswordServlet extends HttpServlet {
             return;
         }
         Resetpassword resetPassword = isTokenValid(token);
+        boolean isUpdated = false;
+        switch (role) {
+            case "customer":
+                isUpdated = resetCustomerPassword(resetPassword.getEmail(), newPassword);
+                break;
+            case "staff":
+                isUpdated = resetStaffPassword(resetPassword.getEmail(), newPassword);
+                break;
+        }
+        if (!isUpdated) {
+            RedirectUtilities.redirectWithMessage(request, response, RedirectType.DANGER, "Failed to reset password", "/");
+            return;
+        }
+        SecurityLog.addSecurityLog(request, "password reset successfully!");
+        removeResetPassword(resetPassword);
+        RedirectUtilities.redirectWithMessage(request, response, RedirectType.SUCCESS, "Password reset successfully", "/");
+    }
+
+    private void removeResetPassword(Resetpassword resetPassword) {
         try {
-            userTransaction.begin();
-            switch (role) {
-                case "customer":
-                    List<Customers> customers = (List<Customers>) entityManager.createNamedQuery("Customers.findByEmail").setParameter("email", resetPassword.getEmail()).getResultList();
-                    if (customers == null || customers.isEmpty()) {
-                        RedirectUtilities.redirectWithMessage(request, response, RedirectType.DANGER, "Email not found", "/");
-                        return;
-                    }
-                    Customers customer = customers.get(0);
-                    customer.setPassword(AesUtilities.aes256EcbEncrypt(newPassword));
-                    entityManager.merge(customer);
-                    userTransaction.commit();
-                    break;
-                case "staff":
-                    List<Staffs> staffs = (List<Staffs>) entityManager.createNamedQuery("Staffs.findByEmail").setParameter("email", resetPassword.getEmail()).getResultList();
-                    if (staffs == null || staffs.isEmpty()) {
-                        RedirectUtilities.redirectWithMessage(request, response, RedirectType.DANGER, "Email not found", "/");
-                        return;
-                    }
-                    Staffs staff = staffs.get(0);
-                    staff.setPassword(AesUtilities.aes256EcbEncrypt(newPassword));
-                    entityManager.merge(staff);
-                    userTransaction.commit();
-                    break;
-                default:
-                    RedirectUtilities.redirectWithMessage(request, response, RedirectType.DANGER, "Invalid role", "/");
-                    return;
-            }
             userTransaction.begin();
             Resetpassword managedResetPassword = entityManager.merge(resetPassword);
             entityManager.remove(managedResetPassword);
             userTransaction.commit();
-            RedirectUtilities.redirectWithMessage(request, response, RedirectType.SUCCESS, "Password reset successfully", "/");
         } catch (HeuristicMixedException | HeuristicRollbackException | NotSupportedException | RollbackException | SystemException | IllegalStateException | SecurityException ex) {
-            RedirectUtilities.redirectWithMessage(request, response, RedirectType.DANGER, "An error occurred while resetting password", "/");
+            throw new DatabaseException(ex.getMessage());
+        }
+    }
+
+    private boolean resetCustomerPassword(String email, String newPassword) {
+        try {
+            userTransaction.begin();
+            List<Customers> customers = (List<Customers>) entityManager.createNamedQuery("Customers.findByEmail").setParameter("email", email).getResultList();
+            if (customers == null || customers.isEmpty()) {
+                return false;
+            }
+            Customers customer = customers.get(0);
+            customer.setPassword(AesUtilities.aes256EcbEncrypt(newPassword));
+            entityManager.merge(customer);
+            userTransaction.commit();
+            return true;
+        } catch (HeuristicMixedException | HeuristicRollbackException | NotSupportedException | RollbackException | SystemException | IllegalStateException | SecurityException ex) {
+            throw new DatabaseException(ex.getMessage());
+        }
+    }
+
+    private boolean resetStaffPassword(String email, String newPassword) {
+        try {
+            userTransaction.begin();
+            List<Staffs> staffs = (List<Staffs>) entityManager.createNamedQuery("Staffs.findByEmail").setParameter("email", email).getResultList();
+            if (staffs == null || staffs.isEmpty()) {
+                return false;
+            }
+            Staffs staff = staffs.get(0);
+            staff.setPassword(AesUtilities.aes256EcbEncrypt(newPassword));
+            entityManager.merge(staff);
+            userTransaction.commit();
+            return true;
+        } catch (HeuristicMixedException | HeuristicRollbackException | NotSupportedException | RollbackException | SystemException | IllegalStateException | SecurityException ex) {
+            throw new DatabaseException(ex.getMessage());
         }
     }
 
