@@ -62,7 +62,11 @@
             <br><h1><i class="fas fa-users">  Customer Management</i></h1><br>
             <div class="customer-search-box">
                 <i class="fas fa-users"></i>
+                <%
+                boolean isAdmin = request.isUserInRole("Admin") || request.isUserInRole("Sup[erAdmin");
+                if (isAdmin) { %>
                 <h3>Number of Customers: <strong>(<c:out value="${customerCount}"/>) </strong></h3>
+                <% } %>
             </div>
             <form class="form-inline mb-3" action="pages/staffs/searchCustomer" method="POST">
                 <input class="col-5 form-control mr-2" type="text" name="searchQuery" placeholder="Enter customer email: "><br>
