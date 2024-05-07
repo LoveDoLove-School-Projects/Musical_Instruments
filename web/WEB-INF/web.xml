@@ -269,10 +269,6 @@
         <url-pattern>/pages/admins/deleteCustomer</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>ModifyCustomerServlet</servlet-name>
-        <url-pattern>/pages/admins/modifyCustomer</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
         <servlet-name>ManageStaffServlet</servlet-name>
         <url-pattern>/pages/admins/manageStaff</url-pattern>
     </servlet-mapping>
@@ -361,6 +357,10 @@
     <servlet-mapping>
         <servlet-name>InternalSecurityLogServlet</servlet-name>
         <url-pattern>/pages/admins/internalSecurityLog</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ModifyCustomerServlet</servlet-name>
+        <url-pattern>/pages/admins/modifyCustomer</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>30</session-timeout>

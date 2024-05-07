@@ -31,7 +31,7 @@ public class AddProductServlet extends HttpServlet {
     UserTransaction userTransaction;
     private static final String ADD_PRODUCT_JSP_URL = "/pages/staffs/addProduct.jsp";
     private static final String ADD_PRODUCT_URL = "/pages/staffs/addProduct";
-    private static final String STAFF_SEARCH_PRODUCT_URL = "/pages/staffs/staffSearchProduct.jsp";
+    private static final String STAFF_SEARCH_PRODUCT_URL = "/pages/staffs/staffSearchProduct";
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
