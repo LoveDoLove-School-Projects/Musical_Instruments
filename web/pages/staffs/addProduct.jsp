@@ -59,10 +59,10 @@
                         <div class="form-group">
                             <label for="category">Please select a category: </label>
                             <select class="form-control" id="category" name="category" required>
-                                <option value="PIANO" >Piano</option>
-                                <option value="DRUM" checked>Drum</option>
-                                <option value="GUITAR">Guitar</option>
-                                <option value="VIOLIN">Violin</option>
+                                <option value="PIANO" >PIANO</option>
+                                <option value="DRUM">DRUM</option>
+                                <option value="GUITAR">GUITAR</option>
+                                <option value="VIOLIN">VIOLIN</option>
                             </select>
                         </div>
 

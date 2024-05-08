@@ -3,7 +3,7 @@
 <c:set var="path" value="${pageContext.request.contextPath}" />
 <c:set var="basePath" value="${pageContext.request.scheme}://${pageContext.request.serverName}:${pageContext.request.serverPort}${path}/" />
 <%@ page import="java.util.List"%>
-<%@ page import="entities.Transactions"%>
+<%@ page import="entities.Sales"%>
 <!DOCTYPE html>
 <html>
     <head>
@@ -25,8 +25,7 @@
                                 View Sales Records
                             </div>
                             <div class="card-body">
-                                <form action="viewSales" method="post">
-                                    <input type="hidden" name="action" value="fetchSales">
+                                <form action="pages/superAdmin/viewSales" method="post">
                                     <div class="form-group">
                                         <label for="date">Select Date:</label>
                                         <input type="date" id="date" name="date" class="form-control">
@@ -80,10 +79,10 @@
                                     </thead>
                                     <tbody>
                                         <!-- Iterate over the top 10 products and display them -->
-                                        <c:forEach var="product" items="${top10Products}">
+                                        <c:forEach var="sales" items="${top10Products}">
                                             <tr>
-                                                <td>${product.productName}</td>
-                                                <td>${product.totalSales}</td>
+                                                <td>${sales.getProductName()}</td>
+                                                <td>${sales.getTotalQuantity()}</td>
                                             </tr>
                                         </c:forEach>
                                     </tbody>

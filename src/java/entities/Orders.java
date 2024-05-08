@@ -205,7 +205,21 @@ public class Orders implements Serializable {
 
     @Override
     public String toString() {
-        return "entities.Orders[ id=" + id + " ]";
+        StringBuilder sb = new StringBuilder();
+        sb.append("Orders{");
+        sb.append("id=").append(id);
+        sb.append(", userId=").append(userId);
+        sb.append(", productId=").append(productId);
+        sb.append(", productName=").append(productName);
+        sb.append(", productQuantity=").append(productQuantity);
+        sb.append(", productColor=").append(productColor);
+        sb.append(", productPrice=").append(productPrice);
+        sb.append(", productImage=").append(productImage);
+        sb.append(", productTotalprice=").append(productTotalprice);
+        sb.append(", orderNumber=").append(orderNumber);
+        sb.append(", orderDate=").append(orderDate);
+        sb.append('}');
+        return sb.toString();
     }
 
 }
