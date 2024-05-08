@@ -24,10 +24,12 @@ public final class Constants {
     public static final String EDITCART_URL = "/pages/products/editCart";
     //     Order JSP History
     public static final String ORDERHISTORY_JSP_URL = "/pages/orderhistory/orderHistory.jsp";
-    //     Order History
-    public static final String ORDERHISTORY_URL = "/pages/orders/orderHistory";
+    public static final String VIEWORDERHISTORY_JSP_URL = "/pages/orderhistory/viewOrderHistory.jsp";
     //     Update Order
     public static final String UPDATE_ORDER_URL = "/pages/orders/updateOrder";
+    //     Order History
+    public static final String ORDERHISTORY_URL = "/pages/orderhistory/orderHistory";
+    public static final String VIEWORDERHISTORY_URL = "/pages/orderhistory/viewOrderHistory";
     /* ********************************* */
  /* ********************************* */
     //    Admin URL

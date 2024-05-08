@@ -46,3 +46,8 @@
     border: none;
     transition: all 0.5s ease;
 }
+
+.addProductBtn{
+    border:solid 1px black;
+    border-radius: 20px;
+}

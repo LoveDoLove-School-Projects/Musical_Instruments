@@ -2,6 +2,7 @@ package services;
 
 import entities.Carts;
 import entities.OrderDetails;
+import entities.Orders;
 import entities.Transactions;
 import java.util.List;
 import utilities.MailSender;
@@ -19,6 +20,21 @@ public class TransactionServices {
         double subtotal = 0;
         for (Carts cart : cartList) {
             subtotal += cart.getProductQuantity() * cart.getProductPrice();
+        }
+        double tax = subtotal * TAX_RATE;
+        double shipping = subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : SHIPPING_COST;
+        orderDetail.setSubtotal(subtotal);
+        orderDetail.setTax(tax);
+        orderDetail.setShipping(shipping);
+        orderDetail.setTotal(subtotal + tax + shipping);
+        return orderDetail;
+    }
+    
+     public OrderDetails getOrderHistoryDetails(List<Orders> orderList) {
+        OrderDetails orderDetail = new OrderDetails();
+        double subtotal = 0;
+        for (Orders orders : orderList) {
+            subtotal += orders.getProductQuantity() * orders.getProductPrice();
         }
         double tax = subtotal * TAX_RATE;
         double shipping = subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : SHIPPING_COST;

@@ -97,9 +97,13 @@ double subTotal=0;
                     <%
                         }
                     %>
-                    </tbody>
-                </table>
 
+                    </tbody>
+
+                </table>
+                <div class="text-center m-3">
+                    <a href="pages/products" class="w-100 p-4 text-center"><button class="addProductBtn p-2">Add more product</button></a>
+                </div>
                 <div class="w-100 fixed-bottom CheckoutBar">
                     <div class="row align-items-center justify-content-center">
                         <h4 class="col-10 d-flex justify-content-end">Total : <strong class="chkOutPrice">  RM<%=String.format("%.2f",subTotal)%></strong></h4>

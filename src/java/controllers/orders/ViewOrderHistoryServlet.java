@@ -1,7 +1,8 @@
-package controllers.carts;
+package controllers.orders;
 
 import entities.Constants;
-import entities.Carts;
+import entities.OrderDetails;
+import entities.Orders;
 import entities.Session;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -11,13 +12,15 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
+import services.TransactionServices;
 import utilities.RedirectUtilities;
 import utilities.SessionUtilities;
 
-public class CartServlet extends HttpServlet {
+public class ViewOrderHistoryServlet extends HttpServlet {
 
     @PersistenceContext
     EntityManager entityManager;
+    private final TransactionServices transactionServices = new TransactionServices();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -30,12 +33,16 @@ public class CartServlet extends HttpServlet {
             RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Admin or staff are not allowed to view this page because it only for customer.", "/");
             return;
         }
-        List<Carts> carts = entityManager.createNamedQuery("Carts.findByCustomerId").setParameter("customerId", session.getUserId()).getResultList();
-        if (carts == null || carts.isEmpty()) {
-            RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Your cart is empty , you can add from product page ", Constants.PRODUCT_URL);
-        } else {
-            request.setAttribute("cartDetails", carts);
-            request.getRequestDispatcher(Constants.CART_JSP_URL).forward(request, response);
-        }
+        String order_number = request.getParameter("order_number");
+        List<Orders> orders = entityManager.createNamedQuery("Orders.findByOrderNumber").setParameter("orderNumber", order_number).getResultList();
+        request.setAttribute("orderLists", orders);
+        request.setAttribute("entityManager", entityManager);
+        OrderDetails orderDetails = transactionServices.getOrderHistoryDetails(orders);
+        request.setAttribute("subtotal", orderDetails.getSubtotal());
+        request.setAttribute("shipping", orderDetails.getShipping());
+        request.setAttribute("tax", orderDetails.getTax());
+        request.setAttribute("total", orderDetails.getTotal());
+        request.getRequestDispatcher(Constants.VIEWORDERHISTORY_JSP_URL).forward(request, response);
     }
+
 }
