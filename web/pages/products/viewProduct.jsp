@@ -4,6 +4,7 @@
 <c:set var="basePath" value="${pageContext.request.scheme}://${pageContext.request.serverName}:${pageContext.request.serverPort}${path}/" />
 <%@ page import="java.util.List"%>
 <%@ page import="java.util.Base64"%>
+<%@ page import="entities.Ratings" %>
 <%@ page import="entities.Products" %>
 <%
 String IMAGE_DEFAULT_PATH = "assets/database/productImage/";
@@ -22,7 +23,7 @@ String IMAGE_DEFAULT_PATH = "assets/database/productImage/";
 
             .addtocartbtn {
                 background-color: #d9d9e1;
-                border: solid rgb(82, 78, 78) 1px;
+                border: solid rgb(82, 78, 78) 2px;
                 color: black;
                 font-size: 20px;
             }
@@ -54,6 +55,18 @@ String IMAGE_DEFAULT_PATH = "assets/database/productImage/";
                 width: 38px;
                 transition: 0.3s;
             }
+
+            .ratingForm{
+                border: solid black 2px;
+                border-radius: 20px;
+            }
+            
+            .ratingResultList{
+                border: solid black 2px;
+                border-radius: 20px;
+            }
+
+
 
         </style>
 
@@ -91,10 +104,113 @@ String IMAGE_DEFAULT_PATH = "assets/database/productImage/";
                             </div>
                         </div>
                     </div>
+                    <div class="row  d-flex align-items-center justify-content-center">
+                        <div class="col-12 ratingForm w-50">
+                            <h2 class="text-center">Rate this product:</h2>
+                            <form action="pages/ratings/addRating" method="post" class="w-50 mx-auto">
+                                <input type="hidden" name="product_id" value="<%=productId%>" />
+                                <label for="rating" class="w-50">Rating:</label>
+                                <select name="rating" id="rating" class="w-100">
+                                    //5 stars so 5 options
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                </select>
+                                <br>
+                                <label for="comment" class="w-25">Comment:</label>
+                                <textarea name="comment" id="comment" class="w-100"></textarea>
+                                <br>
+                                <div class="text-center">
+                                    <button type="submit" class="addtocartbtn m-3 p-1"><strong>Submit</strong></button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+
+                    <h1 class="text-center">Product Ratings</h1>
+                    <div class="ratingResultList">
+                        <%
+                            List<Ratings> ratings = (List<Ratings>) request.getAttribute("ratingList");
+                             if (!ratings.isEmpty()&&ratings!=null) {
+                                for (Ratings rating : ratings) {
+                        %>
+                        <div class="rating m-3">
+                            <p><strong>Rating:</strong> <%= rating.getRatingScore() %></p>
+                            <p><strong>Comment:</strong> <%= rating.getComment() %></p>
+                            <p><strong>Timestamp:</strong> <%= rating.getTimestamp() %></p>
+                            <hr>
+                        </div>
+                        <%
+                                }
+                            } else {
+                        %>
+                        <p class="text-center"><strong>No ratings available for this product.</strong></p>
+                        <%
+                            }
+                        %>
+                    </div>
+
                 </div>
             </section>
         </main>
         <jsp:include page="/defaults/footer.jsp" />
         <script type="module" src="assets/js/carts.js"></script>
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                const stars = document.querySelectorAll('.star');
+                stars.forEach(function (star) {
+                    star.addEventListener('click', function () {
+                        let rating = this.getAttribute('data-rating');
+                        let productId = this.getAttribute('data-product-id');
+                        // Send rating and product ID to server
+                        sendRatingToServer(productId, rating);
+                        // Change star color immediately (optional)
+                        applyStarColor(star, rating);
+                    });
+                });
+            });
+
+// Function to send rating to the server
+            function sendRatingToServer(productId, rating) {
+                // Fetch API (This one from youtube I also dont know the exact way)
+                fetch('rating', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({productId: productId, rating: rating}),
+                })
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('Network response was not ok');
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            console.log('Rating sent successfully:', data);
+                            // Handle server response if needed
+                        })
+                        .catch(error => {
+                            console.error('Error sending rating:', error);
+                            // Handle error
+                        });
+            }
+
+// Function to change star color immediately
+            function applyStarColor(star, rating) {
+                // Example: change color of clicked star and stars before it
+                stars.forEach(function (s) {
+                    if (parseInt(s.getAttribute('data-rating')) <= parseInt(rating)) {
+                        s.style.color = 'yellow';
+                    } else {
+                        s.style.color = 'grey';
+                    }
+                });
+            }
+
+        </script>
     </body>
 </html>

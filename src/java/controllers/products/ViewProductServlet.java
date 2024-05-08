@@ -2,8 +2,8 @@ package controllers.products;
 
 import entities.Constants;
 import entities.Products;
+import entities.Ratings;
 import entities.Session;
-import utilities.SessionUtilities;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.servlet.ServletException;
@@ -13,6 +13,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 import utilities.RedirectUtilities;
+import utilities.SessionUtilities;
 
 public class ViewProductServlet extends HttpServlet {
 
@@ -24,12 +25,16 @@ public class ViewProductServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Session session = SessionUtilities.getLoginSession(request.getSession());
         if (session != null) {
-            String productId = request.getParameter("product_id");
-            List<Products> productList = entityManager.createNamedQuery("Products.findByProductId").setParameter("productId", Integer.valueOf(productId)).getResultList();
+            int productId = Integer.parseInt(request.getParameter("product_id"));
+            List<Products> productList = entityManager.createNamedQuery("Products.findByProductId").setParameter("productId", productId).getResultList();
             if (productList == null) {
                 RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Product Not Found!", Constants.PRODUCT_URL);
                 return;
             }
+
+            List<Ratings> ratings = entityManager.createNamedQuery("Ratings.findByProductId").setParameter("productId", productId).getResultList();
+
+            request.setAttribute("ratingList", ratings);
             Products products = productList.get(0);
             request.setAttribute("productDetails", products);
             request.getRequestDispatcher(VIEW_PRODUCT_JSP_URL).forward(request, response);

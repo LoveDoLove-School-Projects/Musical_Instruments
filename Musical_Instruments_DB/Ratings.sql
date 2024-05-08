@@ -1,0 +1,8 @@
+CREATE TABLE Ratings (
+    okid INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    user_id INT NOT NULL,
+    product_id INT NOT NULL,
+    rating_score INT NOT NULL,
+    comment VARCHAR(5000),
+    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
