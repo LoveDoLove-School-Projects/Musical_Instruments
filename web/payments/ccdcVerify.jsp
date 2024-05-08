@@ -74,10 +74,10 @@ response.setHeader("Cache-Control", "no-store");
                         <div class="row">
                             <div class="col">
                                 <button class="btn btn-primary btn-lg btn-block md-3" type="submit" id="submitButton">Verify</button>
-                                <button class="btn btn-success btn-lg btn-block md-3" id="resendOtp">Resend Otp</button>
+                                <button type="button" class="btn btn-success btn-lg btn-block md-3" id="resendOtp">Resend Otp</button>
                             </div>
                             <div class="col">
-                                <button class="btn btn-danger btn-lg btn-block" id="cancel">Cancel</button>
+                                <button type="button" class="btn btn-danger btn-lg btn-block" id="cancel">Cancel</button>
                             </div>
                         </div>
                     </form>

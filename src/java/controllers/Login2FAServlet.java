@@ -110,7 +110,7 @@ public class Login2FAServlet extends HttpServlet {
     private void handleOtpStatus(HttpServletRequest request, HttpServletResponse response, OtpsType otpStatus, Session session) throws IOException, ServletException {
         if (otpStatus == OtpsType.OK) {
             HttpSession httpSession = request.getSession();
-            httpSession.invalidate();
+//            httpSession.invalidate();
             SessionUtilities.setLoginSession(httpSession, session);
             SecurityLog.addSecurityLog(request, "login successful with 2fa.");
             RedirectUtilities.sendRedirect(request, response, Constants.PROFILE_URL);

@@ -68,7 +68,7 @@ response.setHeader("Cache-Control", "no-store");
                                 <button class="btn btn-primary btn-lg btn-block" type="submit" id="payNow">Pay Now</button>
                             </div>
                             <div class="col">
-                                <button class="btn btn-primary btn-lg btn-block" id="cancel">Cancel</button>
+                                <button type="button" class="btn btn-primary btn-lg btn-block" id="cancel">Cancel</button>
                             </div>
                         </div>
                     </form>
@@ -76,19 +76,38 @@ response.setHeader("Cache-Control", "no-store");
             </div>
         </div>
         <script type="module">
-            import { showConfirmDialog } from "assets/js/dialog.js";
             $("#cancel").click(function (event) {
                 event.preventDefault();
-                showConfirmDialog("Are you sure you want to cancel the payment?", function () {
-                    window.location.href = "${basePath}payments/cancel?transaction_number=${param.paymentId}";
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "You won't be able to revert this!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, cancel it!'
+                }).then((result) => {
+                    if (result.value) {
+                        window.location.href = "${basePath}payments/cancel?transaction_number=${param.paymentId}";
+                                    }
+                                });
                             });
-                        });
-                        $("#payNow").click(function (event) {
-                            event.preventDefault();
-                            showConfirmDialog("Are you sure you want to proceed with the payment?", function () {
-                                $("form").submit();
+                            $("#payNow").click(function (event) {
+                                event.preventDefault();
+                                Swal.fire({
+                                    title: 'Are you sure?',
+                                    text: "You won't be able to revert this!",
+                                    icon: 'warning',
+                                    showCancelButton: true,
+                                    confirmButtonColor: '#3085d6',
+                                    cancelButtonColor: '#d33',
+                                    confirmButtonText: 'Yes, proceed with the payment!'
+                                }).then((result) => {
+                                    if (result.value) {
+                                        $("form").submit();
+                                    }
+                                });
                             });
-                        });
         </script>
     </body>
 </html>
