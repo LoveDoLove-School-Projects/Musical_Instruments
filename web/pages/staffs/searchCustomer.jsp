@@ -63,7 +63,7 @@
             <div class="customer-search-box">
                 <i class="fas fa-users"></i>
                 <%
-                boolean isAdmin = request.isUserInRole("Admin") || request.isUserInRole("Sup[erAdmin");
+                boolean isAdmin = request.isUserInRole("Admin") || request.isUserInRole("SuperAdmin");
                 if (isAdmin) { %>
                 <h3>Number of Customers: <strong>(<c:out value="${customerCount}"/>) </strong></h3>
                 <% } %>

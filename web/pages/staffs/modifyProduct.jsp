@@ -61,7 +61,7 @@
                         <div class="form-group">
                             <label for="category">Please select a category: </label>
                             <select class="form-control" id="category" name="category" required>
-                                <c:forEach var="categoryOption" items="${['Piano', 'Drum', 'Guitar', 'Violin']}">
+                                <c:forEach var="categoryOption" items="${['PIANO', 'DRUM', 'GUITAR', 'VIOLIN']}">
                                     <option value="${categoryOption}" <c:if test="${categoryOption eq productDetails.category}">selected</c:if>>${categoryOption}</option>
                                 </c:forEach>
                             </select>
