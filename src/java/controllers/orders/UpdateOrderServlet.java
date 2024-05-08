@@ -1,9 +1,11 @@
 package controllers.orders;
 
-import entities.Constants;
 import entities.Carts;
+import entities.Constants;
+import entities.Orders;
 import entities.Products;
 import entities.Session;
+import entities.TransactionStatus;
 import entities.Transactions;
 import exceptions.DatabaseException;
 import jakarta.annotation.Resource;
@@ -20,6 +22,7 @@ import jakarta.transaction.RollbackException;
 import jakarta.transaction.SystemException;
 import jakarta.transaction.UserTransaction;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.List;
 import utilities.RedirectUtilities;
 import utilities.SessionUtilities;
@@ -33,8 +36,7 @@ public class UpdateOrderServlet extends HttpServlet {
     private static final String RECEIPT_URL = "/payments/receipt";
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Session session = SessionUtilities.getLoginSession(request.getSession());
         if (session == null) {
             RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Please login to view this page.", Constants.CUSTOMER_LOGIN_URL);
@@ -46,32 +48,44 @@ public class UpdateOrderServlet extends HttpServlet {
         }
         int userId = session.getUserId();
         String tnxStatus = request.getParameter("txnStatus");
-        String transaction_number = request.getParameter("transaction_number");
-        Transactions transactions = entityManager.createNamedQuery("Transactions.findByTransactionNumber", Transactions.class).setParameter("transactionNumber", transaction_number).getSingleResult();
-        if (transactions.getUserId() == userId && tnxStatus.equals(transactions.getTransactionStatus())) {
-            //update product quantity
-            List<Carts> carts = entityManager.createNamedQuery("Carts.findByCustomerId").setParameter("customerId", userId).getResultList();
-            try {
-                userTransaction.begin();
-                for (Carts userCart : carts) {
-                    Products products = entityManager.find(Products.class, userCart.getProductId());
-                    int productQuantity = products.getQuantity() - userCart.getProductQuantity();
-                    products.setQuantity(productQuantity);
-                    entityManager.merge(products);
-                    Carts managedUserCart = entityManager.getReference(Carts.class, userCart.getCartId());
-                    entityManager.remove(managedUserCart);
-                }
-                userTransaction.commit();
-                String url = RECEIPT_URL + "?transaction_number=" + transaction_number;
-                RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.SUCCESS, "welcome to receipt page", url);
-            } catch (HeuristicMixedException | HeuristicRollbackException | NotSupportedException | RollbackException | SystemException | IOException | IllegalStateException | NumberFormatException | SecurityException ex) {
-                throw new DatabaseException(ex.getMessage());
-            }
+        if (!tnxStatus.equals(TransactionStatus.APPROVED)) {
+            return;
         }
-    }
-
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+        String transaction_number = request.getParameter("transaction_number");
+        String orderNumber = request.getParameter("order_number");
+        Transactions transactions = entityManager.createNamedQuery("Transactions.findByTransactionNumberAndUserId", Transactions.class)
+                .setParameter("transactionNumber", transaction_number)
+                .setParameter("userId", userId)
+                .getSingleResult();
+        List<Carts> carts = entityManager.createNamedQuery("Carts.findByCustomerId").setParameter("customerId", userId).getResultList();
+        try {
+            userTransaction.begin();
+            for (Carts userCart : carts) {
+                Products products = entityManager.find(Products.class, userCart.getProductId());
+                int productQuantity = products.getQuantity() - userCart.getProductQuantity();
+                products.setQuantity(productQuantity);
+                entityManager.merge(products);
+                Carts managedUserCart = entityManager.getReference(Carts.class, userCart.getCartId());
+                entityManager.remove(managedUserCart);
+                Orders orders = new Orders();
+                orders.setUserId(userId);
+                orders.setOrderNumber(orderNumber);
+                orders.setProductColor(products.getColor());
+                orders.setProductId(products.getProductId());
+                orders.setProductImage(products.getImage());
+                orders.setProductName(products.getName());
+                orders.setProductPrice(products.getPrice());
+                orders.setProductQuantity(userCart.getProductQuantity());
+                BigDecimal totalPrice = BigDecimal.valueOf(userCart.getProductQuantity() * products.getPrice());
+                orders.setProductTotalprice(totalPrice);
+                orders.setOrderDate(transactions.getDateUpdatedGmt());
+                entityManager.persist(orders);
+            }
+            userTransaction.commit();
+            String url = RECEIPT_URL + "?transaction_number=" + transaction_number;
+            RedirectUtilities.sendRedirect(request, response, url);
+        } catch (HeuristicMixedException | HeuristicRollbackException | NotSupportedException | RollbackException | SystemException | IOException | IllegalStateException | NumberFormatException | SecurityException ex) {
+            throw new DatabaseException(ex.getMessage());
+        }
     }
 }
