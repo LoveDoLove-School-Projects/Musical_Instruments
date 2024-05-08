@@ -149,6 +149,9 @@ public class PaypalServices {
     private AccessToken requestAccessToken() throws IOException {
         String jsonPayload = "{\"client_id\":\"" + CLIENT_ID + "\",\"client_secret\":\"" + CLIENT_SECRET + "\"}";
         String response = HttpUtilities.sendHttpJsonRequest(ACCESS_TOKEN_API, jsonPayload);
+        if (response == null) {
+            return null;
+        }
         AccessToken accessTokenObj = new Gson().fromJson(response, AccessToken.class);
         return accessTokenObj;
     }
@@ -167,6 +170,9 @@ public class PaypalServices {
             String accessToken = getAccessToken();
             String jsonPayload = "{\"access_token\":\"" + accessToken + "\",\"payment_id\":\"" + paymentId + "\"}";
             String response = HttpUtilities.sendHttpJsonRequest(GET_PAYMENT_API, jsonPayload);
+            if (response == null) {
+                return null;
+            }
             return new Gson().fromJson(response, PaypalPayment.class);
         } catch (JsonSyntaxException | IOException ex) {
             throw new PaymentException(ex.getMessage());
@@ -178,6 +184,9 @@ public class PaypalServices {
             String accessToken = getAccessToken();
             String jsonPayload = "{\"access_token\":\"" + accessToken + "\",\"payment_id\":\"" + payment_id + "\",\"payer_id\":\"" + payer_id + "\"}";
             String response = HttpUtilities.sendHttpJsonRequest(EXECUTE_PAYMENT_API, jsonPayload);
+            if (response == null) {
+                return null;
+            }
             return new Gson().fromJson(response, PaypalPayment.class);
         } catch (JsonSyntaxException | IOException ex) {
             throw new PaymentException(ex.getMessage());

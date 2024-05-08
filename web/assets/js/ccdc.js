@@ -45,6 +45,7 @@ function setCancelButton() {
 
 function setResendOtpButton() {
   $("#resendOtp").click(function () {
+    showProgressDialog("Resending OTP...");
     $.ajax({
       url: "api/payments/ccdc/resendOtp",
       type: "POST",

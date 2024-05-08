@@ -33,6 +33,10 @@ public final class HttpUtilities {
                     response.append(inputLine);
                 }
             }
+            int status = connection.getResponseCode();
+            if (status != 200) {
+                return null;
+            }
             return response.toString();
         } catch (IOException ex) {
             throw new RuntimeException(ex);
