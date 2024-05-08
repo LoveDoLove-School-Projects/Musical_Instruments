@@ -1,7 +1,7 @@
 package controllers.products;
 
-import entities.Constants;
 import entities.Carts;
+import entities.Constants;
 import entities.Products;
 import entities.Session;
 import exceptions.DatabaseException;
@@ -59,7 +59,7 @@ public class AddProductToCartServlet extends HttpServlet {
             entityManager.persist(carts);
             userTransaction.commit();
             SecurityLog.addSecurityLog(request, "Product " + product.getName() + " has been added to cart successfully.");
-            RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.SUCCESS, "Add to card successfull !", Constants.CART_URL);
+            RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.SUCCESS, "Add to cart successfull !", Constants.CART_URL);
         } catch (HeuristicMixedException | HeuristicRollbackException | NotSupportedException | RollbackException | SystemException | IOException | IllegalStateException | NumberFormatException | SecurityException ex) {
             SecurityLog.addSecurityLog(request, "Product " + productId + " has been added to cart failed.");
             throw new DatabaseException(ex.getMessage());
