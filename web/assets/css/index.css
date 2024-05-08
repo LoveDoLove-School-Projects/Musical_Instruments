@@ -125,8 +125,7 @@ figure:hover img {
     height:400px;
     width: 100%
 }
-@import url(https://fonts.googleapis.com/css?family=Cabin+Condensed);
-
+/*@import url(https://fonts.googleapis.com/css?family=Cabin+Condensed);*/
 svg{
     font-weight:bold;
     height:100%;
