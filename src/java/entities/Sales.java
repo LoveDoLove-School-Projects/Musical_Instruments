@@ -5,10 +5,12 @@ import java.util.Date;
 
 public class Sales {
 
+    private int productId;
     private String productName;
     private Date orderDate;
     private int totalQuantity;
     private BigDecimal totalAmount;
+    private byte[] productImage;
 
     public Sales() {
     }
@@ -18,6 +20,23 @@ public class Sales {
         this.orderDate = orderDate;
         this.totalQuantity = totalQuantity;
         this.totalAmount = totalAmount;
+    }
+
+    public Sales(int productId, String productName, Date orderDate, int totalQuantity, BigDecimal totalAmount, byte[] productImage) {
+        this.productId = productId;
+        this.productName = productName;
+        this.orderDate = orderDate;
+        this.totalQuantity = totalQuantity;
+        this.totalAmount = totalAmount;
+        this.productImage = productImage;
+    }
+
+    public int getProductId() {
+        return productId;
+    }
+
+    public void setProductId(int productId) {
+        this.productId = productId;
     }
 
     public String getProductName() {
@@ -51,4 +70,13 @@ public class Sales {
     public void setTotalAmount(BigDecimal totalAmount) {
         this.totalAmount = totalAmount;
     }
+
+    public byte[] getProductImage() {
+        return productImage;
+    }
+
+    public void setProductImage(byte[] productImage) {
+        this.productImage = productImage;
+    }
+
 }
