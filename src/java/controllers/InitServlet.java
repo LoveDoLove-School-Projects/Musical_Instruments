@@ -4,6 +4,7 @@ import entities.Environment;
 import entities.TrustAllCertificates;
 import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.ServletContextListener;
+import jakarta.servlet.http.HttpServletRequest;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -33,5 +34,20 @@ public class InitServlet implements ServletContextListener {
         } catch (NamingException ex) {
             throw new RuntimeException(ex.getMessage());
         }
+    }
+
+    /**
+     * Returns the base URL of the server.
+     *
+     * @param request the HttpServletRequest object representing the client's
+     * request
+     * @return the base URL of the server
+     */
+    public static String getServerBaseURL(HttpServletRequest request) {
+        String scheme = request.getScheme() + "://";
+        String serverName = request.getServerName();
+        String serverPort = (request.getServerPort() == 80) ? "" : ":" + request.getServerPort();
+        String contextPath = request.getContextPath();
+        return scheme + serverName + serverPort + contextPath;
     }
 }

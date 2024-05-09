@@ -11,6 +11,7 @@ import com.paypal.api.payments.PayerInfo;
 import com.paypal.api.payments.Payment;
 import com.paypal.api.payments.RedirectUrls;
 import com.paypal.api.payments.Transaction;
+import controllers.InitServlet;
 import entities.AccessToken;
 import entities.Carts;
 import entities.Customers;
@@ -19,6 +20,7 @@ import entities.MemoryCache;
 import entities.OrderDetails;
 import entities.PaypalPayment;
 import exceptions.PaymentException;
+import jakarta.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,8 +32,6 @@ public class PaypalServices {
 
     private static final String CLIENT_ID = "AZrjdHeC-KD9nsZVH8HR54O-3ZgvAshjqYq4hiPgXGL7ZKcps159a3mTW-YqLlvLQzBNveUjdpSELOuX";
     private static final String CLIENT_SECRET = "EGwkzMhtunT9dpkeIGuanST6nkKzdwRVFWHofvCYv8HFHy-RMk_A65bfFVw_p08ZCQaIMEtZKXVOswOY";
-    private static final String RETURN_URL = "http://localhost:8080/Musical_Instruments/payments/paypal/review";
-    private static final String CANCEL_URL = "http://localhost:8080/Musical_Instruments/payments/cancel";
     private static final String ACCESS_TOKEN_API = AesUtilities.aes256EcbDecrypt(Environment.ACCESS_TOKEN_API);
     private static final String CREATE_PAYMENT_API = AesUtilities.aes256EcbDecrypt(Environment.CREATE_PAYMENT_API);
     private static final String GET_PAYMENT_API = AesUtilities.aes256EcbDecrypt(Environment.GET_PAYMENT_API);
@@ -40,6 +40,16 @@ public class PaypalServices {
     private static final MemoryCache<String, String> MEMORY_CACHE = new MemoryCache<>(3);
     private static final MemoryCache<String, Long> TIME_CACHE = new MemoryCache<>(3);
     private final TransactionServices transactionServices = new TransactionServices();
+    private static String returnUrl = "";
+    private static String cancelUrl = "";
+
+    public PaypalServices() {
+    }
+
+    public PaypalServices(HttpServletRequest request) {
+        PaypalServices.returnUrl = InitServlet.getServerBaseURL(request) + "/payments/paypal/review";
+        PaypalServices.cancelUrl = InitServlet.getServerBaseURL(request) + "/payments/cancel";
+    }
 
     public String createPayment(List<Carts> cartList, Customers customer) {
         try {
@@ -81,8 +91,8 @@ public class PaypalServices {
 
     private RedirectUrls getRedirectURLs() {
         RedirectUrls redirectUrls = new RedirectUrls();
-        redirectUrls.setReturnUrl(RETURN_URL);
-        redirectUrls.setCancelUrl(CANCEL_URL);
+        redirectUrls.setReturnUrl(returnUrl);
+        redirectUrls.setCancelUrl(cancelUrl);
         return redirectUrls;
     }
 
@@ -152,7 +162,8 @@ public class PaypalServices {
         if (response == null) {
             return null;
         }
-        AccessToken accessTokenObj = new Gson().fromJson(response, AccessToken.class);
+        AccessToken accessTokenObj = new Gson().fromJson(response, AccessToken.class
+        );
         return accessTokenObj;
     }
 
@@ -173,7 +184,8 @@ public class PaypalServices {
             if (response == null) {
                 return null;
             }
-            return new Gson().fromJson(response, PaypalPayment.class);
+            return new Gson().fromJson(response, PaypalPayment.class
+            );
         } catch (JsonSyntaxException | IOException ex) {
             throw new PaymentException(ex.getMessage());
         }
@@ -187,7 +199,8 @@ public class PaypalServices {
             if (response == null) {
                 return null;
             }
-            return new Gson().fromJson(response, PaypalPayment.class);
+            return new Gson().fromJson(response, PaypalPayment.class
+            );
         } catch (JsonSyntaxException | IOException ex) {
             throw new PaymentException(ex.getMessage());
         }
