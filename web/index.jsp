@@ -2,6 +2,9 @@
 <%@ page contentType="text/html" pageEncoding="UTF-8" %>
 <c:set var="path" value="${pageContext.request.contextPath}" />
 <c:set var="basePath" value="${pageContext.request.scheme}://${pageContext.request.serverName}:${pageContext.request.serverPort}${path}/" />
+<%@ page import="java.util.List"%>
+<%@ page import="entities.Sales"%>
+<%@ page import="java.util.Base64"%>
 <!DOCTYPE html>
 <html>
 
@@ -87,36 +90,27 @@
                 </svg>
                 <!-- ${topsales} -->
                 <div class="row">
+                    <%
+                        List<Sales> salesList = (List<Sales>) request.getAttribute("topsales");
+                        if (salesList != null) {
+                        for (int i = 0; i < 3; i++) {
+                            String pictureBase64 = Base64.getEncoder().encodeToString(salesList.get(i).getProductImage());
+                            String imageSrc = "data:image/png;base64," + pictureBase64; // Change "image/png" based on the actual image type
+                    %>
                     <div class="col">
                         <div class="card">
-                            <a href="pages/login">
+                            <a href="pages/viewProduct?product_id=<%=salesList.get(i).getProductId()%>">
                                 <figure>
-                                    <img src="assets/image/logo.png" alt="" class="imagetop">
-                                    <figcaption>Guitar</figcaption>
+                                    <img src="<%=imageSrc%>" alt="<%=salesList.get(i).getProductName()%>" class="imagetop">
+                                    <figcaption><%=salesList.get(i).getProductName()%></figcaption>
                                 </figure>
                             </a>
                         </div>
                     </div>
-                    <div class="col">
-                        <div class="card">
-                            <a href="">
-                                <figure>
-                                    <img src="assets/image/logo.png" alt="" class="imagetop">
-                                    <figcaption>Drum</figcaption>
-                                </figure>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="col">
-                        <div class="card">
-                            <a href="">
-                                <figure>
-                                    <img src="assets/image/logo.png" alt="" class="imagetop">
-                                    <figcaption>Piano</figcaption>
-                                </figure>
-                            </a>
-                        </div>
-                    </div>
+                    <%
+                        }
+                        }
+                    %>
                 </div>
             </div>
         </main>
