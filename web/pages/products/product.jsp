@@ -36,6 +36,7 @@
                         for (Products product : pianoProductDetails) {
                         String pictureBase64 = Base64.getEncoder().encodeToString(product.getImage());
                          String imageSrc = "data:image/png;base64," + pictureBase64; // Change "image/png" based on the actual image type
+                         if(product.getQuantity()!=0){
                                 %>
                                 <div class="col-6 col-xl-3 col-xxl-3">
                                     <a href="pages/products/viewProduct?product_id=<%=product.getProductId()%>" class="MusicInstruments row1-MusicInstruments1">
@@ -46,6 +47,7 @@
                                     </a>
                                 </div>
                                 <%
+                                    }
                                     }
                                 %>
                             </div>

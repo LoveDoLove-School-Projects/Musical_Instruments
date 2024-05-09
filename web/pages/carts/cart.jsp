@@ -5,6 +5,8 @@
 <%@ page import="java.util.List"%>
 <%@ page import="java.util.Base64"%>
 <%@ page import="entities.Carts" %>
+<%@ page import="jakarta.persistence.EntityManager"%>
+<%@ page import="entities.Products" %>
 <%
 int numberCart=0;
 double subTotal=0;
@@ -37,9 +39,20 @@ double subTotal=0;
 
                     <tbody class="text-center">
                         <%
+                             EntityManager entityManager = (EntityManager) request.getAttribute("entityManager");
                               List<Carts> cartsDetails = (List<Carts>) request.getAttribute("cartDetails");
+                                
                                if (!cartsDetails.isEmpty()&&cartsDetails!=null) {
                               for (Carts carts : cartsDetails) {
+                              Products products = null;
+                              try {
+                                products = entityManager.createNamedQuery("Products.findByProductId", Products.class).setParameter("productId", carts.getProductId()).getSingleResult();
+                                   } catch (Exception e) {
+                                            // If no result found, skip to the next iteration
+                                            continue;
+                                   }
+                                        if(products.getQuantity()!=0){
+                           
                               numberCart++;
                               subTotal+=carts.getProductTotalprice();
                               String pictureBase64 = Base64.getEncoder().encodeToString(carts.getProductImage());
@@ -96,6 +109,15 @@ double subTotal=0;
 
 
                     <%
+                        }else{
+                    %>
+                    <script>
+                      let dynamicMessage ="Sorry , your product"+ '<%= carts.getProductName() %>' + " has been sold out";
+                      window.alert(dynamicMessage);
+                    </script>
+
+                    <%
+                        }
                         }
                         }
                     %>
@@ -109,13 +131,13 @@ double subTotal=0;
                 <div class="w-100 fixed-bottom CheckoutBar">
                     <div class="row align-items-center justify-content-center">
                         <h4 class="col-10 d-flex justify-content-end">Total : <strong class="chkOutPrice">  RM<%=String.format("%.2f",subTotal)%></strong></h4>
-                      
+
                         <form action="payments/checkout" method="post" class="col-2 text-center">
                             <input type="submit" class="w-100 p-4 text-center ChkoutBtn" name="chekout" value="Check Out">
                             <input type="hidden" name="subTotal" value="<%=subTotal%>"/>
                         </form>
 
-                      
+
 
                     </div>
                 </div>

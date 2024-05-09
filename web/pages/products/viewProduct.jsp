@@ -2,10 +2,13 @@
 <%@ page contentType="text/html" pageEncoding="UTF-8" %>
 <c:set var="path" value="${pageContext.request.contextPath}" />
 <c:set var="basePath" value="${pageContext.request.scheme}://${pageContext.request.serverName}:${pageContext.request.serverPort}${path}/" />
+<jsp:useBean id="productDetails" class="entities.Products" scope="session" />
 <%@ page import="java.util.List"%>
 <%@ page import="java.util.Base64"%>
 <%@ page import="entities.Ratings" %>
 <%@ page import="entities.Products" %>
+<%@ page import="entities.Orders" %>
+<%@ page import="jakarta.persistence.EntityManager"%>
 <%
 String IMAGE_DEFAULT_PATH = "assets/database/productImage/";
 
@@ -60,7 +63,7 @@ String IMAGE_DEFAULT_PATH = "assets/database/productImage/";
                 border: solid black 2px;
                 border-radius: 20px;
             }
-            
+
             .ratingResultList{
                 border: solid black 2px;
                 border-radius: 20px;
@@ -75,9 +78,8 @@ String IMAGE_DEFAULT_PATH = "assets/database/productImage/";
                 <div class="container">
                     <div class="row m-5 d-flex align-items-center justify-content-center">
                         <%
-                            Products product = (Products) request.getAttribute("productDetails");
-                            int productId = product.getProductId();
-                            String pictureBase64 = Base64.getEncoder().encodeToString(product.getImage());
+                            int productId = productDetails.getProductId();
+                            String pictureBase64 = Base64.getEncoder().encodeToString(productDetails.getImage());
                             String imageSrc = "data:image/png;base64," + pictureBase64; // Change "image/png" based on the actual image type
                         %>
                         <div class="row m-5 d-flex align-items-center justify-content-center">
@@ -86,16 +88,16 @@ String IMAGE_DEFAULT_PATH = "assets/database/productImage/";
                                     <img src="<%=imageSrc%>" class="img-fluid w-100 m-5">
                                 </div>
                                 <div class="col-7 px-5">
-                                    <h1 class="m-4"><strong><%=product.getName()%></strong></h1>
+                                    <h1 class="m-4"><strong><%=productDetails.getName()%></strong></h1>
                                     <hr>
-                                    <h3 class="my-4"><strong>RM <%=product.getPrice()%></strong></h3>
-                                    <h3 class="my-4"><strong>Stock:</strong> <%=product.getQuantity()%></h3>
-                                    <h3 class="my-4"><strong>Color:</strong> <%=product.getColor()%></h3>
+                                    <h3 class="my-4"><strong>RM <%=productDetails.getPrice()%></strong></h3>
+                                    <h3 class="my-4"><strong>Stock:</strong> <%=productDetails.getQuantity()%></h3>
+                                    <h3 class="my-4"><strong>Color:</strong> <%=productDetails.getColor()%></h3>
                                     <hr>
                                     <h5 class="my-2"><strong>Quantity</strong></h5>
                                     <form method="POST" action="pages/products/addProductToCart" class="qty-container" id="addToCartForm">
                                         <button class="qty-btn-minus" type="button"><i class="fa fa-minus"></i></button>
-                                        <input type="number" name="productQuantity" value="1" class="input-qty w-50 text-center p-2" min="1" max="<%=product.getQuantity()%>"/>
+                                        <input type="number" name="productQuantity" value="1" class="input-qty w-50 text-center p-2" min="1" max="<%=productDetails.getQuantity()%>"/>
                                         <input type="hidden" name="productId" value="<%=productId%>"/>
                                         <button class="qty-btn-plus" type="button"><i class="fa fa-plus"></i></button><br>
                                         <button type="submit" class="my-4 mx-auto p-2 addtocartbtn"><strong>Add to cart</strong></button>
@@ -104,6 +106,14 @@ String IMAGE_DEFAULT_PATH = "assets/database/productImage/";
                             </div>
                         </div>
                     </div>
+                    <%
+      EntityManager entityManager = (EntityManager) request.getAttribute("entityManager");
+      List<Orders> orders = (List<Orders>) request.getAttribute("orderList");
+                     
+      try {
+          for (Orders order : orders) {
+              if (order.getProductId() == productId) {
+                    %>
                     <div class="row  d-flex align-items-center justify-content-center">
                         <div class="col-12 ratingForm w-50">
                             <h2 class="text-center">Rate this product:</h2>
@@ -111,7 +121,7 @@ String IMAGE_DEFAULT_PATH = "assets/database/productImage/";
                                 <input type="hidden" name="product_id" value="<%=productId%>" />
                                 <label for="rating" class="w-50">Rating:</label>
                                 <select name="rating" id="rating" class="w-100">
-                                    //5 stars so 5 options
+                                    <!-- 5 stars so 5 options -->
                                     <option value="1">1</option>
                                     <option value="2">2</option>
                                     <option value="3">3</option>
@@ -128,6 +138,17 @@ String IMAGE_DEFAULT_PATH = "assets/database/productImage/";
                             </form>
                         </div>
                     </div>
+                    <%
+                                    break; // Exit the loop once a matching order is found
+                                }
+                            }
+                        } catch (Exception e) {
+                            // Handle the exception
+                            e.printStackTrace();
+                        }
+                    %>
+
+
 
 
                     <h1 class="text-center">Product Ratings</h1>
@@ -147,7 +168,7 @@ String IMAGE_DEFAULT_PATH = "assets/database/productImage/";
                                 }
                             } else {
                         %>
-                        <p class="text-center"><strong>No ratings available for this product.</strong></p>
+                        <p class="text-center m-5"><strong>No ratings available for this product.</strong></p>
                         <%
                             }
                         %>
