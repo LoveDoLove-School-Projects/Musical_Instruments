@@ -2,9 +2,9 @@ package controllers;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
-import entities.Constants;
 import entities.Cards;
 import entities.Carts;
+import entities.Constants;
 import entities.Customers;
 import entities.OrderDetails;
 import entities.PaypalPayment;
@@ -45,7 +45,6 @@ public class TransactionServlet extends HttpServlet {
     private static final String CREDIT_OR_DEBIT_CARD = "CreditOrDebitCard";
     private static final String CCDC_VERIFY_URL = "/payments/ccdc/verify";
     private static final String BILLING_DETAILS_URL = "/pages/billingDetails";
-    private final PaypalServices paypalServices = new PaypalServices();
     private final TransactionServices transactionServices = new TransactionServices();
 
     @Override
@@ -99,7 +98,7 @@ public class TransactionServlet extends HttpServlet {
 
     private void processPaypalPayment(HttpServletRequest request, HttpServletResponse response, Session session, List<Carts> cartList, Customers customer) throws IOException {
         try {
-            String paymentResponse = paypalServices.createPayment(cartList, customer);
+            String paymentResponse = new PaypalServices(request).createPayment(cartList, customer);
             if (paymentResponse == null) {
                 RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Failed to create payment.", Constants.CART_URL);
                 return;
