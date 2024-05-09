@@ -32,6 +32,7 @@ public class RatingProductServlet extends HttpServlet {
     public static final String VIEW_PRODUCT_URL = "/pages/products/viewProduct";
     public static final String VIEW_PRODUCT_JSP_URL = "/pages/products/viewProduct.jsp";
 
+    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Session session = SessionUtilities.getLoginSession(request.getSession());
         if (session == null) {
@@ -57,7 +58,6 @@ public class RatingProductServlet extends HttpServlet {
             throw new DatabaseException(ex.getMessage());
         }
     }
-
 //    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 //        int productId = Integer.parseInt(request.getParameter("product_id"));
 //        Session session = SessionUtilities.getLoginSession(request.getSession());
@@ -76,5 +76,4 @@ public class RatingProductServlet extends HttpServlet {
 //        request.getRequestDispatcher(VIEW_PRODUCT_JSP_URL).forward(request, response);
 //
 //    }
-
 }

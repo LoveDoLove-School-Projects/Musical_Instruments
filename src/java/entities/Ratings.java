@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package entities;
 
 import jakarta.persistence.Basic;
@@ -15,20 +11,18 @@ import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+import jakarta.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 import java.util.Date;
-import javax.xml.bind.annotation.XmlRootElement;
 
-/**
- *
- * @author Kai Quan
- */
 @Entity
 @Table(name = "RATINGS")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Ratings.findAll", query = "SELECT r FROM Ratings r"),
-    @NamedQuery(name = "Ratings.findByOkid", query = "SELECT r FROM Ratings r WHERE r.okid = :okid"),
+    @NamedQuery(name = "Ratings.findByPkid", query = "SELECT r FROM Ratings r WHERE r.pkid = :pkid"),
     @NamedQuery(name = "Ratings.findByUserId", query = "SELECT r FROM Ratings r WHERE r.userId = :userId"),
     @NamedQuery(name = "Ratings.findByProductId", query = "SELECT r FROM Ratings r WHERE r.productId = :productId"),
     @NamedQuery(name = "Ratings.findByRatingScore", query = "SELECT r FROM Ratings r WHERE r.ratingScore = :ratingScore"),
@@ -40,17 +34,21 @@ public class Ratings implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
-    @Column(name = "OKID")
-    private Integer okid;
+    @Column(name = "PKID")
+    private Integer pkid;
     @Basic(optional = false)
+    @NotNull
     @Column(name = "USER_ID")
     private int userId;
     @Basic(optional = false)
+    @NotNull
     @Column(name = "PRODUCT_ID")
     private int productId;
     @Basic(optional = false)
+    @NotNull
     @Column(name = "RATING_SCORE")
     private int ratingScore;
+    @Size(max = 5000)
     @Column(name = "COMMENT")
     private String comment;
     @Column(name = "TIMESTAMP")
@@ -60,23 +58,23 @@ public class Ratings implements Serializable {
     public Ratings() {
     }
 
-    public Ratings(Integer okid) {
-        this.okid = okid;
+    public Ratings(Integer pkid) {
+        this.pkid = pkid;
     }
 
-    public Ratings(Integer okid, int userId, int productId, int ratingScore) {
-        this.okid = okid;
+    public Ratings(Integer pkid, int userId, int productId, int ratingScore) {
+        this.pkid = pkid;
         this.userId = userId;
         this.productId = productId;
         this.ratingScore = ratingScore;
     }
 
-    public Integer getOkid() {
-        return okid;
+    public Integer getPkid() {
+        return pkid;
     }
 
-    public void setOkid(Integer okid) {
-        this.okid = okid;
+    public void setPkid(Integer pkid) {
+        this.pkid = pkid;
     }
 
     public int getUserId() {
@@ -122,7 +120,7 @@ public class Ratings implements Serializable {
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (okid != null ? okid.hashCode() : 0);
+        hash += (pkid != null ? pkid.hashCode() : 0);
         return hash;
     }
 
@@ -133,7 +131,7 @@ public class Ratings implements Serializable {
             return false;
         }
         Ratings other = (Ratings) object;
-        if ((this.okid == null && other.okid != null) || (this.okid != null && !this.okid.equals(other.okid))) {
+        if ((this.pkid == null && other.pkid != null) || (this.pkid != null && !this.pkid.equals(other.pkid))) {
             return false;
         }
         return true;
@@ -141,7 +139,15 @@ public class Ratings implements Serializable {
 
     @Override
     public String toString() {
-        return "entities.Ratings[ okid=" + okid + " ]";
+        StringBuilder sb = new StringBuilder();
+        sb.append("Ratings{");
+        sb.append("pkid=").append(pkid);
+        sb.append(", userId=").append(userId);
+        sb.append(", productId=").append(productId);
+        sb.append(", ratingScore=").append(ratingScore);
+        sb.append(", comment=").append(comment);
+        sb.append(", timestamp=").append(timestamp);
+        sb.append('}');
+        return sb.toString();
     }
-    
 }
