@@ -48,7 +48,7 @@ public class AddStaffServlet extends HttpServlet {
         String phoneNumber = request.getParameter("phoneNumber");
         Staffs staff = new Staffs(username, email, email, address, phoneNumber, gender); // Set default password as email
         if (!validateStaffDetails(staff)) {
-            RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Invalid staff details.", Constants.ADMIN_SEARCH_STAFF_URL);
+            RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Staff email address already existed!", "/pages/superAdmin/addStaff");
             return;
         }
         if (!addStaffToDb(staff)) {
@@ -62,6 +62,15 @@ public class AddStaffServlet extends HttpServlet {
 
     private boolean addStaffToDb(Staffs staff) {
         try {
+            Staffs existingStaff = entityManager.createQuery("SELECT s FROM Staffs s WHERE s.email = :email", Staffs.class)
+                    .setParameter("email", staff.getEmail())
+                    .getResultStream()
+                    .findFirst()
+                    .orElse(null);
+            if (existingStaff != null) {
+                return false;
+            }
+
             userTransaction.begin();
             staff.setUsername(staff.getUsername());
             staff.setPassword(AesUtilities.aes256EcbEncrypt(staff.getEmail()));
@@ -89,6 +98,15 @@ public class AddStaffServlet extends HttpServlet {
         if (!ValidationUtilities.isEmailValid(staff.getEmail())) {
             return false;
         }
-        return ValidationUtilities.isPhoneNumberValid(staff.getPhoneNumber());
+        if (!ValidationUtilities.isPhoneNumberValid(staff.getPhoneNumber())) {
+            return false;
+        }
+        Staffs existingStaff = entityManager.createQuery("SELECT s FROM Staffs s WHERE s.email = :email", Staffs.class)
+                .setParameter("email", staff.getEmail())
+                .getResultStream()
+                .findFirst()
+                .orElse(null);
+        return existingStaff == null;
     }
+
 }

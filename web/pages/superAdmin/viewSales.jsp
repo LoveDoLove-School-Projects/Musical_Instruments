@@ -75,14 +75,14 @@
                                     <thead>
                                         <tr>
                                             <th>Product Name</th>
-                                            <th>Total Sales</th>
+                                            <th style="text-align: center">Total Quantity Sold(s)</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <c:forEach var="sales" items="${top10Products}">
                                             <tr>
                                                 <td>${sales.getProductName()}</td>
-                                                <td>${sales.getTotalQuantity()}</td>
+                                                <td style="text-align: center">${sales.getTotalQuantity()}</td>
                                             </tr>
                                         </c:forEach>
                                     </tbody>

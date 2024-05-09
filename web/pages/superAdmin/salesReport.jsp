@@ -23,13 +23,11 @@
                             <div class="card-body">
                                 <table class="table">
                                     <thead>
-                                        <tr><th>Date: ${startingDate} <% if(request.getAttribute("reportType") != "day") { %> ~ ${endingDate} <% } %></th></tr>
+                                        <tr><th>Sales Report for Date: <% if ("day".equals(request.getAttribute("reportType")) || request.getAttribute("date") != null) { %>${startingDate}<% } else { %> ${startingDate} until ${endingDate}<% } %></th></tr>
                                         <tr>
-
                                             <th>Transaction Number</th>
                                             <th style="text-align: center">Total Amount (RM)</th>
                                         </tr>
-
                                     </thead>
                                     <tbody>
                                         <c:forEach var="sales" items="${salesList}">
@@ -40,10 +38,8 @@
                                         </c:forEach>
                                         <tr><td> </td> <td> </td></tr>
                                         <tr>
-
                                             <td><strong>Total Revenue</strong></td>
                                             <td style="text-align: center"><strong>${totalRevenue}</strong></td>
-
                                         </tr>
                                     </tbody>
                                 </table>

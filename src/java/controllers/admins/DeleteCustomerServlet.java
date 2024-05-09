@@ -1,7 +1,6 @@
 package controllers.admins;
 
 import entities.Constants;
-import entities.Archivecustomers;
 import entities.Customers;
 import exceptions.DatabaseException;
 import jakarta.annotation.Resource;
@@ -34,9 +33,7 @@ public class DeleteCustomerServlet extends HttpServlet {
         try {
             userTransaction.begin();
             Customers customer = entityManager.find(Customers.class, Integer.valueOf(userID));
-            Archivecustomers archiveCustomer = new Archivecustomers(customer);
             entityManager.remove(customer);
-            entityManager.persist(archiveCustomer);
             userTransaction.commit();
             SecurityLog.addInternalSecurityLog(request, "Customer: " + customer.getUsername() + " deleted successfully.");
             RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.SUCCESS, customer.getUsername() + " deleted successfully.", Constants.ADMIN_SEARCH_CUSTOMER_URL);

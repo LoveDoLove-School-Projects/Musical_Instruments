@@ -103,22 +103,18 @@ public class SalesServlet extends HttpServlet {
             }
             productSales.put(productName, totalQuantity);
         }
-        // Create a new list of combined sales
         List<Sales> combinedSalesList = new ArrayList<>();
         for (Map.Entry<String, Integer> entry : productSales.entrySet()) {
             String productName = entry.getKey();
             Integer totalQuantity = entry.getValue();
             combinedSalesList.add(new Sales(productName, null, totalQuantity, null));
         }
-        // Sort the combined sales list in descending order based on total quantity
         Collections.sort(combinedSalesList, new Comparator<Sales>() {
             @Override
             public int compare(Sales sale1, Sales sale2) {
-                // Compare total quantities in descending order
                 return Integer.compare(sale2.getTotalQuantity(), sale1.getTotalQuantity());
             }
         });
-        // Handle other report types here
         request.setAttribute("top10Products", combinedSalesList);
         request.getRequestDispatcher(VIEW_SALES_JSP_URL).forward(request, response);
     }
@@ -159,13 +155,14 @@ public class SalesServlet extends HttpServlet {
             }
             // Set attributes for JSP and forward to sales report page
             request.setAttribute("salesList", reports.getSalesList());
+            request.setAttribute("date", date);
             request.setAttribute("reportType", reportType);
             request.setAttribute("startingDate", dateFormat.format(reports.getStartingDate()));
             request.setAttribute("endingDate", dateFormat.format(reports.getEndingDate()));
             request.setAttribute("totalRevenue", reports.getTotalRevenue());
             request.getRequestDispatcher(SALES_REPORT_JSP_URL).forward(request, response);
         } catch (Exception ex) {
-            RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Please choose a valid date to fetch the sales!", VIEW_SALES_URL);
+            RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Please choose a valid date to generate the sales!", VIEW_SALES_URL);
         }
     }
 
