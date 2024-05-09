@@ -53,12 +53,13 @@ public class UpdateOrderServlet extends HttpServlet {
         }
         String transaction_number = request.getParameter("transaction_number");
         String orderNumber = request.getParameter("order_number");
-        Transactions transactions = entityManager.createNamedQuery("Transactions.findByTransactionNumberAndUserId", Transactions.class)
-                .setParameter("transactionNumber", transaction_number)
-                .setParameter("userId", userId)
-                .getSingleResult();
+        Transactions transactions = entityManager.createNamedQuery("Transactions.findByTransactionNumberAndUserId", Transactions.class).setParameter("transactionNumber", transaction_number).setParameter("userId", userId).getSingleResult();
+        if(transactions==null){
+                 RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "No transaction record", "/");
+            }
         List<Carts> carts = entityManager.createNamedQuery("Carts.findByCustomerId").setParameter("customerId", userId).getResultList();
         try {
+            
             userTransaction.begin();
             for (Carts userCart : carts) {
                 Products products = entityManager.find(Products.class, userCart.getProductId());

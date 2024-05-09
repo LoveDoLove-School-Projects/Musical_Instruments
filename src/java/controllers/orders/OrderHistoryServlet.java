@@ -31,12 +31,9 @@ public class OrderHistoryServlet extends HttpServlet {
             return;
         }
         List<Orders> orders = entityManager.createNamedQuery("Orders.findByUserId").setParameter("userId", sessionChkUser.getUserId()).getResultList();
-        if (orders.isEmpty() || orders == null) {
-            RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Your order history is empty", "/");
-        } else {
-            request.setAttribute("orderLists", orders);
-            request.setAttribute("entityManager", entityManager);
-            request.getRequestDispatcher(Constants.ORDERHISTORY_JSP_URL).forward(request, response);
-        }
+        request.setAttribute("orderLists", orders);
+        request.setAttribute("entityManager", entityManager);
+        request.getRequestDispatcher(Constants.ORDERHISTORY_JSP_URL).forward(request, response);
+
     }
 }

@@ -9,6 +9,7 @@
 <%@ page import="jakarta.persistence.EntityManager"%>
 <%@ page import="java.util.Set"%>
 <%@ page import="java.util.HashSet"%>
+<%@ page import="java.lang.Exception" %>
 <%
 int numberOrder=0;
 %>
@@ -26,8 +27,8 @@ int numberOrder=0;
             <div class="row">
                 <div class="col-md-12 m-3">
                     <div class="text-center panel-heading">
-                            <h3 class="panel-title">Order History</h3>
-                        </div>
+                        <h3 class="panel-title">Order History</h3>
+                    </div>
                     <div class="panel panel-default">
                         <table class="table table-striped table-bordered table-hover">
                             <thead>
@@ -38,18 +39,25 @@ int numberOrder=0;
                                     <th>Order Date</th>
                                 </tr>
                             </thead>
-
                             <tbody>
                                 <%
-                                      EntityManager entityManager = (EntityManager) request.getAttribute("entityManager");
-                                     List<Orders> orders = (List<Orders>) request.getAttribute("orderLists");
-                                     Set<String> processedOrderNumbers = new HashSet<>();
-                                     for (Orders orderDetails : orders) {
-                                       String orderNumber = orderDetails.getOrderNumber();
-                                        if (!processedOrderNumbers.contains(orderNumber)) {
+                                EntityManager entityManager = (EntityManager) request.getAttribute("entityManager");
+                                List<Orders> orders = (List<Orders>) request.getAttribute("orderLists");
+                                Set<String> processedOrderNumbers = new HashSet<>();
+                                for (Orders orderDetails : orders) {
+                                    String orderNumber = orderDetails.getOrderNumber();
+                                    if (!processedOrderNumbers.contains(orderNumber)) {
                                         processedOrderNumbers.add(orderNumber);
-                                            Transactions transactions = entityManager.createNamedQuery("Transactions.findByOrderNumber", Transactions.class).setParameter("orderNumber", orderDetails.getOrderNumber()).getSingleResult();
-                                            numberOrder++;
+                                        Transactions transactions = null;
+                                        try {
+                                            transactions = entityManager.createNamedQuery("Transactions.findByOrderNumber", Transactions.class)
+                                                    .setParameter("orderNumber", orderDetails.getOrderNumber())
+                                                    .getSingleResult();
+                                        } catch (Exception e) {
+                                            // If no result found, skip to the next iteration
+                                            continue;
+                                        }
+                                        numberOrder++;
                                 %>
                                 <tr class="clickable-row" data-href="pages/orderhistory/viewOrderHistory?order_number=<%= orderDetails.getOrderNumber() %>">
                                     <td><%=numberOrder%></td>
@@ -59,9 +67,10 @@ int numberOrder=0;
                                 </tr>
                                 <%
                                     }
-                                    }
+                                }
                                 %>
                             </tbody>
+
                         </table>
                     </div>
                 </div>

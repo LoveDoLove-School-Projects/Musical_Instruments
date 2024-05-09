@@ -20,7 +20,7 @@
             <section class="section3">
                 <div class="container-fluid">
                     <div class="row m-2 m-xxl-5 p-0 p-xxl-5 d-flex align-items-center justify-content-center">
-                        <div class="col-12 col-xxl-12"  id="section3" >
+                        <div class="col-12 col-xxl-12 productTitle"  id="section3">
                             <div class="m-5 d-block text-center" style="animation:fadeInUp 5s">
                                 <h1>This is our product that we have</h1>
                                 <h5>Here have 4 category of products to let you choose</h5>
@@ -122,7 +122,6 @@
                                 %>
                             </div>
                         </div>
-
                     </div>
                 </div>
             </section>

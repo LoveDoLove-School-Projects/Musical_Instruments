@@ -1,7 +1,7 @@
 package controllers.carts;
 
-import entities.Constants;
 import entities.Carts;
+import entities.Constants;
 import entities.Session;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -31,11 +31,9 @@ public class CartServlet extends HttpServlet {
             return;
         }
         List<Carts> carts = entityManager.createNamedQuery("Carts.findByCustomerId").setParameter("customerId", session.getUserId()).getResultList();
-        if (carts == null || carts.isEmpty()) {
-            RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Your cart is empty , you can add from product page ", Constants.PRODUCT_URL);
-        } else {
+      
             request.setAttribute("cartDetails", carts);
             request.getRequestDispatcher(Constants.CART_JSP_URL).forward(request, response);
-        }
+        
     }
 }

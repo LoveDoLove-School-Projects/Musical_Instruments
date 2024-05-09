@@ -38,6 +38,7 @@ double subTotal=0;
                     <tbody class="text-center">
                         <%
                               List<Carts> cartsDetails = (List<Carts>) request.getAttribute("cartDetails");
+                               if (!cartsDetails.isEmpty()&&cartsDetails!=null) {
                               for (Carts carts : cartsDetails) {
                               numberCart++;
                               subTotal+=carts.getProductTotalprice();
@@ -96,6 +97,7 @@ double subTotal=0;
 
                     <%
                         }
+                        }
                     %>
 
                     </tbody>
@@ -107,9 +109,14 @@ double subTotal=0;
                 <div class="w-100 fixed-bottom CheckoutBar">
                     <div class="row align-items-center justify-content-center">
                         <h4 class="col-10 d-flex justify-content-end">Total : <strong class="chkOutPrice">  RM<%=String.format("%.2f",subTotal)%></strong></h4>
+                      
                         <form action="payments/checkout" method="post" class="col-2 text-center">
                             <input type="submit" class="w-100 p-4 text-center ChkoutBtn" name="chekout" value="Check Out">
+                            <input type="hidden" name="subTotal" value="<%=subTotal%>"/>
                         </form>
+
+                      
+
                     </div>
                 </div>
             </section>
