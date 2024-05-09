@@ -100,27 +100,31 @@ List<Products> productDetails = (List<Products>) request.getAttribute("products"
             document.getElementById("searchQuery").addEventListener("input", function () {
                 let searchQuery = this.value.trim();
                 let xhr = new XMLHttpRequest();
-                xhr.responseType = 'json'; // Set responseType to 'json'
+                xhr.responseType = 'json';
                 xhr.onreadystatechange = function () {
                     if (this.readyState == 4 && this.status == 200) {
                         let jsonResponse = xhr.response;
-                        let result = ''; // Initialize an empty string to accumulate HTML
-                        for (let i = 0; i < jsonResponse.length; i++) {
-                            let product = jsonResponse[i];
-                            let productId = product.productId;
-                            let name = product.name;
-                            let price = product.price;
-                            let color = product.color;
-                            let quantity = product.quantity;
-                            let category = product.category;
-                            let pictureBase64 = arrayBufferToBase64(product.image);
-                            let image = 'data:image/png;base64,' + pictureBase64;
-                            result += `
-                            <div class=list><a href="pages/products/viewProduct?product_id=` + productId + `">&nbsp<img src=` + image + ` class="image">&nbsp&nbsp&nbsp<b>Name:</b>` + name + `
-                            &nbsp&nbsp&nbsp<b>Category:</b>` + category + `&nbsp&nbsp&nbsp<b>Price:</b>` + price + `</a></div>
-                `;
+                        if (jsonResponse.length === 0) {
+                            $("#liveSearchResults").html('<div class="alert alert-danger"><strong>No results found!</strong></div>');
+                        } else {
+                            let result = '';
+                            for (let i = 0; i < jsonResponse.length; i++) {
+                                let product = jsonResponse[i];
+                                let productId = product.productId;
+                                let name = product.name;
+                                let price = product.price;
+                                let color = product.color;
+                                let quantity = product.quantity;
+                                let category = product.category;
+                                let pictureBase64 = arrayBufferToBase64(product.image);
+                                let image = 'data:image/png;base64,' + pictureBase64;
+                                result += `
+                                <div class=list><a href="pages/products/viewProduct?product_id=` + productId + `">&nbsp<img src= ` + image + `  class="image">&nbsp&nbsp&nbsp<b>Name:</b> ` + name + `
+                                &nbsp&nbsp&nbsp<b>Category:</b>` + category + `&nbsp&nbsp&nbsp<b>Price:</b>` + price + `</a></div>
+                                `;
+                            }
+                            $("#liveSearchResults").html(result);
                         }
-                        $("#liveSearchResults").html(result)
                     }
                 };
                 xhr.open("POST", "api/products/productsearch?searchQuery=" + searchQuery, true);
@@ -136,7 +140,6 @@ List<Products> productDetails = (List<Products>) request.getAttribute("products"
                 }
                 return btoa(binary);
             }
-
         </script>
     </body>
 </html>
