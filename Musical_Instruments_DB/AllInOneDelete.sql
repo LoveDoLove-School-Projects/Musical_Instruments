@@ -9,3 +9,5 @@ DROP TABLE InternalSecurityLog;
 DROP TABLE Staffs;
 DROP TABLE Cards;
 DROP TABLE Transactions;
+DROP TABLE Orders;
+DROP TABLE Ratings;
