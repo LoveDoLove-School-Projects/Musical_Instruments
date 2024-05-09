@@ -12,9 +12,6 @@
     </head>
     <body>
         <jsp:include page="/defaults/header.jsp" />
-        <%
-        List<Transactions> transactionList = (List<Transactions>) request.getAttribute("transactionList");
-        %>
         <div class="container">
             <div class="row">
                 <div class="col-md-12 m-3">
@@ -37,21 +34,18 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <% if (transactionList != null) {
-                                        for (Transactions transaction : transactionList) {
-                                    %>
-                                    <tr class="clickable-row" data-href="payments/receipt?transaction_number=<%=transaction.getTransactionNumber()%>">
-                                        <td><%=transaction.getTransactionNumber()%></td>
-                                        <td><%=transaction.getOrderNumber()%></td>
-                                        <td><%=transaction.getPaymentMethod()%></td>
-                                        <td><%=transaction.getCurrency()%></td>
-                                        <td><%=transaction.getTotalAmount()%></td>
-                                        <td><%=transaction.getTransactionStatus()%></td>
-                                        <td><%=transaction.getDateCreatedGmt()%></td>
-                                        <td><%=transaction.getDateUpdatedGmt()%></td>
-                                    </tr>
-                                    <% }
-                                    } %>
+                                    <c:forEach var="transaction" items="${transactionList}">
+                                        <tr class="clickable-row" data-href="payments/receipt?transaction_number=${transaction.transactionNumber}">
+                                            <td>${transaction.transactionNumber}</td>
+                                            <td>${transaction.orderNumber}</td>
+                                            <td>${transaction.paymentMethod}</td>
+                                            <td>${transaction.currency}</td>
+                                            <td>${transaction.totalAmount}</td>
+                                            <td>${transaction.transactionStatus}</td>
+                                            <td>${transaction.dateCreatedGmt}</td>
+                                            <td>${transaction.dateUpdatedGmt}</td>
+                                        </tr>
+                                    </c:forEach>
                                 </tbody>
                             </table>
                         </div>
