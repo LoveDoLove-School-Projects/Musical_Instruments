@@ -31,7 +31,7 @@ public class ManageStaffServlet extends HttpServlet {
         }
         staff = staffList.get(0);
         session.removeAttribute("staffDetails");
-        session.setAttribute("staffDetails", staff);
+        request.getSession().setAttribute("staffDetails", staff);
         request.getRequestDispatcher("/pages/admins/manageStaff.jsp").forward(request, response);
     }
 }

@@ -3,10 +3,11 @@
 <c:set var="path" value="${pageContext.request.contextPath}" />
 <c:set var="basePath" value="${pageContext.request.scheme}://${pageContext.request.serverName}:${pageContext.request.serverPort}${path}/" />
 <%@ page import="entities.Products" %>
-<!DOCTYPE html>
+<jsp:useBean id="productDetails" class="entities.Products" scope="session"></jsp:useBean>
+    <!DOCTYPE html>
 
-<html>
-    <head>
+    <html>
+        <head>
         <jsp:include page="/defaults/head.jsp" />
         <title>Modify Customer Information</title>
         <style>
@@ -30,7 +31,7 @@
                 <div class="col-md-6 offset-md-3">
                     <h1 class="text-center mb-4">Product Modification</h1>
                     <form id="modifyForm" action="pages/staffs/modifyProduct" enctype="multipart/form-data" method="POST" onsubmit="return confirmUpdate()">
-                        <% Products productDetails = (Products) session.getAttribute("productDetails"); %>
+                        <% //Products productDetails = (Products) session.getAttribute("productDetails"); %>
                         <div class="form-group">
                             <label for="productId">Product ID: <%=productDetails.getProductId()%></label>
                             <input type="hidden" class="form-control" name="productId" value="<%=productDetails.getProductId()%>">

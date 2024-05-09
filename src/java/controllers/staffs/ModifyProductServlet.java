@@ -55,7 +55,7 @@ public class ModifyProductServlet extends HttpServlet {
         String category = request.getParameter("category");
         InputStream pictureStream = request.getPart("image").getInputStream();
         if (pictureStream == null) {
-//            RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Error uploading picture.", Constants.PROFILE_URL);
+            RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Error uploading picture.", "/pages/staffs/modifyProduct");
             return;
         }
         byte[] pictureBytes = pictureStream.readAllBytes();

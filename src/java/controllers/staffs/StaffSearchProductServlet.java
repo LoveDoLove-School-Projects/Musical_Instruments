@@ -49,6 +49,7 @@ public class StaffSearchProductServlet extends HttpServlet {
             }
             Products product = productList.get(0);
             HttpSession session = request.getSession();
+            request.getSession().setAttribute("productDetails", product);
             session.setAttribute("productDetails", product);
             RedirectUtilities.sendRedirect(request, response, "/pages/staffs/manageProduct");
         } catch (NumberFormatException ex) {

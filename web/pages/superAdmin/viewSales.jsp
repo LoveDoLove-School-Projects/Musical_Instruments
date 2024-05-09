@@ -17,7 +17,7 @@
                 <br><h1><i class="fas fa-chart-line">  View Sales</i></h1>
             </div>
             <div class="container mt-4">
-                <!-- Sales Records Form -->
+
                 <div class="row">
                     <div class="col-md-6">
                         <div class="card">
@@ -38,7 +38,6 @@
                             </div>
                         </div>
                     </div>
-                    <!-- Sales Report Form -->
                     <div class="col-md-6">
                         <div class="card">
                             <div class="card-header">

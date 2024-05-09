@@ -40,7 +40,8 @@ public class ManageCustomerServlet extends HttpServlet {
         }
         customer = customerList.get(0);
         session.removeAttribute("customerDetails");
-        session.setAttribute("customerDetails", customer);
+//        session.setAttribute("customerDetails", customer);
+        request.getSession().setAttribute("customerDetails", customer);
         request.getRequestDispatcher("/pages/staffs/manageCustomer.jsp").forward(request, response);
     }
 }
