@@ -2,8 +2,6 @@
 <%@ page contentType="text/html" pageEncoding="UTF-8" %>
 <c:set var="path" value="${pageContext.request.contextPath}" />
 <c:set var="basePath" value="${pageContext.request.scheme}://${pageContext.request.serverName}:${pageContext.request.serverPort}${path}/" />
-<%@ page import="java.util.List"%>
-<%@ page import="entities.Securitylog"%>
 <!DOCTYPE html>
 <html>
     <head>
@@ -12,9 +10,6 @@
     </head>
     <body>
         <jsp:include page="/defaults/header.jsp" />
-        <%
-        List<Securitylog> securitylogs = (List<Securitylog>) request.getAttribute("securitylogs");
-        %>
         <div class="container">
             <div class="row">
                 <div class="col-md-12 m-3">
@@ -35,18 +30,15 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <% if (securitylogs != null) {
-                                        for (Securitylog securitylog : securitylogs) {
-                                    %>
-                                    <tr>
-                                        <td><%=securitylog.getActionDate()%></td>
-                                        <td><%=securitylog.getUsername()%></td>
-                                        <td><%=securitylog.getAction()%></td>
-                                        <td><%=securitylog.getIpAddress()%></td>
-                                        <td><%=securitylog.getUserAgent()%></td>
-                                    </tr>
-                                    <% }
-                                    } %>
+                                    <c:forEach var="securitylog" items="${securitylogs}">
+                                        <tr>
+                                            <td>${securitylog.actionDate}</td>
+                                            <td>${securitylog.username}</td>
+                                            <td>${securitylog.action}</td>
+                                            <td>${securitylog.ipAddress}</td>
+                                            <td>${securitylog.userAgent}</td>
+                                        </tr>
+                                    </c:forEach>
                                 </tbody>
                             </table>
                         </div>

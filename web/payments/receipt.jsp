@@ -2,12 +2,12 @@
 <%@ page contentType="text/html" pageEncoding="UTF-8" %>
 <c:set var="path" value="${pageContext.request.contextPath}" />
 <c:set var="basePath" value="${pageContext.request.scheme}://${pageContext.request.serverName}:${pageContext.request.serverPort}${path}/" />
+<jsp:useBean id="transaction" class="entities.Transactions" scope="request" />
 <%
 response.setHeader("Cache-Control", "no-store");
 %>
 <!DOCTYPE html>
 <html>
-
     <head>
         <jsp:include page="/defaults/head.jsp" />
         <title>Receipt Details</title>
@@ -23,11 +23,11 @@ response.setHeader("Cache-Control", "no-store");
                         <tbody>
                             <tr>
                                 <th scope="row">Transaction Created Date:</th>
-                                <td>${transaction.getDateCreatedGmt()}</td>
+                                <td>${transaction.dateCreatedGmt}</td>
                             </tr>
                             <tr>
                                 <th scope="row">Transaction Updated Date:</th>
-                                <td>${transaction.getDateUpdatedGmt()}</td>
+                                <td>${transaction.dateUpdatedGmt}</td>
                             </tr>
                             <tr>
                                 <th scope="row">Merchant:</th>
@@ -35,19 +35,19 @@ response.setHeader("Cache-Control", "no-store");
                             </tr>
                             <tr>
                                 <th scope="row">Transaction Number:</th>
-                                <td>${transaction.getTransactionNumber()}</td>
+                                <td>${transaction.transactionNumber}</td>
                             </tr>
                             <tr>
                                 <th scope="row">Order Number:</th>
-                                <td>${transaction.getOrderNumber()}</td>
+                                <td>${transaction.orderNumber}</td>
                             </tr>
                             <tr>
                                 <th class="row">Transaction Status:</th>
-                                <td>${transaction.getTransactionStatus()}</td>
+                                <td>${transaction.transactionStatus}</td>
                             </tr>
                             <tr>
                                 <th scope="row">Payment Method:</th>
-                                <td>${transaction.getPaymentMethod()}</td>
+                                <td>${transaction.paymentMethod}</td>
                             </tr>
                             <tr>
                                 <th scope="row">Amount:</th>

@@ -2,6 +2,8 @@
 <%@ page contentType="text/html" pageEncoding="UTF-8" %>
 <c:set var="path" value="${pageContext.request.contextPath}" />
 <c:set var="basePath" value="${pageContext.request.scheme}://${pageContext.request.serverName}:${pageContext.request.serverPort}${path}/" />
+<jsp:useBean id="transaction" class="entities.PaypalPayment" scope="session" />
+<jsp:useBean id="payer" class="entities.PaypalPayment" scope="session" />
 <%
 response.setHeader("Cache-Control", "no-store");
 %>

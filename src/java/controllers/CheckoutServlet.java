@@ -34,26 +34,18 @@ public class CheckoutServlet extends HttpServlet {
             return;
         }
         List<Carts> cartList = entityManager.createNamedQuery("Carts.findByCustomerId", Carts.class).setParameter("customerId", session.getUserId()).getResultList();
-        if (cartList == null) {
+        if (cartList == null || cartList.isEmpty()) {
             RedirectUtilities.redirectWithMessage(request, response, RedirectType.DANGER, "Cart is empty.", Constants.CART_URL);
             return;
         }
-
-        double subTotal = Double.valueOf(request.getParameter("subTotal"));
-        if (subTotal == 0) {
-            RedirectUtilities.redirectWithMessage(request, response, RedirectType.DANGER, "Your cart is empty", Constants.CART_URL);
-            return;
-        } else {
-            OrderDetails orderDetails = transactionServices.getOrderDetails(cartList);
-            request.setAttribute("cartList", cartList);
-            request.setAttribute("subtotal", orderDetails.getSubtotal());
-            request.setAttribute("shipping", orderDetails.getShipping());
-            request.setAttribute("tax", orderDetails.getTax());
-            request.setAttribute("total", orderDetails.getTotal());
-            initBillingDetails(request, session);
-            request.getRequestDispatcher(CHECKOUT_JSP_URL).forward(request, response);
-        }
-
+        OrderDetails orderDetails = transactionServices.getOrderDetails(cartList);
+        request.setAttribute("cartList", cartList);
+        request.setAttribute("subtotal", orderDetails.getSubtotal());
+        request.setAttribute("shipping", orderDetails.getShipping());
+        request.setAttribute("tax", orderDetails.getTax());
+        request.setAttribute("total", orderDetails.getTotal());
+        initBillingDetails(request, session);
+        request.getRequestDispatcher(CHECKOUT_JSP_URL).forward(request, response);
     }
 
     private boolean initBillingDetails(HttpServletRequest request, Session session) {

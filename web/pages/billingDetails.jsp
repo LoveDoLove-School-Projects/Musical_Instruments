@@ -2,15 +2,6 @@
 <%@ page contentType="text/html" pageEncoding="UTF-8" %>
 <c:set var="path" value="${pageContext.request.contextPath}" />
 <c:set var="basePath" value="${pageContext.request.scheme}://${pageContext.request.serverName}:${pageContext.request.serverPort}${path}/" />
-<%@ page import="java.security.Principal" %>
-<%@ page import="entities.Session" %>
-<%@ page import="entities.Role" %>
-<%
-Principal principal = request.getUserPrincipal();
-String j_username = principal == null ? null : principal.getName();
-boolean isAdmin = j_username != null ? true : false;
-Session user_session = (Session) session.getAttribute("user_session");
-%>
 <!DOCTYPE html>
 <html>
 
