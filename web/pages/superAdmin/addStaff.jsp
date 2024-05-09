@@ -48,7 +48,7 @@
                         </div>
                         <div class="form-group">
                             <button type="submit" class="btn btn-success">Add Staff</button>
-                            <button type="button" class="btn btn-danger">Cancel</button>
+                            <a href="pages/admins/searchStaff" class="btn btn-danger">Cancel</a>
                         </div>
                     </form>
                 </div>
