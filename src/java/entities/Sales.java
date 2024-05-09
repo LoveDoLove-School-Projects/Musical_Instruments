@@ -22,12 +22,10 @@ public class Sales {
         this.totalAmount = totalAmount;
     }
 
-    public Sales(int productId, String productName, Date orderDate, int totalQuantity, BigDecimal totalAmount, byte[] productImage) {
+    public Sales(int productId, String productName, int totalQuantity, byte[] productImage) {
         this.productId = productId;
         this.productName = productName;
-        this.orderDate = orderDate;
         this.totalQuantity = totalQuantity;
-        this.totalAmount = totalAmount;
         this.productImage = productImage;
     }
 
@@ -79,4 +77,17 @@ public class Sales {
         this.productImage = productImage;
     }
 
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Sales{");
+        sb.append("productId=").append(productId);
+        sb.append(", productName=").append(productName);
+        sb.append(", orderDate=").append(orderDate);
+        sb.append(", totalQuantity=").append(totalQuantity);
+        sb.append(", totalAmount=").append(totalAmount);
+        sb.append(", productImage=").append(productImage);
+        sb.append('}');
+        return sb.toString();
+    }
 }

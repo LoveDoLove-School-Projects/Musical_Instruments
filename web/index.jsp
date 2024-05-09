@@ -3,8 +3,9 @@
 <c:set var="path" value="${pageContext.request.contextPath}" />
 <c:set var="basePath" value="${pageContext.request.scheme}://${pageContext.request.serverName}:${pageContext.request.serverPort}${path}/" />
 <%@ page import="java.util.List"%>
-<%@ page import="entities.Sales"%>
 <%@ page import="java.util.Base64"%>
+<%@ page import="entities.Sales"%>
+<%@ page import="dao.IndexDao"%>
 <!DOCTYPE html>
 <html>
 
@@ -88,28 +89,29 @@
                 <text text-anchor="middle" x="50" y="12" font-size="6" fill="white" fill-opacity="0.1">OUR TOP PRODUCTS</text>
                 <text text-anchor="middle" x="50" y="12" font-size="6" fill="url(#wave)"  fill-opacity="1">OUR TOP PRODUCTS</text>
                 </svg>
-                <!-- ${topsales} -->
                 <div class="row">
                     <%
-                        List<Sales> salesList = (List<Sales>) request.getAttribute("topsales");
-                        if (salesList != null) {
-                        for (int i = 0; i < 3; i++) {
-                            String pictureBase64 = Base64.getEncoder().encodeToString(salesList.get(i).getProductImage());
-                            String imageSrc = "data:image/png;base64," + pictureBase64; // Change "image/png" based on the actual image type
+                    List<Sales> salesList = dao.IndexDao.getTopProducts();
+                    if (salesList != null) {
+                        for (Sales sale : salesList) {
+                            if (sale.getProductImage() != null) { // Add null check here
+                                String pictureBase64 = java.util.Base64.getEncoder().encodeToString(sale.getProductImage());
+                                String imageSrc = "data:image/png;base64," + pictureBase64;
                     %>
                     <div class="col">
                         <div class="card">
-                            <a href="pages/viewProduct?product_id=<%=salesList.get(i).getProductId()%>">
+                            <a href="pages/products/viewProduct?product_id=<%=sale.getProductId()%>">
                                 <figure>
-                                    <img src="<%=imageSrc%>" alt="<%=salesList.get(i).getProductName()%>" class="imagetop">
-                                    <figcaption><%=salesList.get(i).getProductName()%></figcaption>
+                                    <img src="<%=imageSrc%>" alt="<%=sale.getProductName()%>" class="imagetop">
+                                    <figcaption><%=sale.getProductName()%></figcaption>
                                 </figure>
                             </a>
                         </div>
                     </div>
                     <%
+                            }
                         }
-                        }
+                    }
                     %>
                 </div>
             </div>
