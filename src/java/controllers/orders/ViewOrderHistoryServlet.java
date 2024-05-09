@@ -44,5 +44,4 @@ public class ViewOrderHistoryServlet extends HttpServlet {
         request.setAttribute("total", orderDetails.getTotal());
         request.getRequestDispatcher(Constants.VIEWORDERHISTORY_JSP_URL).forward(request, response);
     }
-
 }

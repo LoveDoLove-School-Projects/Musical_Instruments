@@ -29,8 +29,8 @@ public class TransactionServices {
         orderDetail.setTotal(subtotal + tax + shipping);
         return orderDetail;
     }
-    
-     public OrderDetails getOrderHistoryDetails(List<Orders> orderList) {
+
+    public OrderDetails getOrderHistoryDetails(List<Orders> orderList) {
         OrderDetails orderDetail = new OrderDetails();
         double subtotal = 0;
         for (Orders orders : orderList) {

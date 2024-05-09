@@ -42,7 +42,6 @@ public class SalesServlet extends HttpServlet {
         for (Orders order : orderList) {
             salesList.add(new Sales(order.getProductName(), order.getOrderDate(), order.getProductQuantity(), order.getProductTotalprice()));
         }
-
         Map<String, Integer> productSales = new HashMap<>();
         for (Sales sale : salesList) {
             String productName = sale.getProductName();
@@ -52,7 +51,6 @@ public class SalesServlet extends HttpServlet {
             }
             productSales.put(productName, totalQuantity);
         }
-
         // Create a new list of combined sales
         List<Sales> combinedSalesList = new ArrayList<>();
         for (Map.Entry<String, Integer> entry : productSales.entrySet()) {
@@ -60,7 +58,6 @@ public class SalesServlet extends HttpServlet {
             Integer totalQuantity = entry.getValue();
             combinedSalesList.add(new Sales(productName, null, totalQuantity, null));
         }
-
         // Sort the combined sales list in descending order based on total quantity
         Collections.sort(combinedSalesList, new Comparator<Sales>() {
             @Override
@@ -69,7 +66,6 @@ public class SalesServlet extends HttpServlet {
                 return Integer.compare(sale2.getTotalQuantity(), sale1.getTotalQuantity());
             }
         });
-
         // Handle other report types here
         request.setAttribute("top10Products", combinedSalesList);
         request.getRequestDispatcher(VIEW_SALES_JSP_URL).forward(request, response);
@@ -94,7 +90,6 @@ public class SalesServlet extends HttpServlet {
                     filterOrderList.add(order);
                 }
             }
-
             List<Sales> salesList = new ArrayList<>();
             Map<String, String> isCalculated = new HashMap<>();
             for (Orders order : filterOrderList) {
@@ -109,7 +104,6 @@ public class SalesServlet extends HttpServlet {
                 salesList.add(new Sales(order.getProductName(), order.getOrderDate(), order.getProductQuantity(), BigDecimal.valueOf(Double.parseDouble(orderDetails.getTotal()))));
                 isCalculated.put(orderNumber, orderNumber);
             }
-
             // Group sales by product name and calculate total amount
             Map<String, BigDecimal> productSales = new HashMap<>();
             for (Sales sale : salesList) {
@@ -121,7 +115,6 @@ public class SalesServlet extends HttpServlet {
                 }
                 productSales.put(productName, totalPrice);
             }
-
             // Create a new list of combined sales
             List<Sales> combinedSalesList = new ArrayList<>();
             for (Map.Entry<String, BigDecimal> entry : productSales.entrySet()) {
@@ -129,7 +122,6 @@ public class SalesServlet extends HttpServlet {
                 BigDecimal totalAmount = entry.getValue();
                 combinedSalesList.add(new Sales(productName, requestDate, 0, totalAmount));
             }
-
             // Handle other report types here
             request.setAttribute("salesList", combinedSalesList);
             request.setAttribute("reportType", reportType);
@@ -138,5 +130,4 @@ public class SalesServlet extends HttpServlet {
             RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Error in converting date!", VIEW_SALES_URL);
         }
     }
-
 }

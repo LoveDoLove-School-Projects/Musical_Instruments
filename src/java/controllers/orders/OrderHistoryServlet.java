@@ -38,7 +38,5 @@ public class OrderHistoryServlet extends HttpServlet {
             request.setAttribute("entityManager", entityManager);
             request.getRequestDispatcher(Constants.ORDERHISTORY_JSP_URL).forward(request, response);
         }
-
     }
-
 }

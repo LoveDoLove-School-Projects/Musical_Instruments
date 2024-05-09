@@ -51,5 +51,4 @@ public class Sales {
     public void setTotalAmount(BigDecimal totalAmount) {
         this.totalAmount = totalAmount;
     }
-
 }

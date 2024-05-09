@@ -11,16 +11,17 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 import utilities.RedirectUtilities;
 import utilities.SessionUtilities;
 
 public class ViewProductServlet extends HttpServlet {
-
+    
     @PersistenceContext
     EntityManager entityManager;
     public static final String VIEW_PRODUCT_JSP_URL = "/pages/products/viewProduct.jsp";
-
+    
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Session session = SessionUtilities.getLoginSession(request.getSession());
@@ -31,9 +32,8 @@ public class ViewProductServlet extends HttpServlet {
                 RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Product Not Found!", Constants.PRODUCT_URL);
                 return;
             }
-
             List<Ratings> ratings = entityManager.createNamedQuery("Ratings.findByProductId").setParameter("productId", productId).getResultList();
-
+            Collections.reverse(ratings);
             request.setAttribute("ratingList", ratings);
             Products products = productList.get(0);
             request.setAttribute("productDetails", products);
@@ -42,7 +42,7 @@ public class ViewProductServlet extends HttpServlet {
             RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.WARNING, "You must login first !", Constants.CUSTOMER_LOGIN_URL);
         }
     }
-
+    
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     }
