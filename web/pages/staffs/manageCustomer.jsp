@@ -5,9 +5,10 @@
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Base64"%>
 <%@ page import="entities.Customers" %>
-<!DOCTYPE html>
-<html>
-    <head>
+<jsp:useBean id="customerDetails" class="entities.Customers" scope="session"></jsp:useBean>
+    <!DOCTYPE html>
+    <html>
+        <head>
         <jsp:include page="/defaults/head.jsp" />
         <title>Customer Details</title>
         <style>
@@ -30,7 +31,7 @@
             <div class="row">
                 <div class="col-md-10 offset-md-1">
                     <h1 class="text-center mb-4">Customer Details</h1>
-                    <% Customers customerDetails = (Customers) session.getAttribute("customerDetails"); %>
+                    <% //Customers customerDetails = (Customers) session.getAttribute("customerDetails"); %>
                     <div class="card">
                         <div class="card-body">
                             <%

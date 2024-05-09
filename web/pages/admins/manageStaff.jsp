@@ -5,9 +5,10 @@
 <%@ page import="java.util.List" %>
 <%@ page import="entities.Staffs" %>
 <%@ page import="java.util.Base64"%>
-<!DOCTYPE html>
-<html>
-    <head>
+<jsp:useBean id="staffDetails" class="entities.Staffs" scope="session"></jsp:useBean>
+    <!DOCTYPE html>
+    <html>
+        <head>
         <jsp:include page="/defaults/head.jsp" />
         <title>Staff Details</title>
         <style>
@@ -29,28 +30,27 @@
             <div class="row">
                 <div class="col-md-10 offset-md-1">
                     <h1 class="text-center mb-4">Staff Details</h1>
-                    <% Staffs staff = (Staffs) session.getAttribute("staffDetails"); %>
                     <div class="card">
                         <%
                              String imageSrc = null;
-                             if (staff.getPicture() != null) {
-                                  String pictureBase64 = Base64.getEncoder().encodeToString(staff.getPicture());
+                             if (staffDetails.getPicture() != null) {
+                                  String pictureBase64 = Base64.getEncoder().encodeToString(staffDetails.getPicture());
                                   imageSrc = "data:image/png;base64," + pictureBase64;
                             }
                         %>
                         <div class="card-body">
                             <div class="col-3 p-1 d-flex justify-content-center align-content-centers productImage">
-                                <img src="<%if(imageSrc!=null) { %><%=imageSrc%> <%}%>" class="img-fluid w-100 m-5" alt="<%=staff.getUsername() %>">
+                                <img src="<%if(imageSrc!=null) { %><%=imageSrc%> <%}%>" class="img-fluid w-100 m-5" alt="<%=staffDetails.getUsername() %>">
                             </div>
-                            <h5 class="card-title"><strong><%= staff.getUsername() %></strong></h5>
+                            <h5 class="card-title"><strong><%= staffDetails.getUsername() %></strong></h5>
                             <ul class="list-group list-group-flush">
-                                <li class="list-group-item"><strong>ID:</strong> <%= staff.getUserId() %></li>
-                                <li class="list-group-item"><strong>Gender:</strong> <%= staff.getGender() %></li>
-                                <li class="list-group-item"><strong>Email:</strong> <%= staff.getEmail() %></li>
-                                <li class="list-group-item"><strong>Address:</strong> <%= staff.getAddress() %></li>
-                                <li class="list-group-item"><strong>Phone Number:</strong> <%= staff.getPhoneNumber() %></li>
-                                <li class="list-group-item"><strong>Two Factor Authentication:</strong> <%= staff.getTwoFactorAuth() ? "Activated" : "Deactivated" %></li>
-                                <li class="list-group-item"><strong>Account Creation Date:</strong> <%= staff.getAccountCreationDate() %></li>
+                                <li class="list-group-item"><strong>ID:</strong> <%= staffDetails.getUserId() %></li>
+                                <li class="list-group-item"><strong>Gender:</strong> <%= staffDetails.getGender() %></li>
+                                <li class="list-group-item"><strong>Email:</strong> <%= staffDetails.getEmail() %></li>
+                                <li class="list-group-item"><strong>Address:</strong> <%= staffDetails.getAddress() %></li>
+                                <li class="list-group-item"><strong>Phone Number:</strong> <%= staffDetails.getPhoneNumber() %></li>
+                                <li class="list-group-item"><strong>Two Factor Authentication:</strong> <%= staffDetails.getTwoFactorAuth() ? "Activated" : "Deactivated" %></li>
+                                <li class="list-group-item"><strong>Account Creation Date:</strong> <%= staffDetails.getAccountCreationDate() %></li>
                             </ul>
                             <div class="row">
                                 <div class="col-md-2">
@@ -62,7 +62,7 @@
                                 <div class="col-md-1">
 
                                     <form action="pages/superAdmin/deleteStaff" method="post" id="deleteStaffForm">
-                                        <input type="hidden" name="userId" value="<%=staff.getUserId() %>"/>
+                                        <input type="hidden" name="userId" value="<%=staffDetails.getUserId() %>"/>
                                         <button class="btn btn-danger">Delete</button>
                                     </form>
                                 </div>
