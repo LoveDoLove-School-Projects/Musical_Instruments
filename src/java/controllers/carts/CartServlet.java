@@ -31,9 +31,9 @@ public class CartServlet extends HttpServlet {
             return;
         }
         List<Carts> carts = entityManager.createNamedQuery("Carts.findByCustomerId").setParameter("customerId", session.getUserId()).getResultList();
-      
-            request.setAttribute("cartDetails", carts);
-            request.getRequestDispatcher(Constants.CART_JSP_URL).forward(request, response);
-        
+        request.setAttribute("entityManager", entityManager);
+        request.setAttribute("cartDetails", carts);
+        request.getRequestDispatcher(Constants.CART_JSP_URL).forward(request, response);
+
     }
 }
