@@ -19,7 +19,7 @@ public class SessionDao {
                 return resultSet.next();
             }
         } catch (SQLException ex) {
-            throw new DatabaseException(ex.getMessage());
+            return false;
         }
     }
 

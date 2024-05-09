@@ -23,20 +23,33 @@
                             <div class="card-body">
                                 <table class="table">
                                     <thead>
+                                        <tr><th>Date: ${startingDate} <% if(request.getAttribute("reportType") != "day") { %> ~ ${endingDate} <% } %></th></tr>
                                         <tr>
-                                            <th>Product Name</th>
-                                            <th>Total Sales</th>
+
+                                            <th>Transaction Number</th>
+                                            <th style="text-align: center">Total Amount (RM)</th>
                                         </tr>
+
                                     </thead>
                                     <tbody>
                                         <c:forEach var="sales" items="${salesList}">
                                             <tr>
                                                 <td>${sales.getProductName()}</td>
-                                                <td>${sales.getTotalAmount()}</td>
+                                                <td style="text-align: center">${sales.getTotalAmount()}</td>
                                             </tr>
                                         </c:forEach>
+                                        <tr><td> </td> <td> </td></tr>
+                                        <tr>
+
+                                            <td><strong>Total Revenue</strong></td>
+                                            <td style="text-align: center"><strong>${totalRevenue}</strong></td>
+
+                                        </tr>
                                     </tbody>
                                 </table>
+                                <div class="col-md-2">
+                                    <a href="pages/superAdmin/viewSales" class="btn btn-primary mr-2">Go back</a>
+                                </div>
                             </div>
                         </div>
                     </div>

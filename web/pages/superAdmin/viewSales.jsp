@@ -26,12 +26,13 @@
                             </div>
                             <div class="card-body">
                                 <form action="pages/superAdmin/viewSales" method="post">
+                                    <input type="hidden" name="action" value="specificReport">
                                     <div class="form-group">
                                         <label for="date">Select Date:</label>
                                         <input type="date" id="date" name="date" class="form-control">
                                     </div>
                                     <div class="form-group">
-                                        <button type="submit" class="btn btn-primary">Fetch Sales</button>
+                                        <button type="submit" class="btn btn-primary">Generate</button>
                                     </div>
                                 </form>
                             </div>
@@ -44,7 +45,7 @@
                                 Generate Sales Report
                             </div>
                             <div class="card-body">
-                                <form action="viewSales" method="post">
+                                <form action="pages/superAdmin/viewSales" method="post">
                                     <input type="hidden" name="action" value="generateReport">
                                     <div class="form-group">
                                         <label for="reportType">Report Type:</label>
@@ -55,19 +56,19 @@
                                         </select>
                                     </div>
                                     <div class="form-group">
-                                        <button type="submit" class="btn btn-success">Generate Report</button>
+                                        <button type="submit" class="btn btn-success">Generate</button>
                                     </div>
                                 </form>
                             </div>
                         </div>
                     </div>
                 </div>
-                <!-- Top 10 Sold Products Section -->
+
                 <div class="row mt-4">
                     <div class="col-md-12">
                         <div class="card">
                             <div class="card-header">
-                                Top 10 Sold Products
+                                <strong>Top 10 Sold Products</strong>
                             </div>
                             <div class="card-body">
                                 <table class="table">
@@ -78,7 +79,6 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <!-- Iterate over the top 10 products and display them -->
                                         <c:forEach var="sales" items="${top10Products}">
                                             <tr>
                                                 <td>${sales.getProductName()}</td>
