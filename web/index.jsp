@@ -91,12 +91,13 @@
                 </svg>
                 <div class="row">
                     <%
-                    List<Sales> salesList = dao.IndexDao.getTopProducts();
-                    if (salesList != null) {
-                        for (Sales sale : salesList) {
-                            if (sale.getProductImage() != null) { // Add null check here
-                                String pictureBase64 = java.util.Base64.getEncoder().encodeToString(sale.getProductImage());
-                                String imageSrc = "data:image/png;base64," + pictureBase64;
+                        List<Sales> salesList = dao.IndexDao.getTopProducts();
+                        if (salesList != null) {
+                            for (int i = 0; i < salesList.size() && i < 3; i++) {
+                                Sales sale = salesList.get(i);
+                                if (sale.getProductImage() != null) { // Add null check here
+                                    String pictureBase64 = java.util.Base64.getEncoder().encodeToString(sale.getProductImage());
+                                    String imageSrc = "data:image/png;base64," + pictureBase64;
                     %>
                     <div class="col">
                         <div class="card">
@@ -109,9 +110,9 @@
                         </div>
                     </div>
                     <%
+                                }
                             }
                         }
-                    }
                     %>
                 </div>
             </div>
