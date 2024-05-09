@@ -1,4 +1,3 @@
-DROP TABLE ArchiveCustomers;
 DROP TABLE Carts;
 DROP TABLE Customers;
 DROP TABLE Otps;
