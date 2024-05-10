@@ -2,7 +2,6 @@ package controllers.admins;
 
 import entities.Constants;
 import entities.Staffs;
-import exceptions.DatabaseException;
 import jakarta.annotation.Resource;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;

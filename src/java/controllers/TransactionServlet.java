@@ -10,8 +10,6 @@ import entities.OrderDetails;
 import entities.PaypalPayment;
 import entities.Session;
 import entities.Transactions;
-import exceptions.DatabaseException;
-import exceptions.PaymentException;
 import jakarta.annotation.Resource;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;

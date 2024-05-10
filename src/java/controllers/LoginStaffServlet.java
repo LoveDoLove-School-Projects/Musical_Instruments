@@ -4,7 +4,6 @@ import entities.Constants;
 import entities.Role;
 import entities.Session;
 import entities.Staffs;
-import exceptions.DatabaseException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.servlet.ServletException;

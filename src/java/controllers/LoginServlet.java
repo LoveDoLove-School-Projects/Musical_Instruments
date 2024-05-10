@@ -4,7 +4,6 @@ import entities.Constants;
 import entities.Customers;
 import entities.Role;
 import entities.Session;
-import exceptions.DatabaseException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.servlet.ServletException;
@@ -84,7 +83,7 @@ public class LoginServlet extends HttpServlet {
         request.getRequestDispatcher(LOGIN_JSP_URL).forward(request, response);
     }
 
-    private Customers tryCustomerLogin(Customers customer) throws DatabaseException {
+    private Customers tryCustomerLogin(Customers customer) {
         try {
             String encryptedPassword = AesUtilities.aes256EcbEncrypt(customer.getPassword());
             List<Customers> customerList = entityManager.createNamedQuery("Customers.findByEmailAndPassword", Customers.class)
