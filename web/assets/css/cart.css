@@ -1,0 +1,53 @@
+.Title {
+    background-color: rgb(238, 59, 59);
+}
+
+.CheckoutBar {
+    position: fixed;
+    border-top: solid black 1px;
+    background-color: white;
+}
+
+
+.chkOutPrice {
+    color: rgb(238, 59, 59);
+}
+
+.ChkoutBtn {
+    background-color: rgb(238, 59, 59);
+    border: none;
+    box-shadow: 3px 3px 5px;
+    color: rgb(255, 253, 253);
+    font-size: 20px;
+}
+
+.editBtn {
+    background-color: rgb(39, 216, 39);
+    border: none;
+    border-radius: 20px;
+    animation:zoomIn 1.5s;
+}
+
+.editBtn:hover {
+    color: white;
+    transition: all 0.5s ease;
+}
+
+.deleteBtn {
+    background-color: rgb(231, 114, 114);
+    border:none;
+    border-radius: 20px;
+    animation:zoomIn 1.5s;
+
+}
+
+.deleteBtn:hover {
+    color: white;
+    border: none;
+    transition: all 0.5s ease;
+}
+
+.addProductBtn{
+    border:solid 1px black;
+    border-radius: 20px;
+}

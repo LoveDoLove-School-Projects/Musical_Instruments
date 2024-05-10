@@ -1,0 +1,12 @@
+DROP TABLE Carts;
+DROP TABLE Customers;
+DROP TABLE Otps;
+DROP TABLE Products;
+DROP TABLE ResetPassword;
+DROP TABLE SecurityLog;
+DROP TABLE InternalSecurityLog;
+DROP TABLE Staffs;
+DROP TABLE Cards;
+DROP TABLE Transactions;
+DROP TABLE Orders;
+DROP TABLE Ratings;

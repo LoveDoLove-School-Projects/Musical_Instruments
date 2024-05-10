@@ -1,6 +1,6 @@
 package utilities;
 
-public class ConvertUtilities {
+public final class ConvertUtilities {
 
     public static byte[] szConvertKeyToBytes(String szKey) {
         byte[] keyArray;

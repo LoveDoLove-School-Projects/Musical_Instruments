@@ -1,0 +1,104 @@
+package controllers;
+
+import entities.Constants;
+import entities.Customers;
+import static entities.Role.CUSTOMER;
+import entities.Session;
+import entities.Staffs;
+import jakarta.annotation.Resource;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.MultipartConfig;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.transaction.HeuristicMixedException;
+import jakarta.transaction.HeuristicRollbackException;
+import jakarta.transaction.NotSupportedException;
+import jakarta.transaction.RollbackException;
+import jakarta.transaction.SystemException;
+import jakarta.transaction.UserTransaction;
+import java.io.IOException;
+import java.util.logging.Logger;
+import utilities.RedirectUtilities;
+import utilities.RedirectUtilities.RedirectType;
+import utilities.SecurityLog;
+import utilities.SessionUtilities;
+
+@MultipartConfig
+public class RemoveProfilePictureServlet extends HttpServlet {
+
+    @PersistenceContext
+    EntityManager entityManager;
+    @Resource
+    UserTransaction userTransaction;
+    private static final Logger LOG = Logger.getLogger(RemoveProfilePictureServlet.class.getName());
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        Session session = SessionUtilities.getLoginSession(request.getSession());
+        if (session == null) {
+            RedirectUtilities.redirectWithMessage(request, response, RedirectType.DANGER, "Please login to view this page.", "/");
+            return;
+        }
+        boolean isRemoved = false;
+        switch (session.getRole()) {
+            case CUSTOMER:
+                Customers customer = new Customers(session.getUserId());
+                isRemoved = removePicture(request, customer);
+                break;
+            case STAFF:
+                Staffs staff = new Staffs(session.getUserId());
+                isRemoved = removePicture(request, staff);
+                break;
+            default:
+                RedirectUtilities.redirectWithMessage(request, response, RedirectType.DANGER, "Invalid role.", "/");
+                break;
+        }
+        if (isRemoved) {
+            RedirectUtilities.setMessage(request, RedirectType.SUCCESS, "Picture removed successfully.");
+        } else {
+            RedirectUtilities.setMessage(request, RedirectType.DANGER, "Error removing picture.");
+        }
+        RedirectUtilities.sendRedirect(request, response, Constants.PROFILE_URL);
+    }
+
+    private boolean removePicture(HttpServletRequest request, Customers customer) {
+        try {
+            userTransaction.begin();
+            Customers existingCustomer = entityManager.find(Customers.class, customer.getUserId());
+            if (existingCustomer == null) {
+                return false;
+            }
+            existingCustomer.setPicture(null);
+            entityManager.merge(existingCustomer);
+            userTransaction.commit();
+            SecurityLog.addSecurityLog(request, "Customer " + existingCustomer.getUsername() + " has removed their profile picture.");
+            return true;
+        } catch (RollbackException | HeuristicMixedException | HeuristicRollbackException | NotSupportedException | SystemException | IllegalStateException | SecurityException ex) {
+            SecurityLog.addSecurityLog(request, "Error removing profile picture for customer " + customer.getUserId());
+            LOG.severe(ex.getMessage());
+            return false;
+        }
+    }
+
+    private boolean removePicture(HttpServletRequest request, Staffs staff) {
+        try {
+            userTransaction.begin();
+            Staffs existingStaff = entityManager.find(Staffs.class, staff.getUserId());
+            if (existingStaff == null) {
+                return false;
+            }
+            existingStaff.setPicture(null);
+            entityManager.merge(existingStaff);
+            userTransaction.commit();
+            SecurityLog.addSecurityLog(request, "Staff " + existingStaff.getUsername() + " has removed their profile picture.");
+            return true;
+        } catch (RollbackException | HeuristicMixedException | HeuristicRollbackException | NotSupportedException | SystemException | IllegalStateException | SecurityException ex) {
+            SecurityLog.addSecurityLog(request, "Error removing profile picture for staff " + staff.getUserId());
+            LOG.severe(ex.getMessage());
+            return false;
+        }
+    }
+}

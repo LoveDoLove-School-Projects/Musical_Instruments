@@ -1,18 +1,62 @@
 package utilities;
 
+import dao.SessionDao;
+import entities.Role;
+import entities.Session;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import java.security.Principal;
 
 public class SessionUtilities {
 
-    public static void setSessionAttribute(HttpSession session, String key, Object value) {
-        session.setAttribute(key, value);
+    private static final String USER_SESSION = "user_session";
+    private static final SessionDao sessionDao = new SessionDao();
+
+    public static void setLoginSession(HttpSession session, Session userSession) {
+        if (session != null) {
+            session.setAttribute(USER_SESSION, userSession);
+        }
     }
 
-    public static void getSessionAttribute(HttpSession session, String key) {
-        session.getAttribute(key);
+    public static Session getLoginSession(HttpServletRequest request) {
+        return getLoginSession(request.getSession());
     }
 
-    public static void removeSessionAttribute(HttpSession session, String key) {
-        session.removeAttribute(key);
+    public static Session getLoginSession(HttpSession session) {
+        if (session != null) {
+            Session userSession = (Session) session.getAttribute(USER_SESSION);
+            if (userSession == null) {
+                return null;
+            }
+            if (sessionDao.checkSessionIsExistOrNot(userSession)) {
+                return userSession;
+            }
+            session.removeAttribute(USER_SESSION);
+            return null;
+        }
+        return null;
+    }
+
+    public static boolean getIsAdminOrNot(HttpServletRequest request) {
+        Principal principal = request.getUserPrincipal();
+        if (principal == null) {
+            return false;
+        }
+        return request.isUserInRole("Admin") || request.isUserInRole("SuperAdmin");
+    }
+
+    public static String getPrincipalName(HttpServletRequest request) {
+        Principal principal = request.getUserPrincipal();
+        if (principal == null) {
+            return null;
+        }
+        return principal.getName();
+    }
+
+    public static boolean checkIsStaffOrAdmin(HttpServletRequest request) {
+        HttpSession httpSession = request.getSession();
+        boolean isAdmin = getIsAdminOrNot(request);
+        Session session = getLoginSession(httpSession);
+        return isAdmin || session != null && session.getRole() == Role.STAFF;
     }
 }

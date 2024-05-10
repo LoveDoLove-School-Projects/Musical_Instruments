@@ -1,0 +1,42 @@
+
+a{
+    text-decoration: none;
+    color: black;
+}
+.MusicInstruments, .MusicInstruments::before{
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: 20px;
+    transition: all 0.5s ease;
+}
+.MusicInstruments{
+    position: relative;
+    border: none;
+    animation:fadeInLeftBig 3s;
+}
+.MusicInstruments::before{
+    content: '';
+    position: absolute;
+    background-color: #d9d9e1;
+    opacity: 0;
+    transform: translateY(0px);
+    z-index: -1;
+}
+
+.MusicInstruments:hover::before{
+    transform: translateY(20px);
+    opacity: 1;
+}
+
+.productTitle{
+    background-image: url(../image/Product_title_background.jpg);
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    height: 300px;
+}
+
+
+
+
