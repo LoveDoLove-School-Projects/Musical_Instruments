@@ -49,12 +49,12 @@ public class AddStaffServlet extends HttpServlet {
         String phoneNumber = request.getParameter("phoneNumber");
         Staffs staff = new Staffs(username, email, email, address, phoneNumber, gender); // Set default password as email
         if (!validateStaffDetails(staff)) {
-            RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Invalid format adding staff.", "/pages/superAdmin/addStaff");
+            RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Staff email address already existed!", "/pages/superAdmin/addStaff");
             return;
         }
         if (!addStaffToDb(staff)) {
             SecurityLog.addInternalSecurityLog(request, "Failed to add staff: " + staff.getUsername() + ".");
-            RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Staff email address already existed!", Constants.ADMIN_SEARCH_STAFF_URL);
+            RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Error adding staff.", Constants.ADMIN_SEARCH_STAFF_URL);
             return;
         }
         SecurityLog.addInternalSecurityLog(request, "Staff: " + staff.getUsername() + " added successfully.");
@@ -77,7 +77,7 @@ public class AddStaffServlet extends HttpServlet {
             staff.setEmail(staff.getEmail());
             staff.setGender(staff.getGender());
             staff.setAddress(staff.getAddress());
-            staff.setPhoneNumber(staff.getPhoneNumber());
+            staff.setPhoneNumber(staff.getAddress());
             staff.setTwoFactorAuth(false);
             staff.setAccountCreationDate(new Date());
             entityManager.persist(staff);
@@ -102,7 +102,11 @@ public class AddStaffServlet extends HttpServlet {
         if (!ValidationUtilities.isPhoneNumberValid(staff.getPhoneNumber())) {
             return false;
         }
-
-        return true;
+        Staffs existingStaff = entityManager.createQuery("SELECT s FROM Staffs s WHERE s.email = :email", Staffs.class)
+                .setParameter("email", staff.getEmail())
+                .getResultStream()
+                .findFirst()
+                .orElse(null);
+        return existingStaff == null;
     }
 }
