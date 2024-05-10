@@ -97,7 +97,7 @@ public class ChangePasswordServlet extends HttpServlet {
             RedirectUtilities.redirectWithMessage(request, response, RedirectType.DANGER, "Failed to change password", "/");
             return;
         }
-        RedirectUtilities.redirectWithMessage(request, response, RedirectType.SUCCESS, "Password reset successfully", "/");
+        RedirectUtilities.redirectWithMessage(request, response, RedirectType.SUCCESS, "Password changed successfully", "/");
     }
 
     private boolean updateCustomerNewPassword(HttpServletRequest request, Session session, String newPassword) {
@@ -111,7 +111,7 @@ public class ChangePasswordServlet extends HttpServlet {
             customer.setPassword(AesUtilities.aes256EcbEncrypt(newPassword));
             entityManager.merge(customer);
             userTransaction.commit();
-            SecurityLog.addSecurityLog(request, "Customer: " + customer.getUsername() + " has reset password.");
+            SecurityLog.addSecurityLog(request, "Customer: " + customer.getUsername() + " has changed password.");
             return true;
         } catch (HeuristicMixedException | HeuristicRollbackException | NotSupportedException | RollbackException | SystemException | IllegalStateException | SecurityException ex) {
             SecurityLog.addSecurityLog(request, "Failed to change password for customer: " + session.getUserId() + ".");
@@ -131,7 +131,7 @@ public class ChangePasswordServlet extends HttpServlet {
             staff.setPassword(AesUtilities.aes256EcbEncrypt(newPassword));
             entityManager.merge(staff);
             userTransaction.commit();
-            SecurityLog.addSecurityLog(request, "Staff: " + staff.getUsername() + " has reset password.");
+            SecurityLog.addSecurityLog(request, "Staff: " + staff.getUsername() + " has changed password.");
             return true;
         } catch (HeuristicMixedException | HeuristicRollbackException | NotSupportedException | RollbackException | SystemException | IllegalStateException | SecurityException ex) {
             SecurityLog.addSecurityLog(request, "Failed to change password for staff: " + session.getUserId() + ".");
