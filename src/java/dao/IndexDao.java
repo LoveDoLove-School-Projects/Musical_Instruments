@@ -3,7 +3,6 @@ package dao;
 import controllers.ConnectionController;
 import entities.Orders;
 import entities.Sales;
-import exceptions.DatabaseException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -14,9 +13,11 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 public class IndexDao {
 
+    private static final Logger LOG = Logger.getLogger(IndexDao.class.getName());
     private static final String ORDER_LIST_SQL = "SELECT * FROM Orders";
 
     public static List<Sales> getTopProducts() {
@@ -73,7 +74,8 @@ public class IndexDao {
                 return orderList;
             }
         } catch (SQLException ex) {
-            throw new DatabaseException(ex.getMessage());
+            LOG.severe(ex.getMessage());
+            return null;
         }
     }
 }

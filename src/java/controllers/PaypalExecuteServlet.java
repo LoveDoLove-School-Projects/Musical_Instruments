@@ -4,7 +4,6 @@ import entities.Constants;
 import entities.PaypalPayment;
 import entities.Session;
 import entities.Transactions;
-import exceptions.DatabaseException;
 import jakarta.annotation.Resource;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -21,6 +20,7 @@ import jakarta.transaction.SystemException;
 import jakarta.transaction.UserTransaction;
 import java.io.IOException;
 import java.util.Date;
+import java.util.logging.Logger;
 import services.PaypalServices;
 import services.TransactionServices;
 import utilities.RedirectUtilities;
@@ -34,6 +34,7 @@ public class PaypalExecuteServlet extends HttpServlet {
     EntityManager entityManager;
     @Resource
     UserTransaction userTransaction;
+    private static final Logger LOG = Logger.getLogger(PaypalExecuteServlet.class.getName());
     private final PaypalServices paypalServices = new PaypalServices();
     private final TransactionServices transactionServices = new TransactionServices();
 
@@ -80,7 +81,8 @@ public class PaypalExecuteServlet extends HttpServlet {
             return dbTransaction;
         } catch (HeuristicMixedException | HeuristicRollbackException | NotSupportedException | RollbackException | SystemException | IllegalStateException | NumberFormatException | SecurityException ex) {
             SecurityLog.addSecurityLog(request, "Transaction " + paypalPayment.getId() + " has been update failed.");
-            throw new DatabaseException(ex.getMessage());
+            LOG.severe(ex.getMessage());
+            return null;
         }
     }
 }

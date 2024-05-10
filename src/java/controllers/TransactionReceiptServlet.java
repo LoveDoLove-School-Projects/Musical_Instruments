@@ -3,12 +3,12 @@ package controllers;
 import entities.Constants;
 import entities.Session;
 import entities.Transactions;
-import exceptions.DatabaseException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import java.io.IOException;
+import java.util.logging.Logger;
 import utilities.RedirectUtilities;
 import utilities.SessionUtilities;
 
@@ -16,6 +16,7 @@ public class TransactionReceiptServlet extends HttpServlet {
 
     @PersistenceContext
     EntityManager entityManager;
+    private static final Logger LOG = Logger.getLogger(TransactionReceiptServlet.class.getName());
     private static final String RECEIPT_JSP_URL = "/payments/receipt.jsp";
 
     @Override
@@ -49,7 +50,8 @@ public class TransactionReceiptServlet extends HttpServlet {
                     .setParameter("userId", userId)
                     .getSingleResult();
         } catch (Exception ex) {
-            throw new DatabaseException(ex.getMessage());
+            LOG.severe(ex.getMessage());
+            return null;
         }
     }
 }

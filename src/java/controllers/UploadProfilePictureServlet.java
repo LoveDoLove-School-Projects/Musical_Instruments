@@ -4,7 +4,6 @@ import entities.Constants;
 import entities.Customers;
 import entities.Session;
 import entities.Staffs;
-import exceptions.DatabaseException;
 import jakarta.annotation.Resource;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -21,6 +20,7 @@ import jakarta.transaction.SystemException;
 import jakarta.transaction.UserTransaction;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.logging.Logger;
 import utilities.RedirectUtilities;
 import utilities.RedirectUtilities.RedirectType;
 import utilities.SecurityLog;
@@ -33,6 +33,7 @@ public class UploadProfilePictureServlet extends HttpServlet {
     EntityManager entityManager;
     @Resource
     UserTransaction userTransaction;
+    private static final Logger LOG = Logger.getLogger(UploadProfilePictureServlet.class.getName());
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -83,7 +84,8 @@ public class UploadProfilePictureServlet extends HttpServlet {
             return true;
         } catch (HeuristicMixedException | HeuristicRollbackException | NotSupportedException | RollbackException | SystemException | IllegalStateException | SecurityException ex) {
             SecurityLog.addSecurityLog(request, "Error uploading profile picture for customer " + customer.getUsername() + ": " + ex.getMessage());
-            throw new DatabaseException(ex.getMessage());
+            LOG.severe(ex.getMessage());
+            return false;
         }
     }
 
@@ -101,7 +103,8 @@ public class UploadProfilePictureServlet extends HttpServlet {
             return true;
         } catch (HeuristicMixedException | HeuristicRollbackException | NotSupportedException | RollbackException | SystemException | IllegalStateException | SecurityException ex) {
             SecurityLog.addSecurityLog(request, "Error uploading profile picture for staff " + staff.getUsername() + ": " + ex.getMessage());
-            throw new DatabaseException(ex.getMessage());
+            LOG.severe(ex.getMessage());
+            return false;
         }
     }
 }

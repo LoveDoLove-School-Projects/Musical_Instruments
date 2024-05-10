@@ -14,6 +14,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
+import java.util.logging.Logger;
 import services.OtpServices;
 import utilities.AesUtilities;
 import utilities.RedirectUtilities;
@@ -26,6 +27,7 @@ public class LoginStaffServlet extends HttpServlet {
 
     @PersistenceContext
     EntityManager entityManager;
+    private static final Logger LOG = Logger.getLogger(LoginStaffServlet.class.getName());
     private static final String STAFF_LOGIN_JSP_URL = "/pages/staffLogin.jsp";
     private static final String LOGIN_2FA_URL = "/sessions/login2fa";
     private final OtpServices otpServices = new OtpServices();
@@ -82,7 +84,7 @@ public class LoginStaffServlet extends HttpServlet {
         request.getRequestDispatcher(STAFF_LOGIN_JSP_URL).forward(request, response);
     }
 
-    private Staffs tryStaffLogin(Staffs staff) throws DatabaseException {
+    private Staffs tryStaffLogin(Staffs staff) {
         try {
             String encryptedPassword = AesUtilities.aes256EcbEncrypt(staff.getPassword());
             List<Staffs> staffList = entityManager.createNamedQuery("Staffs.findByEmailAndPassword", Staffs.class)
@@ -91,7 +93,8 @@ public class LoginStaffServlet extends HttpServlet {
                     .getResultList();
             return staffList.isEmpty() ? null : staffList.get(0);
         } catch (Exception ex) {
-            throw new DatabaseException(ex.getMessage());
+            LOG.severe(ex.getMessage());
+            return null;
         }
     }
 

@@ -84,7 +84,6 @@ public class SalesServlet extends HttpServlet {
         public void setEndingDate(Date endingDate) {
             this.endingDate = endingDate;
         }
-
     }
 
     @Override

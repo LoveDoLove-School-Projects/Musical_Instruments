@@ -41,7 +41,7 @@
                                 <div class="col-6 col-xl-3 col-xxl-3">
                                     <a href="pages/products/viewProduct?product_id=<%=product.getProductId()%>" class="MusicInstruments row1-MusicInstruments1">
                                         <div class="pt-4 d-flex justify-content-center">
-                                            <img src="<%=imageSrc%>" class="img-fluid w-50 d-flex text-center justify-self-center align-self-center">
+                                            <img src="<%=imageSrc%>" class="img-fluid w-50 d-flex text-center justify-self-center align-self-center" loading="lazy">
                                         </div>
                                         <p class="text-center"><strong><%=product.getName()%></br>RM<%=product.getPrice()%></strong></p>
                                     </a>

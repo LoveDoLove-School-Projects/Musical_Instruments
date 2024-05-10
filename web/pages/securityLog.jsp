@@ -60,7 +60,9 @@
                 }
                 var csv = data.join('\n');
                 var blob = new Blob([csv], {type: 'text/csv;charset=utf-8;'});
-                saveAs(blob, 'security_log.csv');
+                let currentDate = new Date();
+                let dateTime = currentDate.getFullYear() + '-' + (currentDate.getMonth() + 1) + '-' + currentDate.getDate() + ' ' + currentDate.getHours() + ':' + currentDate.getMinutes() + ':' + currentDate.getSeconds();
+                saveAs(blob, `securityLog_${dateTime}.csv`);
             });
         </script>
     </body>

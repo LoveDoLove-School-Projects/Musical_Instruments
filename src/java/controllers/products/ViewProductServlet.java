@@ -29,11 +29,10 @@ public class ViewProductServlet extends HttpServlet {
         if (session != null) {
             int productId = Integer.parseInt(request.getParameter("product_id"));
             List<Products> productList = entityManager.createNamedQuery("Products.findByProductId").setParameter("productId", productId).getResultList();
-            if (productList == null) {
+            if (productList == null || productList.isEmpty()) {
                 RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Product Not Found!", Constants.PRODUCT_URL);
                 return;
             }
-
             List<Ratings> ratings = entityManager.createNamedQuery("Ratings.findByProductId").setParameter("productId", productId).getResultList();
             List<Orders> orders = entityManager.createNamedQuery("Orders.findByProductId").setParameter("productId", productId).getResultList();
             Collections.reverse(ratings);
@@ -46,9 +45,5 @@ public class ViewProductServlet extends HttpServlet {
         } else {
             RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.WARNING, "You must login first !", Constants.CUSTOMER_LOGIN_URL);
         }
-    }
-
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     }
 }

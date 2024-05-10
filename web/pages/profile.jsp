@@ -51,7 +51,7 @@ Session user_session = (Session) session.getAttribute("user_session");
                                         <c:otherwise>
                                             <img src="data:image/jpg;base64,${pictureBase64}" alt="avatar"
                                                  class="rounded-circle img-fluid"
-                                                 style="width: 150px; height: 150px;">
+                                                 style="width: 150px; height: 150px;" loading="lazy">
                                         </c:otherwise>
                                     </c:choose>
 

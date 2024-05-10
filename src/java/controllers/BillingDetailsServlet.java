@@ -3,7 +3,6 @@ package controllers;
 import entities.Customers;
 import static entities.Role.CUSTOMER;
 import entities.Session;
-import exceptions.DatabaseException;
 import jakarta.annotation.Resource;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -19,6 +18,7 @@ import jakarta.transaction.RollbackException;
 import jakarta.transaction.SystemException;
 import jakarta.transaction.UserTransaction;
 import java.io.IOException;
+import java.util.logging.Logger;
 import utilities.RedirectUtilities;
 import utilities.RedirectUtilities.RedirectType;
 import utilities.SecurityLog;
@@ -32,6 +32,7 @@ public class BillingDetailsServlet extends HttpServlet {
     EntityManager entityManager;
     @Resource
     UserTransaction userTransaction;
+    private static final Logger LOG = Logger.getLogger(BillingDetailsServlet.class.getName());
     private static final String BILLING_DETAILS_JSP_URL = "/pages/billingDetails.jsp";
     private static final String BILLING_DETAILS_URL = "/pages/billingDetails";
 
@@ -133,7 +134,8 @@ public class BillingDetailsServlet extends HttpServlet {
             return true;
         } catch (HeuristicMixedException | HeuristicRollbackException | NotSupportedException | RollbackException | SystemException | IllegalStateException | SecurityException ex) {
             SecurityLog.addSecurityLog(request, "Failed to update billing details.");
-            throw new DatabaseException(ex.getMessage());
+            LOG.severe(ex.getMessage());
+            return false;
         }
     }
 }

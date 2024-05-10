@@ -2,7 +2,6 @@ package controllers.admins;
 
 import entities.Constants;
 import entities.Staffs;
-import exceptions.DatabaseException;
 import jakarta.annotation.Resource;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -17,6 +16,7 @@ import jakarta.transaction.RollbackException;
 import jakarta.transaction.SystemException;
 import jakarta.transaction.UserTransaction;
 import java.io.IOException;
+import java.util.logging.Logger;
 import utilities.RedirectUtilities;
 import utilities.SecurityLog;
 import utilities.SessionUtilities;
@@ -27,6 +27,7 @@ public class ModifyStaffServlet extends HttpServlet {
     EntityManager entityManager;
     @Resource
     UserTransaction userTransaction;
+    private static final Logger LOG = Logger.getLogger(ModifyStaffServlet.class.getName());
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -77,7 +78,8 @@ public class ModifyStaffServlet extends HttpServlet {
             return true;
         } catch (HeuristicMixedException | HeuristicRollbackException | NotSupportedException | RollbackException | SystemException | IllegalStateException | SecurityException ex) {
             SecurityLog.addInternalSecurityLog(request, "Failed to update staff: " + staff.getUserId() + ".");
-            throw new DatabaseException(ex.getMessage());
+            LOG.severe(ex.getMessage());
+            return false;
         }
     }
 

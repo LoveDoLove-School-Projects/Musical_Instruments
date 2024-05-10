@@ -1,7 +1,7 @@
 package controllers.carts;
 
-import entities.Constants;
 import entities.Carts;
+import entities.Constants;
 import entities.Session;
 import exceptions.DatabaseException;
 import jakarta.annotation.Resource;
@@ -18,6 +18,7 @@ import jakarta.transaction.RollbackException;
 import jakarta.transaction.SystemException;
 import jakarta.transaction.UserTransaction;
 import java.io.IOException;
+import java.util.logging.Logger;
 import utilities.RedirectUtilities;
 import utilities.SecurityLog;
 import utilities.SessionUtilities;
@@ -28,6 +29,7 @@ public class DeleteCartServlet extends HttpServlet {
     EntityManager entityManager;
     @Resource
     UserTransaction userTransaction;
+    private static final Logger LOG = Logger.getLogger(DeleteCartServlet.class.getName());
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -51,7 +53,8 @@ public class DeleteCartServlet extends HttpServlet {
             RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.SUCCESS, "Your cart has been delete successfull !", Constants.CART_URL);
         } catch (HeuristicMixedException | HeuristicRollbackException | NotSupportedException | RollbackException | SystemException | IOException | IllegalStateException | NumberFormatException | SecurityException ex) {
             SecurityLog.addSecurityLog(request, "Product " + cartId + " has been delete from cart failed.");
-            throw new DatabaseException(ex.getMessage());
+            LOG.severe(ex.getMessage());
+            RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Product in cart delete failed !", Constants.CART_URL);
         }
     }
 }

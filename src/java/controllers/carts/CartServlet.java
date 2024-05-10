@@ -34,6 +34,5 @@ public class CartServlet extends HttpServlet {
         request.setAttribute("entityManager", entityManager);
         request.setAttribute("cartDetails", carts);
         request.getRequestDispatcher(Constants.CART_JSP_URL).forward(request, response);
-
     }
 }

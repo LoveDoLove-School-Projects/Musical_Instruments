@@ -60,8 +60,4 @@ public class Session {
     public void setRole(Role role) {
         this.role = role;
     }
-
-    public void setAttribute(String ordersList, List<Orders> orders) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
 }
