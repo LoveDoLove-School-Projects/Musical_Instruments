@@ -49,7 +49,7 @@
                         <div class="form-group">
                             <label for="color">Please select a color: </label>
                             <select class="form-control" id="color" name="color">
-                                <c:forEach var="colorOption" items="${['Red', 'Orange', 'Yellow', 'Green', 'Blue', 'Indigo', 'Violet', 'Black', 'White', 'Brown', 'Grey']}">
+                                <c:forEach var="colorOption" items="${['Red', 'Orange', 'Yellow', 'Green', 'Blue', 'Indigo', 'Violet', 'Black', 'White', 'Brown', 'Grey', 'Silver']}">
                                     <option value="${colorOption}" <c:if test="${colorOption eq productDetails.color}">selected</c:if>>${colorOption}</option>
                                 </c:forEach>
                             </select>
