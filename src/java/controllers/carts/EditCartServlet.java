@@ -51,8 +51,8 @@ public class EditCartServlet extends HttpServlet {
         //retrive the product stock
         List<Products> productsList = entityManager.createNamedQuery("Products.findByProductId").setParameter("productId", carts.getProductId()).getResultList();
         Products products = productsList.get(0);
-        request.setAttribute("editCartDetails", carts);
-        request.setAttribute("productDetails", products);
+        request.getSession().setAttribute("editCartDetails", carts);
+        request.getSession().setAttribute("productDetails", products);
         request.getRequestDispatcher(EDITCART_JSP_URL).forward(request, response);
     }
 
