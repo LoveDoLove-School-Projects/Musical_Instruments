@@ -28,6 +28,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Logger;
 import services.PaypalServices;
 import services.TransactionServices;
 import utilities.RedirectUtilities;
@@ -41,6 +42,7 @@ public class TransactionServlet extends HttpServlet {
     EntityManager entityManager;
     @Resource
     UserTransaction userTransaction;
+    private static final Logger LOG = Logger.getLogger(TransactionServlet.class.getName());
     private static final String PAYPAL = "Paypal";
     private static final String CREDIT_OR_DEBIT_CARD = "CreditOrDebitCard";
     private static final String CCDC_VERIFY_URL = "/payments/ccdc/verify";
@@ -118,7 +120,8 @@ public class TransactionServlet extends HttpServlet {
             }
             RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Failed to create transaction.", Constants.CART_URL);
         } catch (JsonSyntaxException | IOException ex) {
-            throw new PaymentException(ex.getMessage());
+            LOG.severe(ex.getMessage());
+            RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Failed to create payment.", Constants.CART_URL);
         }
     }
 
@@ -197,7 +200,8 @@ public class TransactionServlet extends HttpServlet {
             }
             return dbCard.getCvv().equals(card.getCvv());
         } catch (Exception ex) {
-            throw new DatabaseException(ex.getMessage());
+            LOG.severe(ex.getMessage());
+            return false;
         }
     }
 
@@ -223,7 +227,8 @@ public class TransactionServlet extends HttpServlet {
             return transaction;
         } catch (HeuristicMixedException | HeuristicRollbackException | NotSupportedException | RollbackException | SystemException | IllegalStateException | NumberFormatException | SecurityException ex) {
             SecurityLog.addSecurityLog(request, "create credit or debit card transaction failed.");
-            throw new DatabaseException(ex.getMessage());
+            LOG.severe(ex.getMessage());
+            return null;
         }
     }
 
@@ -248,7 +253,8 @@ public class TransactionServlet extends HttpServlet {
             return true;
         } catch (HeuristicMixedException | HeuristicRollbackException | NotSupportedException | RollbackException | SystemException | IllegalStateException | NumberFormatException | SecurityException ex) {
             SecurityLog.addSecurityLog(request, "create paypal transaction failed.");
-            throw new DatabaseException(ex.getMessage());
+            LOG.severe(ex.getMessage());
+            return false;
         }
     }
 }

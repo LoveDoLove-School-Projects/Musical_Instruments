@@ -19,6 +19,7 @@ import jakarta.transaction.SystemException;
 import jakarta.transaction.UserTransaction;
 import java.io.IOException;
 import java.util.Date;
+import java.util.logging.Logger;
 import utilities.RedirectUtilities;
 import utilities.SecurityLog;
 import utilities.SessionUtilities;
@@ -29,6 +30,7 @@ public class RatingProductServlet extends HttpServlet {
     EntityManager entityManager;
     @Resource
     UserTransaction userTransaction;
+    private static final Logger LOG = Logger.getLogger(RatingProductServlet.class.getName());
     public static final String VIEW_PRODUCT_URL = "/pages/products/viewProduct";
     public static final String VIEW_PRODUCT_JSP_URL = "/pages/products/viewProduct.jsp";
 
@@ -42,6 +44,7 @@ public class RatingProductServlet extends HttpServlet {
         int productId = Integer.parseInt(request.getParameter("product_id"));
         int productRate = Integer.parseInt(request.getParameter("rating"));
         String productComment = request.getParameter("comment");
+        String url = VIEW_PRODUCT_URL + "?product_id=" + productId;
         try {
             userTransaction.begin();
             Ratings ratings = new Ratings();
@@ -52,10 +55,11 @@ public class RatingProductServlet extends HttpServlet {
             ratings.setUserId(session.getUserId());
             entityManager.persist(ratings);
             userTransaction.commit();
-            RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.SUCCESS, "submit succesfull!", VIEW_PRODUCT_URL + "?product_id=" + productId);
+            RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.SUCCESS, "submit succesfull!", url);
         } catch (HeuristicMixedException | HeuristicRollbackException | NotSupportedException | RollbackException | SystemException | IOException | IllegalStateException | NumberFormatException | SecurityException ex) {
             SecurityLog.addSecurityLog(request, "Product " + productId + " has been added to cart failed.");
-            throw new DatabaseException(ex.getMessage());
+            LOG.severe(ex.getMessage());
+            RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "submit failed!", url);
         }
     }
 }

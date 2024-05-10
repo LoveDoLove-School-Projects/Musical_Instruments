@@ -2,7 +2,6 @@ package controllers.admins;
 
 import entities.Constants;
 import entities.Staffs;
-import exceptions.DatabaseException;
 import jakarta.annotation.Resource;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -18,6 +17,7 @@ import jakarta.transaction.SystemException;
 import jakarta.transaction.UserTransaction;
 import java.io.IOException;
 import java.util.Date;
+import java.util.logging.Logger;
 import utilities.AesUtilities;
 import utilities.RedirectUtilities;
 import utilities.SecurityLog;
@@ -30,6 +30,7 @@ public class AddStaffServlet extends HttpServlet {
     EntityManager entityManager;
     @Resource
     UserTransaction userTransaction;
+    private static final Logger LOG = Logger.getLogger(AddStaffServlet.class.getName());
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -83,7 +84,8 @@ public class AddStaffServlet extends HttpServlet {
             userTransaction.commit();
             return true;
         } catch (NotSupportedException | RollbackException | HeuristicMixedException | HeuristicRollbackException | SecurityException | IllegalStateException | SystemException ex) {
-            throw new DatabaseException(ex.getMessage());
+            LOG.severe(ex.getMessage());
+            return false;
         }
     }
 

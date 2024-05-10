@@ -19,6 +19,7 @@ import jakarta.transaction.RollbackException;
 import jakarta.transaction.SystemException;
 import jakarta.transaction.UserTransaction;
 import java.io.IOException;
+import java.util.logging.Logger;
 import utilities.RedirectUtilities;
 import utilities.SecurityLog;
 import utilities.SessionUtilities;
@@ -29,6 +30,7 @@ public class AddProductToCartServlet extends HttpServlet {
     EntityManager entityManager;
     @Resource
     UserTransaction userTransaction;
+    private static final Logger LOG = Logger.getLogger(AddProductToCartServlet.class.getName());
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -62,7 +64,8 @@ public class AddProductToCartServlet extends HttpServlet {
             RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.SUCCESS, "Add to cart successfull !", Constants.CART_URL);
         } catch (HeuristicMixedException | HeuristicRollbackException | NotSupportedException | RollbackException | SystemException | IOException | IllegalStateException | NumberFormatException | SecurityException ex) {
             SecurityLog.addSecurityLog(request, "Product " + productId + " has been added to cart failed.");
-            throw new DatabaseException(ex.getMessage());
+            LOG.severe(ex.getMessage());
+            RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Add to cart failed!", Constants.PRODUCT_URL);
         }
     }
 }

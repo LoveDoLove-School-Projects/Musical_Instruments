@@ -24,6 +24,7 @@ import jakarta.transaction.UserTransaction;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.logging.Logger;
 import utilities.RedirectUtilities;
 import utilities.SessionUtilities;
 
@@ -33,6 +34,7 @@ public class UpdateOrderServlet extends HttpServlet {
     EntityManager entityManager;
     @Resource
     UserTransaction userTransaction;
+    private static final Logger LOG = Logger.getLogger(UpdateOrderServlet.class.getName());
     private static final String RECEIPT_URL = "/payments/receipt";
 
     @Override
@@ -48,14 +50,21 @@ public class UpdateOrderServlet extends HttpServlet {
         }
         int userId = session.getUserId();
         String tnxStatus = request.getParameter("txnStatus");
-        if (!tnxStatus.equals(TransactionStatus.APPROVED)) {
-            return;
-        }
         String transaction_number = request.getParameter("transaction_number");
         String orderNumber = request.getParameter("order_number");
+        String url = RECEIPT_URL + "?transaction_number=" + transaction_number;
+        if (tnxStatus == null || transaction_number == null || orderNumber == null) {
+            RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Invalid transaction details", "/");
+            return;
+        }
+        if (!tnxStatus.equals(TransactionStatus.APPROVED)) {
+            RedirectUtilities.sendRedirect(request, response, url);
+            return;
+        }
         Transactions transactions = entityManager.createNamedQuery("Transactions.findByTransactionNumberAndUserId", Transactions.class).setParameter("transactionNumber", transaction_number).setParameter("userId", userId).getSingleResult();
         if (transactions == null) {
             RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "No transaction record", "/");
+            return;
         }
         List<Carts> carts = entityManager.createNamedQuery("Carts.findByCustomerId").setParameter("customerId", userId).getResultList();
         try {
@@ -82,10 +91,10 @@ public class UpdateOrderServlet extends HttpServlet {
                 entityManager.persist(orders);
             }
             userTransaction.commit();
-            String url = RECEIPT_URL + "?transaction_number=" + transaction_number;
             RedirectUtilities.sendRedirect(request, response, url);
         } catch (HeuristicMixedException | HeuristicRollbackException | NotSupportedException | RollbackException | SystemException | IOException | IllegalStateException | NumberFormatException | SecurityException ex) {
-            throw new DatabaseException(ex.getMessage());
+            LOG.severe(ex.getMessage());
+            RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Failed to update order! Please contact support to resolve the issue.", "/");
         }
     }
 }

@@ -5,7 +5,6 @@ import entities.Customers;
 import static entities.Role.CUSTOMER;
 import entities.Session;
 import entities.Staffs;
-import exceptions.DatabaseException;
 import jakarta.annotation.Resource;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -21,6 +20,7 @@ import jakarta.transaction.RollbackException;
 import jakarta.transaction.SystemException;
 import jakarta.transaction.UserTransaction;
 import java.io.IOException;
+import java.util.logging.Logger;
 import utilities.RedirectUtilities;
 import utilities.RedirectUtilities.RedirectType;
 import utilities.SecurityLog;
@@ -33,6 +33,7 @@ public class RemoveProfilePictureServlet extends HttpServlet {
     EntityManager entityManager;
     @Resource
     UserTransaction userTransaction;
+    private static final Logger LOG = Logger.getLogger(RemoveProfilePictureServlet.class.getName());
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -77,7 +78,8 @@ public class RemoveProfilePictureServlet extends HttpServlet {
             return true;
         } catch (RollbackException | HeuristicMixedException | HeuristicRollbackException | NotSupportedException | SystemException | IllegalStateException | SecurityException ex) {
             SecurityLog.addSecurityLog(request, "Error removing profile picture for customer " + customer.getUserId());
-            throw new DatabaseException(ex.getMessage());
+            LOG.severe(ex.getMessage());
+            return false;
         }
     }
 
@@ -95,7 +97,8 @@ public class RemoveProfilePictureServlet extends HttpServlet {
             return true;
         } catch (RollbackException | HeuristicMixedException | HeuristicRollbackException | NotSupportedException | SystemException | IllegalStateException | SecurityException ex) {
             SecurityLog.addSecurityLog(request, "Error removing profile picture for staff " + staff.getUserId());
-            throw new DatabaseException(ex.getMessage());
+            LOG.severe(ex.getMessage());
+            return false;
         }
     }
 }

@@ -17,6 +17,7 @@ import jakarta.transaction.RollbackException;
 import jakarta.transaction.SystemException;
 import jakarta.transaction.UserTransaction;
 import java.io.IOException;
+import java.util.logging.Logger;
 import utilities.RedirectUtilities;
 import utilities.SecurityLog;
 
@@ -26,6 +27,7 @@ public class DeleteStaffServlet extends HttpServlet {
     EntityManager entityManager;
     @Resource
     UserTransaction userTransaction;
+    private static final Logger LOG = Logger.getLogger(DeleteStaffServlet.class.getName());
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -39,7 +41,8 @@ public class DeleteStaffServlet extends HttpServlet {
             RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.SUCCESS, "Staff " + staff.getUsername() + " deleted successfully.", Constants.ADMIN_SEARCH_STAFF_URL);
         } catch (HeuristicMixedException | HeuristicRollbackException | NotSupportedException | RollbackException | SystemException | IllegalStateException | NumberFormatException | SecurityException ex) {
             SecurityLog.addInternalSecurityLog(request, "Failed to delete staff: " + userID + ".");
-            throw new DatabaseException(ex.getMessage());
+            LOG.severe(ex.getMessage());
+            RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Failed to delete staff: " + userID + ".", Constants.ADMIN_SEARCH_STAFF_URL);
         }
     }
 }

@@ -3,7 +3,6 @@ package controllers;
 import entities.Customers;
 import entities.Resetpassword;
 import entities.Staffs;
-import exceptions.DatabaseException;
 import jakarta.annotation.Resource;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -19,6 +18,7 @@ import jakarta.transaction.SystemException;
 import jakarta.transaction.UserTransaction;
 import java.io.IOException;
 import java.util.List;
+import java.util.logging.Logger;
 import utilities.AesUtilities;
 import utilities.MailSender;
 import utilities.RedirectUtilities;
@@ -32,6 +32,7 @@ public class ForgotPasswordServlet extends HttpServlet {
     EntityManager entityManager;
     @Resource
     UserTransaction userTransaction;
+    private static final Logger LOG = Logger.getLogger(ForgotPasswordServlet.class.getName());
     private static final String FORGOT_PASSWORD_JSP_URL = "/pages/forgotPassword.jsp";
     private static final String FORGOT_PASSWORD_URL = "/pages/forgotPassword";
     private static final String SUBJECT = "Reset Password";
@@ -120,7 +121,8 @@ public class ForgotPasswordServlet extends HttpServlet {
             userTransaction.commit();
             return true;
         } catch (HeuristicMixedException | HeuristicRollbackException | NotSupportedException | RollbackException | SystemException | IllegalStateException | SecurityException ex) {
-            throw new DatabaseException(ex.getMessage());
+            LOG.severe(ex.getMessage());
+            return false;
         }
     }
 

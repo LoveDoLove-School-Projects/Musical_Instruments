@@ -14,6 +14,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
+import java.util.logging.Logger;
 import services.OtpServices;
 import utilities.AesUtilities;
 import utilities.RedirectUtilities;
@@ -26,6 +27,7 @@ public class LoginServlet extends HttpServlet {
 
     @PersistenceContext
     EntityManager entityManager;
+    private static final Logger LOG = Logger.getLogger(LoginServlet.class.getName());
     private static final String LOGIN_JSP_URL = "/pages/login.jsp";
     private static final String LOGIN_2FA_URL = "/sessions/login2fa";
     private final OtpServices otpServices = new OtpServices();
@@ -91,7 +93,8 @@ public class LoginServlet extends HttpServlet {
                     .getResultList();
             return customerList.isEmpty() ? null : customerList.get(0);
         } catch (Exception ex) {
-            throw new DatabaseException(ex.getMessage());
+            LOG.severe(ex.getMessage());
+            return null;
         }
     }
 

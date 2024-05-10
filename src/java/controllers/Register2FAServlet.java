@@ -3,7 +3,6 @@ package controllers;
 import entities.Constants;
 import entities.Customers;
 import entities.OtpsType;
-import exceptions.DatabaseException;
 import jakarta.annotation.Resource;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -22,6 +21,7 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.EnumMap;
 import java.util.Map;
+import java.util.logging.Logger;
 import services.OtpServices;
 import utilities.AesUtilities;
 import utilities.RedirectUtilities;
@@ -34,6 +34,7 @@ public class Register2FAServlet extends HttpServlet {
     EntityManager entityManager;
     @Resource
     UserTransaction userTransaction;
+    private static final Logger LOG = Logger.getLogger(Register2FAServlet.class.getName());
     private static final String REGISTER_2FA_JSP_URL = "/sessions/register2fa.jsp";
     private static final String REGISTER_URL = "/pages/register";
     private static final String REGISTER_2FA_URL = "/sessions/register2fa";
@@ -145,7 +146,8 @@ public class Register2FAServlet extends HttpServlet {
             userTransaction.commit();
             return true;
         } catch (HeuristicMixedException | HeuristicRollbackException | NotSupportedException | RollbackException | SystemException | IllegalStateException | SecurityException ex) {
-            throw new DatabaseException(ex.getMessage());
+            LOG.severe(ex.getMessage());
+            return false;
         }
     }
 }

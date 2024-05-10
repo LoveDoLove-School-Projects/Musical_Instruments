@@ -19,17 +19,18 @@ import entities.Environment;
 import entities.MemoryCache;
 import entities.OrderDetails;
 import entities.PaypalPayment;
-import exceptions.PaymentException;
 import jakarta.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Logger;
 import utilities.AesUtilities;
 import utilities.HttpUtilities;
 
 public class PaypalServices {
 
+    private static final Logger LOG = Logger.getLogger(PaypalServices.class.getName());
     private static final String CLIENT_ID = "AZrjdHeC-KD9nsZVH8HR54O-3ZgvAshjqYq4hiPgXGL7ZKcps159a3mTW-YqLlvLQzBNveUjdpSELOuX";
     private static final String CLIENT_SECRET = "EGwkzMhtunT9dpkeIGuanST6nkKzdwRVFWHofvCYv8HFHy-RMk_A65bfFVw_p08ZCQaIMEtZKXVOswOY";
     private static final String ACCESS_TOKEN_API = AesUtilities.aes256EcbDecrypt(Environment.ACCESS_TOKEN_API);
@@ -57,7 +58,8 @@ public class PaypalServices {
             String paymentJsonPayload = constructPayload(cartList, customer);
             return createPayment(accessToken, paymentJsonPayload);
         } catch (IOException ex) {
-            throw new PaymentException(ex.getMessage());
+            LOG.severe(ex.getMessage());
+            return null;
         }
     }
 
@@ -172,7 +174,8 @@ public class PaypalServices {
             String jsonPayload = "{\"access_token\":\"" + accessToken + "\",\"payment_body\":" + paymentJsonPayload + "}";
             return HttpUtilities.sendHttpJsonRequest(CREATE_PAYMENT_API, jsonPayload);
         } catch (Exception ex) {
-            throw new PaymentException(ex.getMessage());
+            LOG.severe(ex.getMessage());
+            return null;
         }
     }
 
@@ -187,7 +190,8 @@ public class PaypalServices {
             return new Gson().fromJson(response, PaypalPayment.class
             );
         } catch (JsonSyntaxException | IOException ex) {
-            throw new PaymentException(ex.getMessage());
+            LOG.severe(ex.getMessage());
+            return null;
         }
     }
 
@@ -202,7 +206,8 @@ public class PaypalServices {
             return new Gson().fromJson(response, PaypalPayment.class
             );
         } catch (JsonSyntaxException | IOException ex) {
-            throw new PaymentException(ex.getMessage());
+            LOG.severe(ex.getMessage());
+            return null;
         }
     }
 }

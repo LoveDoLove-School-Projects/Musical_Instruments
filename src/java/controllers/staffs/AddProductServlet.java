@@ -1,7 +1,6 @@
 package controllers.staffs;
 
 import entities.Products;
-import exceptions.DatabaseException;
 import jakarta.annotation.Resource;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -18,6 +17,7 @@ import jakarta.transaction.SystemException;
 import jakarta.transaction.UserTransaction;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.logging.Logger;
 import utilities.RedirectUtilities;
 import utilities.SecurityLog;
 import utilities.SessionUtilities;
@@ -29,6 +29,7 @@ public class AddProductServlet extends HttpServlet {
     EntityManager entityManager;
     @Resource
     UserTransaction userTransaction;
+    private static final Logger LOG = Logger.getLogger(AddProductServlet.class.getName());
     private static final String ADD_PRODUCT_JSP_URL = "/pages/staffs/addProduct.jsp";
     private static final String ADD_PRODUCT_URL = "/pages/staffs/addProduct";
     private static final String STAFF_SEARCH_PRODUCT_URL = "/pages/staffs/staffSearchProduct";
@@ -77,7 +78,8 @@ public class AddProductServlet extends HttpServlet {
             RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.SUCCESS, "Product Added successful!", STAFF_SEARCH_PRODUCT_URL);
         } catch (NotSupportedException | SystemException | RollbackException | HeuristicMixedException | HeuristicRollbackException | SecurityException | IllegalStateException ex) {
             SecurityLog.addInternalSecurityLog(request, "Failed to add product: " + productName + ".");
-            throw new DatabaseException(ex.getMessage());
+            LOG.severe(ex.getMessage());
+            RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Failed to add product!", ADD_PRODUCT_URL);
         }
     }
 }

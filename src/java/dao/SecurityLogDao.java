@@ -3,12 +3,13 @@ package dao;
 import controllers.ConnectionController;
 import entities.Internalsecuritylog;
 import entities.Securitylog;
-import exceptions.DatabaseException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.util.logging.Logger;
 
 public class SecurityLogDao {
 
+    private static final Logger LOG = Logger.getLogger(SecurityLogDao.class.getName());
     private static final String ADD_SECURITY_LOG_SQL = "INSERT INTO SECURITYLOG (USER_ID, USERNAME, EMAIL, ROLE, ACTION, IP_ADDRESS, USER_AGENT) VALUES (?, ?, ?, ?, ?, ?, ?)";
     private static final String ADD_INTERNAL_SECURITY_LOG_SQL = "INSERT INTO INTERNALSECURITYLOG (USER_ID, USERNAME, EMAIL, ACTION, IP_ADDRESS, USER_AGENT) VALUES (?, ?, ?, ?, ?, ?)";
 
@@ -23,7 +24,7 @@ public class SecurityLogDao {
             preparedStatement.setString(7, securitylog.getUserAgent());
             preparedStatement.executeUpdate();
         } catch (Exception ex) {
-            throw new DatabaseException(ex.getMessage());
+            LOG.severe(ex.getMessage());
         }
     }
 
@@ -37,7 +38,7 @@ public class SecurityLogDao {
             preparedStatement.setString(6, internalsecuritylog.getUserAgent());
             preparedStatement.executeUpdate();
         } catch (Exception ex) {
-            throw new DatabaseException(ex.getMessage());
+            LOG.severe(ex.getMessage());
         }
     }
 }

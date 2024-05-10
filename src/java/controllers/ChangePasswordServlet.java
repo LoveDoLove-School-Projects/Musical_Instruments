@@ -19,6 +19,7 @@ import jakarta.transaction.SystemException;
 import jakarta.transaction.UserTransaction;
 import java.io.IOException;
 import java.util.List;
+import java.util.logging.Logger;
 import utilities.AesUtilities;
 import utilities.RedirectUtilities;
 import utilities.RedirectUtilities.RedirectType;
@@ -33,6 +34,7 @@ public class ChangePasswordServlet extends HttpServlet {
     EntityManager entityManager;
     @Resource
     UserTransaction userTransaction;
+    private static final Logger LOG = Logger.getLogger(ChangePasswordServlet.class.getName());
     private static final String CHANGE_PASSWORD_JSP_URL = "/pages/changePassword.jsp";
 
     @Override
@@ -93,7 +95,7 @@ public class ChangePasswordServlet extends HttpServlet {
                 break;
         }
         if (!isPasswordChanged) {
-            RedirectUtilities.redirectWithMessage(request, response, RedirectType.DANGER, "An error occurred while resetting password", "/");
+            RedirectUtilities.redirectWithMessage(request, response, RedirectType.DANGER, "Failed to change password", "/");
             return;
         }
         RedirectUtilities.redirectWithMessage(request, response, RedirectType.SUCCESS, "Password reset successfully", "/");
@@ -114,7 +116,8 @@ public class ChangePasswordServlet extends HttpServlet {
             return true;
         } catch (HeuristicMixedException | HeuristicRollbackException | NotSupportedException | RollbackException | SystemException | IllegalStateException | SecurityException ex) {
             SecurityLog.addSecurityLog(request, "Failed to change password for customer: " + session.getUserId() + ".");
-            throw new DatabaseException(ex.getMessage());
+            LOG.severe(ex.getMessage());
+            return false;
         }
     }
 
@@ -133,7 +136,8 @@ public class ChangePasswordServlet extends HttpServlet {
             return true;
         } catch (HeuristicMixedException | HeuristicRollbackException | NotSupportedException | RollbackException | SystemException | IllegalStateException | SecurityException ex) {
             SecurityLog.addSecurityLog(request, "Failed to change password for staff: " + session.getUserId() + ".");
-            throw new DatabaseException(ex.getMessage());
+            LOG.severe(ex.getMessage());
+            return false;
         }
     }
 

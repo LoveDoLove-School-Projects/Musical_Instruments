@@ -1,7 +1,7 @@
 package controllers.carts;
 
-import entities.Constants;
 import entities.Carts;
+import entities.Constants;
 import entities.Products;
 import entities.Session;
 import exceptions.DatabaseException;
@@ -20,6 +20,7 @@ import jakarta.transaction.SystemException;
 import jakarta.transaction.UserTransaction;
 import java.io.IOException;
 import java.util.List;
+import java.util.logging.Logger;
 import utilities.RedirectUtilities;
 import utilities.SecurityLog;
 import utilities.SessionUtilities;
@@ -30,6 +31,7 @@ public class EditCartServlet extends HttpServlet {
     EntityManager entityManager;
     @Resource
     UserTransaction userTransaction;
+    private static final Logger LOG = Logger.getLogger(EditCartServlet.class.getName());
     private static final String EDITCART_JSP_URL = "/pages/carts/editCart.jsp";
 
     @Override
@@ -74,7 +76,8 @@ public class EditCartServlet extends HttpServlet {
             RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.SUCCESS, "Your cart has been update !", Constants.CART_URL);
         } catch (HeuristicMixedException | HeuristicRollbackException | NotSupportedException | RollbackException | SystemException | IOException | IllegalStateException | NumberFormatException | SecurityException ex) {
             SecurityLog.addSecurityLog(request, "Product " + cardId + " has been update in cart failed.");
-            throw new DatabaseException(ex.getMessage());
+            LOG.severe(ex.getMessage());
+            RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Update cart failed!", Constants.CART_URL);
         }
     }
 }

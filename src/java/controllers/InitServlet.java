@@ -1,7 +1,7 @@
 package controllers;
 
 import entities.Environment;
-import entities.TrustAllCertificates;
+import utilities.TrustAllCertificates;
 import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.ServletContextListener;
 import jakarta.servlet.http.HttpServletRequest;

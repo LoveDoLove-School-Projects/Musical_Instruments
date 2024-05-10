@@ -19,9 +19,9 @@ import jakarta.transaction.SystemException;
 import jakarta.transaction.UserTransaction;
 import java.io.IOException;
 import java.util.List;
+import java.util.logging.Logger;
 import utilities.AesUtilities;
 import utilities.RedirectUtilities;
-import utilities.SecurityLog;
 import utilities.RedirectUtilities.RedirectType;
 import utilities.StringUtilities;
 import utilities.ValidationUtilities;
@@ -32,6 +32,7 @@ public class ResetPasswordServlet extends HttpServlet {
     EntityManager entityManager;
     @Resource
     UserTransaction userTransaction;
+    private static final Logger LOG = Logger.getLogger(ResetPasswordServlet.class.getName());
     private static final String RESET_PASSWORD_JSP_URL = "/pages/resetPassword.jsp";
 
     @Override
@@ -97,7 +98,7 @@ public class ResetPasswordServlet extends HttpServlet {
             entityManager.remove(managedResetPassword);
             userTransaction.commit();
         } catch (HeuristicMixedException | HeuristicRollbackException | NotSupportedException | RollbackException | SystemException | IllegalStateException | SecurityException ex) {
-            throw new DatabaseException(ex.getMessage());
+            LOG.severe(ex.getMessage());
         }
     }
 
@@ -114,7 +115,8 @@ public class ResetPasswordServlet extends HttpServlet {
             userTransaction.commit();
             return true;
         } catch (HeuristicMixedException | HeuristicRollbackException | NotSupportedException | RollbackException | SystemException | IllegalStateException | SecurityException ex) {
-            throw new DatabaseException(ex.getMessage());
+            LOG.severe(ex.getMessage());
+            return false;
         }
     }
 
@@ -131,7 +133,8 @@ public class ResetPasswordServlet extends HttpServlet {
             userTransaction.commit();
             return true;
         } catch (HeuristicMixedException | HeuristicRollbackException | NotSupportedException | RollbackException | SystemException | IllegalStateException | SecurityException ex) {
-            throw new DatabaseException(ex.getMessage());
+            LOG.severe(ex.getMessage());
+            return false;
         }
     }
 

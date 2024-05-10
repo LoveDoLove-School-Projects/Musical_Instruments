@@ -1,7 +1,7 @@
 package controllers;
 
-import entities.Constants;
 import entities.Carts;
+import entities.Constants;
 import entities.Customers;
 import entities.OrderDetails;
 import entities.OtpsType;
@@ -26,6 +26,7 @@ import java.util.Date;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 import services.OtpServices;
 import services.TransactionServices;
 import utilities.RedirectUtilities;
@@ -39,6 +40,7 @@ public class CreditDebitCardVerifyServlet extends HttpServlet {
     EntityManager entityManager;
     @Resource
     UserTransaction userTransaction;
+    private static final Logger LOG = Logger.getLogger(CreditDebitCardVerifyServlet.class.getName());
     private static final String CCDC_VERIFY_JSP_URL = "/payments/ccdcVerify.jsp";
     private static final String RECEIPT_URL = "/payments/receipt";
     private static final String RESEND_OTP_URL = "/api/payments/ccdc/resendOtp";
@@ -172,7 +174,8 @@ public class CreditDebitCardVerifyServlet extends HttpServlet {
             return dbTransaction;
         } catch (HeuristicMixedException | HeuristicRollbackException | NotSupportedException | RollbackException | SystemException | IllegalStateException | NumberFormatException | SecurityException ex) {
             SecurityLog.addSecurityLog(request, "Failed to update transaction: " + transaction.getTransactionNumber());
-            throw new DatabaseException(ex.getMessage());
+            LOG.severe(ex.getMessage());
+            return null;
         }
     }
 }
