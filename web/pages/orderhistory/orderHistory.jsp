@@ -35,7 +35,7 @@ int numberOrder=0;
                                 <tr>
                                     <th>No.</th>
                                     <th>Order Number</th>
-                                    <th>Total Number</th>
+                                    <th>Total Amount</th>
                                     <th>Order Date</th>
                                 </tr>
                             </thead>

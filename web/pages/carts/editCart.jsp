@@ -2,10 +2,10 @@
 <%@ page contentType="text/html" pageEncoding="UTF-8" %>
 <c:set var="path" value="${pageContext.request.contextPath}" />
 <c:set var="basePath" value="${pageContext.request.scheme}://${pageContext.request.serverName}:${pageContext.request.serverPort}${path}/" />
+<jsp:useBean id="editCartDetails" class="entities.Carts" scope="session" />
+<jsp:useBean id="productDetails" class="entities.Products" scope="session" />
 <%@ page import="java.util.List"%>
 <%@ page import="java.util.Base64"%>
-<%@ page import="entities.Carts" %>
-<%@ page import="entities.Products" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -59,9 +59,9 @@
                 <div class="container">
                     <div class="row m-5 d-flex align-items-center justify-content-center">
                         <%
-                            Carts carts = (Carts) request.getAttribute("editCartDetails");
-                            Products products = (Products) request.getAttribute("productDetails");
-                            String pictureBase64 = Base64.getEncoder().encodeToString(carts.getProductImage());
+                            //Carts carts = (Carts) request.getAttribute("editCartDetails");
+                            //Products products = (Products) request.getAttribute("productDetails");
+                            String pictureBase64 = Base64.getEncoder().encodeToString(editCartDetails.getProductImage());
                             String imageSrc = "data:image/png;base64," + pictureBase64; // Change "image/png" based on the actual image type
                         %>
                         <div class="row m-5 d-flex align-items-center justify-content-center">
@@ -70,17 +70,17 @@
                                     <img src="<%=imageSrc%>" class="img-fluid w-100 m-5">
                                 </div>
                                 <div class="col-7 px-5">
-                                    <h1 class="m-4"><strong><%=carts.getProductName()%></strong></h1>
+                                    <h1 class="m-4"><strong><%=editCartDetails.getProductName()%></strong></h1>
                                     <hr>
-                                    <h3 class="my-4"><strong>RM <%=carts.getProductPrice()%></strong></h3>
-                                    <h3 class="my-4"><strong>Stock:</strong> <%=products.getQuantity()%></h3>
-                                    <h3 class="my-4"><strong>Color:</strong> <%=carts.getProductColor()%></h3>
+                                    <h3 class="my-4"><strong>RM <%=editCartDetails.getProductPrice()%></strong></h3>
+                                    <h3 class="my-4"><strong>Stock:</strong> <%=productDetails.getQuantity()%></h3>
+                                    <h3 class="my-4"><strong>Color:</strong> <%=editCartDetails.getProductColor()%></h3>
                                     <hr>
                                     <h5 class="my-2"><strong>Quantity</strong></h5>
                                     <form method="POST" action="pages/carts/editCart" class="qty-container" id="editCartForm">
                                         <button class="qty-btn-minus" type="button"><i class="fa fa-minus"></i></button>
-                                        <input type="number" name="productQuantity" value="<%=carts.getProductQuantity()%>" class="input-qty w-50 text-center p-2" min="1" max="<%=products.getQuantity()%>"/>
-                                        <input type="hidden" name="cartId" value="<%=carts.getCartId()%>"/>
+                                        <input type="number" name="productQuantity" value="<%=editCartDetails.getProductQuantity()%>" class="input-qty w-50 text-center p-2" min="1" max="<%=productDetails.getQuantity()%>"/>
+                                        <input type="hidden" name="cartId" value="<%=editCartDetails.getCartId()%>"/>
                                         <button class="qty-btn-plus" type="button"><i class="fa fa-plus"></i></button><br>
                                         <button type="submit" class="my-4 mx-auto p-2 addtocartbtn" id="editCartBtn"><strong>Update cart</strong></button>
                                     </form>
