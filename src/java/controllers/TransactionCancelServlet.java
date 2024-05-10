@@ -4,7 +4,6 @@ import entities.Constants;
 import entities.Session;
 import entities.TransactionStatus;
 import entities.Transactions;
-import exceptions.DatabaseException;
 import jakarta.annotation.Resource;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -56,7 +55,7 @@ public class TransactionCancelServlet extends HttpServlet {
         request.getRequestDispatcher(CANCEL_JSP_URL).forward(request, response);
     }
 
-    private boolean updateTransactionToDB(HttpServletRequest request, Session session, String transaction_number) throws DatabaseException {
+    private boolean updateTransactionToDB(HttpServletRequest request, Session session, String transaction_number) {
         try {
             userTransaction.begin();
             Transactions dbTransaction = entityManager.createNamedQuery("Transactions.findByTransactionNumberAndUserId", Transactions.class).setParameter("transactionNumber", transaction_number).setParameter("userId", session.getUserId()).getSingleResult();

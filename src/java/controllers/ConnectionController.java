@@ -1,6 +1,5 @@
 package controllers;
 
-import exceptions.DatabaseException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -17,7 +16,7 @@ public class ConnectionController {
             Connection connection = DriverManager.getConnection(HOST, USER, PASSWORD);
             return connection;
         } catch (ClassNotFoundException | SQLException ex) {
-            throw new DatabaseException(ex.getMessage());
+            throw new RuntimeException(ex.getMessage());
         }
     }
 }

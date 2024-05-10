@@ -6,7 +6,6 @@ import static entities.Role.CUSTOMER;
 import static entities.Role.STAFF;
 import entities.Session;
 import entities.Staffs;
-import exceptions.DatabaseException;
 import jakarta.annotation.Resource;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;

@@ -3,7 +3,6 @@ package controllers.products;
 import entities.Constants;
 import entities.Ratings;
 import entities.Session;
-import exceptions.DatabaseException;
 import jakarta.annotation.Resource;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;

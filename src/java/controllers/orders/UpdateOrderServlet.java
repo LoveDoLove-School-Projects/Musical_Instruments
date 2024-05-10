@@ -7,7 +7,6 @@ import entities.Products;
 import entities.Session;
 import entities.TransactionStatus;
 import entities.Transactions;
-import exceptions.DatabaseException;
 import jakarta.annotation.Resource;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;

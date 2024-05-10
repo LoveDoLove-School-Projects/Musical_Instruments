@@ -1,7 +1,6 @@
 package controllers.staffs;
 
 import entities.Products;
-import exceptions.DatabaseException;
 import jakarta.annotation.Resource;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
