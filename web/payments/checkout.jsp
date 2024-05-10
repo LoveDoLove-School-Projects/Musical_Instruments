@@ -51,7 +51,7 @@ response.setHeader("Cache-Control", "no-store");
                         <th class="col"><%=carts.getProductColor()%></th>
                         <th class="col"><%=carts.getProductQuantity()%></th>
                         <th class="col">RM<%=carts.getProductPrice()%></th>
-                        <th class="col">RM<%=carts.getProductTotalprice()%></th>
+                        <th class="col">RM<%=String.format("%.2f",carts.getProductTotalprice())%></th>
                     </tr>
                     <%
                         }

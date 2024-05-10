@@ -84,6 +84,37 @@ response.setHeader("Cache-Control", "no-store");
                 </div>
             </div>
         </div>
-        <script type="module" src="assets/js/ccdc.js"></script>
+        <script type="module">
+            import { showInfoDialog, showProgressDialog } from "${basePath}assets/js/dialog.js";
+            $("#submitButton").prop('disabled', true);
+            $("#otp").keyup(function () {
+                // if is not digit or length is not 6 then disable the submit button
+                if (!/^\d+$/.test($(this).val())) {
+                    $(this).val("");
+                    return;
+                }
+                if ($(this).val().length === 6) {
+                    $("#submitButton").prop('disabled', false);
+                } else {
+                    $("#submitButton").prop('disabled', true);
+                }
+            });
+            $("#cancel").click(function (event) {
+                event.preventDefault();
+                showConfirmDialog("Are you sure you want to cancel the payment?", function () {
+                    window.location.href = "payments/cancel?transaction_number=${transaction.getTransactionNumber()}";
+                });
+            });
+            $("#resendOtp").click(function () {
+                showProgressDialog("Resending OTP...");
+                $.ajax({
+                    url: "api/payments/ccdc/resendOtp",
+                    type: "POST",
+                    success: function (data) {
+                        showInfoDialog(data.message);
+                    },
+                });
+            });
+        </script>
     </body>
 </html>
