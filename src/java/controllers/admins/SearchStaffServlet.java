@@ -23,6 +23,7 @@ public class SearchStaffServlet extends HttpServlet {
             throws ServletException, IOException {
         List<Staffs> staffList = entityManager.createNamedQuery("Staffs.findAll", Staffs.class).getResultList();
         request.setAttribute("staffCount", staffList.size());
+        request.setAttribute("staffList", staffList);
         request.getRequestDispatcher("/pages/admins/searchStaff.jsp").forward(request, response);
     }
 

@@ -30,7 +30,7 @@ int numberOrder=0;
                         <h3 class="panel-title">Order History</h3>
                     </div>
                     <div class="panel panel-default">
-                        <table class="table table-striped table-bordered table-hover">
+                        <table id="orderHistoryTable" class="table table-striped table-bordered table-hover">
                             <thead>
                                 <tr>
                                     <th>No.</th>
@@ -76,17 +76,16 @@ int numberOrder=0;
                 </div>
             </div>
         </div>
-
-    </section>
-</main>
-<jsp:include page="/defaults/footer.jsp" />
-<script>
-    $(document).ready(function () {
-        $('.clickable-row').click(function () {
-            window.location = $(this).data("href");
-        });
-    });
-</script>
-
-</body>
+        <jsp:include page="/defaults/footer.jsp" />
+        <script type="module">
+            $(document).ready(function () {
+                $('.clickable-row').click(function () {
+                    window.location = $(this).data("href");
+                });
+            });
+            $(document).ready(function () {
+                $('#orderHistoryTable').DataTable();
+            });
+        </script>
+    </body>
 </html>

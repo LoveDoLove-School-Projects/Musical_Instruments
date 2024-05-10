@@ -2,6 +2,8 @@
 <%@ page contentType="text/html" pageEncoding="UTF-8" %>
 <c:set var="path" value="${pageContext.request.contextPath}" />
 <c:set var="basePath" value="${pageContext.request.scheme}://${pageContext.request.serverName}:${pageContext.request.serverPort}${path}/" />
+<%@ page import="java.util.*" %>
+<%@ page import="entities.Customers" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -73,6 +75,50 @@
                 <button type="submit" class="btn btn-primary">Search</button>
             </form>
         </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="panel panel-default">
+                        <div class="panel-body table-responsive">
+                            <table id="searchCustomerTable" class="table table-striped table-bordered table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Name</th>
+                                        <th>Gender</th>
+                                        <th>Email</th>
+                                        <th>Phone Number</th>
+                                        <th>Account Creation Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <%
+                                        List<Customers> customerList = (List<Customers>) request.getAttribute("customerList");
+                                        if (customerList != null) {
+                                            for (Customers customer : customerList) {
+                                    %>
+                                    <tr>
+                                        <td><%=customer.getUserId()%></td>
+                                        <td><%=customer.getUsername()%></td>
+                                        <td><%=customer.getGender()%></td>
+                                        <td><%=customer.getEmail()%></td>
+                                        <td><%=customer.getPhoneNumber()%></td>
+                                        <td><%=customer.getAccountCreationDate()%></td>
+                                    </tr>
+                                    <% }
+                                    } %>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         <jsp:include page="/defaults/footer.jsp" />
+        <script type="module">
+            $(document).ready(function () {
+                $('#searchCustomerTable').DataTable();
+            });
+        </script>
     </body>
 </html>

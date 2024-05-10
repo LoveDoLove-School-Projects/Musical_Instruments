@@ -23,7 +23,7 @@
                             <br><h3 class="panel-title"><i class="fas fa-book">  Recent Event(s): </i></h3>
                         </div>
                         <div class="panel-body table-responsive">
-                            <table class="table table-striped table-bordered table-hover">
+                            <table id="internalSecurityLogTable" class="table table-striped table-bordered table-hover">
                                 <thead>
                                     <tr>
                                         <th>Date/Time</th>
@@ -54,5 +54,10 @@
             </div>
         </div>
         <jsp:include page="/defaults/footer.jsp" />
+        <script type="module">
+            $(document).ready(function () {
+                $('#internalSecurityLogTable').DataTable();
+            });
+        </script>
     </body>
 </html>
