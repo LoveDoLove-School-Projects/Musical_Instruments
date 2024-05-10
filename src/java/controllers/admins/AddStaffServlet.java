@@ -70,7 +70,6 @@ public class AddStaffServlet extends HttpServlet {
             if (existingStaff != null) {
                 return false;
             }
-
             userTransaction.begin();
             staff.setUsername(staff.getUsername());
             staff.setPassword(AesUtilities.aes256EcbEncrypt(staff.getEmail()));
@@ -108,5 +107,4 @@ public class AddStaffServlet extends HttpServlet {
                 .orElse(null);
         return existingStaff == null;
     }
-
 }

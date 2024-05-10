@@ -28,8 +28,10 @@ function setSubmitButton() {
   }
   submitButtonElement.onclick = function () {
     if (checkAllFields()) {
-      showProgressDialog("Verifying OTP...");
-      verifyFormElement.submit();
+      showConfirmDialog("Are you sure you want to proceed with the payment?", function () {
+        showProgressDialog("Processing payment...");
+        verifyFormElement.submit();
+      });
     }
   };
 }

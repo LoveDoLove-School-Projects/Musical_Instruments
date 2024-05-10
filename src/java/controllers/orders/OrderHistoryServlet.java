@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 import utilities.RedirectUtilities;
 import utilities.SessionUtilities;
@@ -31,9 +32,9 @@ public class OrderHistoryServlet extends HttpServlet {
             return;
         }
         List<Orders> orders = entityManager.createNamedQuery("Orders.findByUserId").setParameter("userId", sessionChkUser.getUserId()).getResultList();
+        Collections.reverse(orders);
         request.setAttribute("orderLists", orders);
         request.setAttribute("entityManager", entityManager);
         request.getRequestDispatcher(Constants.ORDERHISTORY_JSP_URL).forward(request, response);
-
     }
 }

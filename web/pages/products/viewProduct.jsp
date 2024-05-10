@@ -14,7 +14,7 @@ String IMAGE_DEFAULT_PATH = "assets/database/productImage/";
 
 %>
 <!DOCTYPE html>
-<html> 
+<html>
     <head>
         <jsp:include page="/defaults/head.jsp" />
         <title>Products Page</title>
@@ -39,10 +39,8 @@ String IMAGE_DEFAULT_PATH = "assets/database/productImage/";
 
             .productImage{
                 background-color: #d9d9e1;
-                border: solid black 0spx;
+                border: solid black 0px;
             }
-
-
 
             .qty-container .input-qty{
                 border: 1px solid #d4d4d4;
@@ -69,7 +67,13 @@ String IMAGE_DEFAULT_PATH = "assets/database/productImage/";
                 border-radius: 20px;
             }
 
+            .fa-star {
+                color: grey;
+            }
 
+            .fa-star.checked {
+                color: yellow;
+            }
 
         </style>
 
@@ -117,11 +121,11 @@ String IMAGE_DEFAULT_PATH = "assets/database/productImage/";
                     <div class="row  d-flex align-items-center justify-content-center">
                         <div class="col-12 ratingForm w-50">
                             <h2 class="text-center">Rate this product:</h2>
-                            <form action="pages/ratings/addRating" method="post" class="w-50 mx-auto">
+                            <form action="pages/ratings/addRating" method="post" class="w-50 mx-auto" id="ratingForm">
                                 <input type="hidden" name="product_id" value="<%=productId%>" />
                                 <label for="rating" class="w-50">Rating:</label>
                                 <select name="rating" id="rating" class="w-100">
-                                    <!-- 5 stars so 5 options -->
+                                    //5 stars so 5 options
                                     <option value="1">1</option>
                                     <option value="2">2</option>
                                     <option value="3">3</option>
@@ -133,7 +137,7 @@ String IMAGE_DEFAULT_PATH = "assets/database/productImage/";
                                 <textarea name="comment" id="comment" class="w-100"></textarea>
                                 <br>
                                 <div class="text-center">
-                                    <button type="submit" class="addtocartbtn m-3 p-1"><strong>Submit</strong></button>
+                                    <button type="submit" class="addtocartbtn m-3 p-1" id="submitButton"><strong>Submit</strong></button>
                                 </div>
                             </form>
                         </div>
@@ -155,11 +159,25 @@ String IMAGE_DEFAULT_PATH = "assets/database/productImage/";
                     <div class="ratingResultList">
                         <%
                             List<Ratings> ratings = (List<Ratings>) request.getAttribute("ratingList");
-                             if (!ratings.isEmpty()&&ratings!=null) {
+                            if (ratings!=null && !ratings.isEmpty()) {
                                 for (Ratings rating : ratings) {
                         %>
                         <div class="rating m-3">
-                            <p><strong>Rating:</strong> <%= rating.getRatingScore() %></p>
+                            <p><strong>Rating:</strong>
+                                <%
+                                    int ratingScore = rating.getRatingScore();
+                                    for(int i = 0; i < ratingScore; i++) {
+                                %>
+                                <span class="fa fa-star checked"></span>
+                                <%
+                                    }
+                                    for(int i = ratingScore; i < 5; i++) {
+                                %>
+                                <span class="fa fa-star"></span>
+                                <%
+                                    }
+                                %>
+                            </p>
                             <p><strong>Comment:</strong> <%= rating.getComment() %></p>
                             <p><strong>Timestamp:</strong> <%= rating.getTimestamp() %></p>
                             <hr>
@@ -179,59 +197,5 @@ String IMAGE_DEFAULT_PATH = "assets/database/productImage/";
         </main>
         <jsp:include page="/defaults/footer.jsp" />
         <script type="module" src="assets/js/carts.js"></script>
-        <script>
-            document.addEventListener("DOMContentLoaded", function () {
-                const stars = document.querySelectorAll('.star');
-                stars.forEach(function (star) {
-                    star.addEventListener('click', function () {
-                        let rating = this.getAttribute('data-rating');
-                        let productId = this.getAttribute('data-product-id');
-                        // Send rating and product ID to server
-                        sendRatingToServer(productId, rating);
-                        // Change star color immediately (optional)
-                        applyStarColor(star, rating);
-                    });
-                });
-            });
-
-// Function to send rating to the server
-            function sendRatingToServer(productId, rating) {
-                // Fetch API (This one from youtube I also dont know the exact way)
-                fetch('rating', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({productId: productId, rating: rating}),
-                })
-                        .then(response => {
-                            if (!response.ok) {
-                                throw new Error('Network response was not ok');
-                            }
-                            return response.json();
-                        })
-                        .then(data => {
-                            console.log('Rating sent successfully:', data);
-                            // Handle server response if needed
-                        })
-                        .catch(error => {
-                            console.error('Error sending rating:', error);
-                            // Handle error
-                        });
-            }
-
-// Function to change star color immediately
-            function applyStarColor(star, rating) {
-                // Example: change color of clicked star and stars before it
-                stars.forEach(function (s) {
-                    if (parseInt(s.getAttribute('data-rating')) <= parseInt(rating)) {
-                        s.style.color = 'yellow';
-                    } else {
-                        s.style.color = 'grey';
-                    }
-                });
-            }
-
-        </script>
     </body>
 </html>

@@ -2,8 +2,6 @@
 <%@ page contentType="text/html" pageEncoding="UTF-8" %>
 <c:set var="path" value="${pageContext.request.contextPath}" />
 <c:set var="basePath" value="${pageContext.request.scheme}://${pageContext.request.serverName}:${pageContext.request.serverPort}${path}/" />
-<jsp:useBean id="transaction" class="entities.PaypalPayment" scope="session" />
-<jsp:useBean id="payer" class="entities.PaypalPayment" scope="session" />
 <%
 response.setHeader("Cache-Control", "no-store");
 %>
@@ -70,7 +68,7 @@ response.setHeader("Cache-Control", "no-store");
                                 <button class="btn btn-primary btn-lg btn-block" type="submit" id="payNow">Pay Now</button>
                             </div>
                             <div class="col">
-                                <button type="button" class="btn btn-primary btn-lg btn-block" id="cancel">Cancel</button>
+                                <button type="button" class="btn btn-danger btn-lg btn-block" id="cancel">Cancel</button>
                             </div>
                         </div>
                     </form>
@@ -78,6 +76,8 @@ response.setHeader("Cache-Control", "no-store");
             </div>
         </div>
         <script type="module">
+            import { showProgressDialog } from "${basePath}assets/js/dialog.js";
+            // Cancel button
             $("#cancel").click(function (event) {
                 event.preventDefault();
                 Swal.fire({
@@ -94,6 +94,7 @@ response.setHeader("Cache-Control", "no-store");
                                     }
                                 });
                             });
+                            // Pay now button
                             $("#payNow").click(function (event) {
                                 event.preventDefault();
                                 Swal.fire({
@@ -106,6 +107,7 @@ response.setHeader("Cache-Control", "no-store");
                                     confirmButtonText: 'Yes, proceed with the payment!'
                                 }).then((result) => {
                                     if (result.value) {
+                                        showProgressDialog("Processing payment...");
                                         $("form").submit();
                                     }
                                 });

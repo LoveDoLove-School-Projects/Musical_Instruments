@@ -9,7 +9,18 @@
         <title>Error</title>
     </head>
     <body>
-        <h2>You are not authorized for this.</h2>
-        <a href="#">Go back to main page</a>
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <div class="card mt-5">
+                        <div class="card-body">
+                            <h2 class="card-title">Error</h2>
+                            <p class="card-text">You are not authorized for this.</p>
+                            <a href="#" class="btn btn-primary">Go back to main page</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </body>
 </html>
