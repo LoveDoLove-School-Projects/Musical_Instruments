@@ -85,6 +85,7 @@ String IMAGE_DEFAULT_PATH = "assets/database/productImage/";
                             int productId = productDetails.getProductId();
                             String pictureBase64 = Base64.getEncoder().encodeToString(productDetails.getImage());
                             String imageSrc = "data:image/png;base64," + pictureBase64; // Change "image/png" based on the actual image type
+                            
                         %>
                         <div class="row m-5 d-flex align-items-center justify-content-center">
                             <div class="col-12 row productPanel">

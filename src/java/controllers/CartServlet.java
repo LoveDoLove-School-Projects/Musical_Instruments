@@ -31,6 +31,10 @@ public class CartServlet extends HttpServlet {
             return;
         }
         List<Carts> carts = entityManager.createNamedQuery("Carts.findByCustomerId").setParameter("customerId", session.getUserId()).getResultList();
+        if(carts==null||carts.isEmpty()){
+             RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "your cart is empty", Constants.PRODUCT_URL);
+            return;
+        }
         request.setAttribute("entityManager", entityManager);
         request.setAttribute("cartDetails", carts);
         request.getRequestDispatcher(Constants.CART_JSP_URL).forward(request, response);

@@ -18,6 +18,7 @@ import jakarta.transaction.RollbackException;
 import jakarta.transaction.SystemException;
 import jakarta.transaction.UserTransaction;
 import java.io.IOException;
+import java.util.List;
 import java.util.logging.Logger;
 import utilities.RedirectUtilities;
 import utilities.SecurityLog;
@@ -39,13 +40,29 @@ public class AddProductToCartServlet extends HttpServlet {
             RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Please login to view this page.", Constants.CUSTOMER_LOGIN_URL);
             return;
         }
-        String productId = request.getParameter("productId");
+        int productId = Integer.parseInt(request.getParameter("productId"));
         int productQuantity = Integer.parseInt(request.getParameter("productQuantity"));
-        Products product = entityManager.find(Products.class, Integer.valueOf(productId));
+        Products product = entityManager.find(Products.class, productId);
         if (product == null) {
             RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.WARNING, "Product not found!", Constants.PRODUCT_URL);
             return;
         }
+
+        Products products = entityManager.createNamedQuery("Products.findByProductId", Products.class).setParameter("productId", productId).getSingleResult();
+        List<Carts> cartsList = entityManager.createNamedQuery("Carts.findByCustomerId").setParameter("customerId", session.getUserId()).getResultList();
+
+        int chkProductQuantity = 0;
+        for (Carts cartsDetails : cartsList) {
+            if (productId == cartsDetails.getProductId()) {
+                chkProductQuantity += (productQuantity + cartsDetails.getProductQuantity());
+            }
+        }
+
+        if (chkProductQuantity > products.getQuantity()) {
+            RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.WARNING, "Your cart quantity and your current quantity is over than stock", Constants.PRODUCT_URL);
+            return;
+        }
+
         try {
             userTransaction.begin();
             Carts carts = new Carts();

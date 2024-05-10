@@ -4,6 +4,7 @@ import entities.Carts;
 import entities.Constants;
 import entities.Customers;
 import entities.OrderDetails;
+import entities.Products;
 import entities.Session;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -12,7 +13,9 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import services.TransactionServices;
 import utilities.RedirectUtilities;
 import utilities.RedirectUtilities.RedirectType;
@@ -37,6 +40,24 @@ public class CheckoutServlet extends HttpServlet {
         if (cartList == null || cartList.isEmpty()) {
             RedirectUtilities.redirectWithMessage(request, response, RedirectType.DANGER, "Cart is empty.", Constants.CART_URL);
             return;
+        }
+        Map<Integer, Integer> productQuantities = new HashMap<>();
+        for (Carts cartItem : cartList) {
+            int productId = cartItem.getProductId();
+            int quantity = cartItem.getProductQuantity();
+            productQuantities.put(productId, productQuantities.getOrDefault(productId, 0) + quantity);
+        }
+        for (Map.Entry<Integer, Integer> entry : productQuantities.entrySet()) {
+            int productId = entry.getKey();
+            int cartQuantity = entry.getValue();
+
+            Products product = entityManager.createNamedQuery("Products.findByProductId", Products.class)
+                    .setParameter("productId", productId)
+                    .getSingleResult();
+            if (cartQuantity > product.getQuantity()) {
+                RedirectUtilities.redirectWithMessage(request, response, RedirectType.WARNING, "Product name: " + product.getName() + " quantity in your cart exceeds the available stock", Constants.CART_URL);
+                return;
+            }
         }
         OrderDetails orderDetails = transactionServices.getOrderDetails(cartList);
         request.setAttribute("cartList", cartList);
