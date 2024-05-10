@@ -1,7 +1,7 @@
-package controllers.admins;
+package controllers;
 
 import entities.Constants;
-import entities.Customers;
+import entities.Staffs;
 import jakarta.annotation.Resource;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -21,13 +21,13 @@ import utilities.RedirectUtilities;
 import utilities.SecurityLog;
 import utilities.SessionUtilities;
 
-public class ModifyCustomerServlet extends HttpServlet {
+public class ModifyStaffServlet extends HttpServlet {
 
     @PersistenceContext
     EntityManager entityManager;
     @Resource
     UserTransaction userTransaction;
-    private static final Logger LOG = Logger.getLogger(ModifyCustomerServlet.class.getName());
+    private static final Logger LOG = Logger.getLogger(ModifyStaffServlet.class.getName());
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -36,7 +36,7 @@ public class ModifyCustomerServlet extends HttpServlet {
             RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Please login as staff to view this page!", "/");
             return;
         }
-        request.getRequestDispatcher("/pages/admins/modifyCustomer.jsp").forward(request, response);
+        request.getRequestDispatcher("/pages/superAdmin/modifyStaff.jsp").forward(request, response);
     }
 
     @Override
@@ -52,32 +52,32 @@ public class ModifyCustomerServlet extends HttpServlet {
             return;
         }
         int userId = Integer.parseInt(userIdString);
-        Customers customer = new Customers(userId, username, address, phoneNumber, gender);
-        boolean isUpdated = updateCustomerDetails(request, customer);
+        Staffs staff = new Staffs(userId, username, address, phoneNumber, gender);
+        boolean isUpdated = updateStaffDetails(request, staff);
         if (!isUpdated) {
             showError(request, response);
             return;
         }
-        RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.SUCCESS, "Update Successful!", Constants.ADMIN_MANAGE_CUSTOMER_URL);
+        RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.SUCCESS, "Update Successful!", Constants.ADMIN_MANAGE_STAFF_URL);
     }
 
-    private boolean updateCustomerDetails(HttpServletRequest request, Customers customer) {
+    private boolean updateStaffDetails(HttpServletRequest request, Staffs staff) {
         try {
             userTransaction.begin();
-            Customers customerFromDB = entityManager.find(Customers.class, customer.getUserId());
-            if (customerFromDB == null) {
+            Staffs staffFromDB = entityManager.find(Staffs.class, staff.getUserId());
+            if (staffFromDB == null) {
                 return false;
             }
-            customerFromDB.setAddress(customer.getAddress());
-            customerFromDB.setGender(customer.getGender());
-            customerFromDB.setPhoneNumber(customer.getPhoneNumber());
-            customerFromDB.setUsername(customer.getUsername());
-            entityManager.merge(customerFromDB);
+            staffFromDB.setAddress(staff.getAddress());
+            staffFromDB.setGender(staff.getGender());
+            staffFromDB.setPhoneNumber(staff.getPhoneNumber());
+            staffFromDB.setUsername(staff.getUsername());
+            entityManager.merge(staffFromDB);
             userTransaction.commit();
-            SecurityLog.addInternalSecurityLog(request, "Customer: " + customer.getUsername() + " updated successfully.");
+            SecurityLog.addInternalSecurityLog(request, "Staff: " + staff.getUsername() + " updated successfully.");
             return true;
         } catch (HeuristicMixedException | HeuristicRollbackException | NotSupportedException | RollbackException | SystemException | IllegalStateException | SecurityException ex) {
-            SecurityLog.addInternalSecurityLog(request, "Failed to update customer: " + customer.getUserId() + ".");
+            SecurityLog.addInternalSecurityLog(request, "Failed to update staff: " + staff.getUserId() + ".");
             LOG.severe(ex.getMessage());
             return false;
         }
@@ -85,6 +85,6 @@ public class ModifyCustomerServlet extends HttpServlet {
 
     private void showError(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Invalid details, please re-enter it.", "/pages/admins/modifyCustomer.jsp");
+        RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Invalid details, please re-enter it.", Constants.ADMIN_MODIFY_STAFF_URL);
     }
 }

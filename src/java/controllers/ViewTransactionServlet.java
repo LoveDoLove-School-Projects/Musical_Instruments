@@ -1,4 +1,4 @@
-package controllers.staffs;
+package controllers;
 
 import entities.Transactions;
 import utilities.SessionUtilities;

@@ -1,4 +1,4 @@
-package controllers.staffs;
+package controllers;
 
 import entities.Constants;
 import entities.Customers;
@@ -14,7 +14,7 @@ import java.util.List;
 import utilities.RedirectUtilities;
 import utilities.SessionUtilities;
 
-public class SearchCustomerServlet extends HttpServlet {
+public class ManageCustomerServlet extends HttpServlet {
 
     @PersistenceContext
     EntityManager entityManager;
@@ -26,29 +26,22 @@ public class SearchCustomerServlet extends HttpServlet {
             RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Please login as staff to view this page!", "/");
             return;
         }
-        List<Customers> customerList = entityManager.createNamedQuery("Customers.findAll", Customers.class).getResultList();
-        request.setAttribute("customerCount", customerList.size());
-        request.setAttribute("customerList", customerList);
-        request.getRequestDispatcher("/pages/staffs/searchCustomer.jsp").forward(request, response);
-    }
-
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+        HttpSession session = request.getSession();
         response.setContentType("text/html;charset=UTF-8");
-        String searchQuery = request.getParameter("searchQuery");
-        if (searchQuery.isBlank() || searchQuery.trim().isEmpty()) {
+        Customers customer = (Customers) session.getAttribute("customerDetails");
+        if (customer == null) {
             RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Please fill in the customer email!", Constants.ADMIN_SEARCH_CUSTOMER_URL);
             return;
         }
-        List<Customers> customerList = entityManager.createNamedQuery("Customers.findByEmail", Customers.class).setParameter("email", searchQuery).getResultList();
+        List<Customers> customerList = entityManager.createNamedQuery("Customers.findByEmail", Customers.class).setParameter("email", customer.getEmail()).getResultList();
         if (customerList == null || customerList.isEmpty()) {
             RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Email address does not exist!", Constants.ADMIN_SEARCH_CUSTOMER_URL);
             return;
         }
-        Customers customer = customerList.get(0);
-        HttpSession session = request.getSession();
-        session.setAttribute("customerDetails", customer);
-        RedirectUtilities.sendRedirect(request, response, "/pages/staffs/manageCustomer");
+        customer = customerList.get(0);
+        session.removeAttribute("customerDetails");
+//        session.setAttribute("customerDetails", customer);
+        request.getSession().setAttribute("customerDetails", customer);
+        request.getRequestDispatcher("/pages/staffs/manageCustomer.jsp").forward(request, response);
     }
 }

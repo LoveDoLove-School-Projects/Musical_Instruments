@@ -1,4 +1,4 @@
-package controllers.products;
+package controllers;
 
 import com.google.gson.Gson;
 import entities.Constants;

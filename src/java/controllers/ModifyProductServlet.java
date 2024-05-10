@@ -1,4 +1,4 @@
-package controllers.staffs;
+package controllers;
 
 import entities.Products;
 import jakarta.annotation.Resource;

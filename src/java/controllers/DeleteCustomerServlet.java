@@ -1,7 +1,7 @@
-package controllers.admins;
+package controllers;
 
 import entities.Constants;
-import entities.Staffs;
+import entities.Customers;
 import jakarta.annotation.Resource;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -20,28 +20,28 @@ import java.util.logging.Logger;
 import utilities.RedirectUtilities;
 import utilities.SecurityLog;
 
-public class DeleteStaffServlet extends HttpServlet {
+public class DeleteCustomerServlet extends HttpServlet {
 
     @PersistenceContext
     EntityManager entityManager;
     @Resource
     UserTransaction userTransaction;
-    private static final Logger LOG = Logger.getLogger(DeleteStaffServlet.class.getName());
+    private static final Logger LOG = Logger.getLogger(DeleteCustomerServlet.class.getName());
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String userID = request.getParameter("userId");
         try {
             userTransaction.begin();
-            Staffs staff = entityManager.find(Staffs.class, Integer.valueOf(userID));
-            entityManager.remove(staff);
+            Customers customer = entityManager.find(Customers.class, Integer.valueOf(userID));
+            entityManager.remove(customer);
             userTransaction.commit();
-            SecurityLog.addInternalSecurityLog(request, "Staff " + staff.getUsername() + " deleted successfully.");
-            RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.SUCCESS, "Staff " + staff.getUsername() + " deleted successfully.", Constants.ADMIN_SEARCH_STAFF_URL);
+            SecurityLog.addInternalSecurityLog(request, "Customer: " + customer.getUsername() + " deleted successfully.");
+            RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.SUCCESS, customer.getUsername() + " deleted successfully.", Constants.ADMIN_SEARCH_CUSTOMER_URL);
         } catch (HeuristicMixedException | HeuristicRollbackException | NotSupportedException | RollbackException | SystemException | IllegalStateException | NumberFormatException | SecurityException ex) {
-            SecurityLog.addInternalSecurityLog(request, "Failed to delete staff: " + userID + ".");
+            SecurityLog.addInternalSecurityLog(request, "Failed to delete customer: " + userID + ".");
             LOG.severe(ex.getMessage());
-            RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Failed to delete staff: " + userID + ".", Constants.ADMIN_SEARCH_STAFF_URL);
+            RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Failed to delete customer.", Constants.ADMIN_SEARCH_CUSTOMER_URL);
         }
     }
 }

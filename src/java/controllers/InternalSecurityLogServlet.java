@@ -1,4 +1,4 @@
-package controllers.admins;
+package controllers;
 
 import entities.Internalsecuritylog;
 import jakarta.persistence.EntityManager;

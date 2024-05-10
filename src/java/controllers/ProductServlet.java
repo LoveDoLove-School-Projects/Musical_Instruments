@@ -1,4 +1,4 @@
-package controllers.products;
+package controllers;
 
 import entities.Constants;
 import entities.ProductCategory;

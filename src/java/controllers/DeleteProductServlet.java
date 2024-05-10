@@ -1,4 +1,4 @@
-package controllers.admins;
+package controllers;
 
 import entities.Constants;
 import entities.Products;

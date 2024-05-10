@@ -1,4 +1,4 @@
-package controllers.carts;
+package controllers;
 
 import entities.Carts;
 import entities.Constants;

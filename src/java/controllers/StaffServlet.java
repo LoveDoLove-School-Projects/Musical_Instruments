@@ -1,4 +1,4 @@
-package controllers.staffs;
+package controllers;
 
 import utilities.SessionUtilities;
 import jakarta.servlet.ServletException;

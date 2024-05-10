@@ -1,4 +1,4 @@
-package controllers.staffs;
+package controllers;
 
 import entities.Constants;
 import entities.Products;

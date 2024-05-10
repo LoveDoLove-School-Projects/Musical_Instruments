@@ -2,23 +2,23 @@
 <web-app version="5.0" xmlns="https://jakarta.ee/xml/ns/jakartaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_5_0.xsd">
     <servlet>
         <servlet-name>ModifyStaffServlet</servlet-name>
-        <servlet-class>controllers.admins.ModifyStaffServlet</servlet-class>
+        <servlet-class>controllers.ModifyStaffServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>DeleteStaffServlet</servlet-name>
-        <servlet-class>controllers.admins.DeleteStaffServlet</servlet-class>
+        <servlet-class>controllers.DeleteStaffServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>DeleteCustomerServlet</servlet-name>
-        <servlet-class>controllers.admins.DeleteCustomerServlet</servlet-class>
+        <servlet-class>controllers.DeleteCustomerServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>SearchCustomerServlet</servlet-name>
-        <servlet-class>controllers.staffs.SearchCustomerServlet</servlet-class>
+        <servlet-class>controllers.SearchCustomerServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>ModifyCustomerServlet</servlet-name>
-        <servlet-class>controllers.admins.ModifyCustomerServlet</servlet-class>
+        <servlet-class>controllers.ModifyCustomerServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>ForgotPasswordServlet</servlet-name>
@@ -30,35 +30,35 @@
     </servlet>
     <servlet>
         <servlet-name>ViewProductServlet</servlet-name>
-        <servlet-class>controllers.products.ViewProductServlet</servlet-class>
+        <servlet-class>controllers.ViewProductServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>ManageCustomerServlet</servlet-name>
-        <servlet-class>controllers.staffs.ManageCustomerServlet</servlet-class>
+        <servlet-class>controllers.ManageCustomerServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>ManageStaffServlet</servlet-name>
-        <servlet-class>controllers.admins.ManageStaffServlet</servlet-class>
+        <servlet-class>controllers.ManageStaffServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>SearchProductServlet</servlet-name>
-        <servlet-class>controllers.products.SearchProductServlet</servlet-class>
+        <servlet-class>controllers.SearchProductServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>StaffSearchProductServlet</servlet-name>
-        <servlet-class>controllers.staffs.StaffSearchProductServlet</servlet-class>
+        <servlet-class>controllers.StaffSearchProductServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>AddProductServlet</servlet-name>
-        <servlet-class>controllers.staffs.AddProductServlet</servlet-class>
+        <servlet-class>controllers.AddProductServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>AddProductToCartServlet</servlet-name>
-        <servlet-class>controllers.products.AddProductToCartServlet</servlet-class>
+        <servlet-class>controllers.AddProductToCartServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>CartServlet</servlet-name>
-        <servlet-class>controllers.carts.CartServlet</servlet-class>
+        <servlet-class>controllers.CartServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>CheckoutServlet</servlet-name>
@@ -74,19 +74,19 @@
     </servlet>
     <servlet>
         <servlet-name>ModifyProductServlet</servlet-name>
-        <servlet-class>controllers.staffs.ModifyProductServlet</servlet-class>
+        <servlet-class>controllers.ModifyProductServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>DeleteProductServlet</servlet-name>
-        <servlet-class>controllers.admins.DeleteProductServlet</servlet-class>
+        <servlet-class>controllers.DeleteProductServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>ManageProductServlet</servlet-name>
-        <servlet-class>controllers.staffs.ManageProductServlet</servlet-class>
+        <servlet-class>controllers.ManageProductServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>AddStaffServlet</servlet-name>
-        <servlet-class>controllers.admins.AddStaffServlet</servlet-class>
+        <servlet-class>controllers.AddStaffServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>LoginStaffServlet</servlet-name>
@@ -106,7 +106,7 @@
     </servlet>
     <servlet>
         <servlet-name>EditCart</servlet-name>
-        <servlet-class>controllers.carts.EditCartServlet</servlet-class>
+        <servlet-class>controllers.EditCartServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>LoginAdminServlet</servlet-name>
@@ -114,15 +114,15 @@
     </servlet>
     <servlet>
         <servlet-name>StaffServlet</servlet-name>
-        <servlet-class>controllers.staffs.StaffServlet</servlet-class>
+        <servlet-class>controllers.StaffServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>SearchStaffServlet</servlet-name>
-        <servlet-class>controllers.admins.SearchStaffServlet</servlet-class>
+        <servlet-class>controllers.SearchStaffServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>DeleteCartServlet</servlet-name>
-        <servlet-class>controllers.carts.DeleteCartServlet</servlet-class>
+        <servlet-class>controllers.DeleteCartServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>PaymentReceiptServlet</servlet-name>
@@ -142,7 +142,7 @@
     </servlet>
     <servlet>
         <servlet-name>InternalSecurityLogServlet</servlet-name>
-        <servlet-class>controllers.admins.InternalSecurityLogServlet</servlet-class>
+        <servlet-class>controllers.InternalSecurityLogServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>TransactionHistoryServlet</servlet-name>
@@ -150,11 +150,11 @@
     </servlet>
     <servlet>
         <servlet-name>ViewTransactionServlet</servlet-name>
-        <servlet-class>controllers.staffs.ViewTransactionServlet</servlet-class>
+        <servlet-class>controllers.ViewTransactionServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>SalesServlet</servlet-name>
-        <servlet-class>controllers.admins.SalesServlet</servlet-class>
+        <servlet-class>controllers.SalesServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>TransactionServlet</servlet-name>
@@ -162,11 +162,11 @@
     </servlet>
     <servlet>
         <servlet-name>UpdateOrderServlet</servlet-name>
-        <servlet-class>controllers.orders.UpdateOrderServlet</servlet-class>
+        <servlet-class>controllers.UpdateOrderServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>OrderHistoryServlet</servlet-name>
-        <servlet-class>controllers.orders.OrderHistoryServlet</servlet-class>
+        <servlet-class>controllers.OrderHistoryServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>BillingDetailsServlet</servlet-name>
@@ -174,11 +174,11 @@
     </servlet>
     <servlet>
         <servlet-name>ViewOrderHistory</servlet-name>
-        <servlet-class>controllers.orders.ViewOrderHistoryServlet</servlet-class>
+        <servlet-class>controllers.ViewOrderHistoryServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>RatingProductServlet</servlet-name>
-        <servlet-class>controllers.products.RatingProductServlet</servlet-class>
+        <servlet-class>controllers.RatingProductServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>LoginServlet</servlet-name>
@@ -529,7 +529,7 @@
     </servlet>
     <servlet>
         <servlet-name>ProductServlet</servlet-name>
-        <servlet-class>controllers.products.ProductServlet</servlet-class>
+        <servlet-class>controllers.ProductServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>RegisterServlet</servlet-name>
