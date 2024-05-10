@@ -137,7 +137,7 @@ Session user_session = (Session) session.getAttribute("user_session");
                                     </div>
                                     <hr>
                                     <div class="row">
-                                        <label for="gender">Two Factor Auth</label>
+                                        <label for="gender">Two Factor Auth (OTP Login)</label>
                                         <div class="col-sm-9">
                                             <div class="form-check form-check-inline">
                                                 <input type="checkbox" name="two_factor_auth" id="two_factor_auth"
