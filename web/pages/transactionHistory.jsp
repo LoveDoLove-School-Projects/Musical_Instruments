@@ -20,7 +20,7 @@
                             <h3 class="panel-title">Transaction History</h3>
                         </div>
                         <div class="panel-body table-responsive">
-                            <table class="table table-striped table-bordered table-hover">
+                            <table id="transactionTable" class="table table-striped table-bordered table-hover">
                                 <thead>
                                     <tr>
                                         <th>Txn Number</th>
@@ -54,11 +54,14 @@
             </div>
         </div>
         <jsp:include page="/defaults/footer.jsp" />
-        <script>
+        <script type="module">
             $(document).ready(function () {
                 $('.clickable-row').click(function () {
                     window.location = $(this).data("href");
                 });
+            });
+            $(document).ready(function () {
+                $('#transactionTable').DataTable();
             });
         </script>
     </body>

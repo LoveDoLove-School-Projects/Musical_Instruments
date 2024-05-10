@@ -2,7 +2,6 @@ package controllers.staffs;
 
 import entities.Constants;
 import entities.Customers;
-import utilities.SessionUtilities;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.servlet.ServletException;
@@ -13,6 +12,7 @@ import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
 import utilities.RedirectUtilities;
+import utilities.SessionUtilities;
 
 public class SearchCustomerServlet extends HttpServlet {
 
@@ -28,6 +28,7 @@ public class SearchCustomerServlet extends HttpServlet {
         }
         List<Customers> customerList = entityManager.createNamedQuery("Customers.findAll", Customers.class).getResultList();
         request.setAttribute("customerCount", customerList.size());
+        request.setAttribute("customerList", customerList);
         request.getRequestDispatcher("/pages/staffs/searchCustomer.jsp").forward(request, response);
     }
 

@@ -23,7 +23,7 @@
                             <br><h3 class="panel-title"><i class="fas fa-file-invoice">  Transaction  History</i></h3>
                         </div>
                         <div class="panel-body table-responsive">
-                            <table class="table table-striped table-bordered table-hover">
+                            <table id="viewTransactionTable" class="table table-striped table-bordered table-hover">
                                 <thead>
                                     <tr>
                                         <th>Order No.</th>
@@ -62,5 +62,10 @@
             </div>
         </div>
         <jsp:include page="/defaults/footer.jsp" />
+        <script type="module">
+            $(document).ready(function () {
+                $('#viewTransactionTable').DataTable();
+            });
+        </script>
     </body>
 </html>

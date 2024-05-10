@@ -2,6 +2,8 @@
 <%@ page contentType="text/html" pageEncoding="UTF-8" %>
 <c:set var="path" value="${pageContext.request.contextPath}" />
 <c:set var="basePath" value="${pageContext.request.scheme}://${pageContext.request.serverName}:${pageContext.request.serverPort}${path}/" />
+<%@ page import="java.util.*" %>
+<%@ page import="entities.Products" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -66,7 +68,57 @@
                 <button type="submit" class="btn btn-primary">Search</button>
                 <a href="pages/staffs/addProduct" class="btn btn-success">+ <i class="fas fa-box"></i>  Add New Product</a>
             </form>
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="panel panel-default">
+                            <div class="panel-body table-responsive">
+                                <table id="productTable" class="table table-striped table-bordered table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Image</th>
+                                            <th>Name</th>
+                                            <th>Price</th>
+                                            <th>Quantity</th>
+                                            <th>Color</th>
+                                            <th>Category</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <%
+                                            List<Products> productList = (List<Products>) request.getAttribute("productList");
+                                            if (productList != null) {
+                                                for (Products product : productList) {
+                                                    String pictureBase64 = Base64.getEncoder().encodeToString(product.getImage());
+                                                    String imageSrc = "data:image/png;base64," + pictureBase64;
+                                        %>
+                                        <tr>
+                                            <td><%=product.getProductId()%></td>
+                                            <td>
+                                                <img src="<%=imageSrc%>" alt="<%=product.getName()%>" class="img-fluid center" loading="lazy" style="width: 75px; height: 75px; object-fit: cover;"/>
+                                            </td>
+                                            <td><%=product.getName()%></td>
+                                            <td><%=product.getPrice()%></td>
+                                            <td><%=product.getQuantity()%></td>
+                                            <td><%=product.getColor()%></td>
+                                            <td><%=product.getCategory()%></td>
+                                        </tr>
+                                        <% }
+                                    } %>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
         <jsp:include page="/defaults/footer.jsp" />
+        <script type="module">
+            $(document).ready(function () {
+                $('#productTable').DataTable();
+            });
+        </script>
     </body>
 </html>

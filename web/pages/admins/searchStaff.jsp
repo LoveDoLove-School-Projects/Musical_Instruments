@@ -2,6 +2,8 @@
 <%@ page contentType="text/html" pageEncoding="UTF-8" %>
 <c:set var="path" value="${pageContext.request.contextPath}" />
 <c:set var="basePath" value="${pageContext.request.scheme}://${pageContext.request.serverName}:${pageContext.request.serverPort}${path}/" />
+<%@ page import="java.util.*" %>
+<%@ page import="entities.Staffs" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -72,6 +74,50 @@
                 <a href="pages/superAdmin/addStaff" class="btn btn-success"><i class="fas fa-user-plus"></i> Register new Staff</a>
             </form>
         </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="panel panel-default">
+                        <div class="panel-body table-responsive">
+                            <table id="searchStaffTable" class="table table-striped table-bordered table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Name</th>
+                                        <th>Gender</th>
+                                        <th>Email</th>
+                                        <th>Phone Number</th>
+                                        <th>Account Creation Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <%
+                                        List<Staffs> staffList = (List<Staffs>) request.getAttribute("staffList");
+                                        if (staffList != null) {
+                                            for (Staffs staff : staffList) {
+                                    %>
+                                    <tr>
+                                        <td><%=staff.getUserId()%></td>
+                                        <td><%=staff.getUsername()%></td>
+                                        <td><%=staff.getGender()%></td>
+                                        <td><%=staff.getEmail()%></td>
+                                        <td><%=staff.getPhoneNumber()%></td>
+                                        <td><%=staff.getAccountCreationDate()%></td>
+                                    </tr>
+                                    <% }
+                                    } %>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         <jsp:include page="/defaults/footer.jsp" />
+        <script type="module">
+            $(document).ready(function () {
+                $('#searchStaffTable').DataTable();
+            });
+        </script>
     </body>
 </html>

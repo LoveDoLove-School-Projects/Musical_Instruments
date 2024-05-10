@@ -26,6 +26,8 @@ public class StaffSearchProductServlet extends HttpServlet {
             RedirectUtilities.redirectWithMessage(request, response, RedirectUtilities.RedirectType.DANGER, "Please login as staff to view this page!", "/");
             return;
         }
+        List<Products> productList = entityManager.createNamedQuery("Products.findAll", Products.class).getResultList();
+        request.setAttribute("productList", productList);
         request.getRequestDispatcher("/pages/staffs/searchProduct.jsp").forward(request, response);
     }
 

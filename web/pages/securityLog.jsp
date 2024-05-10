@@ -19,7 +19,7 @@
                             <button id="exportButton" class="btn btn-primary md-3">Export to CSV</button>
                         </div>
                         <div class="panel-body table-responsive">
-                            <table class="table table-striped table-bordered table-hover">
+                            <table id="securityLogTable" class="table table-striped table-bordered table-hover">
                                 <thead>
                                     <tr>
                                         <th>Date/Time</th>
@@ -47,7 +47,7 @@
             </div>
         </div>
         <jsp:include page="/defaults/footer.jsp" />
-        <script>
+        <script type="module">
             document.getElementById('exportButton').addEventListener('click', function () {
                 var table = document.querySelector('table');
                 var data = [];
@@ -60,9 +60,10 @@
                 }
                 var csv = data.join('\n');
                 var blob = new Blob([csv], {type: 'text/csv;charset=utf-8;'});
-                let currentDate = new Date();
-                let dateTime = currentDate.getFullYear() + '-' + (currentDate.getMonth() + 1) + '-' + currentDate.getDate() + ' ' + currentDate.getHours() + ':' + currentDate.getMinutes() + ':' + currentDate.getSeconds();
-                saveAs(blob, `securityLog_${dateTime}.csv`);
+                saveAs(blob, `securityLog.csv`);
+            });
+            $(document).ready(function () {
+                $('#securityLogTable').DataTable();
             });
         </script>
     </body>
